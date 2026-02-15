@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZeroEarth — Planetary Systems as Differential Totality</title>
+<script src="https://unpkg.com/globe.gl@2.31.0/dist/globe.gl.min.js"></script>
+<script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0a0a0f;
+    --bg-panel: rgba(12, 12, 20, 0.92);
+    --bg-card: rgba(20, 20, 35, 0.85);
+    --border: rgba(255, 255, 255, 0.06);
+    --border-active: rgba(120, 180, 255, 0.3);
+    --text-primary: #e8e8f0;
+    --text-secondary: #8888a0;
+    --text-dim: #555570;
+    --accent-zero: #4a6fa5;
+    --accent-metabolism: #d4783c;
+    --accent-first: #5ca65c;
+    --accent-time: #9068b0;
+    --accent-second: #c4a035;
+    --glow-zero: rgba(74, 111, 165, 0.15);
+    --glow-metabolism: rgba(212, 120, 60, 0.15);
+    --glow-first: rgba(92, 166, 92, 0.15);
+    --glow-time: rgba(144, 104, 176, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* Globe container */
+  #globe-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+  }
+
+  /* Title bar */
+  .title-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(10,10,15,0.8) 0%, transparent 100%);
+  }
+
+  .title-bar h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--text-primary);
+    line-height: 1;
+  }
+
+  .title-bar h1 span {
+    color: var(--text-dim);
+    font-size: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 300;
+    display: block;
+    margin-top: 6px;
+    letter-spacing: 0.08em;
+  }
+
+  .title-bar .meta {
+    text-align: right;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    line-height: 1.6;
+    pointer-events: auto;
+  }
+
+  .title-bar .meta a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+
+  .title-bar .meta a:hover {
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+  }
+
+  /* Matrix sidebar */
+  .matrix-panel {
+    position: fixed;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    width: 280px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .matrix-header {
+    padding: 16px 18px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .matrix-section {
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+
+  .matrix-section:last-child { border-bottom: none; }
+
+  .matrix-section-header {
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .matrix-section-header:hover {
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .matrix-section.active .matrix-section-header {
+    background: var(--glow-active);
+  }
+
+  .section-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: all 0.3s;
+    box-shadow: 0 0 0 0 transparent;
+  }
+
+  .matrix-section.active .section-indicator {
+    box-shadow: 0 0 8px 2px currentColor;
+  }
+
+  .section-label {
+    flex: 1;
+  }
+
+  .section-label .en {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+
+  .section-label .de {
+    font-size: 10px;
+    color: var(--text-dim);
+    font-style: italic;
+    font-family: 'Instrument Serif', serif;
+    margin-top: 1px;
+  }
+
+  .section-toggle {
+    font-size: 10px;
+    color: var(--text-dim);
+    transition: transform 0.3s;
+  }
+
+  .matrix-section.active .section-toggle {
+    transform: rotate(90deg);
+  }
+
+  .matrix-sublayers {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .matrix-section.active .matrix-sublayers {
+    max-height: 300px;
+  }
+
+  .sublayer-item {
+    padding: 8px 18px 8px 36px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+
+  .sublayer-item:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .sublayer-item .check {
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .sublayer-item.active .check {
+    border-color: var(--layer-color);
+    background: var(--layer-color);
+    color: var(--bg-deep);
+  }
+
+  /* Info panel (right side) */
+  .info-panel {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    width: 300px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .info-panel.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .info-panel h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+
+  .info-panel .info-subtitle {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .info-panel p {
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+
+  .info-panel .timescale {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin-top: 12px;
+  }
+
+  .info-panel .timescale-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+
+  .info-panel .timescale-value {
+    font-size: 13px;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  /* Time slider */
+  .time-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    width: min(600px, 70vw);
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .time-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+
+  .time-slider-container {
+    flex: 1;
+    position: relative;
+  }
+
+  .time-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .time-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--text-primary);
+    border: 2px solid var(--bg-deep);
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    transition: all 0.2s;
+  }
+
+  .time-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  }
+
+  .time-marks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    padding: 0 2px;
+  }
+
+  .time-marks span {
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  .time-value {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    min-width: 80px;
+    text-align: right;
+  }
+
+  /* Epigraph */
+  .epigraph {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+  }
+
+  .epigraph.visible { opacity: 1; }
+
+  .epigraph q {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--text-secondary);
+    quotes: "\201E" "\201C";
+  }
+
+  .epigraph .author {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    letter-spacing: 0.08em;
+  }
+
+  /* Loading state */
+  .loading-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: var(--bg-deep);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1s ease, visibility 1s ease;
+  }
+
+  .loading-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .loading-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 42px;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .loading-sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .loading-bar {
+    width: 200px;
+    height: 1px;
+    background: var(--border);
+    margin-top: 30px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .loading-bar::after {
+    content: '';
+    position: absolute;
+    left: -50%;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background: var(--text-secondary);
+    animation: loading 1.2s ease-in-out infinite;
+  }
+
+  @keyframes loading {
+    0% { left: -50%; }
+    100% { left: 100%; }
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .matrix-panel { display: none; }
+    .info-panel { display: none; }
+    .title-bar h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loading">
+  <div class="loading-title">ZeroEarth</div>
+  <div class="loading-sub">Planetary Systems as Differential Totality</div>
+  <div class="loading-bar"></div>
+</div>
+
+<!-- Title -->
+<div class="title-bar">
+  <h1>
+    ZeroEarth
+    <span>From ZeroNature to First Nature — A Matrix Framework</span>
+  </h1>
+  <div class="meta">
+    Maximilian Marchand<br>
+    Independent Researcher, Magdeburg<br>
+    <a href="#">DOI: 10.5281/zenodo.XXXXXXX</a>
+  </div>
+</div>
+
+<!-- Globe -->
+<div id="globe-container"></div>
+
+<!-- Matrix Panel -->
+<div class="matrix-panel">
+  <div class="matrix-header">Framework Dimensions</div>
+
+  <div class="matrix-section" data-section="zeronature" data-color="var(--accent-zero)">
+    <div class="matrix-section-header" onclick="toggleSection(this)">
+      <div class="section-indicator" style="background: var(--accent-zero); color: var(--accent-zero)"></div>
+      <div class="section-label">
+        <div class="en">ZeroNature</div>
+        <div class="de">Raum / Zeit</div>
+      </div>
+      <div class="section-toggle">▸</div>
+    </div>
+    <div class="matrix-sublayers">
+      <div class="sublayer-item" data-layer="fundamental" style="--layer-color: var(--accent-zero)" onclick="toggleLayer(this)">
+        <div class="check">✓</div>
+        Universal / Fundamental
+      </div>
+      <div class="sublayer-item" data-layer="interstellar" style="--layer-color: var(--accent-zero)" onclick="toggleLayer(this)">
+        <div class="check">✓</div>
+        Intergalactic / Interstellar
+      </div>
+      <div class="sublayer-item" data-layer="solar" style="--layer-color: var(--accent-zero)" onclick="toggleLayer(this)">
+        <div class="check">✓</div>
+        Solar System
+      </div>
+    </div>
+  </div>
+
+  <div class="matrix-section" data-section="metabolism" data-color="var(--accent-metabolism)">
+    <div class="matrix-section-header" onclick="toggleSection(this)">
+      <div class="section-indicator" style="background: var(--accent-metabolism); color: var(--accent-metabolism)"></div>
+      <div class="section-label">
+        <div class="en">Planetary Metabolism</div>
+        <div class="de">Planetarer Stoffwechsel</div>
+      </div>
+      <div class="section-toggle">▸</div>
+    </div>
+    <div class="matrix-sublayers">
+      <div class="sublayer-item active" data-layer="tectonic" style="--layer-color: var(--accent-metabolism)" onclick="toggleLayer(this)">
+        <div class="check">✓</div>
+        Internal — Tectonics
+      </div>
+      <div class="sublayer-item" data-layer="atmosphere" style="--layer-color: var(--accent-metabolism)" onclick="toggleLayer(this)">
+        <div class="check">✓</div>
+        External — Solar Radiation
+      </div>
+    </div>
+  </div>
+
+  <div class="matrix-section" data-section="firstnature" data-color="var(--accent-first)">
+    <div class="matrix-section-header" onclick="toggleSection(this)">
+      <div class="section-indicator" style="background: var(--accent-first); color: var(--accent-first)"></div>
+      <div class="section-label">
+        <div class="en">First Nature</div>
+        <div class="de">Erste Natur</div>
+      </div>
+      <div class="section-toggle">▸</div>
+    </div>
+    <div class="matrix-sublayers">
+      <div class="sublayer-item" data-layer="planetary-system" style="--layer-color: var(--accent-first)" onclick="toggleLayer(this)">
+        <div class="check">✓</div>
+        Planetary System
+      </div>
+      <div class="sublayer-item" data-layer="basement" style="--layer-color: var(--accent-first)" onclick="toggleLayer(this)">
+        <div class="check">✓</div>
+        Basement — Unterbau
+      </div>
+      <div class="sublayer-item active" data-layer="base" style="--layer-color: var(--accent-first)" onclick="toggleLayer(this)">
+        <div class="check">✓</div>
+        Base — gesellschaftl. Basis
+      </div>
+    </div>
+  </div>
+
+  <div class="matrix-section" data-section="secondnature" data-color="var(--accent-second)">
+    <div class="matrix-section-header" onclick="toggleSection(this)">
+      <div class="section-indicator" style="background: var(--accent-second); color: var(--accent-second)"></div>
+      <div class="section-label">
+        <div class="en">Second Nature</div>
+        <div class="de">Zweite Natur — Paper B</div>
+      </div>
+      <div class="section-toggle">▸</div>
+    </div>
+    <div class="matrix-sublayers">
+      <div class="sublayer-item" data-layer="superstructure" style="--layer-color: var(--accent-second); opacity: 0.5; pointer-events: none">
+        <div class="check"></div>
+        Überbau — forthcoming
+      </div>
+      <div class="sublayer-item" data-layer="social-metabolism" style="--layer-color: var(--accent-second); opacity: 0.5; pointer-events: none">
+        <div class="check"></div>
+        Social Metabolism — forthcoming
+      </div>
+    </div>
+  </div>
+
+  <div class="matrix-section" data-section="time" data-color="var(--accent-time)">
+    <div class="matrix-section-header" onclick="toggleSection(this)">
+      <div class="section-indicator" style="background: var(--accent-time); color: var(--accent-time)"></div>
+      <div class="section-label">
+        <div class="en">Time</div>
+        <div class="de">Zeit / Raum</div>
+      </div>
+      <div class="section-toggle">▸</div>
+    </div>
+    <div class="matrix-sublayers">
+      <div class="sublayer-item" data-layer="duration" style="--layer-color: var(--accent-time)" onclick="toggleLayer(this)">
+        <div class="check">✓</div>
+        Duration — Zeitraum
+      </div>
+      <div class="sublayer-item" data-layer="location" style="--layer-color: var(--accent-time)" onclick="toggleLayer(this)">
+        <div class="check">✓</div>
+        Location — Zeitpunkt
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Info Panel -->
+<div class="info-panel" id="info-panel">
+  <h3 id="info-title">Planetary Metabolism</h3>
+  <div class="info-subtitle" id="info-subtitle">Internal Processes</div>
+  <p id="info-text">Earth's internal heat production drives mantle convection, plate tectonics, and core dynamics. The asthenosphere's plasticity enables plate tectonics for approximately another 500 million years. No seafloor older than 170 million years exists — a continuous renewal distinguishing geologically "living" planets from "dead" ones.</p>
+  <div class="timescale">
+    <div class="timescale-label">Characteristic Timescale</div>
+    <div class="timescale-value" id="info-timescale">10⁷–10⁹ years</div>
+  </div>
+</div>
+
+<!-- Epigraph -->
+<div class="epigraph" id="epigraph">
+  <q>Wahrheit ist die Erfindung eines Lügners.</q>
+  <div class="author">— Heinz von Foerster</div>
+</div>
+
+<!-- Time Bar -->
+<div class="time-bar">
+  <div class="time-label">Time</div>
+  <div class="time-slider-container">
+    <input type="range" class="time-slider" id="time-slider" min="0" max="4600" value="4600" step="1">
+    <div class="time-marks">
+      <span>4.6 Ga</span>
+      <span>3.5 Ga</span>
+      <span>2.0 Ga</span>
+      <span>540 Ma</span>
+      <span>Now</span>
+    </div>
+  </div>
+  <div class="time-value" id="time-value">Present</div>
+</div>
+
+<script>
+// ─── Data: Sample tectonic plate boundaries ───
+const tectonicData = [
+  // Mid-Atlantic Ridge (sample points)
+  {startLat: 65, startLng: -17, endLat: 60, endLng: -20},
+  {startLat: 60, startLng: -20, endLat: 52, endLng: -28},
+  {startLat: 52, startLng: -28, endLat: 40, endLng: -28},
+  {startLat: 40, startLng: -28, endLat: 30, endLng: -42},
+  {startLat: 30, startLng: -42, endLat: 15, endLng: -46},
+  {startLat: 15, startLng: -46, endLat: 0, endLng: -20},
+  {startLat: 0, startLng: -20, endLat: -15, endLng: -14},
+  {startLat: -15, startLng: -14, endLat: -35, endLng: -16},
+  {startLat: -35, startLng: -16, endLat: -54, endLng: -2},
+  // Pacific Ring of Fire (west)
+  {startLat: 55, startLng: 162, endLat: 45, endLng: 150},
+  {startLat: 45, startLng: 150, endLat: 35, endLng: 140},
+  {startLat: 35, startLng: 140, endLat: 25, endLng: 130},
+  {startLat: 25, startLng: 130, endLat: 15, endLng: 120},
+  {startLat: 15, startLng: 120, endLat: 5, endLng: 125},
+  {startLat: 5, startLng: 125, endLat: -5, endLng: 130},
+  {startLat: -5, startLng: 130, endLat: -15, endLng: 167},
+  {startLat: -15, startLng: 167, endLat: -25, endLng: 177},
+  {startLat: -25, startLng: 177, endLat: -35, endLng: 178},
+  {startLat: -35, startLng: 178, endLat: -45, endLng: 168},
+  // Pacific Ring of Fire (east)
+  {startLat: 55, startLng: -163, endLat: 50, endLng: -155},
+  {startLat: 50, startLng: -155, endLat: 45, endLng: -130},
+  {startLat: 45, startLng: -130, endLat: 35, endLng: -122},
+  {startLat: 35, startLng: -122, endLat: 20, endLng: -108},
+  {startLat: 20, startLng: -108, endLat: 10, endLng: -100},
+  {startLat: 10, startLng: -100, endLat: -5, endLng: -82},
+  {startLat: -5, startLng: -82, endLat: -20, endLng: -70},
+  {startLat: -20, startLng: -70, endLat: -35, endLng: -73},
+  {startLat: -35, startLng: -73, endLat: -45, endLng: -76},
+  {startLat: -45, startLng: -76, endLat: -55, endLng: -70},
+  // Himalayan collision zone
+  {startLat: 35, startLng: 70, endLat: 32, endLng: 80},
+  {startLat: 32, startLng: 80, endLat: 28, endLng: 90},
+  {startLat: 28, startLng: 90, endLat: 25, endLng: 95},
+  // East African Rift
+  {startLat: 12, startLng: 42, endLat: 5, endLng: 36},
+  {startLat: 5, startLng: 36, endLat: -2, endLng: 36},
+  {startLat: -2, startLng: 36, endLat: -8, endLng: 34},
+  {startLat: -8, startLng: 34, endLat: -15, endLng: 35},
+].map(d => ({...d, color: '#d4783c'}));
+
+// ─── Data: CO2 emissions (top 20 emitters, relative) ───
+const emissionsData = [
+  {lat: 39.9, lng: 116.4, size: 0.9, label: 'China', val: '10.7 Gt'},
+  {lat: 38.9, lng: -77.0, size: 0.55, label: 'USA', val: '5.0 Gt'},
+  {lat: 28.6, lng: 77.2, size: 0.35, label: 'India', val: '2.7 Gt'},
+  {lat: 55.7, lng: 37.6, size: 0.22, label: 'Russia', val: '1.7 Gt'},
+  {lat: 35.7, lng: 139.7, size: 0.18, label: 'Japan', val: '1.1 Gt'},
+  {lat: 52.5, lng: 13.4, size: 0.12, label: 'Germany', val: '0.7 Gt'},
+  {lat: 37.6, lng: 127.0, size: 0.12, label: 'South Korea', val: '0.6 Gt'},
+  {lat: 3.1, lng: 101.7, size: 0.11, label: 'Indonesia', val: '0.6 Gt'},
+  {lat: 25.3, lng: 51.2, size: 0.10, label: 'Saudi Arabia', val: '0.6 Gt'},
+  {lat: 45.4, lng: -75.7, size: 0.10, label: 'Canada', val: '0.6 Gt'},
+  {lat: 51.5, lng: -0.1, size: 0.08, label: 'UK', val: '0.35 Gt'},
+  {lat: -23.5, lng: -46.6, size: 0.08, label: 'Brazil', val: '0.5 Gt'},
+  {lat: 33.9, lng: -6.9, size: 0.06, label: 'Morocco', val: '0.07 Gt'},
+  {lat: -33.9, lng: 18.4, size: 0.07, label: 'South Africa', val: '0.5 Gt'},
+  {lat: 48.9, lng: 2.4, size: 0.06, label: 'France', val: '0.3 Gt'},
+  {lat: -15.8, lng: -47.9, size: 0.08, label: 'Brazil', val: '0.5 Gt'},
+  {lat: 19.4, lng: -99.1, size: 0.08, label: 'Mexico', val: '0.5 Gt'},
+  {lat: -33.4, lng: 151.2, size: 0.07, label: 'Australia', val: '0.4 Gt'},
+  {lat: 41.0, lng: 29.0, size: 0.07, label: 'Turkey', val: '0.4 Gt'},
+];
+
+// ─── Info content for each layer ───
+const layerInfo = {
+  tectonic: {
+    title: 'Planetary Metabolism',
+    subtitle: 'Internal Processes',
+    text: "Earth's internal heat production drives mantle convection, plate tectonics, and core dynamics. The asthenosphere's plasticity enables plate tectonics for approximately another 500 million years. No seafloor older than 170 million years exists — continuous renewal distinguishing geologically \"living\" planets from \"dead\" ones.",
+    timescale: '10⁷–10⁹ years'
+  },
+  atmosphere: {
+    title: 'Planetary Metabolism',
+    subtitle: 'External Processes',
+    text: 'Solar radiation provides 99.97% of Earth\'s surface energy budget. The energy input drives atmospheric circulation, oceanic currents, and the hydrological cycle. Photosynthesis captures solar energy into biological systems — but life predates photosynthesis, originating in chemosynthetic metabolism at hydrothermal vents.',
+    timescale: '10⁰–10⁸ years'
+  },
+  base: {
+    title: 'First Nature — Base',
+    subtitle: 'gesellschaftliche Basis',
+    text: 'Social formation and social-economic relations. CO₂ emissions visualized here trace the metabolic rift between social production and planetary systems. The Base encompasses productive forces and relations of production — not merely human labor but animal, microbial, fossil, and digital Produktivkraft.',
+    timescale: '10¹–10³ years'
+  },
+  basement: {
+    title: 'First Nature — Basement',
+    subtitle: 'Unterbau',
+    text: '"More-than-human societies" — ecosystems as conditions of existence and relations of reproduction. The Basement is not merely nature upon which society is built; it is itself a form of sociality — a more-than-human sociality that precedes, enables, and interpenetrates human social formations.',
+    timescale: '10³–10⁷ years'
+  },
+  'planetary-system': {
+    title: 'First Nature — Planetary System',
+    subtitle: 'Earth System',
+    text: 'Atmosphere, biosphere, hydrosphere, lithosphere and their interactions. Earth-sized body (±10%), axial tilt 20-30°, large moon for stabilization, approximately 2 km global water coverage. Continental crust — unique to Earth in our solar system — concentrates life-essential elements through weathering.',
+    timescale: '10⁶–10¹⁰ years'
+  },
+  fundamental: {
+    title: 'ZeroNature',
+    subtitle: 'Universal / Fundamental',
+    text: 'The four fundamental forces and physical constants that permit complex chemistry — the anthropic constraint. At this level, the framework designates the cosmic-physical substrate within which all planetary processes become possible. The NULL designation signals pre-empirical foundations.',
+    timescale: '10⁻⁴³–10¹⁷ seconds'
+  },
+  solar: {
+    title: 'ZeroNature',
+    subtitle: 'Solar System',
+    text: 'Stellar characteristics: Sun-like stars provide stable radiation over billions of years. The presence of Jupiter-analog gas giants may shield inner planets from excessive bombardment. At this level, habitability depends on orbital position within the circumstellar habitable zone.',
+    timescale: '10⁷–10¹⁰ years'
+  },
+  duration: {
+    title: 'Time — Zeitraum',
+    subtitle: 'Temporal Duration',
+    text: 'How long processes take — relative duration across scales. The framework spans 20 orders of magnitude from Planck time (10⁻⁴³ s) to cosmic timescales (10¹⁷ s). Each level generates its own characteristic temporalities, irreducible to a single universal clock.',
+    timescale: '10⁻⁴³–10¹⁷ seconds'
+  },
+  location: {
+    title: 'Time — Zeitpunkt',
+    subtitle: 'Temporal Location',
+    text: 'When events occur — temporal positioning within sequences. Distinct from duration: geological strata record location (when something happened), while radioactive decay reveals duration (how long it takes). Social temporalities add qualitative dimensions irreducible to calendar time.',
+    timescale: 'Contextual'
+  }
+};
+
+// ─── Globe Setup ───
+let globe;
+let activeLayers = new Set(['tectonic', 'base']);
+
+function initGlobe() {
+  const container = document.getElementById('globe-container');
+
+  globe = Globe()
+    .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+    .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
+    .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
+    .showAtmosphere(true)
+    .atmosphereColor('#4a6fa5')
+    .atmosphereAltitude(0.15)
+    .width(window.innerWidth)
+    .height(window.innerHeight)
+    (container);
+
+  // Set initial camera position
+  globe.pointOfView({ lat: 25, lng: 20, altitude: 2.2 });
+
+  // Slow auto-rotation
+  globe.controls().autoRotate = true;
+  globe.controls().autoRotateSpeed = 0.3;
+  globe.controls().enableZoom = true;
+  globe.controls().minDistance = 120;
+  globe.controls().maxDistance = 800;
+
+  // Update layers
+  updateGlobeLayers();
+
+  // Hide loading
+  setTimeout(() => {
+    document.getElementById('loading').classList.add('hidden');
+    // Show epigraph briefly
+    setTimeout(() => {
+      document.getElementById('epigraph').classList.add('visible');
+      setTimeout(() => {
+        document.getElementById('epigraph').classList.remove('visible');
+      }, 6000);
+    }, 1500);
+  }, 2000);
+
+  // Resize handler
+  window.addEventListener('resize', () => {
+    globe.width(window.innerWidth).height(window.innerHeight);
+  });
+}
+
+function updateGlobeLayers() {
+  // Arcs: tectonic plates
+  if (activeLayers.has('tectonic')) {
+    globe.arcsData(tectonicData)
+      .arcColor(() => '#d4783c')
+      .arcStroke(0.6)
+      .arcDashLength(0.4)
+      .arcDashGap(0.2)
+      .arcDashAnimateTime(4000)
+      .arcAltitude(0.005);
+  } else {
+    globe.arcsData([]);
+  }
+
+  // Points: CO2 emissions (Base layer)
+  if (activeLayers.has('base')) {
+    globe.pointsData(emissionsData)
+      .pointLat(d => d.lat)
+      .pointLng(d => d.lng)
+      .pointAltitude(d => d.size * 0.15)
+      .pointRadius(d => d.size * 1.2)
+      .pointColor(() => '#5ca65c')
+      .pointResolution(12);
+  } else {
+    globe.pointsData([]);
+  }
+
+  // Rings: atmosphere/radiation visualization
+  if (activeLayers.has('atmosphere')) {
+    const ringData = [
+      {lat: 0, lng: 0}, {lat: 0, lng: 90}, {lat: 0, lng: 180}, {lat: 0, lng: -90},
+      {lat: 23.5, lng: 45}, {lat: -23.5, lng: 135}, {lat: 45, lng: 0}, {lat: -45, lng: 90}
+    ];
+    globe.ringsData(ringData)
+      .ringLat(d => d.lat)
+      .ringLng(d => d.lng)
+      .ringMaxRadius(5)
+      .ringPropagationSpeed(1.5)
+      .ringRepeatPeriod(2000)
+      .ringColor(() => t => `rgba(212, 120, 60, ${1 - t})`);
+  } else {
+    globe.ringsData([]);
+  }
+
+  // Labels for base layer
+  if (activeLayers.has('base')) {
+    globe.labelsData(emissionsData.slice(0, 6))
+      .labelLat(d => d.lat)
+      .labelLng(d => d.lng)
+      .labelText(d => `${d.label}: ${d.val}`)
+      .labelSize(0.7)
+      .labelDotRadius(0.3)
+      .labelColor(() => 'rgba(232, 232, 240, 0.6)')
+      .labelResolution(2)
+      .labelAltitude(d => d.size * 0.15 + 0.01);
+  } else {
+    globe.labelsData([]);
+  }
+}
+
+// ─── UI Interactions ───
+function toggleSection(header) {
+  const section = header.parentElement;
+  const wasActive = section.classList.contains('active');
+
+  // Close all sections
+  document.querySelectorAll('.matrix-section').forEach(s => {
+    s.classList.remove('active');
+  });
+
+  // Toggle clicked section
+  if (!wasActive) {
+    section.classList.add('active');
+
+    // Show info for first active sublayer in this section
+    const firstActive = section.querySelector('.sublayer-item.active');
+    if (firstActive) {
+      showInfo(firstActive.dataset.layer);
+    } else {
+      const firstItem = section.querySelector('.sublayer-item');
+      if (firstItem && firstItem.dataset.layer) {
+        showInfo(firstItem.dataset.layer);
+      }
+    }
+  } else {
+    document.getElementById('info-panel').classList.remove('visible');
+  }
+}
+
+function toggleLayer(item) {
+  const layer = item.dataset.layer;
+  item.classList.toggle('active');
+
+  if (item.classList.contains('active')) {
+    activeLayers.add(layer);
+  } else {
+    activeLayers.delete(layer);
+  }
+
+  updateGlobeLayers();
+  showInfo(layer);
+}
+
+function showInfo(layer) {
+  const info = layerInfo[layer];
+  if (!info) return;
+
+  document.getElementById('info-title').textContent = info.title;
+  document.getElementById('info-subtitle').textContent = info.subtitle;
+  document.getElementById('info-text').textContent = info.text;
+  document.getElementById('info-timescale').textContent = info.timescale;
+  document.getElementById('info-panel').classList.add('visible');
+}
+
+// ─── Time Slider ───
+document.getElementById('time-slider').addEventListener('input', function() {
+  const val = parseInt(this.value);
+  const timeDisplay = document.getElementById('time-value');
+
+  if (val >= 4590) {
+    timeDisplay.textContent = 'Present';
+  } else if (val >= 1000) {
+    timeDisplay.textContent = (val / 1000).toFixed(1) + ' Ga';
+  } else {
+    timeDisplay.textContent = val + ' Ma';
+  }
+
+  // Adjust atmosphere color based on geological era
+  if (globe) {
+    if (val < 2400) {
+      // Pre-Great Oxidation: reducing atmosphere
+      globe.atmosphereColor('#8b4513');
+    } else if (val < 3500) {
+      // Archean
+      globe.atmosphereColor('#6a5d3a');
+    } else {
+      // Modern
+      globe.atmosphereColor('#4a6fa5');
+    }
+  }
+});
+
+// ─── Initialize ───
+document.addEventListener('DOMContentLoaded', function() {
+  // Small delay to ensure Globe.GL is loaded
+  setTimeout(initGlobe, 500);
+});
+</script>
+</body>
+</html>
