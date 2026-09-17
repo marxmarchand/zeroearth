@@ -195,9 +195,9 @@
     #scale-strip .db{padding:4px 8px;}
     #scale-strip .dn{font-size:7px;}
     #scale-strip .dl{font-size:9.5px;}
-    #vocab{font-size:8.5px;color:var(--muted);padding:5px 10px;cursor:pointer;letter-spacing:.4px;}
-    #vocab:hover{color:var(--text);}
-    #vocab-name{color:var(--accent);}
+    #vocab,#sprache,#licht{font-size:8.5px;color:var(--muted);padding:5px 10px;cursor:pointer;letter-spacing:.4px;}
+    #vocab:hover,#sprache:hover,#licht:hover{color:var(--text);}
+    #vocab-name,#sprache-name,#licht-name{color:var(--accent);}
     #ms-pts-btn.vis{display:flex;}
     .ms-slider{width:70px;height:3px;-webkit-appearance:none;appearance:none;
       background:rgba(255,255,255,.12);border-radius:2px;outline:none;cursor:pointer;}
@@ -394,6 +394,8 @@
       <div class="ov-status" id="grenzen-status"></div>
       <div class="ob ov-side" id="tb-kataster" onclick="ze.toggle('kataster')"><div class="obd"></div>Kataster · Parzellen ▦</div>
       <div class="ov-status" id="kataster-status"></div>
+      <div class="ob ov-side" id="tb-nachtlicht" onclick="ze.toggleNachtlicht()"><div class="obd"></div>Nachtlichter (VIIRS · NASA GIBS) ☾</div>
+      <div class="ov-status" id="nachtlicht-status"></div>
       <div class="ob ov-side" id="tb-sats" onclick="ze.toggle('sats')"><div class="obd"></div>Satelliten (CelesTrak)</div>
       <div class="ov-status" id="sats-status"></div>
       <div class="ov-status" style="display:block">Straßen &amp; Bebauung (OSM): Regler „Zweite Natur" im Linsen-Panel</div>
@@ -463,6 +465,9 @@
     </div>
     <div id="sprache" onclick="ze.cycleSprache()" title="Sprache der Begriffe — dieselbe Adresse, andere Beschriftung">
       Sprache: <span id="sprache-name"></span> ⇄
+    </div>
+    <div id="licht" onclick="ze.cycleLicht()" title="Beleuchtung — Darstellung, keine Daten: Terminator zeigt die reale Tag-Nacht-Grenze, „an" beleuchtet gleichmäßig">
+      Licht: <span id="licht-name"></span> ⇄
     </div>
     <div class="sep"></div>
     <div class="dftr">ZEIT · relational · dimensionsspezifisch</div>
@@ -3666,6 +3671,7 @@ class ZeroEarth {
     // Modell laden (data/matrix.json), dann S4-Beschriftungen anwenden
     await MODELL.laden();
     this.applyLabels();
+    this._applyLicht();
     const st = this._readHash();
     if (st) this.setState(st); else this.setScale('solar');
   }
@@ -3775,10 +3781,11 @@ class ZeroEarth {
       .map(([k,v])=>`${k}:${v.toFixed(2)}`).join(',');
     return { s:this.scale, la:+this.obs.lat.toFixed(3), lo:+this.obs.lon.toFixed(3),
       t:+Tideline.t.toFixed(4), tz:TSCALES[Tideline.zoom].id,
-      l, o:o.join(','), v:LABELS.active, s:LABELS.sprache };
+      l, o:o.join(','), v:LABELS.active, s:LABELS.sprache, li:this.licht ?? 'terminator' };
   }
 
   setState(st) {
+    if (st.li === 'an' || st.li === 'terminator') { this.licht = st.li; this._applyLicht(); }
     if (st.s === 'de' || st.s === 'en') LABELS.sprache = st.s;
     if (st.v && LABELS.sets[st.v]) LABELS.active = st.v;
     if (st.v || st.s) this.applyLabels();
@@ -3851,6 +3858,64 @@ class ZeroEarth {
   cycleSprache() {
     LABELS.sprache = LABELS.sprache === 'de' ? 'en' : 'de';
     this.applyLabels();
+  }
+
+  /* ── Beleuchtung (Darstellung, keine Daten) ─────────────────────
+     terminator: reale Tag-Nacht-Grenze (Standard, Sonnenstand aus der
+                 Masterzeit-Uhr)
+     an:         gleichmäßig beleuchtet — die Nachtseite wird sichtbar,
+                 die Grenze verschwindet. Für Beobachtung, nicht für
+                 Behauptung: Nachtlichter sind eine eigene Datenebene. */
+  cycleLicht() {
+    const modi = ['terminator', 'an'];
+    this.licht = modi[(modi.indexOf(this.licht ?? 'terminator') + 1) % modi.length];
+    this._applyLicht();
+    this._writeHash();
+  }
+
+  _applyLicht() {
+    const an = (this.licht ?? 'terminator') === 'an';
+    if (this.cesiumV) this.cesiumV.scene.globe.enableLighting = !an;
+    const el = document.getElementById('licht-name');
+    if (el) el.textContent = an ? 'an (gleichmäßig)' : 'Terminator';
+    const ns = document.getElementById('nachtlicht-status');
+    if (an && this.nachtlicht && ns)
+      ns.innerHTML = ns.innerHTML.split('<br>')[0] +
+        '<br><span class="ds-err">ohne Terminator liegen die Nachtlichter über der ganzen Kugel</span>';
+  }
+
+  /* ── Nachtlichter — VIIRS Day/Night Band (NASA GIBS) ────────────
+     Daten, keine Beleuchtung: Lichtemission als Spur der konstruierten
+     Wirklichkeit. dayAlpha=0 / nightAlpha=1 blendet sie nur auf der
+     Nachtseite ein, die Ebene folgt also dem Terminator. */
+  toggleNachtlicht() {
+    const el = document.getElementById('tb-nachtlicht');
+    const st = document.getElementById('nachtlicht-status');
+    if (this.nachtlicht) {
+      this.cesiumV.imageryLayers.remove(this.nachtlicht, true);
+      this.nachtlicht = null;
+      el?.classList.remove('on');
+      if (st) st.textContent = '';
+      return;
+    }
+    // GIBS liefert den Vortag verlässlich; „heute" ist oft noch nicht prozessiert
+    const tag = new Date(Date.now() - 36e5 * 30).toISOString().slice(0, 10);
+    const provider = new Cesium.WebMapTileServiceImageryProvider({
+      url: `https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/VIIRS_SNPP_DayNightBand_ENCC/default/${tag}/500m/{TileMatrix}/{TileRow}/{TileCol}.jpg`,
+      layer: 'VIIRS_SNPP_DayNightBand_ENCC', style: 'default', format: 'image/jpeg',
+      tileMatrixSetID: '500m', maximumLevel: 8,
+      tilingScheme: new Cesium.GeographicTilingScheme(),
+      credit: new Cesium.Credit('VIIRS DNB ENCC · NASA GIBS/Worldview')
+    });
+    provider.errorEvent.addEventListener(e => {
+      if (st) st.innerHTML = `<span class="ds-err">GIBS nicht erreichbar</span> (${e.message ?? 'Kacheln fehlen'})`;
+    });
+    this.nachtlicht = this.cesiumV.imageryLayers.addImageryProvider(provider);
+    this.nachtlicht.dayAlpha = 0;      // am Tag unsichtbar
+    this.nachtlicht.nightAlpha = 1;    // auf der Nachtseite voll
+    el?.classList.add('on');
+    if (st) st.innerHTML = `VIIRS DNB · ${tag} · NASA GIBS — Lichtemission, keine Beleuchtung`;
+    this._applyLicht();
   }
 
   /* ── v0.9: Skala setzen — die einzige primäre Navigation ────────
