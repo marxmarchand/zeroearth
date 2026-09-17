@@ -28,6 +28,31 @@
       position:absolute;inset:0;z-index:1;
       /* Wird per JS gesteuert — starts visible für CesiumJS-Init */
     }
+    /* ── Analysefeld (v0.9.34) — Globus sinkt ab, bleibt aber ganz
+       bedienbar: er wird kleiner, nicht überdeckt. Der Griff schiebt
+       die Grenze, --an-h ist die einzige Größe dafür. ── */
+    :root{--an-h:42vh;}
+    body.analyse #cc, body.analyse #ss-canvas{top:var(--an-h);}
+    #analyse{position:absolute;top:0;left:0;right:0;height:var(--an-h);z-index:3;
+      background:rgba(6,8,14,.94);border-bottom:1px solid rgba(255,255,255,.14);
+      display:none;flex-direction:column;}
+    body.analyse #analyse{display:flex;}
+    #an-kopf{display:flex;align-items:center;gap:10px;padding:6px 12px;font-size:8.5px;
+      letter-spacing:.4px;color:var(--muted);border-bottom:1px solid rgba(255,255,255,.08);}
+    #an-titel{color:var(--accent);}
+    #an-hinweis{margin-left:auto;color:var(--muted);}
+    #an-zu{cursor:pointer;padding:0 4px;}
+    #an-zu:hover{color:var(--text);}
+    #an-svg{flex:1;width:100%;min-height:0;}
+    #an-griff{height:7px;cursor:ns-resize;background:rgba(255,255,255,.06);}
+    #an-griff:hover{background:rgba(255,255,255,.16);}
+    .an-knoten{cursor:pointer;}
+    .an-knoten rect{stroke-width:1.4;}
+    .an-knoten:hover rect{stroke:#fff;}
+    .an-knoten.markiert rect{stroke:#fff;stroke-width:2.4;}
+    .an-knoten text{font-size:11px;fill:#e8e8e8;pointer-events:none;}
+    .an-knoten .an-zahl{font-size:9px;fill:#9a9a9a;}
+    .an-kante{fill:none;}
     .cesium-widget-credits,.cesium-viewer-toolbar,.cesium-viewer-animationContainer,
     .cesium-viewer-timelineContainer,.cesium-viewer-bottom{display:none!important;}
 
@@ -309,6 +334,18 @@
 <!-- Rendering Layer 2: CesiumJS (Planetarer Stoffwechsel → Zweite Natur) -->
 <div id="cc"></div>
 
+<!-- Analysefeld: der relationale Zusammenhang aus dem Modell, gefüllt
+     mit dem, was an dieser Position und in diesem Zeitfenster belegt ist -->
+<div id="analyse">
+  <div id="an-kopf">
+    ANALYSEFELD · <span id="an-titel">Relationen</span>
+    <span id="an-hinweis"></span>
+    <span id="an-zu" onclick="ze.toggleAnalyse()">✕</span>
+  </div>
+  <svg id="an-svg" preserveAspectRatio="xMidYMid meet"></svg>
+  <div id="an-griff" title="Ziehen: Globus und Analysefeld teilen sich die Höhe"></div>
+</div>
+
 <div id="ov"></div>
 
 <div id="ui">
@@ -396,6 +433,8 @@
       <div class="ov-status" id="kataster-status"></div>
       <div class="ob ov-side" id="tb-nachtlicht" onclick="ze.toggleNachtlicht()"><div class="obd"></div>Nachtlichter (VIIRS · NASA GIBS) ☾</div>
       <div class="ov-status" id="nachtlicht-status"></div>
+      <div class="ob ov-side" id="tb-analyse" onclick="ze.toggleAnalyse()"><div class="obd"></div>Analysefeld — Relationen an dieser Position ▤</div>
+      <div class="ov-status" id="analyse-status"></div>
       <div class="ob ov-side" id="tb-sats" onclick="ze.toggle('sats')"><div class="obd"></div>Satelliten (CelesTrak)</div>
       <div class="ov-status" id="sats-status"></div>
       <div class="ov-status" style="display:block">Straßen &amp; Bebauung (OSM): Regler „Zweite Natur" im Linsen-Panel</div>
@@ -3601,6 +3640,7 @@ class ZeroEarth {
       }
       const m = picked?.id?.zeMarker;
       if (!m) return;
+      this.markiereAnalyse(m.obj);
       const obj = m.obj, jahr = 2000 + Tideline.t;
       const J = j => j === null ? 'heute' : (j < -9999 ? `${(j/1e6).toFixed(0)} Ma` : j);
       const zeilen = (obj.aspekte || []).map(a => {
@@ -3672,6 +3712,7 @@ class ZeroEarth {
     await MODELL.laden();
     this.applyLabels();
     this._applyLicht();
+    Tideline.onChange(() => this.zeichneAnalyse());
     const st = this._readHash();
     if (st) this.setState(st); else this.setScale('solar');
   }
@@ -3858,6 +3899,161 @@ class ZeroEarth {
   cycleSprache() {
     LABELS.sprache = LABELS.sprache === 'de' ? 'en' : 'de';
     this.applyLabels();
+  }
+
+  /* ── ANALYSEFELD ────────────────────────────────────────────────
+     Der Globus sinkt ab, statt überdeckt zu werden: er behält seine
+     Bedienung, der Griff verteilt die Höhe. Gezeichnet wird der
+     relationale Zusammenhang aus dem Modell (FORMEN × RELATIONEN),
+     gefüllt mit den Marker-Objekten, die bei der aktuellen Masterzeit
+     aktiv sind. Eine Kante ohne Belege bleibt grau — sie behauptet
+     nichts. Knoten und Globus sind gekoppelt: Zeigen hebt die Objekte
+     hervor, Klicken fliegt sie an. */
+  toggleAnalyse() {
+    const auf = !document.body.classList.contains('analyse');
+    document.body.classList.toggle('analyse', auf);
+    document.getElementById('tb-analyse')?.classList.toggle('on', auf);
+    if (auf) { this._analyseGriff(); this.zeichneAnalyse(); }
+    this.cesiumV?.resize();
+    const st = document.getElementById('analyse-status');
+    if (st) st.textContent = auf ? 'Griff unter dem Feld zieht die Grenze' : '';
+  }
+
+  _analyseGriff() {
+    const griff = document.getElementById('an-griff');
+    if (!griff || griff._verdrahtet) return;
+    griff._verdrahtet = true;
+    const setzen = (y) => {
+      const h = Math.max(18, Math.min(72, (y / window.innerHeight) * 100));
+      document.documentElement.style.setProperty('--an-h', `${h}vh`);
+      this.cesiumV?.resize();
+      this.zeichneAnalyse();
+    };
+    let zieht = false;
+    griff.addEventListener('mousedown', e => { zieht = true; e.preventDefault(); });
+    window.addEventListener('mousemove', e => { if (zieht) setzen(e.clientY); });
+    window.addEventListener('mouseup', () => { zieht = false; });
+    griff.addEventListener('touchmove', e => setzen(e.touches[0].clientY), { passive: true });
+  }
+
+  /* Objekte je Marker-Ebene, aktiv bei der aktuellen Masterzeit. */
+  _analyseBelege() {
+    const jahr = 2000 + Tideline.t, belege = {};
+    for (const obj of MarkerLayer._cache ?? []) {
+      for (const a of obj.aspekte ?? []) {
+        if (jahr < a.jahr0 || (a.jahr1 !== null && jahr > a.jahr1)) continue;
+        (belege[a.ebene] ??= []).push(obj);
+      }
+    }
+    return belege;
+  }
+
+  zeichneAnalyse() {
+    const svg = document.getElementById('an-svg');
+    if (!svg || !document.body.classList.contains('analyse')) return;
+    const hinweis = document.getElementById('an-hinweis');
+    if (!MODELL.daten) {
+      svg.innerHTML = '';
+      if (hinweis) hinweis.innerHTML = `<span class="ds-err">Modell fehlt (${MODELL.fehler})</span>`;
+      return;
+    }
+    const M = MODELL.daten, sp = LABELS.sprache;
+    const belege = this._analyseBelege();
+
+    const reihen = [...M.voraussetzung].reverse();
+    const proReihe = {};
+    for (const [id, f] of Object.entries(M.formen)) (proReihe[f.bei.split('/')[0]] ??= []).push([id, f]);
+    const aktiv = reihen.filter(d => (proReihe[d] ?? []).length);
+
+    const B = 1000, KH = 42, ZH = 96, BR = 190;
+    const H = aktiv.length * ZH + 30;
+    svg.setAttribute('viewBox', `0 0 ${B} ${H}`);
+    const pos = {}, teile = [];
+    aktiv.forEach((d, r) => {
+      const dim = M.dimensionen[d], knoten = proReihe[d];
+      const y = 20 + r * ZH;
+      teile.push(`<text x="12" y="${y + KH / 2 + 4}" font-size="9" fill="${dim.farbe}" opacity=".8">${dim[sp].toUpperCase()}</text>`);
+      knoten.forEach(([id, f], i) => {
+        const x = 200 + i * ((B - 240) / Math.max(1, knoten.length));
+        pos[id] = { x: x + BR / 2, y, y2: y + KH };
+        const eb = f.ebene ?? null;
+        const n = eb ? (belege[eb]?.length ?? 0) : 0;
+        const belegt = n > 0;
+        const stand = belegt ? `${n} Objekt${n > 1 ? 'e' : ''}` : (eb ? 'unbelegt' : 'keine Datenebene');
+        teile.push(`<g class="an-knoten" data-form="${id}" data-ebene="${eb ?? ''}">
+          <rect x="${x}" y="${y}" width="${BR}" height="${KH}" rx="3"
+            fill="${belegt ? dim.farbe : 'rgba(255,255,255,.04)'}" fill-opacity="${belegt ? .3 : 1}"
+            stroke="${belegt ? dim.farbe : '#555'}"/>
+          <text x="${x + 10}" y="${y + 18}">${f[sp]}</text>
+          <text class="an-zahl" x="${x + 10}" y="${y + 33}">${stand}</text>
+        </g>`);
+      });
+    });
+    const farben = { fliesst: '#8fbc5a', wird_in_wert_gesetzt: '#e88080',
+                     eignet_an: '#e8b04a', entwertet: '#e88080', fasst: '#e8b04a' };
+    const kanten = [];
+    for (const r of M.relationen) {
+      if (r.typ === 'setzt_voraus') continue;          // die Schichtung zeigt die Reihenfolge
+      const a = pos[r.von], b = pos[r.nach];
+      if (!a || !b) continue;                          // Ziel ist eine Schicht, keine Form
+      const belegt = svgBelegt(r.von) && svgBelegt(r.nach);
+      const gestrichelt = r.typ === 'fasst' || r.typ === 'entwertet';
+      kanten.push(`<path class="an-kante" d="M ${a.x} ${a.y2} C ${a.x} ${a.y2 + 30}, ${b.x} ${b.y - 30}, ${b.x} ${b.y}"
+        stroke="${belegt ? farben[r.typ] : '#4a4a4a'}" stroke-width="${belegt ? 1.6 : 1}"
+        ${gestrichelt ? 'stroke-dasharray="4 3"' : ''} marker-end="url(#an-pfeil)">
+        <title>${M.relationstypen[r.typ][sp]}${belegt ? '' : ' · unbelegt'}</title></path>`);
+    }
+    function svgBelegt(id) {
+      const eb = M.formen[id]?.ebene;
+      return !!eb && (belege[eb]?.length ?? 0) > 0;
+    }
+    svg.innerHTML = `<defs><marker id="an-pfeil" viewBox="0 0 8 8" refX="7" refY="4"
+        markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#777"/></marker></defs>
+      ${kanten.join('\n')}${teile.join('\n')}`;
+
+    const objekte = Object.values(belege).flat().length;
+    if (hinweis) hinweis.textContent = MarkerLayer._cache
+      ? `${objekte} aktive Aspekte bei ${Math.round(2000 + Tideline.t)} CE · kuratiert, unvollständig`
+      : 'data/marker.json nicht geladen — Ebene der 2. Natur einschalten';
+
+    svg.querySelectorAll('.an-knoten').forEach(g => {
+      const eb = g.dataset.ebene;
+      g.addEventListener('mouseenter', () => this._analyseHervorheben(eb, true));
+      g.addEventListener('mouseleave', () => this._analyseHervorheben(eb, false));
+      g.addEventListener('click', () => this._analyseAnfliegen(eb));
+    });
+  }
+
+  /* Knoten ↔ Globus: Objekte dieser Ebene hervorheben. */
+  _analyseHervorheben(ebene, an) {
+    if (!ebene) return;
+    for (const l of this._markerLayers())
+      if (l.kind === ebene) l.ents.forEach(e => { if (e.billboard) e.billboard.scale = an ? 1.6 : 1; });
+  }
+
+  _analyseAnfliegen(ebene) {
+    const st = document.getElementById('analyse-status');
+    const ents = this._markerLayers().filter(l => l.kind === ebene).flatMap(l => l.ents);
+    if (!ents.length) {
+      if (st) st.textContent = 'keine sichtbaren Objekte — Ebene einschalten oder Zeit verschieben';
+      return;
+    }
+    this.cesiumV.flyTo(ents, { duration: 1.6 });
+    if (st) st.textContent = `${ents.length} Objekt(e) angeflogen`;
+  }
+
+  /* Umgekehrter Weg: ein angeklicktes Objekt markiert seine Knoten. */
+  markiereAnalyse(obj) {
+    const jahr = 2000 + Tideline.t;
+    const ebenen = (obj?.aspekte ?? []).filter(a =>
+      jahr >= a.jahr0 && (a.jahr1 === null || jahr <= a.jahr1)).map(a => a.ebene);
+    document.querySelectorAll('#an-svg .an-knoten').forEach(g =>
+      g.classList.toggle('markiert', ebenen.includes(g.dataset.ebene)));
+  }
+
+  _markerLayers() {
+    return [this.ueberbauLayer, this.rissLayer, this.bestaendeLayer, this.basisLayer,
+            this.wareLayer, this.matBestandLayer, this.pmProduktLayer].filter(Boolean);
   }
 
   /* ── Beleuchtung (Darstellung, keine Daten) ─────────────────────

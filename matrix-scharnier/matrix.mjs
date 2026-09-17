@@ -87,20 +87,40 @@ export const VORAUSSETZUNG = /** @type {const} */ ([
    Keine Dimensionen, sondern Gestalten INNERHALB der Matrix (Kapital-
    genese-Diagramm). Jede sitzt an einer Adresse — das ist die
    Verortungsarbeit, die die Matrix leistet.                            */
+/* ── Formen ───────────────────────────────────────────────────────────
+   Keine Dimensionen, sondern Gestalten INNERHALB der Matrix (Kapital-
+   genese-Diagramm). `bei` ist die Adresse, `ebene` die Marker-Ebene der
+   Plattform, sofern es für diese Form überhaupt einen Datenweg gibt.
+   Ohne `ebene` kann die Form nie belegt sein — das Analysefeld sagt das
+   dann auch so, statt sie als „unbelegt" zu führen.                     */
 export const FORMEN = /** @type {const} */ ({
   stoffstroeme:   { de: 'Stoff- und Energieströme + nichtmenschliche Arbeit',
-                    en: 'Material and Energy Flows + Nonhuman Labour', bei: 'planetarer_stoffwechsel/intern' },
-  materialbestand:{ de: 'Materialbestände', en: 'Material Stocks', bei: 'erste_natur/erdsystem' },
-  lohnarbeit:     { de: 'Lohnarbeit', en: 'Wage Labour', bei: 'erste_natur/basis' },
-  klassenstruktur:{ de: 'Gesellschaftliche Klassenstruktur', en: 'Social Class Structure', bei: 'erste_natur/basis' },
-  produktionsmittel:{ de: 'Produktionsmittel', en: 'Means of Production', bei: 'gesellschaftlicher_stoffwechsel/mat_pm' },
-  gebrauchswert:  { de: 'Gebrauchswert', en: 'Use Value', bei: 'gesellschaftlicher_stoffwechsel/mat_pm' },
-  ware:           { de: 'Ware / Mehrwert', en: 'Commodity / Added Value', bei: 'zweite_natur/konstruierte_wirklichkeit' },
-  kapital:        { de: 'Kapital', en: 'Capital', bei: 'zweite_natur/ueberbau' },
-  mehrwert:       { de: 'Mehrwert', en: 'Surplus Value', bei: 'zweite_natur/ueberbau' },
-  integraler_staat:{ de: 'Integraler Staat', en: 'Integral State', bei: 'zweite_natur/ueberbau' },
-  produktionsweise:{ de: 'Produktions- und Distributionsweise', en: 'Mode of Production / Distribution', bei: 'zweite_natur/ueberbau' },
-  abfall:         { de: 'Abfall', en: 'Waste', bei: 'erste_natur/erdsystem' },
+                    en: 'Material and Energy Flows + Nonhuman Labour',
+                    bei: 'planetarer_stoffwechsel/intern', ebene: 'pm' },
+  materialbestand:{ de: 'Materialbestände', en: 'Material Stocks',
+                    bei: 'erste_natur/erdsystem', ebene: 'erste_natur' },
+  lohnarbeit:     { de: 'Lohnarbeit', en: 'Wage Labour',
+                    bei: 'erste_natur/basis', ebene: null },
+  klassenstruktur:{ de: 'Gesellschaftliche Klassenstruktur', en: 'Social Class Structure',
+                    bei: 'erste_natur/basis', ebene: 'basis' },
+  produktionsmittel:{ de: 'Produktionsmittel', en: 'Means of Production',
+                    bei: 'gesellschaftlicher_stoffwechsel/mat_pm', ebene: 'bestaende' },
+  gebrauchswert:  { de: 'Gebrauchswert', en: 'Use Value',
+                    bei: 'gesellschaftlicher_stoffwechsel/mat_pm', ebene: null },
+  ware:           { de: 'Ware / Mehrwert', en: 'Commodity / Added Value',
+                    bei: 'zweite_natur/konstruierte_wirklichkeit', ebene: 'ware' },
+  kapital:        { de: 'Kapital', en: 'Capital',
+                    bei: 'zweite_natur/ueberbau', ebene: null },
+  mehrwert:       { de: 'Mehrwert', en: 'Surplus Value',
+                    bei: 'zweite_natur/ueberbau', ebene: null },
+  integraler_staat:{ de: 'Integraler Staat', en: 'Integral State',
+                    bei: 'zweite_natur/ueberbau', ebene: 'ueberbau' },
+  produktionsweise:{ de: 'Produktions- und Distributionsweise', en: 'Mode of Production / Distribution',
+                    bei: 'zweite_natur/ueberbau', ebene: null },
+  symbolordnung:  { de: 'Symbolische Ordnung', en: 'Symbolic Order',
+                    bei: 'zweite_natur/riss', ebene: 'riss' },
+  abfall:         { de: 'Abfall', en: 'Waste',
+                    bei: 'erste_natur/erdsystem', ebene: null },
 });
 
 /* ── Relationen ───────────────────────────────────────────────────────
@@ -132,6 +152,7 @@ export const RELATIONEN = [
     hinweis: 'devaluation of use value for reproduction' },
   { von: 'produktionsmittel', nach: 'abfall',          typ: 'fliesst' },
   { von: 'integraler_staat', nach: 'klassenstruktur',  typ: 'fasst' },
+  { von: 'symbolordnung',   nach: 'klassenstruktur',  typ: 'fasst' },
   { von: 'integraler_staat', nach: 'kapital',          typ: 'fasst' },
   { von: 'produktionsweise', nach: 'produktionsmittel', typ: 'fasst' },
 ];
