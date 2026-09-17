@@ -1,0 +1,39 @@
+flowchart TB
+  subgraph zweite_natur["Second Nature"]
+    ware["Commodity / Added Value"]
+    kapital["Capital"]
+    mehrwert["Surplus Value"]
+    integraler_staat["Integral State"]
+    produktionsweise["Mode of Production / Distribution"]
+  end
+  subgraph gesellschaftlicher_stoffwechsel["Social Metabolism"]
+    produktionsmittel["Means of Production"]
+    gebrauchswert["Use Value"]
+  end
+  subgraph erste_natur["First Nature"]
+    materialbestand["Material Stocks"]
+    lohnarbeit["Wage Labour"]
+    klassenstruktur["Social Class Structure"]
+    abfall["Waste"]
+  end
+  subgraph planetarer_stoffwechsel["Planetary Metabolism"]
+    stoffstroeme["Material and Energy Flows + Nonhuman Labour"]
+  end
+  subgraph nullnatur["ZeroNature"]
+    nullnatur_leer[" "]
+  end
+  stoffstroeme -->|"flows into"| materialbestand["Material Stocks"]
+  stoffstroeme -->|"flows into"| produktionsmittel["Means of Production"]
+  materialbestand -->|"flows into"| produktionsmittel["Means of Production"]
+  lohnarbeit -->|"flows into"| produktionsmittel["Means of Production"]
+  produktionsmittel -->|"flows into"| gebrauchswert["Use Value"]
+  gebrauchswert -->|"is valorized as"| ware["Commodity / Added Value"]
+  ware -->|"is valorized as"| kapital["Capital"]
+  klassenstruktur -->|"appropriates"| mehrwert["Surplus Value"]
+  mehrwert -->|"flows into"| kapital["Capital"]
+  ware -.->|"devalues"| erste_natur_unterbau["Ecological Basis"]
+  produktionsmittel -->|"flows into"| abfall["Waste"]
+  integraler_staat -.->|"institutionally frames"| klassenstruktur["Social Class Structure"]
+  integraler_staat -.->|"institutionally frames"| kapital["Capital"]
+  produktionsweise -.->|"institutionally frames"| produktionsmittel["Means of Production"]
+  %% erzeugt aus matrix.mjs — nicht von Hand ändern

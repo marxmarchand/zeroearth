@@ -1,0 +1,39 @@
+flowchart TB
+  subgraph zweite_natur["Zweite Natur"]
+    ware["Ware / Mehrwert"]
+    kapital["Kapital"]
+    mehrwert["Mehrwert"]
+    integraler_staat["Integraler Staat"]
+    produktionsweise["Produktions- und Distributionsweise"]
+  end
+  subgraph gesellschaftlicher_stoffwechsel["Gesellschaftlicher Stoffwechsel"]
+    produktionsmittel["Produktionsmittel"]
+    gebrauchswert["Gebrauchswert"]
+  end
+  subgraph erste_natur["Erste Natur"]
+    materialbestand["Materialbestände"]
+    lohnarbeit["Lohnarbeit"]
+    klassenstruktur["Gesellschaftliche Klassenstruktur"]
+    abfall["Abfall"]
+  end
+  subgraph planetarer_stoffwechsel["Planetarer Stoffwechsel"]
+    stoffstroeme["Stoff- und Energieströme + nichtmenschliche Arbeit"]
+  end
+  subgraph nullnatur["NullNatur"]
+    nullnatur_leer[" "]
+  end
+  stoffstroeme -->|"fließt in"| materialbestand["Materialbestände"]
+  stoffstroeme -->|"fließt in"| produktionsmittel["Produktionsmittel"]
+  materialbestand -->|"fließt in"| produktionsmittel["Produktionsmittel"]
+  lohnarbeit -->|"fließt in"| produktionsmittel["Produktionsmittel"]
+  produktionsmittel -->|"fließt in"| gebrauchswert["Gebrauchswert"]
+  gebrauchswert -->|"wird in Wert gesetzt als"| ware["Ware / Mehrwert"]
+  ware -->|"wird in Wert gesetzt als"| kapital["Kapital"]
+  klassenstruktur -->|"eignet an"| mehrwert["Mehrwert"]
+  mehrwert -->|"fließt in"| kapital["Kapital"]
+  ware -.->|"entwertet"| erste_natur_unterbau["Unterbau"]
+  produktionsmittel -->|"fließt in"| abfall["Abfall"]
+  integraler_staat -.->|"fasst institutionell"| klassenstruktur["Gesellschaftliche Klassenstruktur"]
+  integraler_staat -.->|"fasst institutionell"| kapital["Kapital"]
+  produktionsweise -.->|"fasst institutionell"| produktionsmittel["Produktionsmittel"]
+  %% erzeugt aus matrix.mjs — nicht von Hand ändern

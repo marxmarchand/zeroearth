@@ -1,0 +1,304 @@
+{
+  "erzeugt": "2026-09-17T18:58:49.136Z",
+  "hinweis": "erzeugt aus matrix-scharnier/matrix.mjs — nicht von Hand ändern",
+  "voraussetzung": [
+    "nullnatur",
+    "planetarer_stoffwechsel",
+    "erste_natur",
+    "gesellschaftlicher_stoffwechsel",
+    "zweite_natur"
+  ],
+  "zeit": {
+    "de": "Zeit / (Raum)",
+    "en": "Time / (Space)",
+    "wert": {
+      "de": "relativ",
+      "en": "relative"
+    }
+  },
+  "dimensionen": {
+    "zweite_natur": {
+      "de": "Zweite Natur",
+      "en": "Second Nature",
+      "farbe": "#e8807f",
+      "strata": {
+        "riss": {
+          "de": "R.I.S.System",
+          "en": "Rel.-Ideo-Symbolic System"
+        },
+        "ueberbau": {
+          "de": "Institutionalisierter Überbau",
+          "en": "Institutionalized Superstructure"
+        },
+        "konstruierte_wirklichkeit": {
+          "de": "Konstruierte Wirklichkeit",
+          "en": "Constructed Reality"
+        }
+      }
+    },
+    "gesellschaftlicher_stoffwechsel": {
+      "de": "Gesellschaftlicher Stoffwechsel",
+      "en": "Social Metabolism",
+      "farbe": "#f2e35a",
+      "strata": {
+        "immat_pm": {
+          "de": "Immaterielle Produktionsmittel",
+          "en": "Immaterial Means of Production"
+        },
+        "mat_pm": {
+          "de": "Materielle Produktionsmittel",
+          "en": "Material Means of Production"
+        }
+      }
+    },
+    "erste_natur": {
+      "de": "Erste Natur",
+      "en": "First Nature",
+      "farbe": "#a8cf74",
+      "strata": {
+        "basis": {
+          "de": "Gesellschaftliche Basis",
+          "en": "Socially Base"
+        },
+        "unterbau": {
+          "de": "Unterbau",
+          "en": "Ecological Basis"
+        },
+        "erdsystem": {
+          "de": "Erdsystem",
+          "en": "Earth (Sub)System"
+        }
+      }
+    },
+    "planetarer_stoffwechsel": {
+      "de": "Planetarer Stoffwechsel",
+      "en": "Planetary Metabolism",
+      "farbe": "#f2e35a",
+      "strata": {
+        "intern": {
+          "de": "Interne Prozesse",
+          "en": "Internal Processes"
+        },
+        "extern": {
+          "de": "Externe Prozesse",
+          "en": "External Processes"
+        }
+      }
+    },
+    "nullnatur": {
+      "de": "NullNatur",
+      "en": "ZeroNature",
+      "farbe": "#2e2a6b",
+      "strata": {
+        "solar": {
+          "de": "Solarer Raum · Ekliptik",
+          "en": "Solar System"
+        },
+        "interstellar": {
+          "de": "Interstellarer Raum",
+          "en": "Intergalactic / Interstellar Space"
+        },
+        "kosmologisch": {
+          "de": "Universell / Fundamental",
+          "en": "Universal / Fundamental"
+        }
+      }
+    }
+  },
+  "ebenen": {
+    "pm": "planetarer_stoffwechsel/intern",
+    "erste_natur": "erste_natur/erdsystem",
+    "basis": "erste_natur/basis",
+    "bestaende": "gesellschaftlicher_stoffwechsel/mat_pm",
+    "ware": null,
+    "ueberbau": "zweite_natur/ueberbau",
+    "riss": "zweite_natur/riss"
+  },
+  "formen": {
+    "stoffstroeme": {
+      "de": "Stoff- und Energieströme + nichtmenschliche Arbeit",
+      "en": "Material and Energy Flows + Nonhuman Labour",
+      "bei": "planetarer_stoffwechsel/intern"
+    },
+    "materialbestand": {
+      "de": "Materialbestände",
+      "en": "Material Stocks",
+      "bei": "erste_natur/erdsystem"
+    },
+    "lohnarbeit": {
+      "de": "Lohnarbeit",
+      "en": "Wage Labour",
+      "bei": "erste_natur/basis"
+    },
+    "klassenstruktur": {
+      "de": "Gesellschaftliche Klassenstruktur",
+      "en": "Social Class Structure",
+      "bei": "erste_natur/basis"
+    },
+    "produktionsmittel": {
+      "de": "Produktionsmittel",
+      "en": "Means of Production",
+      "bei": "gesellschaftlicher_stoffwechsel/mat_pm"
+    },
+    "gebrauchswert": {
+      "de": "Gebrauchswert",
+      "en": "Use Value",
+      "bei": "gesellschaftlicher_stoffwechsel/mat_pm"
+    },
+    "ware": {
+      "de": "Ware / Mehrwert",
+      "en": "Commodity / Added Value",
+      "bei": "zweite_natur/konstruierte_wirklichkeit"
+    },
+    "kapital": {
+      "de": "Kapital",
+      "en": "Capital",
+      "bei": "zweite_natur/ueberbau"
+    },
+    "mehrwert": {
+      "de": "Mehrwert",
+      "en": "Surplus Value",
+      "bei": "zweite_natur/ueberbau"
+    },
+    "integraler_staat": {
+      "de": "Integraler Staat",
+      "en": "Integral State",
+      "bei": "zweite_natur/ueberbau"
+    },
+    "produktionsweise": {
+      "de": "Produktions- und Distributionsweise",
+      "en": "Mode of Production / Distribution",
+      "bei": "zweite_natur/ueberbau"
+    },
+    "abfall": {
+      "de": "Abfall",
+      "en": "Waste",
+      "bei": "erste_natur/erdsystem"
+    }
+  },
+  "relationen": [
+    {
+      "von": "planetarer_stoffwechsel",
+      "nach": "nullnatur",
+      "typ": "setzt_voraus"
+    },
+    {
+      "von": "erste_natur",
+      "nach": "planetarer_stoffwechsel",
+      "typ": "setzt_voraus"
+    },
+    {
+      "von": "gesellschaftlicher_stoffwechsel",
+      "nach": "erste_natur",
+      "typ": "setzt_voraus"
+    },
+    {
+      "von": "zweite_natur",
+      "nach": "gesellschaftlicher_stoffwechsel",
+      "typ": "setzt_voraus"
+    },
+    {
+      "von": "stoffstroeme",
+      "nach": "materialbestand",
+      "typ": "fliesst"
+    },
+    {
+      "von": "stoffstroeme",
+      "nach": "produktionsmittel",
+      "typ": "fliesst"
+    },
+    {
+      "von": "materialbestand",
+      "nach": "produktionsmittel",
+      "typ": "fliesst"
+    },
+    {
+      "von": "lohnarbeit",
+      "nach": "produktionsmittel",
+      "typ": "fliesst"
+    },
+    {
+      "von": "produktionsmittel",
+      "nach": "gebrauchswert",
+      "typ": "fliesst"
+    },
+    {
+      "von": "gebrauchswert",
+      "nach": "ware",
+      "typ": "wird_in_wert_gesetzt"
+    },
+    {
+      "von": "ware",
+      "nach": "kapital",
+      "typ": "wird_in_wert_gesetzt"
+    },
+    {
+      "von": "klassenstruktur",
+      "nach": "mehrwert",
+      "typ": "eignet_an"
+    },
+    {
+      "von": "mehrwert",
+      "nach": "kapital",
+      "typ": "fliesst"
+    },
+    {
+      "von": "ware",
+      "nach": "unterbau",
+      "typ": "entwertet",
+      "hinweis": "devaluation of use value for reproduction"
+    },
+    {
+      "von": "produktionsmittel",
+      "nach": "abfall",
+      "typ": "fliesst"
+    },
+    {
+      "von": "integraler_staat",
+      "nach": "klassenstruktur",
+      "typ": "fasst"
+    },
+    {
+      "von": "integraler_staat",
+      "nach": "kapital",
+      "typ": "fasst"
+    },
+    {
+      "von": "produktionsweise",
+      "nach": "produktionsmittel",
+      "typ": "fasst"
+    }
+  ],
+  "relationstypen": {
+    "setzt_voraus": {
+      "de": "setzt voraus",
+      "en": "presupposes",
+      "stil": "ontologisch"
+    },
+    "fliesst": {
+      "de": "fließt in",
+      "en": "flows into",
+      "stil": "stofflich"
+    },
+    "wird_in_wert_gesetzt": {
+      "de": "wird in Wert gesetzt als",
+      "en": "is valorized as",
+      "stil": "wertform"
+    },
+    "eignet_an": {
+      "de": "eignet an",
+      "en": "appropriates",
+      "stil": "aneignung"
+    },
+    "entwertet": {
+      "de": "entwertet",
+      "en": "devalues",
+      "stil": "aneignung"
+    },
+    "fasst": {
+      "de": "fasst institutionell",
+      "en": "institutionally frames",
+      "stil": "ueberbau"
+    }
+  }
+}

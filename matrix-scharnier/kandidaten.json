@@ -1,0 +1,17 @@
+{
+  "kandidaten": [
+    {
+      "id": "ruhrkohle",
+      "label": "Ruhrkohle",
+      "lon": 7.2, "lat": 51.5,
+      "quelle": "Beispiel — Text durch belegte Quelle ersetzen",
+      "text": "Steinkohle im Ruhrgebiet, entstanden im Karbon. Ab etwa 1850 industriell abgebaut und als Energieträger der Schwerindustrie genutzt, auf Märkten gehandelt; 2018 Ende des Steinkohlebergbaus.",
+      "zeitfenster": {
+        "pm":          [-300000000, null],
+        "erste_natur": [-300000000, null],
+        "bestaende":   [1850, 2018],
+        "ware":        [1850, 2018]
+      }
+    }
+  ]
+}

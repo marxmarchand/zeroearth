@@ -1,0 +1,29 @@
+name: Modell
+# Prüft bei jedem Push: Stimmen Plattform und Modell überein, und sind
+# data/matrix.json und die Diagramme aus matrix.mjs neu erzeugt?
+on:
+  push: { branches: [main] }
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pruefen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Adressen von Modell und Plattform vergleichen
+        run: node pruefe.mjs ../index.html
+        working-directory: matrix-scharnier
+        continue-on-error: true      # solange Schichten der Stoffwechsel unbeschriftet sind
+      - name: Export und Diagramme neu erzeugen
+        run: |
+          node export.mjs ../data/matrix.json
+          node diagramm.mjs
+        working-directory: matrix-scharnier
+      - name: Abgleich — erzeugte Dateien müssen dem Modell entsprechen
+        run: |
+          git diff --stat -- data/matrix.json matrix-scharnier/diagramme
+          git diff --quiet -- matrix-scharnier/diagramme || {
+            echo "::error::Diagramme weichen vom Modell ab — 'node diagramm.mjs' laufen lassen und committen"; exit 1; }

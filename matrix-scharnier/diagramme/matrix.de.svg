@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="592" viewBox="0 0 780 592" font-family="Helvetica, Arial, sans-serif">
+<rect width="780" height="592" fill="#fff"/>
+<!-- erzeugt aus matrix.mjs — nicht von Hand ändern -->
+<rect x="16" y="16" width="748" height="110" fill="#e8807f" stroke="#111" stroke-width="2.5"/>
+<text transform="translate(30,71) rotate(-90)" text-anchor="middle" dominant-baseline="hanging" font-size="11" font-weight="600" fill="#111">Zweite Natur</text>
+<rect x="56" y="26" width="698" height="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<text x="66" y="42" font-size="12" fill="#111">R.I.S.System</text>
+<text x="744" y="42" font-size="9" fill="#777" text-anchor="end">zweite_natur/riss</text>
+<rect x="56" y="56" width="698" height="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<text x="66" y="72" font-size="12" fill="#111">Institutionalisierter Überbau</text>
+<text x="744" y="72" font-size="9" fill="#777" text-anchor="end">zweite_natur/ueberbau</text>
+<rect x="56" y="86" width="698" height="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<text x="66" y="102" font-size="12" fill="#111">Konstruierte Wirklichkeit</text>
+<text x="744" y="102" font-size="9" fill="#777" text-anchor="end">zweite_natur/konstruierte_wirklichkeit</text>
+<rect x="16" y="134" width="748" height="80" fill="#f2e35a" stroke="#111" stroke-width="2.5"/>
+<text transform="translate(30,174) rotate(-90)" text-anchor="middle" dominant-baseline="hanging" font-size="10" font-weight="600" fill="#111">Gesellschaftlicher</text>
+<text transform="translate(42,174) rotate(-90)" text-anchor="middle" dominant-baseline="hanging" font-size="10" font-weight="600" fill="#111">Stoffwechsel</text>
+<rect x="56" y="144" width="698" height="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<text x="66" y="160" font-size="12" fill="#111">Immaterielle Produktionsmittel</text>
+<text x="744" y="160" font-size="9" fill="#777" text-anchor="end">gesellschaftlicher_stoffwechsel/immat_pm</text>
+<rect x="56" y="174" width="698" height="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<text x="66" y="190" font-size="12" fill="#111">Materielle Produktionsmittel</text>
+<text x="744" y="190" font-size="9" fill="#777" text-anchor="end">gesellschaftlicher_stoffwechsel/mat_pm</text>
+<rect x="16" y="222" width="748" height="110" fill="#a8cf74" stroke="#111" stroke-width="2.5"/>
+<text transform="translate(30,277) rotate(-90)" text-anchor="middle" dominant-baseline="hanging" font-size="11" font-weight="600" fill="#111">Erste Natur</text>
+<rect x="56" y="232" width="698" height="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<text x="66" y="248" font-size="12" fill="#111">Gesellschaftliche Basis</text>
+<text x="744" y="248" font-size="9" fill="#777" text-anchor="end">erste_natur/basis</text>
+<rect x="56" y="262" width="698" height="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<text x="66" y="278" font-size="12" fill="#111">Unterbau</text>
+<text x="744" y="278" font-size="9" fill="#777" text-anchor="end">erste_natur/unterbau</text>
+<rect x="56" y="292" width="698" height="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<text x="66" y="308" font-size="12" fill="#111">Erdsystem</text>
+<text x="744" y="308" font-size="9" fill="#777" text-anchor="end">erste_natur/erdsystem</text>
+<rect x="16" y="340" width="748" height="80" fill="#f2e35a" stroke="#111" stroke-width="2.5"/>
+<text transform="translate(30,380) rotate(-90)" text-anchor="middle" dominant-baseline="hanging" font-size="10" font-weight="600" fill="#111">Planetarer</text>
+<text transform="translate(42,380) rotate(-90)" text-anchor="middle" dominant-baseline="hanging" font-size="10" font-weight="600" fill="#111">Stoffwechsel</text>
+<rect x="56" y="350" width="698" height="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<text x="66" y="366" font-size="12" fill="#111">Interne Prozesse</text>
+<text x="744" y="366" font-size="9" fill="#777" text-anchor="end">planetarer_stoffwechsel/intern</text>
+<rect x="56" y="380" width="698" height="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<text x="66" y="396" font-size="12" fill="#111">Externe Prozesse</text>
+<text x="744" y="396" font-size="9" fill="#777" text-anchor="end">planetarer_stoffwechsel/extern</text>
+<rect x="16" y="428" width="748" height="110" fill="#2e2a6b" stroke="#111" stroke-width="2.5"/>
+<text transform="translate(30,483) rotate(-90)" text-anchor="middle" dominant-baseline="hanging" font-size="11" font-weight="600" fill="#fff">NullNatur</text>
+<rect x="56" y="438" width="698" height="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<text x="66" y="454" font-size="12" fill="#111">Solarer Raum · Ekliptik</text>
+<text x="744" y="454" font-size="9" fill="#777" text-anchor="end">nullnatur/solar</text>
+<rect x="56" y="468" width="698" height="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<text x="66" y="484" font-size="12" fill="#111">Interstellarer Raum</text>
+<text x="744" y="484" font-size="9" fill="#777" text-anchor="end">nullnatur/interstellar</text>
+<rect x="56" y="498" width="698" height="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<text x="66" y="514" font-size="12" fill="#111">Universell / Fundamental</text>
+<text x="744" y="514" font-size="9" fill="#777" text-anchor="end">nullnatur/kosmologisch</text>
+<rect x="16" y="546" width="748" height="30" fill="#111"/>
+<text x="30" y="566" font-size="12" fill="#fff">Zeit / (Raum) · relativ</text>
+</svg>

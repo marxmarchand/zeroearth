@@ -1,0 +1,15 @@
+node_modules/
+.DS_Store
+
+# Rohdaten und Rasterbestände gehören nicht ins Repository
+oberflächen/
+*.zip
+rohdaten.json
+data/*.tif
+data/*.nc
+
+# niemals veröffentlichen
+*ssl-bundle*
+*.pem
+*.key
+.env

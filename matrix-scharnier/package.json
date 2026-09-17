@@ -1,0 +1,14 @@
+{
+  "name": "matrix-scharnier",
+  "private": true,
+  "type": "module",
+  "description": "Matrix gesellschaftlicher Naturverhältnisse ↔ TypeSafe: Verortung von Kandidaten als Marker-Vorschläge",
+  "scripts": {
+    "trocken": "node verorten.mjs --trocken",
+    "verorten": "node verorten.mjs"
+  },
+  "dependencies": {
+    "@typesafe-ai/sdk": "^0.6.0"
+  },
+  "engines": { "node": ">=20" }
+}
