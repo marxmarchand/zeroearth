@@ -1,7 +1,7 @@
 # ZEIT_RAUM.md
 ## Referenzspezifikation für Zeit- und Raumkoordinaten in zeroearth.io
 
-**Status:** Festlegung v1.0 · Stand Juni 2026
+**Status:** Festlegung v1.0 · Stand Juni 2026 · §2.4 ergänzt 20.09.2026 (Entwurf, Entscheidung Max)
 **Geltung:** verbindlich für alle Plattform-Versionen ab v0.6
 **Theoretische Grundlage:** Marchand 2026a (ZeroNature/FirstNature), Abschnitt 2.4 & 3.3; Glossar v3 (Einträge `zeit`, `dimtemp`, `masterzeit`, `matrixschnitt`, `beobpos`, `raster`, `rastereingang`)
 
@@ -117,6 +117,41 @@ Prinzip:    Küstenlinien, Eisbedeckung, Siedlungsverteilung etc. werden nicht
             als Polygone approximiert, sondern als Funktionen auf dem Raster
             berechnet. Jeder Punkt (lat, lon, t) hat einen Zustand in jeder Dimension.
 ```
+
+### 2.4 Zelle und Koordinate (v1.4, 20.09.2026)
+
+Kanonisch ist die **Koordinate**, nicht die Zelle. Gespeichert wird `(lat, lon, t)`;
+eine Zelle wird daraus **berechnet**. Das Raster ist damit eine Beschreibung, so wie
+die Dimensionen Linsen sind und keine Orte (§8.2) — es gibt keinen Zustand „Zelle",
+den man pflegen müsste, und keine zwei Raster, die auseinanderlaufen können.
+
+Die Stufenleiter ist an die Beobachtungshöhen gebunden, jede Stufe halbiert die vorige:
+
+```
+Stufe  0   8°       Erde + Mond
+       1   4°       Planet
+       2   2°       Kontinent
+       4   0.5°     Region
+       5   0.25°    (Referenzauflösung §2.2 — PaleoMIST)
+       7   0.0625°  Stadt
+      11   0.0039°  Straße        (~430 m am Äquator)
+```
+
+Zell-ID: `g<Stufe>:<Zeile>/<Spalte>`, Zeile ab −90°, Spalte ab −180°. Die Schachtelung
+ist exakt: jede Zelle hat genau eine Elternzelle und vier Kinder. Implementierung:
+`matrix-scharnier/zellen.mjs` — **dieselbe** Funktion in Plattform und Auswertung,
+damit Mensch und Maschine dieselben Zellen sehen. Die gezeichneten Rasterlinien sind
+die Grenzen der aktiven Stufe: was sichtbar ist, ist das, was gerechnet wird.
+
+**Verzerrung, ausgewiesen statt versteckt.** Das Gradnetz ist nicht flächengleich:
+eine 0,25°-Zelle misst am Äquator 772,8 km², bei 51,5° N noch 482,4 km² — Faktor 0,62.
+Für Zählungen ist das folgenlos, für jede Größe *pro Fläche* nicht. Deshalb trägt jede
+Dichte ihre Bezugsfläche mit (`proFlaeche` → `{wert, einheit, bezugsflaeche_km2, zelle}`);
+eine nackte Dichte ohne Bezugsfläche ist im Sinne von §0 kein zulässiger Wert.
+
+**Verdichten beim Herauszoomen.** Sätze fallen in die gröbere Zelle zusammen, die
+Aggregation ist gerechnet. Eine leere Zelle bleibt leer — es wird nicht über Lücken
+hinweg interpoliert.
 
 ### 2.3 Die Brücke zwischen den Raumsystemen
 
