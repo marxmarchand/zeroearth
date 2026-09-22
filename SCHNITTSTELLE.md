@@ -31,7 +31,18 @@ Denkmalstatus. Vier Achsen, ein Koordinatensystem:
   Anzeigeformen (a BP, Ma, CE) sind Konversionen, siehe ZEIT_RAUM §1.
 - **wo** — Adresse im Modell, `dimension/schicht`. Gültige Werte stehen in `matrix.json`.
 - **was** — der Sachverhalt.
-- **woher** — Herkunft. Pflicht. Ohne Herkunft kein Satz.
+- **woher** — Herkunft. Pflicht. Ohne Herkunft kein Satz. Dazu gehört `art`:
+  `beobachtung`, `rekonstruktion`, `modell` oder `kuratiert`. Ein Modellwert nennt
+  zusätzlich Modell, Version, Szenario und Lauf:
+
+  ```json
+  "woher": { "art": "modell", "modell": "MAgPIE", "version": "4.x",
+             "szenario": "SSP2", "lauf": "…", "lizenz": "AGPL-3.0" }
+  ```
+
+  Ein Messwert und eine Projektion dürfen nie gleich aussehen — weder im Satz noch in
+  der Darstellung. Welche Quellen es gibt und welcher Art sie sind, steht in
+  [QUELLEN.md](QUELLEN.md).
 
 Dieselbe Koordinate trägt mehrere Sätze an verschiedenen Adressen — das ist der
 **Matrixschnitt** und der Normalfall, keine Ausnahme: der Bodenrichtwert liegt an
