@@ -1963,6 +1963,13 @@ const MODELL = {
     }
     return true;
   },
+  /* Schicht-Eintrag (Beschriftung, Text, Zeitskala) über ihre ID. */
+  schicht(id) {
+    if (!this.daten) return null;
+    for (const [d, m] of Object.entries(this.daten.dimensionen))
+      if (m.strata?.[id]) return { ...m.strata[id], dimension: d };
+    return null;
+  },
   /* Adresse → Beschriftung, für Marker und Info-Flächen. */
   label(adresse, sprache = LABELS.sprache) {
     if (!this.daten) return adresse;
@@ -4125,6 +4132,12 @@ class ZeroEarth {
     });
     document.querySelectorAll('.sub-head').forEach(el => {
       el.textContent = LABELS.common.subHeads[el.dataset.sub] || '';
+      const b = MODELL.schicht(el.dataset.sub);
+      if (b?.info) {
+        el.style.cursor = 'help';
+        el.title = `${b.info[LABELS.sprache]}\n\nZeitskala: ${b.zeitskala ?? '—'}`;
+        el.onclick = () => this.zeigeSchicht(el.dataset.sub);
+      }
     });
     const vn = document.getElementById('vocab-name');
     if (vn) vn.textContent = LABELS.sets[LABELS.active].name;
@@ -4139,6 +4152,21 @@ class ZeroEarth {
     const keys = Object.keys(LABELS.sets);
     LABELS.active = keys[(keys.indexOf(LABELS.active) + 1) % keys.length];
     this.applyLabels();
+  }
+
+  /* Text einer Schicht in die Infofläche — aus dem Modell, nicht aus dem HTML.
+     Die Texte stammen aus der Globe.gl-Fassung (archiv/index-vorher.html). */
+  zeigeSchicht(id) {
+    const b = MODELL.schicht(id);
+    if (!b) return;
+    const dim = MODELL.daten.dimensionen[b.dimension];
+    document.querySelector('#ip .il').textContent =
+      `${dim[LABELS.sprache]} · ${b.dimension}/${id}`;
+    document.getElementById('i-title').textContent = b[LABELS.sprache];
+    document.getElementById('i-desc').textContent = b.info?.[LABELS.sprache] ?? '';
+    document.getElementById('i-meta').textContent =
+      b.zeitskala ? `${LABELS.sprache === 'de' ? 'charakteristische Zeitskala' : 'characteristic timescale'} ${b.zeitskala}` : '';
+    document.getElementById('i-extra').innerHTML = '';
   }
 
   cycleSprache() {

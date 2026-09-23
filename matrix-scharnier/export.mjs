@@ -14,7 +14,8 @@ const modell = {
   zeit: ZEIT,
   dimensionen: Object.fromEntries(Object.entries(MATRIX).map(([d, m]) => [d, {
     de: m.de, en: m.en, farbe: m.farbe,
-    strata: Object.fromEntries(Object.entries(m.strata).map(([s, b]) => [s, { de: b.de, en: b.en }])),
+    strata: Object.fromEntries(Object.entries(m.strata).map(([s, b]) => [s,
+      { de: b.de, en: b.en, ...(b.info && { info: b.info }), ...(b.zeitskala && { zeitskala: b.zeitskala }) }])),
   }])),
   ebenen: Object.fromEntries(Object.entries(EBENEN).map(([k, e]) => [k, e.adresse])),
   formen: FORMEN,
