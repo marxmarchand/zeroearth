@@ -20,6 +20,7 @@ abgeleitet · `modell` — gerechnet · `kuratiert` — von Hand zusammengetrage
 | NOAA SWPC | Sonnenwind | `planetarer_stoffwechsel/extern` | live | beobachtung | gemeinfrei |
 | CelesTrak TLE | Satellitenbahnen | `zweite_natur/konstruierte_wirklichkeit` | live | beobachtung | frei |
 | USGS | Seismik | `erste_natur/erdsystem` | live | beobachtung | gemeinfrei |
+| NASA GIBS (VIIRS True Color) | Satellitenbild des Tages | `erste_natur/erdsystem` | 250 m, täglich | beobachtung | frei, Namensnennung |
 | NASA GIBS (VIIRS DNB) | Nachtlichter | `zweite_natur/konstruierte_wirklichkeit` | 500 m, täglich | beobachtung | frei, Namensnennung |
 | Natural Earth 110 m | Landumrisse (Equal-Earth-Karte) | Darstellung | 110 m | beobachtung | gemeinfrei, `data/land-110m.json` |
 | OSM | Straßen, Bebauung | `zweite_natur/konstruierte_wirklichkeit` | Objekt | beobachtung | ODbL |
@@ -31,6 +32,7 @@ abgeleitet · `modell` — gerechnet · `kuratiert` — von Hand zusammengetrage
 |---|---|---|---|---|---|
 | Wikidata | Objekte, Eigentum, Zeitfenster | mehrere | Objekt | kuratiert | CC0, SPARQL |
 | GBIF | Artvorkommen | `erste_natur/unterbau` | Objekt | beobachtung | CC BY / CC0 |
+| Wikidata (Institutionen) | Parlamente, Regierungssitze, Gerichte, Zentralbanken | `zweite_natur/ueberbau` | Objekt | kuratiert | CC0, SPARQL |
 | SWOT River Tides | Tidenamplitude und -klasse in Küstenflüssen | `erste_natur/erdsystem` | SWORD-Knoten (200 m) | rekonstruktion | CC BY 4.0, Zenodo 15223861 · 9 Shapefiles, 303,8 MB · abgeleitet über `adapter/gezeiten.py` |
 
 ## Bezugsnetze

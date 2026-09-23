@@ -457,10 +457,13 @@
     <div class="dim-sec" id="sec-gesellschaftlicher_stoffwechsel">
       <div class="dim-head" data-dim="gesellschaftlicher_stoffwechsel" title="Dimensionen sind Linsen, keine Orte — die Gliederung markiert typische Beobachtungshöhen"></div>
       <div class="dim-body">
+      <div class="sub-head" data-sub="mat_pm"></div>
       <div class="ob ov-side" id="tb-bestaende" onclick="ze.toggle('bestaende')"><div class="obd"></div>Bestände &amp; Mittel ⬠</div>
       <div class="ov-status" id="bestaende-status"></div>
       <div class="ob ov-side" id="tb-stroeme" onclick="ze.toggle('stroeme')"><div class="obd"></div>Netzströme (Waren · Kapital · Arbeit) →</div>
       <div class="ov-status" id="stroeme-status"></div>
+      <div class="sub-head" data-sub="immat_pm"></div>
+      <div class="ov-status" style="display:block">Wissen als Produktionsmittel — Kuratierung offen</div>
       </div>
     </div>
 
@@ -486,6 +489,8 @@
       <div class="ov-status" id="gewaesser-status"></div>
       <div class="ob ov-side" id="tb-gezeiten" onclick="ze.toggle('gezeiten')"><div class="obd"></div>Gezeiten in Küstenflüssen (SWOT) ≈</div>
       <div class="ov-status" id="gezeiten-status"></div>
+      <div class="ob ov-side" id="tb-satbild" onclick="ze.toggleSatbild()"><div class="obd"></div>Satellitenbild (VIIRS True Color · NASA GIBS) ▩</div>
+      <div class="ov-status" id="satbild-status"></div>
       <div class="ov-status" style="display:block">Klimazonen (Köppen): Regler „Erste Natur" im Linsen-Panel</div>
       </div>
     </div>
@@ -493,11 +498,13 @@
     <div class="dim-sec" id="sec-planetarer_stoffwechsel">
       <div class="dim-head" data-dim="planetarer_stoffwechsel" title="Dimensionen sind Linsen, keine Orte — die Gliederung markiert typische Beobachtungshöhen"></div>
       <div class="dim-body">
+      <div class="sub-head" data-sub="extern"></div>
       <div class="ob ov-side" id="tb-moon" onclick="ze.toggle('moon')"><div class="obd"></div>Mond · Phase &amp; Störgeometrie</div>
       <div class="ob ov-side" id="tb-tidal" onclick="ze.toggle('tidal')"><div class="obd"></div>Gezeitenkraft</div>
-      <div class="ob ov-side" id="tb-magfield" onclick="ze.toggle('magfield')"><div class="obd"></div>Magnetfeld (IGRF)</div>
       <div class="ob ov-side" id="tb-solarwind" onclick="ze.toggle('solarwind')"><div class="obd"></div>Sonnenwind (SWPC)</div>
       <div class="ov-status" id="sw-status"></div>
+      <div class="sub-head" data-sub="intern"></div>
+      <div class="ob ov-side" id="tb-magfield" onclick="ze.toggle('magfield')"><div class="obd"></div>Magnetfeld (IGRF)</div>
       <div class="ob ov-side" id="tb-pm" onclick="ze.toggle('pm')"><div class="obd"></div>Stoffwechselprodukte ◆</div>
       <div class="ov-status" id="pm-status"></div>
       </div>
@@ -506,8 +513,10 @@
     <div class="dim-sec" id="sec-nullnatur">
       <div class="dim-head" data-dim="nullnatur" title="Dimensionen sind Linsen, keine Orte — die Gliederung markiert typische Beobachtungshöhen"></div>
       <div class="dim-body">
+      <div class="sub-head" data-sub="solar"></div>
       <div class="ob ov-side on" id="tb-ekliptik" onclick="ze.toggleNull('ekliptik')"><div class="obd"></div>Ekliptik-Ringe ◎</div>
       <div class="ob ov-side on" id="tb-orbits" onclick="ze.toggleNull('orbits')"><div class="obd"></div>Planetenbahnen ⬭</div>
+      <div class="sub-head" data-sub="interstellar"></div>
       <div class="ob ov-side on" id="tb-apex" onclick="ze.toggleNull('apex')"><div class="obd"></div>Sonnenapex-Drift →</div>
       <div class="ov-status" style="display:block">Kontext im heliozentrischen Renderer — sichtbar auf den HEJ2000-Höhen.</div>
       </div>
@@ -4377,6 +4386,35 @@ class ZeroEarth {
     if (an && this.nachtlicht && ns)
       ns.innerHTML = ns.innerHTML.split('<br>')[0] +
         '<br><span class="ds-err">ohne Terminator liegen die Nachtlichter über der ganzen Kugel</span>';
+  }
+
+  /* ── Satellitenbild — VIIRS True Color (NASA GIBS) ──────────────
+     Der beobachtete Oberflächenzustand eines Tages, keine Textur:
+     die Kachel trägt ihr Datum. Tageslichtseite; die Nachtseite
+     zeigt das Day/Night Band (eigene Ebene der 2. Natur). */
+  toggleSatbild() {
+    const el = document.getElementById('tb-satbild');
+    const st = document.getElementById('satbild-status');
+    if (this.satbild) {
+      this.cesiumV.imageryLayers.remove(this.satbild, true);
+      this.satbild = null; el?.classList.remove('on');
+      if (st) st.textContent = ''; return;
+    }
+    const tag = new Date(Date.now() - 36e5 * 30).toISOString().slice(0, 10);
+    const provider = new Cesium.WebMapTileServiceImageryProvider({
+      url: `https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/VIIRS_SNPP_CorrectedReflectance_TrueColor/default/${tag}/250m/{TileMatrix}/{TileRow}/{TileCol}.jpg`,
+      layer: 'VIIRS_SNPP_CorrectedReflectance_TrueColor', style: 'default', format: 'image/jpeg',
+      tileMatrixSetID: '250m', maximumLevel: 8,
+      tilingScheme: new Cesium.GeographicTilingScheme(),
+      credit: new Cesium.Credit('VIIRS SNPP True Color · NASA GIBS/Worldview')
+    });
+    provider.errorEvent.addEventListener(e => {
+      if (st) st.innerHTML = `<span class="ds-err">GIBS nicht erreichbar</span> (${e.message ?? 'Kacheln fehlen'})`;
+    });
+    this.satbild = this.cesiumV.imageryLayers.addImageryProvider(provider);
+    el?.classList.add('on');
+    if (st) st.innerHTML = `VIIRS True Color · ${tag} · NASA GIBS — beobachteter Zustand dieses Tages` +
+      `<br><span style="opacity:.7">nicht zeitlich verschiebbar: die Masterzeit ändert das Bild nicht</span>`;
   }
 
   /* ── Nachtlichter — VIIRS Day/Night Band (NASA GIBS) ────────────
