@@ -21,6 +21,7 @@ abgeleitet · `modell` — gerechnet · `kuratiert` — von Hand zusammengetrage
 | CelesTrak TLE | Satellitenbahnen | `zweite_natur/konstruierte_wirklichkeit` | live | beobachtung | frei |
 | USGS | Seismik | `erste_natur/erdsystem` | live | beobachtung | gemeinfrei |
 | NASA GIBS (VIIRS DNB) | Nachtlichter | `zweite_natur/konstruierte_wirklichkeit` | 500 m, täglich | beobachtung | frei, Namensnennung |
+| Natural Earth 110 m | Landumrisse (Equal-Earth-Karte) | Darstellung | 110 m | beobachtung | gemeinfrei, `data/land-110m.json` |
 | OSM | Straßen, Bebauung | `zweite_natur/konstruierte_wirklichkeit` | Objekt | beobachtung | ODbL |
 | GLEIF | Unternehmensverflechtung | `erste_natur/basis` | Objekt | beobachtung | CC0 |
 

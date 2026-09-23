@@ -6,6 +6,8 @@
   <title>zeroearth.io · v0.9.17</title>
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Cesium.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/satellite.js@5.0.0/dist/satellite.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-geo@3.1.1/dist/d3-geo.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
   <link href="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Space+Mono&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -32,7 +34,8 @@
        bedienbar: er wird kleiner, nicht überdeckt. Der Griff schiebt
        die Grenze, --an-h ist die einzige Größe dafür. ── */
     :root{--an-h:42vh;}
-    body.analyse #cc, body.analyse #ss-canvas{top:var(--an-h);}
+    body.analyse #cc, body.analyse #ss-canvas, body.analyse #ee-canvas{top:var(--an-h);}
+    #ee-canvas{position:absolute;inset:0;z-index:1;display:none;background:#06080e;}
     #analyse{position:absolute;top:0;left:0;right:0;height:var(--an-h);z-index:3;
       background:rgba(6,8,14,.94);border-bottom:1px solid rgba(255,255,255,.14);
       display:none;flex-direction:column;}
@@ -220,9 +223,9 @@
     #scale-strip .db{padding:4px 8px;}
     #scale-strip .dn{font-size:7px;}
     #scale-strip .dl{font-size:9.5px;}
-    #vocab,#sprache,#licht{font-size:8.5px;color:var(--muted);padding:5px 10px;cursor:pointer;letter-spacing:.4px;}
-    #vocab:hover,#sprache:hover,#licht:hover{color:var(--text);}
-    #vocab-name,#sprache-name,#licht-name{color:var(--accent);}
+    #vocab,#sprache,#licht,#karte{font-size:8.5px;color:var(--muted);padding:5px 10px;cursor:pointer;letter-spacing:.4px;}
+    #vocab:hover,#sprache:hover,#licht:hover,#karte:hover{color:var(--text);}
+    #vocab-name,#sprache-name,#licht-name,#karte-name{color:var(--accent);}
     #ms-pts-btn.vis{display:flex;}
     .ms-slider{width:70px;height:3px;-webkit-appearance:none;appearance:none;
       background:rgba(255,255,255,.12);border-radius:2px;outline:none;cursor:pointer;}
@@ -334,6 +337,10 @@
 <!-- Rendering Layer 2: CesiumJS (Planetarer Stoffwechsel → Zweite Natur) -->
 <div id="cc"></div>
 
+<!-- Rendering Layer 3: Equal-Earth-Karte (flächentreu) — dieselbe Erde,
+     andere Projektion. Zeigt nur, was ohne Höhe darstellbar ist. -->
+<canvas id="ee-canvas"></canvas>
+
 <!-- Analysefeld: der relationale Zusammenhang aus dem Modell, gefüllt
      mit dem, was an dieser Position und in diesem Zeitfenster belegt ist -->
 <div id="analyse">
@@ -435,6 +442,8 @@
       <div class="ov-status" id="nachtlicht-status"></div>
       <div class="ob ov-side" id="tb-analyse" onclick="ze.toggleAnalyse()"><div class="obd"></div>Analysefeld — Relationen an dieser Position ▤</div>
       <div class="ov-status" id="analyse-status"></div>
+      <div class="ob ov-side" id="tb-karte" onclick="ze.toggleKarte()"><div class="obd"></div>Equal-Earth-Karte — flächentreu ▭</div>
+      <div class="ov-status" id="karte-status"></div>
       <div class="ob ov-side" id="tb-sats" onclick="ze.toggle('sats')"><div class="obd"></div>Satelliten (CelesTrak)</div>
       <div class="ov-status" id="sats-status"></div>
       <div class="ov-status" style="display:block">Straßen &amp; Bebauung (OSM): Regler „Zweite Natur" im Linsen-Panel</div>
@@ -507,6 +516,9 @@
     </div>
     <div id="licht" onclick="ze.cycleLicht()" title="Beleuchtung — Darstellung, keine Daten: Terminator zeigt die reale Tag-Nacht-Grenze, „an" beleuchtet gleichmäßig">
       Licht: <span id="licht-name"></span> ⇄
+    </div>
+    <div id="karte" onclick="ze.toggleKarte()" title="Projektion — Globus (geozentrisch) oder Equal Earth (flächentreu). Derselbe Raum, andere Darstellung.">
+      Ansicht: <span id="karte-name">Globus</span> ⇄
     </div>
     <div class="sep"></div>
     <div class="dftr">ZEIT · relational · dimensionsspezifisch</div>
@@ -3440,6 +3452,149 @@ class OSMLayer {
 }
 
 /* ─────────────────────────────────────────────────────────────────
+   EQUAL-EARTH-KARTE (v0.9.35) — dritter Renderer neben CesiumJS
+   (geozentrisch) und dem 2D-Sonnensystem (heliozentrisch).
+
+   Warum nicht Cesiums 2D-Modus: der kann nur zylindrische
+   Projektionen. Equal Earth ist pseudozylindrisch — gebogene
+   Meridiane, keine Rechtecke im projizierten Raum.
+
+   Warum überhaupt: Equal Earth ist FLÄCHENTREU. Die Verzerrung des
+   Gradnetzes (ZEIT_RAUM §2.4: 0,25°-Zelle 772,8 km² am Äquator,
+   482,4 km² bei 51,5° N) wird hier sichtbar, statt kaschiert.
+
+   Was die Karte NICHT kann, sagt sie selbst: alles mit Höhe —
+   Umlaufbahnen, Mond, Magnetfeld, Sonnenwind — hat auf einer Fläche
+   keinen Ort. Satelliten erscheinen deshalb als Bodenspur: der
+   Subsatellitenpunkt, also der Überflug. Die Bahn bleibt dem Globus.
+   ───────────────────────────────────────────────────────────────── */
+class EqualEarthKarte {
+  constructor(canvasId) {
+    this.cv = document.getElementById(canvasId);
+    this.land = null; this.fehler = null; this.on = false;
+    window.addEventListener('resize', () => this.zeichne());
+  }
+
+  async laden() {
+    if (this.land || this.fehler) return;
+    try {
+      if (typeof d3 === 'undefined' || typeof topojson === 'undefined')
+        throw new Error('d3-geo/topojson nicht geladen (CDN)');
+      const r = await fetch('data/land-110m.json');
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const topo = await r.json();
+      this.land = topojson.feature(topo, topo.objects.land);
+      this.quelle = 'Natural Earth 110 m · gemeinfrei';
+    } catch (e) { this.fehler = e.message; }
+  }
+
+  /* Subsatellitenpunkte + Bodenspur des nächstgelegenen Satelliten. */
+  _bodenspur(obs) {
+    if (typeof satellite === 'undefined' || !ze.satLayer?.recs?.length) return null;
+    const jetzt = new Date(), gmst = satellite.gstime(jetzt);
+    const punkte = [];
+    let naechster = null, distMin = Infinity;
+    for (const rec of ze.satLayer.recs) {
+      const pv = satellite.propagate(rec, jetzt);
+      if (!pv?.position || Number.isNaN(pv.position.x)) continue;
+      const g = satellite.eciToGeodetic(pv.position, gmst);
+      const lat = satellite.degreesLat(g.latitude), lon = satellite.degreesLong(g.longitude);
+      punkte.push([lon, lat, g.height]);
+      const d = Math.hypot(lat - obs.lat, ((lon - obs.lon + 540) % 360) - 180);
+      if (d < distMin) { distMin = d; naechster = rec; }
+    }
+    // Spur: ±45 min in Minutenschritten — Erdrotation lässt sie nach Westen wandern
+    const spur = [];
+    if (naechster) {
+      for (let m = -45; m <= 45; m++) {
+        const t = new Date(jetzt.getTime() + m * 60000);
+        const pv = satellite.propagate(naechster, t);
+        if (!pv?.position || Number.isNaN(pv.position.x)) continue;
+        const g = satellite.eciToGeodetic(pv.position, satellite.gstime(t));
+        spur.push([satellite.degreesLong(g.longitude), satellite.degreesLat(g.latitude)]);
+      }
+    }
+    return { punkte, spur, distMin };
+  }
+
+  zeichne() {
+    if (!this.on || !this.cv) return;
+    const dpr = window.devicePixelRatio || 1;
+    const b = this.cv.getBoundingClientRect();
+    this.cv.width = Math.max(1, b.width * dpr); this.cv.height = Math.max(1, b.height * dpr);
+    const x = this.cv.getContext('2d');
+    x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    x.clearRect(0, 0, b.width, b.height);
+
+    const st = document.getElementById('karte-status');
+    if (this.fehler || !this.land) {
+      if (st) st.innerHTML = `<span class="ds-err">Karte nicht ladbar</span> (${this.fehler ?? 'lädt …'})`;
+      return;
+    }
+    const proj = d3.geoEqualEarth().fitExtent([[12, 12], [b.width - 12, b.height - 12]], { type: 'Sphere' });
+    const pfad = d3.geoPath(proj, x);
+
+    x.beginPath(); pfad({ type: 'Sphere' });
+    x.fillStyle = '#080b12'; x.fill();
+    x.strokeStyle = 'rgba(255,255,255,.18)'; x.lineWidth = 1; x.stroke();
+
+    // Gradnetz: die Stufe der aktuellen Beobachtungshöhe, sonst 20°
+    const gradStufe = { erdmond: 20, planet: 20, kontinent: 10, region: 5, stadt: 1, strasse: 1 }[ze.scale] ?? 20;
+    x.beginPath(); pfad(d3.geoGraticule().step([gradStufe, gradStufe])());
+    x.strokeStyle = 'rgba(255,255,255,.07)'; x.stroke();
+
+    x.beginPath(); pfad(this.land);
+    x.fillStyle = 'rgba(255,255,255,.07)'; x.fill();
+    x.strokeStyle = 'rgba(255,255,255,.28)'; x.stroke();
+
+    const kann = [`Landumrisse (${this.quelle})`, `Gradnetz ${gradStufe}°`];
+
+    // Matrix-Objekte, aktiv bei der Masterzeit
+    const jahr = 2000 + Tideline.t;
+    let marker = 0;
+    for (const obj of MarkerLayer._cache ?? []) {
+      for (const a of obj.aspekte ?? []) {
+        if (jahr < a.jahr0 || (a.jahr1 !== null && jahr > a.jahr1)) continue;
+        const p = proj([obj.lon, obj.lat]); if (!p) continue;
+        x.beginPath(); x.arc(p[0], p[1], 3, 0, 2 * Math.PI);
+        x.strokeStyle = MarkerLayer.STYLE[a.ebene]?.color ?? '#aaa'; x.lineWidth = 1.5; x.stroke();
+        marker++;
+      }
+    }
+    if (marker) kann.push(`${marker} Aspekte`);
+
+    // Satelliten: Bodenspur statt Bahn
+    if (ze.satLayer?.on) {
+      const s = this._bodenspur(ze.obs);
+      if (s) {
+        x.fillStyle = 'rgba(106,212,232,.75)';
+        for (const [lon, lat] of s.punkte) {
+          const p = proj([lon, lat]); if (!p) continue;
+          x.fillRect(p[0] - 0.75, p[1] - 0.75, 1.5, 1.5);
+        }
+        if (s.spur.length > 1) {
+          x.beginPath(); pfad({ type: 'LineString', coordinates: s.spur });
+          x.strokeStyle = 'rgba(232,176,74,.9)'; x.lineWidth = 1.4; x.stroke();
+        }
+        kann.push(`${s.punkte.length} Subsatellitenpunkte, Spur des nächstgelegenen ±45 min`);
+      }
+    }
+
+    // Beobachtungsposition
+    const o = proj([ze.obs.lon, ze.obs.lat]);
+    if (o) {
+      x.beginPath(); x.moveTo(o[0] - 6, o[1]); x.lineTo(o[0] + 6, o[1]);
+      x.moveTo(o[0], o[1] - 6); x.lineTo(o[0], o[1] + 6);
+      x.strokeStyle = '#e8e8e8'; x.lineWidth = 1; x.stroke();
+    }
+
+    if (st) st.innerHTML = `flächentreu · ${kann.join(' · ')}` +
+      `<br><span style="opacity:.7">ohne Höhe nicht darstellbar: Umlaufbahnen (nur Bodenspur), ` +
+      `Mond, Magnetfeld, Sonnenwind, NullNatur · Rasterebenen bleiben beim Globus</span>`;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
    ZEROEARTH APP
    ───────────────────────────────────────────────────────────────── */
 class ZeroEarth {
@@ -3712,7 +3867,7 @@ class ZeroEarth {
     await MODELL.laden();
     this.applyLabels();
     this._applyLicht();
-    Tideline.onChange(() => this.zeichneAnalyse());
+    Tideline.onChange(() => { this.zeichneAnalyse(); this.karte?.zeichne(); });
     const st = this._readHash();
     if (st) this.setState(st); else this.setScale('solar');
   }
@@ -3928,6 +4083,7 @@ class ZeroEarth {
       document.documentElement.style.setProperty('--an-h', `${h}vh`);
       this.cesiumV?.resize();
       this.zeichneAnalyse();
+      this.karte?.zeichne();
     };
     let zieht = false;
     griff.addEventListener('mousedown', e => { zieht = true; e.preventDefault(); });
@@ -4062,6 +4218,20 @@ class ZeroEarth {
      an:         gleichmäßig beleuchtet — die Nachtseite wird sichtbar,
                  die Grenze verschwindet. Für Beobachtung, nicht für
                  Behauptung: Nachtlichter sind eine eigene Datenebene. */
+  /* Globus ⇄ Karte: ein Raum, zwei Projektionen. */
+  async toggleKarte() {
+    this.karte ??= new EqualEarthKarte('ee-canvas');
+    const an = !this.karte.on;
+    this.karte.on = an;
+    if (an) await this.karte.laden();
+    document.getElementById('cc').style.display = an ? 'none' : 'block';
+    document.getElementById('ee-canvas').style.display = an ? 'block' : 'none';
+    document.getElementById('tb-karte')?.classList.toggle('on', an);
+    document.getElementById('karte-name').textContent = an ? 'Equal Earth' : 'Globus';
+    if (an) this.karte.zeichne(); else { this.cesiumV?.resize();
+      const st = document.getElementById('karte-status'); if (st) st.textContent = ''; }
+  }
+
   cycleLicht() {
     const modi = ['terminator', 'an'];
     this.licht = modi[(modi.indexOf(this.licht ?? 'terminator') + 1) % modi.length];
