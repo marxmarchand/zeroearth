@@ -48,6 +48,18 @@ Dieselbe Koordinate trägt mehrere Sätze an verschiedenen Adressen — das ist 
 **Matrixschnitt** und der Normalfall, keine Ausnahme: der Bodenrichtwert liegt an
 derselben Stelle wie die Ertragsmesszahl, aber in einer anderen Dimension.
 
+## Bezugsnetze als Schlüssel
+
+Wo mehrere Quellen dieselben Knoten benutzen, steht der Knoten im Satz — dann trifft
+sich, was zusammengehört, ohne Koordinatenvergleich:
+
+```json
+"woher": { "knoten": "sword:v17:reach/node", "quelle": "zenodo:15223861" }
+```
+
+Für Flüsse ist das SWORD, für Unternehmen der LEI, für Objekte die Wikidata-Q-Nummer.
+Die Koordinate bleibt kanonisch; der Knoten ist die Verabredung zwischen Quellen.
+
 ## Was kein Satz ist
 
 Rasterdaten (GEBCO, GFS, PaleoMIST) sind Funktionen auf einem Gitter, keine Sammlung

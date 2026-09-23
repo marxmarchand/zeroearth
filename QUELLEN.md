@@ -32,6 +32,20 @@ abgeleitet · `modell` — gerechnet · `kuratiert` — von Hand zusammengetrage
 | Wikidata | Objekte, Eigentum, Zeitfenster | mehrere | Objekt | kuratiert | CC0, SPARQL |
 | GBIF | Artvorkommen | `erste_natur/unterbau` | Objekt | beobachtung | CC BY / CC0 |
 
+## Bezugsnetze
+
+Netze, auf die sich andere Daten beziehen. Ihr Wert liegt nicht im Inhalt, sondern
+darin, dass mehrere Quellen dieselben Knoten benutzen — sie sind Schlüssel, nicht Daten.
+
+| Quelle | Was | Adresse | Auflösung | Art | Lizenz / Zugang |
+|---|---|---|---|---|---|
+| SWORD (SWOT River Database) | globales Flussnetz: Reaches (~10 km), Knoten (200 m), alle Flüsse ab 30 m Breite | `erste_natur/erdsystem` | 200 m | kuratiert | CC BY 4.0, Zenodo · NetCDF, GeoPackage, Shapefile, je 1,6–1,9 GB, nach Kontinenten |
+
+SWORD ist selbst eine Setzung: Was schmaler als 30 m ist, kommt darin nicht vor und
+existiert damit für jeden Datensatz nicht, der darauf aufbaut — die SWOT-Flusstiden
+eingeschlossen. Das Netz entscheidet mit, was überhaupt sichtbar werden kann. Genau
+deshalb gehört es in den Katalog und nicht in den Hintergrund.
+
 ## Modelle (PIK)
 
 Die drei bilden zusammen fast die Matrixleiter ab — jedes behandelt das Nachbargebiet
