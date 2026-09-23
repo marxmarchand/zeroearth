@@ -31,6 +31,7 @@ abgeleitet · `modell` — gerechnet · `kuratiert` — von Hand zusammengetrage
 |---|---|---|---|---|---|
 | Wikidata | Objekte, Eigentum, Zeitfenster | mehrere | Objekt | kuratiert | CC0, SPARQL |
 | GBIF | Artvorkommen | `erste_natur/unterbau` | Objekt | beobachtung | CC BY / CC0 |
+| SWOT River Tides | Tidenamplitude und -klasse in Küstenflüssen | `erste_natur/erdsystem` | SWORD-Knoten (200 m) | rekonstruktion | CC BY 4.0, Zenodo 15223861 · 9 Shapefiles, 303,8 MB · abgeleitet über `adapter/gezeiten.py` |
 
 ## Bezugsnetze
 

@@ -480,6 +480,8 @@
       <div class="ov-status" id="platten-status"></div>
       <div class="ob ov-side" id="tb-gewaesser" onclick="ze.toggle('gewaesser')"><div class="obd"></div>Gewässer · Flüsse &amp; Pegel ⋲</div>
       <div class="ov-status" id="gewaesser-status"></div>
+      <div class="ob ov-side" id="tb-gezeiten" onclick="ze.toggle('gezeiten')"><div class="obd"></div>Gezeiten in Küstenflüssen (SWOT) ≈</div>
+      <div class="ov-status" id="gezeiten-status"></div>
       <div class="ov-status" style="display:block">Klimazonen (Köppen): Regler „Erste Natur" im Linsen-Panel</div>
       </div>
     </div>
@@ -2114,6 +2116,7 @@ class DM {
     if(name==='grenzen')  { on ? ze.grenzenLayer.show() : ze.grenzenLayer.hide(); }
     if(name==='kataster') { on ? ze.katasterLayer.show() : ze.katasterLayer.hide(); }
     if(name==='gewaesser') { on ? ze.gewaesserLayer.show() : ze.gewaesserLayer.hide(); }
+    if(name==='gezeiten') { on ? ze.gezeitenLayer.show() : ze.gezeitenLayer.hide(); }
   }
 
   _moon(on) {
@@ -3452,6 +3455,79 @@ class OSMLayer {
 }
 
 /* ─────────────────────────────────────────────────────────────────
+   GEZEITEN IN KÜSTENFLÜSSEN (v0.9.36)
+   Sätze aus data/gezeiten.json — abgeleitet aus SWOT River Tides
+   (Scherer & Hart-Davis 2026, Zenodo 15223861, CC BY 4.0) über
+   matrix-scharnier/adapter/gezeiten.py.
+
+   Der Matrixschnitt an einem Gegenstand: Der Antrieb liegt in der
+   NullNatur (Mond, Sonne) und wirkt über den planetaren Stoffwechsel
+   (extern) in das Erdsystem hinein — verortet ist der Satz in
+   erste_natur/erdsystem, wo gemessen wird.
+
+   Zeitfenster: SWOT fliegt seit 2023. Außerhalb zeigt die Ebene
+   nichts und sagt warum.
+   ───────────────────────────────────────────────────────────────── */
+class GezeitenLayer {
+  static DATEI = 'data/gezeiten.json';
+  constructor(viewer) { this.v = viewer; this.ents = []; this.on = false; this.daten = null; }
+
+  static farbe(amp) {                      // 0–5 m, hell = viel
+    const f = Math.max(0, Math.min(1, amp / 5));
+    return `rgb(${Math.round(60 + 120 * f)},${Math.round(140 + 90 * f)},${Math.round(200 + 55 * f)})`;
+  }
+  _status(html) { const el = document.getElementById('gezeiten-status'); if (el) el.innerHTML = html; }
+
+  async laden() {
+    if (this.daten) return this.daten;
+    const r = await fetch(GezeitenLayer.DATEI);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    this.daten = await r.json();
+    return this.daten;
+  }
+
+  _imFenster() {
+    const t = Tideline.t, z = this.daten?.saetze?.[0]?.zeit;
+    return !z || (t >= z.t0 - 2 && t <= z.t1 + 2);
+  }
+
+  async show() {
+    this.on = true;
+    try { await this.laden(); } catch (e) {
+      this._status(`<span class="ds-err">${GezeitenLayer.DATEI} fehlt</span> (${e.message}) — ` +
+                   `Actions-Lauf „Gezeiten" erzeugt sie aus Zenodo 15223861`);
+      return;
+    }
+    this.update(Tideline.t);
+  }
+
+  update() {
+    if (!this.on || !this.daten) return;
+    this.clear();
+    if (!this._imFenster()) {
+      this._status('<span class="ds-err">außerhalb des Beobachtungsfensters</span> — SWOT misst seit 2023');
+      return;
+    }
+    for (const satz of this.daten.saetze) {
+      const amp = satz.was.wert;
+      this.ents.push(this.v.entities.add({
+        position: Cesium.Cartesian3.fromDegrees(satz.raum.lon, satz.raum.lat, 0),
+        point: { pixelSize: 4 + Math.min(8, amp * 1.6),
+                 color: Cesium.Color.fromCssColorString(GezeitenLayer.farbe(amp)).withAlpha(0.85),
+                 disableDepthTestDistance: Number.POSITIVE_INFINITY },
+      }));
+    }
+    const max = Math.max(...this.daten.saetze.map(s => s.was.wert));
+    this._status(`${this.daten.anzahl.toLocaleString('de-DE')} Knoten · max ${max.toFixed(2)} m · ` +
+      `je ${this.daten.stufe_grad}°-Zelle das Maximum<br><span style="opacity:.7">` +
+      `SWOT River Tides, Zenodo 15223861 · CC BY 4.0 · Rekonstruktion, keine Messung an diesem Punkt</span>`);
+  }
+
+  clear() { this.ents.forEach(e => this.v.entities.remove(e)); this.ents = []; }
+  hide() { this.on = false; this.clear(); this._status(''); }
+}
+
+/* ─────────────────────────────────────────────────────────────────
    EQUAL-EARTH-KARTE (v0.9.35) — dritter Renderer neben CesiumJS
    (geozentrisch) und dem 2D-Sonnensystem (heliozentrisch).
 
@@ -3562,6 +3638,19 @@ class EqualEarthKarte {
       }
     }
     if (marker) kann.push(`${marker} Aspekte`);
+
+    // Gezeitenknoten (Sätze) — auf der flächentreuen Karte lesbarer als am Horizont
+    if (ze.gezeitenLayer?.on && ze.gezeitenLayer.daten) {
+      let n = 0;
+      for (const satz of ze.gezeitenLayer.daten.saetze) {
+        const p = proj([satz.raum.lon, satz.raum.lat]); if (!p) continue;
+        x.fillStyle = GezeitenLayer.farbe(satz.was.wert);
+        const r = 1 + Math.min(3, satz.was.wert * 0.7);
+        x.beginPath(); x.arc(p[0], p[1], r, 0, 2 * Math.PI); x.fill();
+        n++;
+      }
+      if (n) kann.push(`${n} Gezeitenknoten`);
+    }
 
     // Satelliten: Bodenspur statt Bahn
     if (ze.satLayer?.on) {
@@ -3678,6 +3767,7 @@ class ZeroEarth {
       color:'#c8a0e8', width:1, quelle:'lokal kuratiert',
       hinweis:'Kataster sind regional (kein globaler Dienst) — data/kataster.geojson' });
     this.gewaesserLayer = new GewaesserLayer(this.cesiumV);
+    this.gezeitenLayer = new GezeitenLayer(this.cesiumV);
     // Klimazonen (Köppen-Geiger): kategoriales Raster über den FieldLayer
     this.klimaLayer = new FieldLayer(this.cesiumV, 'koeppen', { alpha:0.55,
       colormap: v => {
@@ -3867,7 +3957,7 @@ class ZeroEarth {
     await MODELL.laden();
     this.applyLabels();
     this._applyLicht();
-    Tideline.onChange(() => { this.zeichneAnalyse(); this.karte?.zeichne(); });
+    Tideline.onChange(() => { this.zeichneAnalyse(); this.karte?.zeichne(); this.gezeitenLayer?.update(); });
     const st = this._readHash();
     if (st) this.setState(st); else this.setScale('solar');
   }

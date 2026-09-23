@@ -1,0 +1,25 @@
+name: Gezeiten
+# Holt SWOT River Tides von Zenodo und schreibt data/gezeiten.json.
+# Läuft hier und nicht im Browser: offener Netzzugang, Zeit zum Rechnen,
+# und das Ergebnis ist ein Commit — damit nachvollziehbar, woher es stammt.
+on:
+  workflow_dispatch:
+jobs:
+  ableiten:
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install geopandas pyogrio
+      - name: Zenodo holen und ableiten
+        run: python3 gezeiten.py --ziel ../../data/gezeiten.json
+        working-directory: matrix-scharnier/adapter
+      - name: Ergebnis committen
+        run: |
+          git config user.name "zeroearth-bot"
+          git config user.email "noreply@zeroearth.io"
+          git add data/gezeiten.json
+          git diff --cached --quiet || git commit -m "Gezeiten aus SWOT River Tides abgeleitet (Zenodo 15223861)"
+          git push
