@@ -205,6 +205,29 @@ export const EBENEN = {
                  frage: 'Trägt das Objekt symbolische oder ideologische Bedeutung?' },
 };
 
+/** Suchbegriffe je Adresse — daraus bildet der Katalogadapter seine Anfragen.
+    Sie stehen hier und nicht im Adapter, weil die Wahl der Wörter eine
+    inhaltliche Setzung ist: sie entscheidet, was überhaupt gefunden werden
+    kann. Eine leere Liste ist eine Aussage — die Adresse hat in Erdkatalogen
+    nichts zu suchen. (Vgl. QUELLEN.md zur 30-m-Schwelle von SWORD.) */
+export const SUCHBEGRIFFE = {
+  'zweite_natur/riss':                       ['religion', 'sprache', 'kulturdenkmal', 'weltanschauung'],
+  'zweite_natur/ueberbau':                   ['verwaltungsgrenze', 'gebietskörperschaft', 'behörde', 'wahlergebnis'],
+  'zweite_natur/konstruierte_wirklichkeit':  ['liegenschaftskataster', 'flurstück', 'bodenrichtwert', 'flächennutzungsplan'],
+  'gesellschaftlicher_stoffwechsel/immat_pm':['forschungseinrichtung', 'hochschule', 'patent', 'sortenschutz'],
+  'gesellschaftlicher_stoffwechsel/mat_pm':  ['gebäudebestand', 'stromnetz', 'industrieanlage', 'verkehrsinfrastruktur'],
+  'erste_natur/basis':                       ['erwerbstätigkeit', 'betriebe', 'landnutzung', 'grundeigentum'],
+  'erste_natur/unterbau':                    ['biotop', 'artenvorkommen', 'schutzgebiet', 'bodenzustand'],
+  'erste_natur/erdsystem':                   ['geologie', 'hydrologie', 'klimadaten', 'geländemodell'],
+  'planetarer_stoffwechsel/intern':          ['seismik', 'geothermie', 'erdmagnetfeld', 'vulkanismus'],
+  'planetarer_stoffwechsel/extern':          ['globalstrahlung', 'gezeiten', 'weltraumwetter', 'sonneneinstrahlung'],
+  'nullnatur/solar':                         ['ephemeride', 'planetenbahn'],
+  'nullnatur/interstellar':                  ['sternkatalog', 'astrometrie'],
+  // Ohne Ort auf der Erde: kein Katalog führt die Grundkräfte. Die leere
+  // Liste ist der Befund, kein vergessener Eintrag.
+  'nullnatur/kosmologisch':                  [],
+};
+
 export const ABLOESUNG = [
   'an das stofflich-räumliche Verhältnis gebunden',
   'teilweise abstrahiert',

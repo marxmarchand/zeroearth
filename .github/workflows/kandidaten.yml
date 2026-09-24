@@ -1,0 +1,43 @@
+name: Kandidaten
+# Fragt offene Datenkataloge nach Kandidaten fuer die Adressen der Matrix
+# und schreibt data/kandidaten.json. Laeuft hier, weil die Kataloge von
+# der Arbeitsumgebung aus nicht erreichbar sind — und weil das Ergebnis
+# ein Commit ist: im Repo steht damit, woher jeder Kandidat stammt.
+on:
+  workflow_dispatch:
+    inputs:
+      je:
+        description: "Treffer je Suchbegriff"
+        default: "20"
+      katalog:
+        description: "Katalog (siehe KATALOGE in dcat.mjs)"
+        default: "govdata"
+jobs:
+  suchen:
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Geplante Anfragen zeigen
+        run: node dcat.mjs --trocken --katalog "${{ inputs.katalog }}"
+        working-directory: matrix-scharnier/adapter
+      - name: Kataloge abfragen
+        run: node dcat.mjs --ziel ../../data/kandidaten.json --je "${{ inputs.je }}" --katalog "${{ inputs.katalog }}"
+        working-directory: matrix-scharnier/adapter
+      - name: Ueberblick ins Protokoll
+        run: |
+          node -e "const d=require('./data/kandidaten.json');
+            const n={};for(const e of d.eintraege)for(const a of e.gesucht_fuer)n[a]=(n[a]||0)+1;
+            console.log('Kandidaten je Adresse:');
+            for(const [a,c] of Object.entries(n).sort((x,y)=>y[1]-x[1])) console.log(String(c).padStart(5),a);
+            const ohne=d.eintraege.filter(e=>!e.raum).length;
+            console.log('\nohne Raumbezug:',ohne,'von',d.eintraege.length);"
+      - name: Ergebnis committen
+        run: |
+          git config user.name "zeroearth-bot"
+          git config user.email "noreply@zeroearth.io"
+          git add data/kandidaten.json
+          git diff --cached --quiet || git commit -m "Kandidaten aus offenen Katalogen abgefragt (dcat.mjs)"
+          git push
