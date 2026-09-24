@@ -295,6 +295,8 @@
     .dim-sec .dim-head::before{content:'▸ ';opacity:.55;}
     .dim-sec.open .dim-head::before{content:'▾ ';}
     .dim-sec .dim-body{display:none;}
+    .dim-sec.ruht{opacity:.4;}
+    .dim-sec.ruht .dim-head::after{content:' · ruht';font-weight:400;opacity:.7;}
     .dim-sec.open .dim-body{display:block;}
     /* Matrixlegenden-Design (Vorlage: Matrix-Grafiken) */
     #sec-zweite_natur{--dc:#dd7a72;}
@@ -311,6 +313,7 @@
       padding:8px 1px;text-align:center;flex-shrink:0;}
     .dim-sec.open>.dim-body{flex:1;padding:3px 4px 3px 0;min-width:0;}
     .dim-sec .sub-head{color:#000;opacity:.85;font-weight:700;}
+    .dim-sec .ov-status:empty{display:none;}
     .dim-sec .db,.dim-sec .ob{background:#fff;border:1.5px solid #000;border-radius:3px;
       margin:3px 4px;color:#111;}
     .dim-sec .db:hover,.dim-sec .ob:hover{background:#f2ecd9;}
@@ -525,7 +528,6 @@
     <div class="dftr" style="padding-bottom:5px">WERKZEUGE · keine Dimension</div>
     <div class="ob ov-side" id="tb-analyse" onclick="ze.toggleAnalyse()"><div class="obd"></div>Analysefeld — Relationen an dieser Position ▤</div>
     <div class="ov-status" id="analyse-status"></div>
-    <div class="ob ov-side" id="tb-karte" onclick="ze.toggleKarte()"><div class="obd"></div>Equal-Earth-Karte — flächentreu ▭</div>
     <div class="ov-status" id="karte-status"></div>
 
     <div class="sep"></div>
@@ -3978,7 +3980,11 @@ class ZeroEarth {
     Tideline.startClock();
     // Akkordeon: Dimensionsköpfe klappen ihre Abschnitte
     document.querySelectorAll('.dim-head').forEach(h =>
-      h.addEventListener('click', () => h.parentElement.classList.toggle('open')));
+      h.addEventListener('click', () => {
+        const sec = h.parentElement, auf = !sec.classList.contains('open');
+        document.querySelectorAll('.dim-sec').forEach(x => x.classList.remove('open'));
+        sec.classList.toggle('open', auf);
+      }));
     // Modell laden (data/matrix.json), dann S4-Beschriftungen anwenden
     await MODELL.laden();
     this.applyLabels();
@@ -4462,7 +4468,13 @@ class ZeroEarth {
     const secOf = { strasse:'zweite_natur', stadt:'zweite_natur', region:'zweite_natur',
       kontinent:'erste_natur', planet:'erste_natur', erdmond:'erste_natur',
       solar:'nullnatur', interstellar:'nullnatur', kosmologisch:'nullnatur' };
-    document.getElementById(`sec-${secOf[id]}`)?.classList.add('open');
+    const aufCanvas = sc.type === 'canvas';
+    document.querySelectorAll('.dim-sec').forEach(sec => {
+      sec.classList.toggle('open', sec.id === `sec-${secOf[id]}`);
+      // „ruht": auf dieser Beobachtungshöhe nicht darstellbar — bleibt sichtbar,
+      // tritt aber zurück, statt die Leiste zu füllen
+      sec.classList.toggle('ruht', aufCanvas ? sec.id !== 'sec-nullnatur' : sec.id === 'sec-nullnatur');
+    });
     document.querySelectorAll('.db.sc').forEach(b =>
       b.classList.toggle('active', b.dataset.s === id));
     const ov = document.getElementById('ov');
