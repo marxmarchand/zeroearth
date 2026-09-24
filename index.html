@@ -304,8 +304,6 @@
     .dim-sec .dim-head::before{content:'▸ ';opacity:.55;}
     .dim-sec.open .dim-head::before{content:'▾ ';}
     .dim-sec .dim-body{display:none;}
-    .dim-sec.ruht{opacity:.4;}
-    .dim-sec.ruht .dim-head::after{content:' · ruht';font-weight:400;opacity:.7;}
     .dim-sec.open .dim-body{display:block;}
     /* Matrixlegenden-Design (Vorlage: Matrix-Grafiken) */
     #sec-zweite_natur{--dc:#dd7a72;}
@@ -342,11 +340,14 @@
     .dim-sec .ov-status .ds-ok{color:#1e5c1e;}
     .dim-sec .ov-status .ds-err{color:#7a2810;}
     .dim-sec .ms-tag{color:#333;border-color:#555;}
-    .null-tab{display:none;font-family:var(--mono);font-size:8px;letter-spacing:1.2px;
+    .dim-tab{display:none;font-family:var(--mono);font-size:8px;letter-spacing:1.2px;
       margin:4px 6px;padding:7px 8px;border:2px solid #000;border-radius:4px;
-      background:#6a63b0;color:#fff;cursor:pointer;user-select:none;text-align:center;}
-    .null-tab:hover{background:#7c74c6;}
-    .null-tab.an{display:block;}
+      cursor:pointer;user-select:none;text-align:center;}
+    .dim-tab.an{display:block;}
+    #null-tab{background:#6a63b0;color:#fff;}
+    #null-tab:hover{background:#7c74c6;}
+    #erd-tab{background:#a8cf74;color:#000;}
+    #erd-tab:hover{background:#bcdd8e;}
   </style>
 </head>
 <body>
@@ -442,6 +443,11 @@
     <div class="sep"></div>
     <div class="dftr" style="padding-bottom:5px">DIMENSIONSINHALTE · LINSEN</div>
 
+    <!-- Gegenstück zum NullNatur-Reiter: im heliozentrischen Bild haben die
+         vier Erddimensionen keinen Ort. -->
+    <div class="dim-tab" id="erd-tab" onclick="ze.setScale('planet')"
+         title="Die Erddimensionen werden im geozentrischen Renderer gezeichnet"></div>
+
     <div class="dim-sec" id="sec-zweite_natur">
       <div class="dim-head" data-dim="zweite_natur" title="Dimensionen sind Linsen, keine Orte — die Gliederung markiert typische Beobachtungshöhen"></div>
       <div class="dim-body">
@@ -464,7 +470,6 @@
       <div class="ov-status" id="kataster-status"></div>
       <div class="ob ov-side" id="tb-ware" onclick="ze.toggle('ware')"><div class="obd"></div>Wertformen (Ware · Kapital) ▢</div>
       <div class="ov-status" id="ware-status"></div>
-      <div class="ov-status" style="display:block">Straßen &amp; Bebauung (OSM): Regler „Zweite Natur" im Linsen-Panel</div>
       </div>
     </div>
 
@@ -482,6 +487,7 @@
       <div class="ov-status" id="nachtlicht-status"></div>
       <div class="ob ov-side" id="tb-sats" onclick="ze.toggle('sats')"><div class="obd"></div>Satelliten (CelesTrak) ⌖</div>
       <div class="ov-status" id="sats-status"></div>
+      <div class="ov-status" style="display:block">Straßen &amp; Bebauung (OSM): Regler „Ges. Stoffwechsel" im Linsen-Panel</div>
       </div>
     </div>
 
@@ -541,7 +547,7 @@
     </div>
 
     <!-- NullNatur hat auf Erdhöhe keinen Ort. Statt zu ruhen wird sie zur Tür. -->
-    <div class="null-tab" id="null-tab" onclick="ze.setScale('solar')"
+    <div class="dim-tab" id="null-tab" onclick="ze.setScale('solar')"
          title="NullNatur lässt sich nicht auf Erdkoordinaten legen — sichtbar erst im heliozentrischen Bild"></div>
 
     <div class="sep"></div>
@@ -687,15 +693,15 @@
       <div class="obd"></div>Rasterlinien (1°/10°)</div>
     <div class="ms-row">
       <div class="ms-dot" data-d="gesellschaftlicher_stoffwechsel"></div>
-      <div class="ms-label"><span class="lens-name" data-l="gesellschaftlicher_stoffwechsel"></span> <span class="ms-tag">prozedural</span></div>
+      <div class="ms-label"><span class="lens-name" data-l="gesellschaftlicher_stoffwechsel"></span> — Bebauung (OSM) · Bevölkerung <span class="ms-tag">prozedural</span></div>
       <input type="range" class="ms-slider" min="0" max="100" value="0"
         oninput="ze.msOpacity('gesellschaftlicher_stoffwechsel', this.value)">
     </div>
     <div class="ms-row">
       <div class="ms-dot" data-d="zweite_natur"></div>
-      <div class="ms-label"><span class="lens-name" data-l="zweite_natur"></span> (OSM)</div>
-      <input type="range" class="ms-slider" min="0" max="100" value="0"
-        oninput="ze.msOpacity('zweite_natur', this.value)">
+      <div class="ms-label"><span class="lens-name" data-l="zweite_natur"></span> <span class="ms-tag">ohne Ebene</span></div>
+      <input type="range" class="ms-slider" min="0" max="100" value="0" disabled
+        title="Kataster und Wertformen sind Setzungen — noch keine Rasterebene">
     </div>
   </div>
 
@@ -1842,15 +1848,15 @@ const DIMS = {
     id:'gesellschaftlicher_stoffwechsel', label:'Ges. Stoffwechsel',
     sub:'Übergang — gesellschaftlich-metabolische Prozesse',
     desc:'Übergang von ReProduktionsverhältnissen zu Produktionsverhältnissen. Materielle und immaterielle Produktionsmittel.',
-    layers:['natural_earth','hyde_pop'], overlays:[],
+    layers:['natural_earth','hyde_pop','osm'], overlays:['sats'],
     tr:{min:-10000,max:2100,cur:1800}, unit:'CE/BP', fmt:t=>t<0?`${Math.abs(t)} v.Chr.`:`${t} n.Chr.`,
-    meta:{'Zeitskala':'10 ka → Gegenwart','Unterk.':'Mat. PM · Immat. PM'}
+    meta:{'Zeitskala':'10 ka → Gegenwart','Unterk.':'Immat. PM · Mat. PM'}
   },
   zweite_natur:{
     id:'zweite_natur', label:'Zweite Natur',
     sub:'2. Natur — kulturell-symbolische Dimension',
     desc:'R.I.S.S., institutionalisierter Überbau, konstruierte Wirklichkeit.',
-    layers:['osm'], overlays:['sats'],
+    layers:[], overlays:[],
     tr:{min:1700,max:2100,cur:2024}, unit:'Jahr', fmt:t=>`${t}`,
     meta:{'Zeitskala':'~1700 → Gegenwart','Unterk.':'R.I.S.S. · Überbau · Konstr. Wirklichkeit',
       'Equal Earth':'[geplant]'}
@@ -2034,8 +2040,10 @@ const MODELL = {
 const LENSES = {
   planetarer_stoffwechsel: ['coastLayer'],
   erste_natur:             ['iceLayer','tempLayer','paleoTempLayer','klimaLayer'],
-  gesellschaftlicher_stoffwechsel: ['popLayer'],
-  zweite_natur:            ['osmLayer']
+  gesellschaftlicher_stoffwechsel: ['popLayer','osmLayer'],
+  // Konstruierte Wirklichkeit liegt noch nicht als Rasterebene vor —
+  // Kataster und Wertformen sind Setzungen, keine Flächen.
+  zweite_natur:            []
 };
 
 
@@ -4223,9 +4231,12 @@ class ZeroEarth {
         if (i) i.onclick = ev => { ev.stopPropagation(); this.zeigeSchicht(el.dataset.sub); };
       } else if (i) { i.style.display = 'none'; }
     });
+    const de = LABELS.sprache === 'de';
     const nt = document.getElementById('null-tab');
     if (nt) nt.textContent = `◎ ${LABELS.common.dimHeads.nullnatur || 'NULLNATUR'} · ${
-      LABELS.sprache === 'de' ? 'zum Sonnensystem' : 'to the solar system'}`;
+      de ? 'zum Sonnensystem' : 'to the solar system'}`;
+    const et = document.getElementById('erd-tab');
+    if (et) et.textContent = de ? '⊕ zurück zur Erdansicht' : '⊕ back to Earth view';
     const vn = document.getElementById('vocab-name');
     if (vn) vn.textContent = LABELS.sets[LABELS.active].name;
     const sn = document.getElementById('sprache-name');
@@ -4533,15 +4544,13 @@ class ZeroEarth {
     const aufCanvas = sc.type === 'canvas';
     document.querySelectorAll('.dim-sec').forEach(sec => {
       const nn = sec.id === 'sec-nullnatur';
-      // NullNatur ruht auf Erdhöhe nicht — sie hat dort keinen Ort. Sie
-      // verschwindet und bleibt als Reiter zurück, der den Renderer wechselt.
-      sec.style.display = (!aufCanvas && nn) ? 'none' : '';
+      // Was auf dieser Beobachtungshöhe keinen Ort hat, ruht nicht — es fehlt.
+      // Die fehlende Seite bleibt als Reiter, der den Renderer wechselt.
+      sec.style.display = (aufCanvas === nn) ? '' : 'none';
       sec.classList.toggle('open', sec.id === `sec-${secOf[id]}`);
-      // „ruht": auf dieser Beobachtungshöhe nicht darstellbar — bleibt sichtbar,
-      // tritt aber zurück, statt die Leiste zu füllen
-      sec.classList.toggle('ruht', aufCanvas && !nn);
     });
     document.getElementById('null-tab')?.classList.toggle('an', !aufCanvas);
+    document.getElementById('erd-tab')?.classList.toggle('an', aufCanvas);
     document.querySelectorAll('.db.sc').forEach(b =>
       b.classList.toggle('active', b.dataset.s === id));
     const ov = document.getElementById('ov');
