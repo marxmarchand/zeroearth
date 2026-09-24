@@ -342,6 +342,11 @@
     .dim-sec .ov-status .ds-ok{color:#1e5c1e;}
     .dim-sec .ov-status .ds-err{color:#7a2810;}
     .dim-sec .ms-tag{color:#333;border-color:#555;}
+    .null-tab{display:none;font-family:var(--mono);font-size:8px;letter-spacing:1.2px;
+      margin:4px 6px;padding:7px 8px;border:2px solid #000;border-radius:4px;
+      background:#6a63b0;color:#fff;cursor:pointer;user-select:none;text-align:center;}
+    .null-tab:hover{background:#7c74c6;}
+    .null-tab.an{display:block;}
   </style>
 </head>
 <body>
@@ -459,10 +464,6 @@
       <div class="ov-status" id="kataster-status"></div>
       <div class="ob ov-side" id="tb-ware" onclick="ze.toggle('ware')"><div class="obd"></div>Wertformen (Ware · Kapital) ▢</div>
       <div class="ov-status" id="ware-status"></div>
-      <div class="ob ov-side" id="tb-nachtlicht" onclick="ze.toggleNachtlicht()"><div class="obd"></div>Nachtlichter (VIIRS · NASA GIBS) ☾</div>
-      <div class="ov-status" id="nachtlicht-status"></div>
-      <div class="ob ov-side" id="tb-sats" onclick="ze.toggle('sats')"><div class="obd"></div>Satelliten (CelesTrak) ⌖</div>
-      <div class="ov-status" id="sats-status"></div>
       <div class="ov-status" style="display:block">Straßen &amp; Bebauung (OSM): Regler „Zweite Natur" im Linsen-Panel</div>
       </div>
     </div>
@@ -477,6 +478,10 @@
       <div class="ov-status" id="bestaende-status"></div>
       <div class="ob ov-side" id="tb-stroeme" onclick="ze.toggle('stroeme')"><div class="obd"></div>Netzströme (Waren · Kapital · Arbeit) →</div>
       <div class="ov-status" id="stroeme-status"></div>
+      <div class="ob ov-side" id="tb-nachtlicht" onclick="ze.toggleNachtlicht()"><div class="obd"></div>Nachtlichter (VIIRS · NASA GIBS) ☾</div>
+      <div class="ov-status" id="nachtlicht-status"></div>
+      <div class="ob ov-side" id="tb-sats" onclick="ze.toggle('sats')"><div class="obd"></div>Satelliten (CelesTrak) ⌖</div>
+      <div class="ov-status" id="sats-status"></div>
       </div>
     </div>
 
@@ -534,6 +539,10 @@
       <div class="ov-status" style="display:block">Kontext im heliozentrischen Renderer — sichtbar auf den HEJ2000-Höhen.</div>
       </div>
     </div>
+
+    <!-- NullNatur hat auf Erdhöhe keinen Ort. Statt zu ruhen wird sie zur Tür. -->
+    <div class="null-tab" id="null-tab" onclick="ze.setScale('solar')"
+         title="NullNatur lässt sich nicht auf Erdkoordinaten legen — sichtbar erst im heliozentrischen Bild"></div>
 
     <div class="sep"></div>
     <div class="dftr" style="padding-bottom:5px">WERKZEUGE · keine Dimension</div>
@@ -4214,6 +4223,9 @@ class ZeroEarth {
         if (i) i.onclick = ev => { ev.stopPropagation(); this.zeigeSchicht(el.dataset.sub); };
       } else if (i) { i.style.display = 'none'; }
     });
+    const nt = document.getElementById('null-tab');
+    if (nt) nt.textContent = `◎ ${LABELS.common.dimHeads.nullnatur || 'NULLNATUR'} · ${
+      LABELS.sprache === 'de' ? 'zum Sonnensystem' : 'to the solar system'}`;
     const vn = document.getElementById('vocab-name');
     if (vn) vn.textContent = LABELS.sets[LABELS.active].name;
     const sn = document.getElementById('sprache-name');
@@ -4520,11 +4532,16 @@ class ZeroEarth {
       solar:'nullnatur', interstellar:'nullnatur', kosmologisch:'nullnatur' };
     const aufCanvas = sc.type === 'canvas';
     document.querySelectorAll('.dim-sec').forEach(sec => {
+      const nn = sec.id === 'sec-nullnatur';
+      // NullNatur ruht auf Erdhöhe nicht — sie hat dort keinen Ort. Sie
+      // verschwindet und bleibt als Reiter zurück, der den Renderer wechselt.
+      sec.style.display = (!aufCanvas && nn) ? 'none' : '';
       sec.classList.toggle('open', sec.id === `sec-${secOf[id]}`);
       // „ruht": auf dieser Beobachtungshöhe nicht darstellbar — bleibt sichtbar,
       // tritt aber zurück, statt die Leiste zu füllen
-      sec.classList.toggle('ruht', aufCanvas ? sec.id !== 'sec-nullnatur' : sec.id === 'sec-nullnatur');
+      sec.classList.toggle('ruht', aufCanvas && !nn);
     });
+    document.getElementById('null-tab')?.classList.toggle('an', !aufCanvas);
     document.querySelectorAll('.db.sc').forEach(b =>
       b.classList.toggle('active', b.dataset.s === id));
     const ov = document.getElementById('ov');
