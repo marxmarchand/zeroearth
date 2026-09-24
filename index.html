@@ -247,7 +247,16 @@
     /* ══ REPARATURBLOCK v0.9.5 — Leisten-CSS (Akkordeon + Matrixlegende).
        Konsolidiert, weil drei frühere Einfügungen still fehlschlugen. ══ */
     .dim-head{font-size:9px;letter-spacing:1.5px;padding:6px 8px 5px 8px;}
-    .sub-head{font-size:7px;letter-spacing:1px;padding:5px 6px 1px 10px;}
+    .sub-head{font-size:7.5px;letter-spacing:1.1px;padding:4px 6px 4px 7px;
+      display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none;
+      border-radius:2px;margin:5px 4px 1px 4px;}
+    .sub-head::before{content:'\25be';font-size:7px;opacity:.65;flex:0 0 6px;}
+    .sub-sec.zu>.sub-head::before{content:'\25b8';}
+    .sub-head .sh-t{flex:1 1 auto;min-width:0;}
+    .sub-head .sh-i{flex:0 0 auto;font-size:8px;opacity:.45;padding:0 1px;cursor:help;}
+    .sub-head .sh-i:hover{opacity:1;}
+    .sub-sec>.sub-body{display:block;}
+    .sub-sec.zu>.sub-body{display:none;}
     #about-btn{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--muted);
       cursor:pointer;pointer-events:auto;margin-left:auto;padding:2px 6px;
       border:1px solid var(--border);border-radius:3px;}
@@ -312,7 +321,9 @@
       background:#fff;border:2px solid #000;border-radius:3px;margin:6px 4px 6px 6px;
       padding:8px 1px;text-align:center;flex-shrink:0;}
     .dim-sec.open>.dim-body{flex:1;padding:3px 4px 3px 0;min-width:0;}
-    .dim-sec .sub-head{color:#000;opacity:.85;font-weight:700;}
+    .dim-sec .sub-head{color:#000;font-weight:700;background:rgba(0,0,0,.16);
+      border:1px solid rgba(0,0,0,.40);}
+    .dim-sec .sub-head:hover{background:rgba(0,0,0,.26);}
     .dim-sec .ov-status:empty{display:none;}
     .dim-sec .db,.dim-sec .ob{background:#fff;border:1.5px solid #000;border-radius:3px;
       margin:3px 4px;color:#111;}
@@ -459,13 +470,13 @@
     <div class="dim-sec" id="sec-gesellschaftlicher_stoffwechsel">
       <div class="dim-head" data-dim="gesellschaftlicher_stoffwechsel" title="Dimensionen sind Linsen, keine Orte — die Gliederung markiert typische Beobachtungshöhen"></div>
       <div class="dim-body">
+      <div class="sub-head" data-sub="immat_pm"></div>
+      <div class="ov-status" style="display:block">Wissen als Produktionsmittel — Kuratierung offen</div>
       <div class="sub-head" data-sub="mat_pm"></div>
       <div class="ob ov-side" id="tb-bestaende" onclick="ze.toggle('bestaende')"><div class="obd"></div>Bestände &amp; Mittel ⬠</div>
       <div class="ov-status" id="bestaende-status"></div>
       <div class="ob ov-side" id="tb-stroeme" onclick="ze.toggle('stroeme')"><div class="obd"></div>Netzströme (Waren · Kapital · Arbeit) →</div>
       <div class="ov-status" id="stroeme-status"></div>
-      <div class="sub-head" data-sub="immat_pm"></div>
-      <div class="ov-status" style="display:block">Wissen als Produktionsmittel — Kuratierung offen</div>
       </div>
     </div>
 
@@ -1919,7 +1930,13 @@ const LABELS = {
       basis:'BASIS', unterbau:'UNTERBAU', erdsystem:'ERDSYSTEM',
       riss:'R.I.S.SYSTEM',
       ueberbau:'INSTITUTIONALISIERTER ÜBERBAU',
-      konstruierte_wirklichkeit:'KONSTRUIERTE WIRKLICHKEIT'
+      konstruierte_wirklichkeit:'KONSTRUIERTE WIRKLICHKEIT',
+      immat_pm:'IMMATERIELLE PRODUKTIONSMITTEL',
+      mat_pm:'MATERIELLE PRODUKTIONSMITTEL',
+      intern:'INTERNE PROZESSE', extern:'EXTERNE PROZESSE',
+      solar:'SOLARER RAUM · EKLIPTIK',
+      interstellar:'INTERSTELLARER RAUM',
+      kosmologisch:'UNIVERSELL / FUNDAMENTAL'
     },
     dimHeads: {
       nullnatur:'0. NATUR', planetarer_stoffwechsel:'PLANETARER STOFFWECHSEL',
@@ -3987,6 +4004,7 @@ class ZeroEarth {
       }));
     // Modell laden (data/matrix.json), dann S4-Beschriftungen anwenden
     await MODELL.laden();
+    this._gruppiereSchichten();
     this.applyLabels();
     this._applyLicht();
     Tideline.onChange(() => { this.zeichneAnalyse(); this.karte?.zeichne(); this.gezeitenLayer?.update(); });
@@ -4141,6 +4159,37 @@ class ZeroEarth {
     return st;
   }
 
+  /* ── Schichten gruppieren: jede Schichtueberschrift bekommt ihren Koerper,
+     damit sie auf Antippen auf- und zuklappt. Zur Laufzeit erzeugt — das
+     Markup bleibt flach, die Gliederung folgt allein den .sub-head-Marken. ── */
+  _gruppiereSchichten() {
+    document.querySelectorAll('.dim-body').forEach(body => {
+      if (body.dataset.gruppiert) return;
+      let sec = null;
+      Array.from(body.children).forEach(kind => {
+        if (kind.classList.contains('sub-head')) {
+          sec = document.createElement('div');
+          sec.className = 'sub-sec';
+          body.insertBefore(sec, kind);
+          sec.appendChild(kind);
+          sec.appendChild(Object.assign(document.createElement('div'), { className: 'sub-body' }));
+          const t = Object.assign(document.createElement('span'), { className: 'sh-t' });
+          const i = Object.assign(document.createElement('span'), { className: 'sh-i', textContent: '\u24d8' });
+          kind.textContent = '';
+          kind.append(t, i);
+          const eigen = sec;
+          kind.addEventListener('click', ev => {
+            if (ev.target.classList.contains('sh-i')) return;
+            eigen.classList.toggle('zu');
+          });
+        } else if (sec) {
+          sec.lastElementChild.appendChild(kind);
+        }
+      });
+      body.dataset.gruppiert = '1';
+    });
+  }
+
   /* ── S4: Beschriftungen anwenden (ZEIT_RAUM §8.2 Bindungsregel:
      Umbenennung = Eingriff in genau eine Tabelle, nämlich LABELS) ── */
   applyLabels() {
@@ -4156,13 +4205,14 @@ class ZeroEarth {
       el.textContent = LABELS.common.dimHeads[el.dataset.dim] || '';
     });
     document.querySelectorAll('.sub-head').forEach(el => {
-      el.textContent = LABELS.common.subHeads[el.dataset.sub] || '';
+      const t = el.querySelector('.sh-t') || el;
+      t.textContent = LABELS.common.subHeads[el.dataset.sub] || '';
       const b = MODELL.schicht(el.dataset.sub);
+      const i = el.querySelector('.sh-i');
       if (b?.info) {
-        el.style.cursor = 'help';
         el.title = `${b.info[LABELS.sprache]}\n\nZeitskala: ${b.zeitskala ?? '—'}`;
-        el.onclick = () => this.zeigeSchicht(el.dataset.sub);
-      }
+        if (i) i.onclick = ev => { ev.stopPropagation(); this.zeigeSchicht(el.dataset.sub); };
+      } else if (i) { i.style.display = 'none'; }
     });
     const vn = document.getElementById('vocab-name');
     if (vn) vn.textContent = LABELS.sets[LABELS.active].name;
