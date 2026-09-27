@@ -1,0 +1,1401 @@
+{
+  "erzeugt": "2026-09-27T13:46:57+00:00",
+  "hinweis": "erzeugt von matrix-scharnier/adapter/paleomist.py",
+  "ereigniskomplex": "Nacheiszeitliche Transgression — sechs Fenster, eine Ursache",
+  "woher": {
+    "art": "rekonstruktion",
+    "quelle": "PaleoMIST 1.0, globales Gitter 0.25 Grad (paleo_topography, sea_level)",
+    "datei": "reconstruction_0.25_degree.nc",
+    "zeitschritt": "2500 a",
+    "zeitraum": "80 ka BP bis heute, 33 Schritte",
+    "grenzen": [
+      "2500-Jahre-Schritte: Huellkurve, nicht das Ereignis — Schmelzwasserpulse 1A/1B fallen zwischen zwei Stuetzstellen",
+      "keine Sedimentation: Kuestenlinie aus Topographie und Meeresspiegel gerechnet, nicht kartiert",
+      "0.25 Grad sind am Aequator rund 28 km — Flusslaeufe und Marschen liegen darunter",
+      "die Fenster sind Setzungen: der Kasten entscheidet, was als Ort gilt"
+    ],
+    "pruefbar_gegen": "reconstruction_a1_0.25_degree.nc (alternative Eisgeschichte)"
+  },
+  "orte": {
+    "persischer_golf": {
+      "name": "Persischer Golf · Mesopotamien",
+      "notiz": "Flaches Becken, meist unter 50 m. Bei 20 ka weitgehend trocken.",
+      "bbox": {
+        "west": 47,
+        "ost": 57,
+        "sued": 23,
+        "nord": 31
+      },
+      "fenster_km2": 930796,
+      "trockenster_stand": {
+        "ka_bp": 22.5,
+        "land_km2": 925897,
+        "land_anteil": 0.9947,
+        "meeresspiegel_m": -107.7
+      },
+      "heute": {
+        "ka_bp": -0.0,
+        "land_km2": 665226,
+        "land_anteil": 0.7147,
+        "meeresspiegel_m": 0.0
+      },
+      "verlust_km2": 260671,
+      "verlust_anteil": 0.2815,
+      "schnellster_schritt": {
+        "von": 10.0,
+        "bis": 7.5,
+        "verlust_km2": 88434
+      },
+      "reihe": [
+        {
+          "ka_bp": 80.0,
+          "land_km2": 735003,
+          "land_anteil": 0.7897,
+          "meeresspiegel_m": -14.2
+        },
+        {
+          "ka_bp": 77.5,
+          "land_km2": 728775,
+          "land_anteil": 0.783,
+          "meeresspiegel_m": -12.8
+        },
+        {
+          "ka_bp": 75.0,
+          "land_km2": 747385,
+          "land_anteil": 0.803,
+          "meeresspiegel_m": -16.7
+        },
+        {
+          "ka_bp": 72.5,
+          "land_km2": 768146,
+          "land_anteil": 0.8253,
+          "meeresspiegel_m": -22.0
+        },
+        {
+          "ka_bp": 70.0,
+          "land_km2": 792993,
+          "land_anteil": 0.852,
+          "meeresspiegel_m": -28.5
+        },
+        {
+          "ka_bp": 67.5,
+          "land_km2": 828706,
+          "land_anteil": 0.8903,
+          "meeresspiegel_m": -39.0
+        },
+        {
+          "ka_bp": 65.0,
+          "land_km2": 863044,
+          "land_anteil": 0.9272,
+          "meeresspiegel_m": -51.5
+        },
+        {
+          "ka_bp": 62.5,
+          "land_km2": 905100,
+          "land_anteil": 0.9724,
+          "meeresspiegel_m": -71.0
+        },
+        {
+          "ka_bp": 60.0,
+          "land_km2": 914790,
+          "land_anteil": 0.9828,
+          "meeresspiegel_m": -78.6
+        },
+        {
+          "ka_bp": 57.5,
+          "land_km2": 891950,
+          "land_anteil": 0.9583,
+          "meeresspiegel_m": -65.6
+        },
+        {
+          "ka_bp": 55.0,
+          "land_km2": 874007,
+          "land_anteil": 0.939,
+          "meeresspiegel_m": -57.1
+        },
+        {
+          "ka_bp": 52.5,
+          "land_km2": 851357,
+          "land_anteil": 0.9147,
+          "meeresspiegel_m": -47.6
+        },
+        {
+          "ka_bp": 50.0,
+          "land_km2": 829384,
+          "land_anteil": 0.891,
+          "meeresspiegel_m": -38.9
+        },
+        {
+          "ka_bp": 47.5,
+          "land_km2": 839694,
+          "land_anteil": 0.9021,
+          "meeresspiegel_m": -43.1
+        },
+        {
+          "ka_bp": 45.0,
+          "land_km2": 828009,
+          "land_anteil": 0.8896,
+          "meeresspiegel_m": -38.5
+        },
+        {
+          "ka_bp": 42.5,
+          "land_km2": 786726,
+          "land_anteil": 0.8452,
+          "meeresspiegel_m": -26.7
+        },
+        {
+          "ka_bp": 40.0,
+          "land_km2": 802617,
+          "land_anteil": 0.8623,
+          "meeresspiegel_m": -30.7
+        },
+        {
+          "ka_bp": 37.5,
+          "land_km2": 836956,
+          "land_anteil": 0.8992,
+          "meeresspiegel_m": -41.2
+        },
+        {
+          "ka_bp": 35.0,
+          "land_km2": 847223,
+          "land_anteil": 0.9102,
+          "meeresspiegel_m": -45.9
+        },
+        {
+          "ka_bp": 32.5,
+          "land_km2": 865773,
+          "land_anteil": 0.9301,
+          "meeresspiegel_m": -53.1
+        },
+        {
+          "ka_bp": 30.0,
+          "land_km2": 884345,
+          "land_anteil": 0.9501,
+          "meeresspiegel_m": -62.2
+        },
+        {
+          "ka_bp": 27.5,
+          "land_km2": 914790,
+          "land_anteil": 0.9828,
+          "meeresspiegel_m": -80.0
+        },
+        {
+          "ka_bp": 25.0,
+          "land_km2": 923117,
+          "land_anteil": 0.9917,
+          "meeresspiegel_m": -96.5
+        },
+        {
+          "ka_bp": 22.5,
+          "land_km2": 925897,
+          "land_anteil": 0.9947,
+          "meeresspiegel_m": -107.7
+        },
+        {
+          "ka_bp": 20.0,
+          "land_km2": 925897,
+          "land_anteil": 0.9947,
+          "meeresspiegel_m": -110.5
+        },
+        {
+          "ka_bp": 17.5,
+          "land_km2": 925200,
+          "land_anteil": 0.994,
+          "meeresspiegel_m": -102.5
+        },
+        {
+          "ka_bp": 15.0,
+          "land_km2": 913402,
+          "land_anteil": 0.9813,
+          "meeresspiegel_m": -76.4
+        },
+        {
+          "ka_bp": 12.5,
+          "land_km2": 858926,
+          "land_anteil": 0.9228,
+          "meeresspiegel_m": -50.5
+        },
+        {
+          "ka_bp": 10.0,
+          "land_km2": 781900,
+          "land_anteil": 0.84,
+          "meeresspiegel_m": -25.0
+        },
+        {
+          "ka_bp": 7.5,
+          "land_km2": 693466,
+          "land_anteil": 0.745,
+          "meeresspiegel_m": -5.4
+        },
+        {
+          "ka_bp": 5.0,
+          "land_km2": 676937,
+          "land_anteil": 0.7273,
+          "meeresspiegel_m": -2.7
+        },
+        {
+          "ka_bp": 2.5,
+          "land_km2": 665226,
+          "land_anteil": 0.7147,
+          "meeresspiegel_m": 0.9
+        },
+        {
+          "ka_bp": -0.0,
+          "land_km2": 665226,
+          "land_anteil": 0.7147,
+          "meeresspiegel_m": 0.0
+        }
+      ]
+    },
+    "doggerland": {
+      "name": "Doggerland · südliche Nordsee",
+      "notiz": "Bewohntes Land, mesolithische Funde aus Schleppnetzen. Keine Überlieferung.",
+      "bbox": {
+        "west": -2,
+        "ost": 9,
+        "sued": 51,
+        "nord": 57
+      },
+      "fenster_km2": 510748,
+      "trockenster_stand": {
+        "ka_bp": 22.5,
+        "land_km2": 510297,
+        "land_anteil": 0.9991,
+        "meeresspiegel_m": -65.6
+      },
+      "heute": {
+        "ka_bp": -0.0,
+        "land_km2": 195941,
+        "land_anteil": 0.3836,
+        "meeresspiegel_m": 0.0
+      },
+      "verlust_km2": 314356,
+      "verlust_anteil": 0.616,
+      "schnellster_schritt": {
+        "von": 10.0,
+        "bis": 7.5,
+        "verlust_km2": 119757
+      },
+      "reihe": [
+        {
+          "ka_bp": 80.0,
+          "land_km2": 247133,
+          "land_anteil": 0.4839,
+          "meeresspiegel_m": -19.0
+        },
+        {
+          "ka_bp": 77.5,
+          "land_km2": 242993,
+          "land_anteil": 0.4758,
+          "meeresspiegel_m": -17.4
+        },
+        {
+          "ka_bp": 75.0,
+          "land_km2": 247656,
+          "land_anteil": 0.4849,
+          "meeresspiegel_m": -19.5
+        },
+        {
+          "ka_bp": 72.5,
+          "land_km2": 257445,
+          "land_anteil": 0.5041,
+          "meeresspiegel_m": -23.0
+        },
+        {
+          "ka_bp": 70.0,
+          "land_km2": 324314,
+          "land_anteil": 0.635,
+          "meeresspiegel_m": -31.5
+        },
+        {
+          "ka_bp": 67.5,
+          "land_km2": 399030,
+          "land_anteil": 0.7813,
+          "meeresspiegel_m": -45.9
+        },
+        {
+          "ka_bp": 65.0,
+          "land_km2": 435880,
+          "land_anteil": 0.8534,
+          "meeresspiegel_m": -58.9
+        },
+        {
+          "ka_bp": 62.5,
+          "land_km2": 471880,
+          "land_anteil": 0.9239,
+          "meeresspiegel_m": -66.5
+        },
+        {
+          "ka_bp": 60.0,
+          "land_km2": 510294,
+          "land_anteil": 0.9991,
+          "meeresspiegel_m": -60.5
+        },
+        {
+          "ka_bp": 57.5,
+          "land_km2": 400214,
+          "land_anteil": 0.7836,
+          "meeresspiegel_m": -48.1
+        },
+        {
+          "ka_bp": 55.0,
+          "land_km2": 397242,
+          "land_anteil": 0.7778,
+          "meeresspiegel_m": -53.7
+        },
+        {
+          "ka_bp": 52.5,
+          "land_km2": 403258,
+          "land_anteil": 0.7895,
+          "meeresspiegel_m": -54.3
+        },
+        {
+          "ka_bp": 50.0,
+          "land_km2": 401658,
+          "land_anteil": 0.7864,
+          "meeresspiegel_m": -48.7
+        },
+        {
+          "ka_bp": 47.5,
+          "land_km2": 386647,
+          "land_anteil": 0.757,
+          "meeresspiegel_m": -42.8
+        },
+        {
+          "ka_bp": 45.0,
+          "land_km2": 326466,
+          "land_anteil": 0.6392,
+          "meeresspiegel_m": -34.2
+        },
+        {
+          "ka_bp": 42.5,
+          "land_km2": 350181,
+          "land_anteil": 0.6856,
+          "meeresspiegel_m": -36.1
+        },
+        {
+          "ka_bp": 40.0,
+          "land_km2": 347105,
+          "land_anteil": 0.6796,
+          "meeresspiegel_m": -36.0
+        },
+        {
+          "ka_bp": 37.5,
+          "land_km2": 366888,
+          "land_anteil": 0.7183,
+          "meeresspiegel_m": -39.2
+        },
+        {
+          "ka_bp": 35.0,
+          "land_km2": 382894,
+          "land_anteil": 0.7497,
+          "meeresspiegel_m": -41.9
+        },
+        {
+          "ka_bp": 32.5,
+          "land_km2": 402561,
+          "land_anteil": 0.7882,
+          "meeresspiegel_m": -47.3
+        },
+        {
+          "ka_bp": 30.0,
+          "land_km2": 431606,
+          "land_anteil": 0.845,
+          "meeresspiegel_m": -55.6
+        },
+        {
+          "ka_bp": 27.5,
+          "land_km2": 509391,
+          "land_anteil": 0.9973,
+          "meeresspiegel_m": -61.8
+        },
+        {
+          "ka_bp": 25.0,
+          "land_km2": 503775,
+          "land_anteil": 0.9863,
+          "meeresspiegel_m": -64.1
+        },
+        {
+          "ka_bp": 22.5,
+          "land_km2": 510297,
+          "land_anteil": 0.9991,
+          "meeresspiegel_m": -65.6
+        },
+        {
+          "ka_bp": 20.0,
+          "land_km2": 506517,
+          "land_anteil": 0.9917,
+          "meeresspiegel_m": -67.9
+        },
+        {
+          "ka_bp": 17.5,
+          "land_km2": 457438,
+          "land_anteil": 0.8956,
+          "meeresspiegel_m": -71.5
+        },
+        {
+          "ka_bp": 15.0,
+          "land_km2": 413959,
+          "land_anteil": 0.8105,
+          "meeresspiegel_m": -68.1
+        },
+        {
+          "ka_bp": 12.5,
+          "land_km2": 405780,
+          "land_anteil": 0.7945,
+          "meeresspiegel_m": -55.0
+        },
+        {
+          "ka_bp": 10.0,
+          "land_km2": 347909,
+          "land_anteil": 0.6812,
+          "meeresspiegel_m": -35.1
+        },
+        {
+          "ka_bp": 7.5,
+          "land_km2": 228152,
+          "land_anteil": 0.4467,
+          "meeresspiegel_m": -14.8
+        },
+        {
+          "ka_bp": 5.0,
+          "land_km2": 214518,
+          "land_anteil": 0.42,
+          "meeresspiegel_m": -7.3
+        },
+        {
+          "ka_bp": 2.5,
+          "land_km2": 197042,
+          "land_anteil": 0.3858,
+          "meeresspiegel_m": -0.2
+        },
+        {
+          "ka_bp": -0.0,
+          "land_km2": 195941,
+          "land_anteil": 0.3836,
+          "meeresspiegel_m": 0.0
+        }
+      ]
+    },
+    "schwarzes_meer": {
+      "name": "Schwarzes Meer · Nordwestschelf",
+      "notiz": "Katastrophische Version (Ryan/Pitman 1997) umstritten.",
+      "bbox": {
+        "west": 27,
+        "ost": 42,
+        "sued": 40,
+        "nord": 47
+      },
+      "fenster_km2": 990949,
+      "trockenster_stand": {
+        "ka_bp": 20.0,
+        "land_km2": 665221,
+        "land_anteil": 0.6713,
+        "meeresspiegel_m": -99.5
+      },
+      "heute": {
+        "ka_bp": -0.0,
+        "land_km2": 515293,
+        "land_anteil": 0.52,
+        "meeresspiegel_m": 0.0
+      },
+      "verlust_km2": 149928,
+      "verlust_anteil": 0.2254,
+      "schnellster_schritt": {
+        "von": 12.5,
+        "bis": 10.0,
+        "verlust_km2": 31705
+      },
+      "reihe": [
+        {
+          "ka_bp": 80.0,
+          "land_km2": 524377,
+          "land_anteil": 0.5292,
+          "meeresspiegel_m": -4.3
+        },
+        {
+          "ka_bp": 77.5,
+          "land_km2": 521183,
+          "land_anteil": 0.5259,
+          "meeresspiegel_m": -2.9
+        },
+        {
+          "ka_bp": 75.0,
+          "land_km2": 527597,
+          "land_anteil": 0.5324,
+          "meeresspiegel_m": -5.8
+        },
+        {
+          "ka_bp": 72.5,
+          "land_km2": 538298,
+          "land_anteil": 0.5432,
+          "meeresspiegel_m": -9.3
+        },
+        {
+          "ka_bp": 70.0,
+          "land_km2": 568590,
+          "land_anteil": 0.5738,
+          "meeresspiegel_m": -14.5
+        },
+        {
+          "ka_bp": 67.5,
+          "land_km2": 581715,
+          "land_anteil": 0.587,
+          "meeresspiegel_m": -24.1
+        },
+        {
+          "ka_bp": 65.0,
+          "land_km2": 599325,
+          "land_anteil": 0.6048,
+          "meeresspiegel_m": -36.3
+        },
+        {
+          "ka_bp": 62.5,
+          "land_km2": 627694,
+          "land_anteil": 0.6334,
+          "meeresspiegel_m": -55.0
+        },
+        {
+          "ka_bp": 60.0,
+          "land_km2": 638363,
+          "land_anteil": 0.6442,
+          "meeresspiegel_m": -63.7
+        },
+        {
+          "ka_bp": 57.5,
+          "land_km2": 627072,
+          "land_anteil": 0.6328,
+          "meeresspiegel_m": -55.6
+        },
+        {
+          "ka_bp": 55.0,
+          "land_km2": 620388,
+          "land_anteil": 0.6261,
+          "meeresspiegel_m": -50.7
+        },
+        {
+          "ka_bp": 52.5,
+          "land_km2": 610908,
+          "land_anteil": 0.6165,
+          "meeresspiegel_m": -44.5
+        },
+        {
+          "ka_bp": 50.0,
+          "land_km2": 603145,
+          "land_anteil": 0.6087,
+          "meeresspiegel_m": -38.1
+        },
+        {
+          "ka_bp": 47.5,
+          "land_km2": 607058,
+          "land_anteil": 0.6126,
+          "meeresspiegel_m": -41.7
+        },
+        {
+          "ka_bp": 45.0,
+          "land_km2": 599834,
+          "land_anteil": 0.6053,
+          "meeresspiegel_m": -36.5
+        },
+        {
+          "ka_bp": 42.5,
+          "land_km2": 589890,
+          "land_anteil": 0.5953,
+          "meeresspiegel_m": -26.9
+        },
+        {
+          "ka_bp": 40.0,
+          "land_km2": 591515,
+          "land_anteil": 0.5969,
+          "meeresspiegel_m": -29.5
+        },
+        {
+          "ka_bp": 37.5,
+          "land_km2": 601546,
+          "land_anteil": 0.607,
+          "meeresspiegel_m": -38.4
+        },
+        {
+          "ka_bp": 35.0,
+          "land_km2": 607093,
+          "land_anteil": 0.6126,
+          "meeresspiegel_m": -42.3
+        },
+        {
+          "ka_bp": 32.5,
+          "land_km2": 612619,
+          "land_anteil": 0.6182,
+          "meeresspiegel_m": -48.2
+        },
+        {
+          "ka_bp": 30.0,
+          "land_km2": 628247,
+          "land_anteil": 0.634,
+          "meeresspiegel_m": -55.7
+        },
+        {
+          "ka_bp": 27.5,
+          "land_km2": 645065,
+          "land_anteil": 0.651,
+          "meeresspiegel_m": -70.9
+        },
+        {
+          "ka_bp": 25.0,
+          "land_km2": 656264,
+          "land_anteil": 0.6623,
+          "meeresspiegel_m": -86.1
+        },
+        {
+          "ka_bp": 22.5,
+          "land_km2": 662998,
+          "land_anteil": 0.6691,
+          "meeresspiegel_m": -95.6
+        },
+        {
+          "ka_bp": 20.0,
+          "land_km2": 665221,
+          "land_anteil": 0.6713,
+          "meeresspiegel_m": -99.5
+        },
+        {
+          "ka_bp": 17.5,
+          "land_km2": 663549,
+          "land_anteil": 0.6696,
+          "meeresspiegel_m": -96.0
+        },
+        {
+          "ka_bp": 15.0,
+          "land_km2": 650639,
+          "land_anteil": 0.6566,
+          "meeresspiegel_m": -75.9
+        },
+        {
+          "ka_bp": 12.5,
+          "land_km2": 625379,
+          "land_anteil": 0.6311,
+          "meeresspiegel_m": -53.2
+        },
+        {
+          "ka_bp": 10.0,
+          "land_km2": 593674,
+          "land_anteil": 0.5991,
+          "meeresspiegel_m": -30.1
+        },
+        {
+          "ka_bp": 7.5,
+          "land_km2": 562972,
+          "land_anteil": 0.5681,
+          "meeresspiegel_m": -11.1
+        },
+        {
+          "ka_bp": 5.0,
+          "land_km2": 535589,
+          "land_anteil": 0.5405,
+          "meeresspiegel_m": -6.8
+        },
+        {
+          "ka_bp": 2.5,
+          "land_km2": 519024,
+          "land_anteil": 0.5238,
+          "meeresspiegel_m": -1.1
+        },
+        {
+          "ka_bp": -0.0,
+          "land_km2": 515293,
+          "land_anteil": 0.52,
+          "meeresspiegel_m": 0.0
+        }
+      ]
+    },
+    "sundaschelf": {
+      "name": "Sundaschelf · Indonesien",
+      "notiz": "Sehr flaches Schelf, ein Meter Wasser verschiebt die Küste um Kilometer.",
+      "bbox": {
+        "west": 100,
+        "ost": 118,
+        "sued": -8,
+        "nord": 10
+      },
+      "fenster_km2": 4100089,
+      "trockenster_stand": {
+        "ka_bp": 20.0,
+        "land_km2": 3250589,
+        "land_anteil": 0.7928,
+        "meeresspiegel_m": -117.4
+      },
+      "heute": {
+        "ka_bp": -0.0,
+        "land_km2": 1395730,
+        "land_anteil": 0.3404,
+        "meeresspiegel_m": 0.0
+      },
+      "verlust_km2": 1854859,
+      "verlust_anteil": 0.5706,
+      "schnellster_schritt": {
+        "von": 12.5,
+        "bis": 10.0,
+        "verlust_km2": 714177
+      },
+      "reihe": [
+        {
+          "ka_bp": 80.0,
+          "land_km2": 1652784,
+          "land_anteil": 0.4031,
+          "meeresspiegel_m": -15.7
+        },
+        {
+          "ka_bp": 77.5,
+          "land_km2": 1628138,
+          "land_anteil": 0.3971,
+          "meeresspiegel_m": -14.5
+        },
+        {
+          "ka_bp": 75.0,
+          "land_km2": 1723531,
+          "land_anteil": 0.4204,
+          "meeresspiegel_m": -19.1
+        },
+        {
+          "ka_bp": 72.5,
+          "land_km2": 1899008,
+          "land_anteil": 0.4632,
+          "meeresspiegel_m": -26.0
+        },
+        {
+          "ka_bp": 70.0,
+          "land_km2": 2137626,
+          "land_anteil": 0.5214,
+          "meeresspiegel_m": -33.5
+        },
+        {
+          "ka_bp": 67.5,
+          "land_km2": 2442341,
+          "land_anteil": 0.5957,
+          "meeresspiegel_m": -45.0
+        },
+        {
+          "ka_bp": 65.0,
+          "land_km2": 2747737,
+          "land_anteil": 0.6702,
+          "meeresspiegel_m": -58.0
+        },
+        {
+          "ka_bp": 62.5,
+          "land_km2": 3075351,
+          "land_anteil": 0.7501,
+          "meeresspiegel_m": -77.7
+        },
+        {
+          "ka_bp": 60.0,
+          "land_km2": 3121500,
+          "land_anteil": 0.7613,
+          "meeresspiegel_m": -85.2
+        },
+        {
+          "ka_bp": 57.5,
+          "land_km2": 2976147,
+          "land_anteil": 0.7259,
+          "meeresspiegel_m": -70.4
+        },
+        {
+          "ka_bp": 55.0,
+          "land_km2": 2756166,
+          "land_anteil": 0.6722,
+          "meeresspiegel_m": -59.7
+        },
+        {
+          "ka_bp": 52.5,
+          "land_km2": 2500746,
+          "land_anteil": 0.6099,
+          "meeresspiegel_m": -48.9
+        },
+        {
+          "ka_bp": 50.0,
+          "land_km2": 2262171,
+          "land_anteil": 0.5517,
+          "meeresspiegel_m": -39.5
+        },
+        {
+          "ka_bp": 47.5,
+          "land_km2": 2408412,
+          "land_anteil": 0.5874,
+          "meeresspiegel_m": -44.7
+        },
+        {
+          "ka_bp": 45.0,
+          "land_km2": 2329166,
+          "land_anteil": 0.5681,
+          "meeresspiegel_m": -41.6
+        },
+        {
+          "ka_bp": 42.5,
+          "land_km2": 1932740,
+          "land_anteil": 0.4714,
+          "meeresspiegel_m": -28.3
+        },
+        {
+          "ka_bp": 40.0,
+          "land_km2": 2062110,
+          "land_anteil": 0.5029,
+          "meeresspiegel_m": -32.2
+        },
+        {
+          "ka_bp": 37.5,
+          "land_km2": 2381498,
+          "land_anteil": 0.5808,
+          "meeresspiegel_m": -43.4
+        },
+        {
+          "ka_bp": 35.0,
+          "land_km2": 2510781,
+          "land_anteil": 0.6124,
+          "meeresspiegel_m": -48.3
+        },
+        {
+          "ka_bp": 32.5,
+          "land_km2": 2700768,
+          "land_anteil": 0.6587,
+          "meeresspiegel_m": -56.2
+        },
+        {
+          "ka_bp": 30.0,
+          "land_km2": 2896996,
+          "land_anteil": 0.7066,
+          "meeresspiegel_m": -65.8
+        },
+        {
+          "ka_bp": 27.5,
+          "land_km2": 3119188,
+          "land_anteil": 0.7608,
+          "meeresspiegel_m": -84.7
+        },
+        {
+          "ka_bp": 25.0,
+          "land_km2": 3206036,
+          "land_anteil": 0.7819,
+          "meeresspiegel_m": -101.8
+        },
+        {
+          "ka_bp": 22.5,
+          "land_km2": 3245981,
+          "land_anteil": 0.7917,
+          "meeresspiegel_m": -114.5
+        },
+        {
+          "ka_bp": 20.0,
+          "land_km2": 3250589,
+          "land_anteil": 0.7928,
+          "meeresspiegel_m": -117.4
+        },
+        {
+          "ka_bp": 17.5,
+          "land_km2": 3223685,
+          "land_anteil": 0.7862,
+          "meeresspiegel_m": -106.8
+        },
+        {
+          "ka_bp": 15.0,
+          "land_km2": 3046840,
+          "land_anteil": 0.7431,
+          "meeresspiegel_m": -78.2
+        },
+        {
+          "ka_bp": 12.5,
+          "land_km2": 2524557,
+          "land_anteil": 0.6157,
+          "meeresspiegel_m": -51.5
+        },
+        {
+          "ka_bp": 10.0,
+          "land_km2": 1810380,
+          "land_anteil": 0.4415,
+          "meeresspiegel_m": -25.4
+        },
+        {
+          "ka_bp": 7.5,
+          "land_km2": 1452579,
+          "land_anteil": 0.3543,
+          "meeresspiegel_m": -5.3
+        },
+        {
+          "ka_bp": 5.0,
+          "land_km2": 1427955,
+          "land_anteil": 0.3483,
+          "meeresspiegel_m": -2.8
+        },
+        {
+          "ka_bp": 2.5,
+          "land_km2": 1383403,
+          "land_anteil": 0.3374,
+          "meeresspiegel_m": 1.0
+        },
+        {
+          "ka_bp": -0.0,
+          "land_km2": 1395730,
+          "land_anteil": 0.3404,
+          "meeresspiegel_m": 0.0
+        }
+      ]
+    },
+    "sahulschelf": {
+      "name": "Sahul- und Arafuraschelf · Nordaustralien",
+      "notiz": "Überlieferung in Erzählungen von 21 Küstenorten (Nunn & Reid 2016).",
+      "bbox": {
+        "west": 125,
+        "ost": 145,
+        "sued": -20,
+        "nord": -8
+      },
+      "fenster_km2": 2970359,
+      "trockenster_stand": {
+        "ka_bp": 20.0,
+        "land_km2": 2676459,
+        "land_anteil": 0.9011,
+        "meeresspiegel_m": -113.7
+      },
+      "heute": {
+        "ka_bp": -0.0,
+        "land_km2": 1539212,
+        "land_anteil": 0.5182,
+        "meeresspiegel_m": 0.0
+      },
+      "verlust_km2": 1137247,
+      "verlust_anteil": 0.4249,
+      "schnellster_schritt": {
+        "von": 15.0,
+        "bis": 12.5,
+        "verlust_km2": 425666
+      },
+      "reihe": [
+        {
+          "ka_bp": 80.0,
+          "land_km2": 1720884,
+          "land_anteil": 0.5794,
+          "meeresspiegel_m": -15.8
+        },
+        {
+          "ka_bp": 77.5,
+          "land_km2": 1707310,
+          "land_anteil": 0.5748,
+          "meeresspiegel_m": -14.8
+        },
+        {
+          "ka_bp": 75.0,
+          "land_km2": 1768468,
+          "land_anteil": 0.5954,
+          "meeresspiegel_m": -19.1
+        },
+        {
+          "ka_bp": 72.5,
+          "land_km2": 1853699,
+          "land_anteil": 0.6241,
+          "meeresspiegel_m": -25.8
+        },
+        {
+          "ka_bp": 70.0,
+          "land_km2": 1925345,
+          "land_anteil": 0.6482,
+          "meeresspiegel_m": -33.0
+        },
+        {
+          "ka_bp": 67.5,
+          "land_km2": 2043998,
+          "land_anteil": 0.6881,
+          "meeresspiegel_m": -44.0
+        },
+        {
+          "ka_bp": 65.0,
+          "land_km2": 2284438,
+          "land_anteil": 0.7691,
+          "meeresspiegel_m": -56.4
+        },
+        {
+          "ka_bp": 62.5,
+          "land_km2": 2508859,
+          "land_anteil": 0.8446,
+          "meeresspiegel_m": -75.2
+        },
+        {
+          "ka_bp": 60.0,
+          "land_km2": 2551275,
+          "land_anteil": 0.8589,
+          "meeresspiegel_m": -82.5
+        },
+        {
+          "ka_bp": 57.5,
+          "land_km2": 2474002,
+          "land_anteil": 0.8329,
+          "meeresspiegel_m": -68.7
+        },
+        {
+          "ka_bp": 55.0,
+          "land_km2": 2296542,
+          "land_anteil": 0.7732,
+          "meeresspiegel_m": -58.0
+        },
+        {
+          "ka_bp": 52.5,
+          "land_km2": 2068215,
+          "land_anteil": 0.6963,
+          "meeresspiegel_m": -47.2
+        },
+        {
+          "ka_bp": 50.0,
+          "land_km2": 1967684,
+          "land_anteil": 0.6624,
+          "meeresspiegel_m": -37.8
+        },
+        {
+          "ka_bp": 47.5,
+          "land_km2": 2017545,
+          "land_anteil": 0.6792,
+          "meeresspiegel_m": -42.7
+        },
+        {
+          "ka_bp": 45.0,
+          "land_km2": 1988829,
+          "land_anteil": 0.6696,
+          "meeresspiegel_m": -39.8
+        },
+        {
+          "ka_bp": 42.5,
+          "land_km2": 1869567,
+          "land_anteil": 0.6294,
+          "meeresspiegel_m": -27.2
+        },
+        {
+          "ka_bp": 40.0,
+          "land_km2": 1902722,
+          "land_anteil": 0.6406,
+          "meeresspiegel_m": -30.8
+        },
+        {
+          "ka_bp": 37.5,
+          "land_km2": 2008496,
+          "land_anteil": 0.6762,
+          "meeresspiegel_m": -41.4
+        },
+        {
+          "ka_bp": 35.0,
+          "land_km2": 2062925,
+          "land_anteil": 0.6945,
+          "meeresspiegel_m": -46.1
+        },
+        {
+          "ka_bp": 32.5,
+          "land_km2": 2216478,
+          "land_anteil": 0.7462,
+          "meeresspiegel_m": -53.7
+        },
+        {
+          "ka_bp": 30.0,
+          "land_km2": 2409031,
+          "land_anteil": 0.811,
+          "meeresspiegel_m": -63.0
+        },
+        {
+          "ka_bp": 27.5,
+          "land_km2": 2545974,
+          "land_anteil": 0.8571,
+          "meeresspiegel_m": -81.3
+        },
+        {
+          "ka_bp": 25.0,
+          "land_km2": 2627883,
+          "land_anteil": 0.8847,
+          "meeresspiegel_m": -97.7
+        },
+        {
+          "ka_bp": 22.5,
+          "land_km2": 2668859,
+          "land_anteil": 0.8985,
+          "meeresspiegel_m": -110.5
+        },
+        {
+          "ka_bp": 20.0,
+          "land_km2": 2676459,
+          "land_anteil": 0.9011,
+          "meeresspiegel_m": -113.7
+        },
+        {
+          "ka_bp": 17.5,
+          "land_km2": 2646850,
+          "land_anteil": 0.8911,
+          "meeresspiegel_m": -103.2
+        },
+        {
+          "ka_bp": 15.0,
+          "land_km2": 2517995,
+          "land_anteil": 0.8477,
+          "meeresspiegel_m": -75.2
+        },
+        {
+          "ka_bp": 12.5,
+          "land_km2": 2092329,
+          "land_anteil": 0.7044,
+          "meeresspiegel_m": -49.4
+        },
+        {
+          "ka_bp": 10.0,
+          "land_km2": 1824341,
+          "land_anteil": 0.6142,
+          "meeresspiegel_m": -24.6
+        },
+        {
+          "ka_bp": 7.5,
+          "land_km2": 1607476,
+          "land_anteil": 0.5412,
+          "meeresspiegel_m": -5.8
+        },
+        {
+          "ka_bp": 5.0,
+          "land_km2": 1587939,
+          "land_anteil": 0.5346,
+          "meeresspiegel_m": -3.2
+        },
+        {
+          "ka_bp": 2.5,
+          "land_km2": 1536242,
+          "land_anteil": 0.5172,
+          "meeresspiegel_m": 0.9
+        },
+        {
+          "ka_bp": -0.0,
+          "land_km2": 1539212,
+          "land_anteil": 0.5182,
+          "meeresspiegel_m": 0.0
+        }
+      ]
+    },
+    "yucatan": {
+      "name": "Yucatán · Mittelamerika",
+      "notiz": "Schmale Schelfe. Flutüberlieferung vorhanden, physisches Gegenstück schwach.",
+      "bbox": {
+        "west": -95,
+        "ost": -80,
+        "sued": 15,
+        "nord": 25
+      },
+      "fenster_km2": 1813725,
+      "trockenster_stand": {
+        "ka_bp": 20.0,
+        "land_km2": 770828,
+        "land_anteil": 0.425,
+        "meeresspiegel_m": -90.3
+      },
+      "heute": {
+        "ka_bp": -0.0,
+        "land_km2": 463500,
+        "land_anteil": 0.2556,
+        "meeresspiegel_m": 0.0
+      },
+      "verlust_km2": 307328,
+      "verlust_anteil": 0.3987,
+      "schnellster_schritt": {
+        "von": 12.5,
+        "bis": 10.0,
+        "verlust_km2": 93803
+      },
+      "reihe": [
+        {
+          "ka_bp": 80.0,
+          "land_km2": 470328,
+          "land_anteil": 0.2593,
+          "meeresspiegel_m": 0.7
+        },
+        {
+          "ka_bp": 77.5,
+          "land_km2": 469596,
+          "land_anteil": 0.2589,
+          "meeresspiegel_m": 0.9
+        },
+        {
+          "ka_bp": 75.0,
+          "land_km2": 484173,
+          "land_anteil": 0.2669,
+          "meeresspiegel_m": -2.1
+        },
+        {
+          "ka_bp": 72.5,
+          "land_km2": 521727,
+          "land_anteil": 0.2877,
+          "meeresspiegel_m": -8.2
+        },
+        {
+          "ka_bp": 70.0,
+          "land_km2": 555080,
+          "land_anteil": 0.306,
+          "meeresspiegel_m": -14.5
+        },
+        {
+          "ka_bp": 67.5,
+          "land_km2": 607536,
+          "land_anteil": 0.335,
+          "meeresspiegel_m": -23.6
+        },
+        {
+          "ka_bp": 65.0,
+          "land_km2": 651825,
+          "land_anteil": 0.3594,
+          "meeresspiegel_m": -33.5
+        },
+        {
+          "ka_bp": 62.5,
+          "land_km2": 706887,
+          "land_anteil": 0.3897,
+          "meeresspiegel_m": -48.3
+        },
+        {
+          "ka_bp": 60.0,
+          "land_km2": 722019,
+          "land_anteil": 0.3981,
+          "meeresspiegel_m": -55.8
+        },
+        {
+          "ka_bp": 57.5,
+          "land_km2": 703245,
+          "land_anteil": 0.3877,
+          "meeresspiegel_m": -47.2
+        },
+        {
+          "ka_bp": 55.0,
+          "land_km2": 663372,
+          "land_anteil": 0.3658,
+          "meeresspiegel_m": -37.7
+        },
+        {
+          "ka_bp": 52.5,
+          "land_km2": 627847,
+          "land_anteil": 0.3462,
+          "meeresspiegel_m": -28.8
+        },
+        {
+          "ka_bp": 50.0,
+          "land_km2": 587739,
+          "land_anteil": 0.3241,
+          "meeresspiegel_m": -20.3
+        },
+        {
+          "ka_bp": 47.5,
+          "land_km2": 604605,
+          "land_anteil": 0.3334,
+          "meeresspiegel_m": -23.8
+        },
+        {
+          "ka_bp": 45.0,
+          "land_km2": 604538,
+          "land_anteil": 0.3333,
+          "meeresspiegel_m": -23.9
+        },
+        {
+          "ka_bp": 42.5,
+          "land_km2": 551337,
+          "land_anteil": 0.304,
+          "meeresspiegel_m": -15.0
+        },
+        {
+          "ka_bp": 40.0,
+          "land_km2": 563626,
+          "land_anteil": 0.3108,
+          "meeresspiegel_m": -16.7
+        },
+        {
+          "ka_bp": 37.5,
+          "land_km2": 608917,
+          "land_anteil": 0.3357,
+          "meeresspiegel_m": -24.6
+        },
+        {
+          "ka_bp": 35.0,
+          "land_km2": 631420,
+          "land_anteil": 0.3481,
+          "meeresspiegel_m": -29.3
+        },
+        {
+          "ka_bp": 32.5,
+          "land_km2": 663307,
+          "land_anteil": 0.3657,
+          "meeresspiegel_m": -37.2
+        },
+        {
+          "ka_bp": 30.0,
+          "land_km2": 691597,
+          "land_anteil": 0.3813,
+          "meeresspiegel_m": -44.9
+        },
+        {
+          "ka_bp": 27.5,
+          "land_km2": 729878,
+          "land_anteil": 0.4024,
+          "meeresspiegel_m": -59.5
+        },
+        {
+          "ka_bp": 25.0,
+          "land_km2": 745709,
+          "land_anteil": 0.4111,
+          "meeresspiegel_m": -72.1
+        },
+        {
+          "ka_bp": 22.5,
+          "land_km2": 765780,
+          "land_anteil": 0.4222,
+          "meeresspiegel_m": -85.6
+        },
+        {
+          "ka_bp": 20.0,
+          "land_km2": 770828,
+          "land_anteil": 0.425,
+          "meeresspiegel_m": -90.3
+        },
+        {
+          "ka_bp": 17.5,
+          "land_km2": 762228,
+          "land_anteil": 0.4203,
+          "meeresspiegel_m": -82.6
+        },
+        {
+          "ka_bp": 15.0,
+          "land_km2": 733412,
+          "land_anteil": 0.4044,
+          "meeresspiegel_m": -61.8
+        },
+        {
+          "ka_bp": 12.5,
+          "land_km2": 679097,
+          "land_anteil": 0.3744,
+          "meeresspiegel_m": -41.9
+        },
+        {
+          "ka_bp": 10.0,
+          "land_km2": 585294,
+          "land_anteil": 0.3227,
+          "meeresspiegel_m": -22.2
+        },
+        {
+          "ka_bp": 7.5,
+          "land_km2": 521301,
+          "land_anteil": 0.2874,
+          "meeresspiegel_m": -8.4
+        },
+        {
+          "ka_bp": 5.0,
+          "land_km2": 504524,
+          "land_anteil": 0.2782,
+          "meeresspiegel_m": -4.7
+        },
+        {
+          "ka_bp": 2.5,
+          "land_km2": 459120,
+          "land_anteil": 0.2531,
+          "meeresspiegel_m": 0.5
+        },
+        {
+          "ka_bp": -0.0,
+          "land_km2": 463500,
+          "land_anteil": 0.2556,
+          "meeresspiegel_m": 0.0
+        }
+      ]
+    }
+  }
+}
