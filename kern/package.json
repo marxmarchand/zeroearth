@@ -1,0 +1,11 @@
+{
+  "name": "zeroearth-kern",
+  "private": true,
+  "type": "module",
+  "description": "Schema und Prüfregeln nach docs/strukturstand.md; Adapter als Prüfsteine",
+  "scripts": {
+    "pruefe": "node pruefe.mjs",
+    "test": "node pruefe.mjs && node --test test/*.test.mjs"
+  },
+  "engines": { "node": ">=20" }
+}

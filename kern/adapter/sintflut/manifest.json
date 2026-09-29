@@ -1,0 +1,43 @@
+{
+  "id": "sintflut",
+  "eingabe": "data/sintflut.json",
+  "quelle": {
+    "name": "PaleoMIST 1.0",
+    "datei": "reconstruction_0.25_degree.nc",
+    "variablen": ["paleo_topography", "sea_level"],
+    "abgeleitet_durch": "matrix-scharnier/adapter/paleomist.py",
+    "pruefbar_gegen": "reconstruction_a1_0.25_degree.nc (alternative Eisgeschichte)"
+  },
+  "stapel": ["1.1", "2"],
+  "uebergang": "planetar",
+  "vorgang": "stoffwechsel",
+  "herkunft": {
+    "arten": ["rekonstruktion"],
+    "ebene": "Datei",
+    "hinweis": "Die Quelle nennt die Herkunft einmal für die ganze Datei. transform.mjs schreibt sie an jeden Wert und vermerkt, dass sie von der Dateiebene übernommen ist. Die Notizen tragen eine eigene Herkunft (kuratiert, gesellschaftliches Archiv).",
+    "archivkette": [
+      { "archiv": "zeroearth (data/sintflut.json, Commit afe6d90)", "art": "zeroearth" },
+      { "archiv": "PaleoMIST 1.0, reconstruction_0.25_degree.nc",
+        "art": { "fehlt": true, "grund": "Archivart von PaleoMIST nicht festgelegt" } },
+      { "fehlt": true, "grund": "Welche natürlichen Archive PaleoMIST zugrunde liegen, nennen die Daten nicht" }
+    ]
+  },
+  "zeitsemantik": {
+    "skala": "ka BP",
+    "bezugsjahr": { "fehlt": true, "grund": "Die Quelle sagt nicht, ob 0 ka BP 1950 CE oder das Jahr der Rechnung meint." },
+    "aufloesung": { "wert": 2.5, "einheit": "ka" },
+    "abdeckung": { "von": 80, "bis": 0, "schritte": 33 },
+    "verzoegerung": { "fehlt": true, "grund": "Kein Wissensstand angegeben; der Abstand zwischen Bezugszeit und Wissensstand ist daher unbekannt." }
+  },
+  "geometrie": ["flaeche", "feld", "grenze"],
+  "lizenz": {
+    "angabe": "frei",
+    "quelle": "QUELLEN.md",
+    "geprueft": false
+  },
+  "weitergabe": {
+    "im_repo": "data/sintflut.json: Flächensummen und Mittelwerte je Kasten",
+    "nicht_im_repo": "Raster reconstruction_0.25_degree.nc; wird nur als Verweis geführt"
+  },
+  "auswahl": ["sintflut/auswahl/fenster", "sintflut/auswahl/kasten"]
+}
