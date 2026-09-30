@@ -164,6 +164,7 @@ Diese Regeln folgen aus der Struktur und gelten für jede Ansicht.
 8. Fehlendes bleibt fehlend: auch ein fehlender Träger, eine fehlende Kommensurabilität, eine leere Subjektachse.
 9. Die Plattform ist selbst ein Objekt der 2. Natur, eine Verdinglichung, und weist sich als solches aus.
 10. Jede Verzerrung (Flächenverzerrung, Überhöhung, Projektion) steht als Zahl in der Ansicht.
+11. Jede Reduktion (Vergröbern, Mitteln, Auswählen, Zusammenfassen) steht im Manifest. Werden mehrere Modelle zusammengefasst, erscheint die Spannweite, nicht nur der Mittelwert: Die Uneinigkeit der Modelle ist selbst eine Aussage.
 
 ## Ansichten
 
@@ -194,6 +195,20 @@ Die Plattform soll einen gegenwärtigen Zustand des Erdsystems zeigen, ihn in Te
 | Ansichten | fünf gekoppelte Ansichten mit gemeinsamem Auswahlzustand | nein |
 
 Das Zwischenformat ist das Modell selbst, kein Renderformat. Punkt, Fläche, Feld und Grenze sind nur die Geometrie von Trägern der 1. Natur. Eine Grenze (Küstenlinie, Schneegrenze) ist nie gemessen, sondern immer abgeleitet und trägt die Herkunft ihrer Quelle.
+
+### Fremde Modelle, abgespeckt
+
+zeroearth rechnet nicht selbst. Es bindet Ergebnisse großer Modelle und Messreihen ein, die andere berechnet haben, und verkleinert sie im Adapter. Die Seite zeigt nur das verkleinerte Ergebnis.
+
+- **Quellen:** ISIMIP (Wirkungsmodelle), Copernicus Climate Data Store (ERA5, CMIP6-Auszüge), CMIP6 in der Cloud (Pangeo), PANGAEA (Paläodaten).
+- **Reduktion als Pflichtfeld im Manifest:** räumlich vergröbern, zeitlich mitteln, Variablen auswählen, Modelle zusammenfassen. Jeder Schritt steht in der Herkunftskette, etwa zeroearth (Jahresmittel, 2°) ← ISIMIP ← Grundwassermodell.
+- **Größe:** eine Ebene im Bereich weniger Megabyte; einzelne Dateien unter 100 MB, Repo unter etwa 1 GB.
+
+### Ideal, Beobachtung, Differenz
+
+Modellergebnisse bilden die **Idealschicht**: Herkunft `modell`, Merkmal „idealisiert“, eigene Bildsprache (schematisch, nie wie Beobachtung). Messungen und Rekonstruktionen bilden die **Beobachtung**, mit ihren Lücken. Die **Differenz** erscheint nur, wo beides vorliegt; sie ist der eigentliche Forschungsgegenstand. Welcher Zustand als Ideal gilt, ist eine Setzung und steht im Bild (Regel 7): Ein vorindustrieller Referenzzustand ist kein natürlicher Normalzustand.
+
+Die 2. Natur tritt dabei nicht als Zahlenparameter auf, sondern als **Regime**, das festlegt, welche Flüsse laufen, etwa Grundwasser als Gemeingut oder als Eigentum mit Entnahmerecht.
 
 ### Echtzeit und Revision
 

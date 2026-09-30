@@ -18,7 +18,7 @@ import {
   STAPEL, UNTEREBENEN, stapelVon, UEBERGAENGE, GRUNDKRAEFTE, RICHTUNGEN, ZUFLUSSARTEN, AUSGANGSARTEN,
   KAPITALFORMEN, VORGAENGE, RUECKWIRKUNG, RELATIONSARTEN, VERWORFEN, TAUSCHVORGAENGE, MODI, formwechsel,
   ARCHIVARTEN, HERKUNFTSARTEN, KEIN_ERWARTUNGSTRAEGER, WISSENSSTATUS, GEOMETRIEN, MIT_VERZERRUNG,
-  istFehlend, MANIFEST_PFLICHT, ZEITSEMANTIK_PFLICHT,
+  istFehlend, MANIFEST_PFLICHT, ZEITSEMANTIK_PFLICHT, REDUKTIONSSCHRITTE, SPANNWEITE,
 } from './schema.mjs';
 
 export const REGELN = /** @type {const} */ ({
@@ -32,6 +32,7 @@ export const REGELN = /** @type {const} */ ({
   8: 'Fehlendes bleibt fehlend',
   9: 'Plattform weist sich als 2. Natur aus',
   10: 'Verzerrung als Zahl',
+  11: 'Reduktion im Manifest, Spannweite bei zusammengefassten Modellen',
   B: 'Bestände und Formen',
   S: 'Struktur',
   M: 'Manifest',
@@ -258,6 +259,7 @@ export function pruefe(gr) {
       else pruefeWoher(f.woher, fo);
       pruefeErwartung(f, f.woher?.erwartungstraeger, fo);
       pruefeGegenwert(f, fo);
+      pruefeSpannweite(f, fo);
     });
     // Revisionen fügen hinzu, überschreiben nie.
     if (fs.length > 1) {
@@ -285,6 +287,8 @@ export function pruefe(gr) {
     if (!arten.length) F(6, ort, 'Herkunft ohne arten (nichtleere Menge)');
     for (const a of arten) if (!HERKUNFTSARTEN.includes(a)) F(6, ort, `Herkunftsart unbekannt: ${a}`);
     if (new Set(arten).size !== arten.length) F(6, ort, 'arten ist eine Menge; doppelte Einträge');
+    if (arten.includes('idealisiert') && !arten.includes('modell')) F(6, ort, 'idealisiert ohne modell; das Merkmal gehört zur Idealschicht');
+    if (arten.includes('modell') && !arten.includes('idealisiert')) F(6, ort, 'modell ohne Merkmal idealisiert; Modellergebnisse bilden die Idealschicht');
     if (!istText(w.quelle)) F(6, ort, 'Herkunft ohne Quelle');
     pruefeArchivkette(w.archivkette, ort);
     if (w.abgeleitet_aus !== undefined) {
@@ -328,6 +332,24 @@ export function pruefe(gr) {
       const arten = x.woher?.arten;
       if (Array.isArray(arten) && !arten.includes('erwartung')) F(4, ort, 'Wahrscheinlichkeit ohne Herkunftsart erwartung');
     }
+  }
+
+  /** Regel 11: Mehrere Modelle zusammengefasst heißt Spannweite mitführen.
+      @param {any} f @param {string} ort */
+  function pruefeSpannweite(f, ort) {
+    const modelle = f.woher?.modelle;
+    if (modelle === undefined) {
+      if (f.spannweite !== undefined) F(11, ort, 'Spannweite ohne woher.modelle; unklar, worüber sie reicht');
+      return;
+    }
+    if (!Array.isArray(modelle) || !modelle.length || !modelle.every(istText))
+      return F(11, ort, 'woher.modelle muss eine nichtleere Liste von Namen sein');
+    if (modelle.length < 2 || istFehlend(f.wert)) return;
+    const sw = f.spannweite;
+    if (!sw || !SPANNWEITE.every(k => istZahl(sw[k])))
+      return F(11, ort, `${modelle.length} Modelle zusammengefasst ohne Spannweite {min, max}; die Uneinigkeit der Modelle ist selbst eine Aussage`);
+    if (sw.min > sw.max) F(11, ort, 'Spannweite: min größer als max');
+    else if (istZahl(f.wert) && (f.wert < sw.min || f.wert > sw.max)) F(11, ort, 'Wert liegt außerhalb seiner Spannweite');
   }
 
   /** Regel 3. @param {any} x @param {string} ort */
@@ -472,6 +494,32 @@ export function pruefeManifest(m) {
   if (m.zeitsemantik && !istFehlend(m.zeitsemantik))
     for (const k of ZEITSEMANTIK_PFLICHT) if (!(k in m.zeitsemantik)) F(ort, `zeitsemantik.${k} fehlt`);
   for (const g of [m.geometrie].flat()) if (g !== undefined && !istFehlend(g) && !GEOMETRIEN.includes(g)) F(ort, `Geometrie unbekannt: ${g}`);
+  if (m.herkunft && !istFehlend(m.herkunft)) {
+    const arten = m.herkunft.arten ?? [];
+    if (arten.includes('idealisiert') !== arten.includes('modell'))
+      F(ort, 'herkunft: modell und idealisiert gehören zusammen (Idealschicht)');
+  }
+
+  // Regel 11: Reduktion
+  const R = (/** @type {string} */ text) => fehler.push({ regel: 11, ort, text });
+  if (istFehlend(m.reduktion)) R('reduktion ist nie fehlend: der Adapter reduziert selbst; nichts reduziert heißt []');
+  else if (m.reduktion !== undefined && !Array.isArray(m.reduktion)) R('reduktion ist eine Liste von Schritten {schritt, angabe}');
+  else if (Array.isArray(m.reduktion)) {
+    if (!m.reduktion.length) hinweise.push({ regel: 11, ort, text: 'keine Reduktion: Quelle unverändert übernommen' });
+    m.reduktion.forEach((/** @type {any} */ r, /** @type {number} */ i) => {
+      const o = `reduktion[${i}]`;
+      if (!REDUKTIONSSCHRITTE.includes(r?.schritt)) R(`${o}: Schritt unbekannt: ${r?.schritt} (${REDUKTIONSSCHRITTE.join(', ')})`);
+      if (!istText(r?.angabe)) R(`${o}: ohne Angabe, etwa "0.5° -> 2°"`);
+      if (r?.schritt !== 'zusammenfassen') return;
+      if (!Array.isArray(r.modelle) || !r.modelle.length || !r.modelle.every(istText))
+        R(`${o}: zusammenfassen nennt die Modelle nicht (modelle: [...])`);
+      else if (r.modelle.length > 1) {
+        const mit = Array.isArray(r.mitgefuehrt) ? r.mitgefuehrt : [];
+        const fehlen = SPANNWEITE.filter(k => !mit.includes(k));
+        if (fehlen.length) R(`${o}: ${r.modelle.length} Modelle zusammengefasst, es fehlt ${fehlen.join(' und ')}; die Spannweite erscheint, nicht nur der Mittelwert`);
+      }
+    });
+  }
   return { fehler, hinweise };
 }
 

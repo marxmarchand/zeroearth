@@ -6,7 +6,7 @@
    Was hier fehlt, ist nicht entschieden. Offene Stellen: kern/BERICHT.md.
    ════════════════════════════════════════════════════════════════════ */
 
-export const SCHEMA_VERSION = '0.2.0';
+export const SCHEMA_VERSION = '0.3.0';
 
 /* ── Stapel ───────────────────────────────────────────────────────────
    Drei Stapel, je drei Unterebenen. Die Reihenfolge codiert die Genese
@@ -102,11 +102,13 @@ export const MODI = /** @type {const} */ ({
 
 /* ── Herkunft ─────────────────────────────────────────────────────────
    Gilt pro Wert und ist eine Menge. Rangfolge nur beobachtung >
-   rekonstruktion > modell; kuratiert und erwartung sind Merkmale.
-   Abgeleitete Werte tragen alle beteiligten Arten.                      */
-export const HERKUNFTSARTEN = /** @type {const} */ (['beobachtung', 'rekonstruktion', 'modell', 'kuratiert', 'erwartung']);
+   rekonstruktion > modell; kuratiert, erwartung und idealisiert sind
+   Merkmale. Abgeleitete Werte tragen alle beteiligten Arten.
+   idealisiert: Modellergebnis als Idealschicht (Bauform, Ideal,
+   Beobachtung, Differenz). Gehört immer zu modell und umgekehrt.        */
+export const HERKUNFTSARTEN = /** @type {const} */ (['beobachtung', 'rekonstruktion', 'modell', 'kuratiert', 'erwartung', 'idealisiert']);
 export const HERKUNFT_RANG = /** @type {const} */ (['beobachtung', 'rekonstruktion', 'modell']);
-export const HERKUNFT_MERKMALE = /** @type {const} */ (['kuratiert', 'erwartung']);
+export const HERKUNFT_MERKMALE = /** @type {const} */ (['kuratiert', 'erwartung', 'idealisiert']);
 
 /** Was angezeigt wird: die schwächste Art aus der Rangfolge plus die Merkmale. */
 export function anzeige(/** @type {string[]} */ arten) {
@@ -145,8 +147,20 @@ export const istFehlend = (/** @type {any} */ x) => !!x && typeof x === 'object'
    Pflichtfelder eines Adapters. Jedes darf fehlend sein, aber nicht fehlen. */
 export const MANIFEST_PFLICHT = /** @type {const} */ ([
   'id', 'quelle', 'stapel', 'vorgang', 'herkunft', 'zeitsemantik', 'geometrie', 'lizenz', 'weitergabe', 'auswahl',
+  'reduktion',
 ]);
 export const ZEITSEMANTIK_PFLICHT = /** @type {const} */ (['aufloesung', 'abdeckung', 'verzoegerung']);
+
+/* ── Reduktion (Regel 11) ─────────────────────────────────────────────
+   Was der Adapter verkleinert, steht als Liste von Schritten im Manifest,
+   je {schritt, angabe}, etwa {schritt: 'vergroebern', angabe: '0.5° -> 2°'}.
+   Die Liste ist nie fehlend: Die Reduktion macht der Adapter selbst.
+   Leer nur, wenn nichts reduziert wurde.
+   zusammenfassen nennt die Modelle; sind es mehrere, führt es min und max
+   mit (Spannweite statt nur Mittelwert). Im Graphen trägt ein solcher
+   Wert woher.modelle und spannweite {min, max}.                        */
+export const REDUKTIONSSCHRITTE = /** @type {const} */ (['vergroebern', 'mitteln', 'auswaehlen', 'zusammenfassen']);
+export const SPANNWEITE = /** @type {const} */ (['min', 'max']);
 
 /* ── Typen ────────────────────────────────────────────────────────────
    @typedef {{fehlt: true, grund: string}} Fehlend
@@ -154,10 +168,12 @@ export const ZEITSEMANTIK_PFLICHT = /** @type {const} */ (['aufloesung', 'abdeck
    @typedef {{skala: string, wert?: number, von?: number, bis?: number}} Bezugszeit
    @typedef {{archiv: string|Fehlend, art: keyof typeof ARCHIVARTEN|Fehlend}} Archivglied
    @typedef {{arten: string[], quelle: string, archivkette: (Archivglied|Fehlend)[],
-              abgeleitet_aus?: string[], verfahren?: string, erwartungstraeger?: string}} Woher
+              abgeleitet_aus?: string[], verfahren?: string, erwartungstraeger?: string, modelle?: string[]}} Woher
    @typedef {{wert: number|string|{verweis: string}|Fehlend, wissensstand: Wissensstand|Fehlend,
               woher: Woher, wahrscheinlichkeit?: number, gegenwert?: {betrag: number, einheit: string},
-              tausch?: string}} Fassung
+              tausch?: string, spannweite?: {min: number, max: number}}} Fassung
+   @typedef {{schritt: typeof REDUKTIONSSCHRITTE[number], angabe: string,
+              modelle?: string[], mitgefuehrt?: string[]}} Reduktionsschritt
    @typedef {{bezugszeit?: Bezugszeit|Fehlend, fassungen: Fassung[]}} Punkt
    @typedef {{skala: string, aufloesung: number|Fehlend, abdeckung: {von: number, bis: number}, schritte: number}} Zeitsemantik
    @typedef {{einheit: string, zeitsemantik?: Zeitsemantik, punkte: Punkt[]}} Groesse

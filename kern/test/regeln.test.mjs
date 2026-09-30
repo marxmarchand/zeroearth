@@ -60,6 +60,9 @@ function gueltig() {
       },
       { id: 't/modell', stapel: '1.1', name: 'Rekonstruktion', wo: { geometrie: 'feld', verzerrung: VERZERRUNG },
         werte: { x: einzel('m', fassung(1, W(['rekonstruktion']))) } },
+      { id: 't/ideal', stapel: '1.1', name: 'Idealschicht', wo: { geometrie: 'feld', verzerrung: VERZERRUNG },
+        werte: { y: einzel('m', fassung(2, W(['modell', 'idealisiert'], { modelle: ['A', 'B', 'C'] }),
+          { spannweite: { min: 1, max: 4 } })) } },
       { id: 't/co2', stapel: '1.1', name: 'CO2', wo: { geometrie: 'punkt' }, werte: {} },
       { id: 't/eis', stapel: '1.1', name: 'Eis', wo: fehlt('nicht im Test'), werte: {} },
       { id: 't/ozean', stapel: '1.1', name: 'Ozean', wo: fehlt('nicht im Test'), werte: {} },
@@ -137,6 +140,7 @@ test('Anzeige: schwächste aus der Rangfolge plus Merkmale', () => {
   assert.deepEqual(anzeige(['modell', 'beobachtung', 'kuratiert']), { rang: 'modell', merkmale: ['kuratiert'] });
   assert.deepEqual(anzeige(['erwartung', 'rekonstruktion']), { rang: 'rekonstruktion', merkmale: ['erwartung'] });
   assert.deepEqual(anzeige(['kuratiert']), { rang: null, merkmale: ['kuratiert'] });
+  assert.deepEqual(anzeige(['beobachtung', 'modell', 'idealisiert']), { rang: 'modell', merkmale: ['idealisiert'] });
 });
 
 /** @type {[string|number, string, (b: any) => void][]} */
@@ -189,6 +193,11 @@ const VERSTOESSE = [
   }],
   [6, 'Herkunft ohne Archivkette', b => { delete woherK(b).archivkette; }],
   [6, 'unbekannte Archivart', b => { woherK(b).archivkette = [KETTE[0], { archiv: 'x', art: 'digital' }]; }],
+  [6, 'modell ohne idealisiert', b => { e(b, 't/ideal').werte.y.punkte[0].fassungen[0].woher.arten = ['modell']; }],
+  [6, 'idealisiert ohne modell', b => { e(b, 't/ideal').werte.y.punkte[0].fassungen[0].woher.arten = ['beobachtung', 'idealisiert']; }],
+  [6, 'Differenz verliert idealisiert', b => {
+    e(b, 't/kohle').werte.diff = einzel('m', fassung(1, W(['beobachtung', 'modell'], { abgeleitet_aus: ['t/kohle#masse', 't/ideal#y'] })));
+  }],
   [6, 'Archivglied ohne Archiv', b => { woherK(b).archivkette = [KETTE[0], { art: 'natuerlich' }]; }],
   // Regel 7
   [7, 'Auswahl nicht ausgewiesen', b => { delete b.auswahl; }],
@@ -210,6 +219,11 @@ const VERSTOESSE = [
   [10, 'Fläche ohne Flächenverzerrung', b => { delete e(b, 't/kohle').wo.verzerrung.flaeche; }],
   [10, 'Überhöhung nicht als Zahl', b => { e(b, 't/modell').wo.verzerrung = { flaeche: 1, ueberhoehung: 'keine' }; }],
   [10, 'Grenze ohne Verzerrung', b => { delete e(b, 't/kueste').wo.verzerrung; }],
+  // Regel 11
+  [11, 'mehrere Modelle ohne Spannweite', b => { delete e(b, 't/ideal').werte.y.punkte[0].fassungen[0].spannweite; }],
+  [11, 'Spannweite ohne max', b => { delete e(b, 't/ideal').werte.y.punkte[0].fassungen[0].spannweite.max; }],
+  [11, 'Wert außerhalb der Spannweite', b => { e(b, 't/ideal').werte.y.punkte[0].fassungen[0].wert = 5; }],
+  [11, 'Spannweite ohne Modelle', b => { delete e(b, 't/ideal').werte.y.punkte[0].fassungen[0].woher.modelle; }],
   // Bestände und Formen
   ['B', 'Bestände nicht geführt', b => { delete b.bestaende; }],
   ['B', 'erhalten nicht angegeben', b => { delete best(b, 't/wasser').erhalten; }],
@@ -256,7 +270,13 @@ const MANIFEST = {
   herkunft: { arten: ['beobachtung'], archivkette: [{ archiv: 'zeroearth', art: 'zeroearth' }] },
   zeitsemantik: { aufloesung: 1, abdeckung: {}, verzoegerung: fehlt('unbekannt') }, geometrie: ['punkt'],
   lizenz: 'x', weitergabe: 'frei', auswahl: [],
+  reduktion: [
+    { schritt: 'vergroebern', angabe: '0.5° -> 2°' },
+    { schritt: 'zusammenfassen', angabe: 'Mittel über Modelle', modelle: ['A', 'B'], mitgefuehrt: ['mittel', 'min', 'max'] },
+  ],
 };
+/** @param {any} m */
+const regel11 = m => pruefeManifest(m).fehler.some(f => f.regel === 11);
 
 test('Manifest: gültig', () => {
   assert.deepEqual(pruefeManifest(MANIFEST).fehler, []);
@@ -275,4 +295,33 @@ test('Manifest: Übergang als Stapel', () => {
 test('Manifest: Herkunft als einzelne Art oder ohne zeroearth', () => {
   assert.ok(pruefeManifest({ ...MANIFEST, herkunft: { art: 'beobachtung', archivkette: MANIFEST.herkunft.archivkette } }).fehler.length > 0);
   assert.ok(pruefeManifest({ ...MANIFEST, herkunft: { arten: ['beobachtung'], archivkette: [] } }).fehler.length > 0);
+});
+
+test('Manifest: Reduktion ist Pflicht, leer nur ohne Reduktion', () => {
+  const { reduktion, ...m } = MANIFEST;
+  assert.ok(pruefeManifest(m).fehler.some(f => f.text.includes('reduktion')));
+  assert.ok(regel11({ ...m, reduktion: fehlt('unbekannt') }));
+  const leer = pruefeManifest({ ...m, reduktion: [] });
+  assert.deepEqual(leer.fehler, []);
+  assert.ok(leer.hinweise.some(h => h.regel === 11));
+});
+
+test('Manifest: Reduktionsschritt unbekannt oder ohne Angabe', () => {
+  assert.ok(regel11({ ...MANIFEST, reduktion: [{ schritt: 'glaetten', angabe: 'x' }] }));
+  assert.ok(regel11({ ...MANIFEST, reduktion: [{ schritt: 'mitteln' }] }));
+});
+
+test('Manifest: Regel 11, mehrere Modelle ohne min und max', () => {
+  const z = { schritt: 'zusammenfassen', angabe: 'Ensemblemittel', modelle: ['A', 'B'] };
+  assert.ok(regel11({ ...MANIFEST, reduktion: [z] }));
+  assert.ok(regel11({ ...MANIFEST, reduktion: [{ ...z, mitgefuehrt: ['mittel', 'min'] }] }));
+  assert.ok(regel11({ ...MANIFEST, reduktion: [{ ...z, modelle: undefined }] }));
+  assert.ok(!regel11({ ...MANIFEST, reduktion: [{ ...z, modelle: ['A'] }] }));
+});
+
+test('Manifest: modell und idealisiert gehören zusammen', () => {
+  const h = (/** @type {string[]} */ arten) => ({ ...MANIFEST, herkunft: { ...MANIFEST.herkunft, arten } });
+  assert.ok(pruefeManifest(h(['modell'])).fehler.length > 0);
+  assert.ok(pruefeManifest(h(['idealisiert'])).fehler.length > 0);
+  assert.deepEqual(pruefeManifest(h(['modell', 'idealisiert'])).fehler, []);
 });

@@ -39,5 +39,11 @@
     "im_repo": "data/sintflut.json: Flächensummen und Mittelwerte je Kasten",
     "nicht_im_repo": "Raster reconstruction_0.25_degree.nc; wird nur als Verweis geführt"
   },
-  "auswahl": ["sintflut/auswahl/fenster", "sintflut/auswahl/kasten"]
+  "auswahl": ["sintflut/auswahl/fenster", "sintflut/auswahl/kasten"],
+  "reduktion": [
+    { "schritt": "auswaehlen", "angabe": "2 Variablen: paleo_topography, sea_level" },
+    { "schritt": "auswaehlen", "angabe": "6 Fenster (Kästen) aus dem globalen Gitter" },
+    { "schritt": "vergroebern", "angabe": "0.25°-Gitter -> 1 Wert je Kasten: Landfläche als Flächensumme in km2" },
+    { "schritt": "mitteln", "angabe": "Meeresspiegel (sea_level) räumlich je Kasten, auf 0.1 m gerundet" }
+  ]
 }
