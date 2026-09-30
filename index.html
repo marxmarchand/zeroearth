@@ -3794,6 +3794,10 @@ class ZeroEarth {
     this.mode = 'matrix';          // v0.9: Matrixschnitt ist Normalzustand
     this.scale = null;             // aktive Skala (SCALES-Key)
     this.obs = { lat: 50, lon: 10 }; // Beobachtungsposition (bleibt bei Skalenwechsel)
+    // Ansichtszustand: genau eine Ebene sichtbar (sonnensystem | globus | karte).
+    // erdansicht merkt sich Globus oder Karte über den Wechsel zur NullNatur hinweg.
+    this.ansicht = 'globus';
+    this.erdansicht = 'globus';
 
     // Zeitabhängige & statische Layer für den Matrixschnitt
     this.iceLayer = new IceLayer(this.cesiumV);
@@ -4048,22 +4052,9 @@ class ZeroEarth {
     track.style.height = '6px'; // größere Trefferfläche
   }
 
+  /* NullNatur oder Erde; auf der Erde die zuletzt gewählte Erdansicht. */
   _showMode(mode) {
-    const ssCanvas=document.getElementById('ss-canvas');
-    const cesiumEl=document.getElementById('cc');
-    const mini=document.getElementById('mini-null');
-    if(mode==='nullnatur') {
-      ssCanvas.style.display='block';
-      cesiumEl.style.display='none';
-      if(mini) mini.style.display='none';   // im Vollbild-Sonnensystem redundant
-    } else {
-      ssCanvas.style.display='none';
-      cesiumEl.style.display='block';
-      if(mini) mini.style.display='flex';    // im Erdkontext: Rahmen präsent halten
-      requestAnimationFrame(()=>{
-        try { this.cesiumV.resize(); } catch(e){}
-      });
-    }
+    return this.zeigeAnsicht(mode === 'nullnatur' ? 'sonnensystem' : this.erdansicht);
   }
 
   simSpeed(mode) {
@@ -4410,7 +4401,7 @@ class ZeroEarth {
       if (st) st.textContent = 'keine sichtbaren Objekte — Ebene einschalten oder Zeit verschieben';
       return;
     }
-    this.cesiumV.flyTo(ents, { duration: 1.6 });
+    this.cesiumV.flyTo(ents, { duration: this.ansicht === 'karte' ? 0 : 1.6 });
     if (st) st.textContent = `${ents.length} Objekt(e) angeflogen`;
   }
 
@@ -4434,18 +4425,37 @@ class ZeroEarth {
      an:         gleichmäßig beleuchtet — die Nachtseite wird sichtbar,
                  die Grenze verschwindet. Für Beobachtung, nicht für
                  Behauptung: Nachtlichter sind eine eigene Datenebene. */
-  /* Globus ⇄ Karte: ein Raum, zwei Projektionen. */
-  async toggleKarte() {
-    this.karte ??= new EqualEarthKarte('ee-canvas');
-    const an = !this.karte.on;
-    this.karte.on = an;
-    if (an) await this.karte.laden();
-    document.getElementById('cc').style.display = an ? 'none' : 'block';
-    document.getElementById('ee-canvas').style.display = an ? 'block' : 'none';
-    document.getElementById('tb-karte')?.classList.toggle('on', an);
-    document.getElementById('karte-name').textContent = an ? 'Equal Earth' : 'Globus';
-    if (an) this.karte.zeichne(); else { this.cesiumV?.resize();
-      const st = document.getElementById('karte-status'); if (st) st.textContent = ''; }
+  /* Globus ⇄ Karte: ein Raum, zwei Projektionen. In der NullNatur
+     wird nur die Erdansicht für die Rückkehr umgestellt. */
+  toggleKarte() {
+    const ziel = this.erdansicht === 'karte' ? 'globus' : 'karte';
+    return this.zeigeAnsicht(this.ansicht === 'sonnensystem' ? 'sonnensystem' : ziel, ziel);
+  }
+
+  /* Die einzige Stelle, die #ss-canvas, #cc und #ee-canvas ein- und
+     ausblendet. ansicht: sonnensystem | globus | karte. */
+  async zeigeAnsicht(ansicht, erdansicht = ansicht === 'sonnensystem' ? this.erdansicht : ansicht) {
+    this._ansichtZiel = ansicht;
+    this.erdansicht = erdansicht;
+    if (ansicht === 'karte') {
+      this.karte ??= new EqualEarthKarte('ee-canvas');
+      await this.karte.laden();
+      if (this._ansichtZiel !== ansicht) return;   // inzwischen anders gewählt
+    }
+    this.ansicht = ansicht;
+    const ebenen = { 'ss-canvas': 'sonnensystem', 'cc': 'globus', 'ee-canvas': 'karte' };
+    for (const [id, a] of Object.entries(ebenen))
+      document.getElementById(id).style.display = a === ansicht ? 'block' : 'none';
+    if (this.karte) this.karte.on = ansicht === 'karte';
+    const mini = document.getElementById('mini-null');
+    // im Vollbild-Sonnensystem redundant, im Erdkontext Rahmen präsent halten
+    if (mini) mini.style.display = ansicht === 'sonnensystem' ? 'none' : 'flex';
+    document.getElementById('tb-karte')?.classList.toggle('on', erdansicht === 'karte');
+    document.getElementById('karte-name').textContent = erdansicht === 'karte' ? 'Equal Earth' : 'Globus';
+    const st = document.getElementById('karte-status');
+    if (ansicht === 'karte') this.karte.zeichne();
+    else if (st) st.textContent = '';
+    if (ansicht === 'globus') requestAnimationFrame(() => { try { this.cesiumV.resize(); } catch (e) {} });
   }
 
   cycleLicht() {
@@ -4573,13 +4583,15 @@ class ZeroEarth {
         this.dm._showOv(k, false));
     } else {
       this.ss.stop();
-      this._showMode('cesium');
+      await this._showMode('cesium');
       document.querySelectorAll('.ov-side').forEach(b => b.classList.remove('dimmed'));
       const dest = Cesium.Cartesian3.fromDegrees(this.obs.lon, this.obs.lat, sc.h);
       const cam = sc.lookEarth
         ? { dest, lookEarth: true, dur: 1.8 }
         : { dest, ori: { heading: 0, pitch: Cesium.Math.toRadians(sc.pitch ?? -88), roll: 0 }, dur: 1.8 };
-      await this.dm.flyTo(cam);
+      // Solange die Karte sichtbar ist, keine Kamerafahrt: der Globus
+      // wird ohne Flug nachgestellt, damit er bei der Rückkehr stimmt.
+      await this.dm.flyTo(cam, this.ansicht === 'karte');
       this.dm.layers(['natural_earth']);
       // Overlay-Zustände wieder anlegen
       ['moon','magfield','tidal','solarwind','sats','ueberbau','riss','bestaende','basis','ware','erste_natur','pm','wind','stroeme','unterbau','seismik','platten','grenzen','kataster','gewaesser'].forEach(k =>
@@ -4598,6 +4610,7 @@ class ZeroEarth {
      Gegenflug). Über der obersten Erdskala: Übergang in die Solar-
      Ansicht — der eine Raum, per Mausrad durchfahren. */
   _syncScaleFromCamera(h) {
+    if (this.ansicht !== 'globus') return;   // unsichtbare Kamera steuert keine Skala
     if (!SCALES[this.scale] || SCALES[this.scale].type !== 'cesium') return;
     if (h > 6.0e8) { this.setScale('solar'); return; }
     let best = null, dist = Infinity;
