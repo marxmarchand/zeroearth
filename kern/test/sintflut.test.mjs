@@ -48,7 +48,7 @@ test('Herkunft: Menge mit Archivkette ab zeroearth', () => {
 
 test('Bestand Wasser: Formen Eis und Ozean, erhalten, Bilanz nicht prüfbar', () => {
   const [wasser] = graph.bestaende;
-  assert.equal(wasser.erhalten, true);
+  assert.equal(wasser.erhaltung, 'erhalten');
   assert.deepEqual(wasser.formen.map(f => f.id), ['eis', 'ozean']);
   const [r] = graph.relationen;
   assert.equal(r.art, 'stoffwechsel');

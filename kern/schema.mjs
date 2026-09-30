@@ -6,7 +6,7 @@
    Was hier fehlt, ist nicht entschieden. Offene Stellen: kern/BERICHT.md.
    ════════════════════════════════════════════════════════════════════ */
 
-export const SCHEMA_VERSION = '0.3.0';
+export const SCHEMA_VERSION = '0.4.0';
 
 /* ── Stapel ───────────────────────────────────────────────────────────
    Drei Stapel, je drei Unterebenen. Die Reihenfolge codiert die Genese
@@ -49,7 +49,7 @@ export const RICHTUNGEN = /** @type {const} */ (['extern', 'intern']);
 /* ── Prozess als Knoten ───────────────────────────────────────────────
    Gehört keinem Stapel. Zuflüsse tragen ihren Herkunftsstapel.          */
 export const ZUFLUSSARTEN = /** @type {const} */ (['stoff', 'energie', 'nichtmenschliche_arbeit', 'kapital', 'zeit']);
-export const AUSGANGSARTEN = /** @type {const} */ (['stoff', 'energie', 'ware', 'abfall', 'waerme', 'mehrwert']);
+export const AUSGANGSARTEN = /** @type {const} */ (['stoff', 'energie', 'ware', 'abfall', 'waerme', 'mehrwert', 'daten']);
 export const KAPITALFORMEN = /** @type {const} */ (['oekonomisch', 'sozial', 'kulturell', 'symbolisch', 'performativ_affektiv']);
 
 /* ── Vorgänge ─────────────────────────────────────────────────────────
@@ -62,6 +62,9 @@ export const VORGAENGE = /** @type {const} */ ({
   konversion:                { name: 'Konversion',                  bilanzierbar: false },
   ueberlieferung:            { name: 'Überlieferung',               bilanzierbar: false },
 });
+
+/** Rolle: als was ein Ding in den Prozess eingespannt ist. */
+export const ROLLEN = /** @type {const} */ (['rohstoff', 'arbeitsmittel', 'produkt']);
 
 /** Rückwirkung: oben nach unten, darf Ebenen überspringen. Kein Vorgang. */
 export const RUECKWIRKUNG = 'rueckwirkung';
@@ -78,12 +81,24 @@ export const VERWORFEN = /** @type {const} */ ({
 export const TAUSCHVORGAENGE = /** @type {const} */ (['konversion', 'einschliessen_realisieren']);
 
 /* ── Bestände (Welt) ──────────────────────────────────────────────────
-   Substanz mit Menge, die ihre Form wechselt. `erhalten` sagt, ob die
-   Summe über alle Formen gleich bleibt (Stoff ja, Kapital nein). Der
-   Formwechsel ist ein Stoffwechsel, bei Kapital Einschließen und
-   Realisieren; er bleibt innerhalb eines Stapels oder Übergangs.       */
-export const formwechsel = (/** @type {boolean} */ erhalten) =>
-  erhalten ? 'stoffwechsel' : 'einschliessen_realisieren';
+   Substanz mit Menge, die ihre Form wechselt. `erhaltung` sagt, was mit
+   der Summe über alle Formen geschieht:
+   - erhalten: bleibt gleich, bilanzierbar (Stoff, Energie)
+   - nicht_erhalten: kann entstehen und verschwinden (Kapital)
+   - vervielfaeltigbar: wird kopiert, ohne dass das Original abnimmt
+     (Daten); keine Bilanzprüfung
+   Je Erhaltung die zulässigen Relationsarten des Formwechsels. Er bleibt
+   innerhalb eines Stapels oder Übergangs.
+   Ein Bestand der 2. Natur führt `haengt_an` (Datenträger) wie jeder
+   Eintrag der 2. Natur; `verweist_auf` nennt, wovon er handelt (etwa die
+   erfasste Bevölkerung).                                                */
+export const ERHALTUNG = /** @type {const} */ ({
+  erhalten:          ['stoffwechsel'],
+  nicht_erhalten:    ['einschliessen_realisieren'],
+  vervielfaeltigbar: ['stoffwechsel', 'einschliessen_realisieren'],
+});
+export const formwechsel = (/** @type {string} */ erhaltung) =>
+  /** @type {readonly string[]} */ (/** @type {any} */ (ERHALTUNG)[erhaltung] ?? []);
 
 /* ── Archive (Wissen) ─────────────────────────────────────────────────
    Jedes woher trägt eine Kette durch Archive, beginnend bei zeroearth.  */
@@ -143,6 +158,25 @@ export const fehlt = grund => ({ fehlt: /** @type {true} */ (true), grund });
 /** @returns {x is {fehlt: true, grund: string}} */
 export const istFehlend = (/** @type {any} */ x) => !!x && typeof x === 'object' && x.fehlt === true;
 
+/** Was die Quelle nicht nennt, ist nicht erhoben. Ein fehlender Schlüssel
+    und eine leere Liste der Quelle heißen beide so, nie "keine Beziehung":
+    Das Fehlen einer Angabe ist keine Angabe über die Welt.
+    @param {string} was */
+export const nichtErhoben = was => fehlt(`${was}: nicht erhoben (fehlender Schlüssel oder leere Liste der Quelle; `
+  + 'keine Aussage, dass keine Beziehung besteht)');
+
+/* ── Einträge ─────────────────────────────────────────────────────────
+   Das Schema kennt keine Eintragsart wie "Firma". Was die Quelle als
+   Akteur führt, kann Firma, Behörde, Ministerium oder App sein; das
+   bleibt Angabe der Quelle (kuratiert) und wird nicht vorausgesetzt.    */
+
+/* ── Belege ───────────────────────────────────────────────────────────
+   Jede Relation trägt `beleg`: eine Liste von Quellen für genau diese
+   Relation, oder {ebene: BELEG_EINTRAGSEBENE, eintrag, quellen}, wenn die
+   Quelle nur den Eintrag belegt und nicht die einzelne Beziehung, oder
+   {fehlt, grund}.                                                      */
+export const BELEG_EINTRAGSEBENE = 'nur_auf_eintragsebene';
+
 /* ── Manifest ─────────────────────────────────────────────────────────
    Pflichtfelder eines Adapters. Jedes darf fehlend sein, aber nicht fehlen. */
 export const MANIFEST_PFLICHT = /** @type {const} */ ([
@@ -186,12 +220,15 @@ export const SPANNWEITE = /** @type {const} */ (['min', 'max']);
               spur_von?: {bestand: string, form: string}|Fehlend,
               werte: Record<string, Groesse|Fehlend>}} Eintrag
    @typedef {{id: string, name: string, eintrag?: string, prozess?: string}} Form
-   @typedef {{id: string, name: string, erhalten: boolean, menge: Groesse|Fehlend, formen: Form[]}} Bestand
+   @typedef {{id: string, name: string, erhaltung: keyof typeof ERHALTUNG, menge: Groesse|Fehlend, formen: Form[],
+              haengt_an?: string[]|Fehlend, verweist_auf?: string[]|Fehlend}} Bestand
    @typedef {{von: string, herkunftsstapel: string, art: string, kapitalform?: string,
               kette?: string[]|Fehlend, richtung?: string, menge?: any}} Zufluss
    @typedef {{id: string, name: string, uebergang: string, richtung?: string,
               zufluesse: Zufluss[], ausgaenge: {nach: string, art: string, menge?: any}[]}} Prozess
-   @typedef {{id: string, art: string, von: string, nach: string, prozess?: string, bestand?: string, modus?: string,
+   @typedef {string[] | {ebene: typeof BELEG_EINTRAGSEBENE, eintrag: string, quellen: string[]} | Fehlend} Beleg
+   @typedef {{id: string, art: string, von: string|Fehlend, nach: string|Fehlend, prozess?: string, bestand?: string, modus?: string,
+              als?: typeof ROLLEN[number], ware?: string|Fehlend, bezugszeit: Bezugszeit|Fehlend, beleg: Beleg,
               bilanz?: {einheit: string, zufluss: number|Fehlend, abfluss: (number|Fehlend)[], toleranz?: number},
               bilanzierbar?: boolean, erwartungstraeger?: string, wahrscheinlichkeit?: number,
               gegenwert?: {betrag: number, einheit: string}, tausch?: string,

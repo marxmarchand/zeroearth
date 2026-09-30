@@ -100,7 +100,7 @@ export function transform(roh, manifest) {
     },
   };
   const wasser = {
-    id: `${P}/wasser`, name: 'Wasser', erhalten: true,
+    id: `${P}/wasser`, name: 'Wasser', erhaltung: 'erhalten',
     menge: fehlt('Die Daten enthalten keine Wassermenge'),
     formen: [{ id: 'eis', name: 'Eis', eintrag: eis.id }, { id: 'ozean', name: 'Ozean', eintrag: ozean.id }],
   };
@@ -118,6 +118,8 @@ export function transform(roh, manifest) {
     woher: { arten: ['kuratiert'], quelle: 'Setzung Max, Korrekturen zu Schritt 0 und strukturstand.md (2026-09-29)',
       archivkette: KETTE_SETZUNG },
     wissensstand: SETZUNG,
+    bezugszeit: { skala, von, bis },
+    beleg: fehlt('Setzung; kein Beleg außer der Setzung selbst (woher.quelle)'),
   };
 
   /* ── Fenster ─────────────────────────────────────────────────────── */

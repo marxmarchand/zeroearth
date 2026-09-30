@@ -8,7 +8,7 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { pruefe, pruefeManifest } from '../pruefe.mjs';
-import { fehlt, anzeige } from '../schema.mjs';
+import { fehlt, anzeige, nichtErhoben, BELEG_EINTRAGSEBENE } from '../schema.mjs';
 
 const PRUEFE = fileURLToPath(new URL('../pruefe.mjs', import.meta.url));
 const WS = { seit: '2026-09-29', status: 'vorlaeufig' };
@@ -21,6 +21,8 @@ const fassung = (/** @type {any} */ wert, /** @type {any} */ woher = W(['beobach
 const einzel = (/** @type {string} */ einheit, /** @type {any} */ f, bezugszeit = { skala: 'a CE', wert: 2000 }) =>
   ({ einheit, punkte: [{ bezugszeit, fassungen: [f] }] });
 const VERZERRUNG = { flaeche: 1, ueberhoehung: 1 };
+/** Pflichtfelder jeder Relation: Bezugszeit und Beleg. */
+const REL = () => ({ bezugszeit: fehlt('Test: nicht datiert'), beleg: ['Testbeleg'] });
 
 /** Ein gültiger Graph, der jede Regel berührt. */
 function gueltig() {
@@ -33,10 +35,14 @@ function gueltig() {
     subjektachse: { status: 'leer' },
     auswahl: [{ id: 't/a', was: 'Testausschnitt', gesetzt_in: 'test', begruendung: 'Test' }],
     bestaende: [
-      { id: 't/wasser', name: 'Wasser', erhalten: true, menge: fehlt('nicht im Test'),
+      { id: 't/wasser', name: 'Wasser', erhaltung: 'erhalten', menge: fehlt('nicht im Test'),
         formen: [{ id: 'eis', name: 'Eis', eintrag: 't/eis' }, { id: 'ozean', name: 'Ozean', eintrag: 't/ozean' }] },
-      { id: 't/kapital', name: 'Kapital', erhalten: false, menge: fehlt('nicht im Test'),
+      { id: 't/kapital', name: 'Kapital', erhaltung: 'nicht_erhalten', menge: fehlt('nicht im Test'),
+        haengt_an: fehlt('nicht im Test'),
         formen: [{ id: 'geld', name: 'Geld', eintrag: 't/geld' }, { id: 'ware', name: 'Ware', eintrag: 't/eigentum' }] },
+      { id: 't/daten', name: 'Daten', erhaltung: 'vervielfaeltigbar', menge: fehlt('nicht im Test'),
+        haengt_an: fehlt('Datenträger nennt die Quelle nicht'), verweist_auf: ['t/bevoelkerung'],
+        formen: [{ id: 'rohdaten', name: 'Rohdaten', eintrag: 't/rohdaten' }, { id: 'profil', name: 'Profil', eintrag: 't/profil' }] },
     ],
     eintraege: [
       { id: 't/grundkraft', stapel: '0.1', name: 'Grundkraft', werte: {} },
@@ -64,6 +70,13 @@ function gueltig() {
         werte: { y: einzel('m', fassung(2, W(['modell', 'idealisiert'], { modelle: ['A', 'B', 'C'] }),
           { spannweite: { min: 1, max: 4 } })) } },
       { id: 't/co2', stapel: '1.1', name: 'CO2', wo: { geometrie: 'punkt' }, werte: {} },
+      { id: 't/bevoelkerung', stapel: '1.3', name: 'Bevölkerung Testland', wo: { geometrie: 'flaeche', verzerrung: VERZERRUNG }, werte: {} },
+      { id: 't/rohdaten', stapel: '2.3', name: 'Rohdaten', haengt_an: fehlt('Datenträger unbekannt'),
+        formation: { id: 't/f-ware', von: 2020, bis: 'offen' }, werte: {} },
+      { id: 't/profil', stapel: '2.3', name: 'Profil', haengt_an: fehlt('Datenträger unbekannt'),
+        formation: { id: 't/f-ware', von: 2020, bis: 'offen' }, werte: {} },
+      { id: 't/behoerde', stapel: '2.2', name: 'Behörde', haengt_an: fehlt('nicht im Test'),
+        formation: { id: 't/f-ware', von: 2020, bis: 'offen' }, werte: {} },
       { id: 't/eis', stapel: '1.1', name: 'Eis', wo: fehlt('nicht im Test'), werte: {} },
       { id: 't/ozean', stapel: '1.1', name: 'Ozean', wo: fehlt('nicht im Test'), werte: {} },
       { id: 't/kennwert', stapel: '1.1', name: 'Kennwert', werte: {
@@ -99,19 +112,34 @@ function gueltig() {
         { von: 't/eigentum', herkunftsstapel: '2.2', art: 'kapital', kapitalform: 'oekonomisch', modus: 'fliessend' },
       ],
       ausgaenge: [{ nach: 't/co2', art: 'abfall' }],
+    }, {
+      id: 't/erfassung', name: 'Erfassung', uebergang: 'gesellschaftlich',
+      zufluesse: [], ausgaenge: [{ nach: 't/rohdaten', art: 'daten' }],
     }],
     relationen: [
       { id: 't/r-stoff', art: 'stoffwechsel', von: 't/kohle', nach: 't/co2', prozess: 't/p',
-        bilanz: { einheit: 'kg', zufluss: 10, abfluss: [7, 3] }, woher: W(['beobachtung']), wissensstand: WS },
+        bilanz: { einheit: 'kg', zufluss: 10, abfluss: [7, 3] }, woher: W(['beobachtung']), wissensstand: WS, ...REL() },
       { id: 't/r-schmelze', art: 'stoffwechsel', bestand: 't/wasser', von: 't/eis', nach: 't/ozean',
-        bilanz: { einheit: 'kg', zufluss: fehlt('offen'), abfluss: [fehlt('offen')] }, woher: W(['kuratiert']), wissensstand: WS },
+        bilanz: { einheit: 'kg', zufluss: fehlt('offen'), abfluss: [fehlt('offen')] }, woher: W(['kuratiert']), wissensstand: WS, ...REL() },
       { id: 't/r-kauf', art: 'einschliessen_realisieren', bestand: 't/kapital', von: 't/geld', nach: 't/eigentum',
-        modus: 'eingeschlossen', woher: W(['kuratiert']), wissensstand: WS },
-      { id: 't/r-tausch', art: 'konversion', von: 't/eigentum', nach: 't/kohle', woher: W(['kuratiert']), wissensstand: WS },
-      { id: 't/r-haftet', art: 'anhaften', von: 't/eigentum', nach: 't/kohle', woher: W(['kuratiert']), wissensstand: WS },
-      { id: 't/r-rueck', art: 'rueckwirkung', von: 't/eigentum', nach: 't/kohle', woher: W(['kuratiert']), wissensstand: WS },
-      { id: 't/r-rolle', art: 'rolle', modus: 'erwartet', erwartungstraeger: 'Testfirma', von: 't/kohle', nach: 't/p',
-        woher: W(['kuratiert']), wissensstand: WS },
+        modus: 'eingeschlossen', woher: W(['kuratiert']), wissensstand: WS, ...REL() },
+      { id: 't/r-tausch', art: 'konversion', von: 't/eigentum', nach: 't/kohle', woher: W(['kuratiert']), wissensstand: WS, ...REL() },
+      { id: 't/r-haftet', art: 'anhaften', von: 't/eigentum', nach: 't/kohle', woher: W(['kuratiert']), wissensstand: WS, ...REL() },
+      { id: 't/r-rueck', art: 'rueckwirkung', von: 't/eigentum', nach: 't/kohle', woher: W(['kuratiert']), wissensstand: WS, ...REL() },
+      { id: 't/r-rolle', art: 'rolle', als: 'arbeitsmittel', modus: 'erwartet', erwartungstraeger: 'Testfirma', von: 't/kohle', nach: 't/p',
+        woher: W(['kuratiert']), wissensstand: WS, ...REL() },
+      { id: 't/r-rohstoff', art: 'rolle', als: 'rohstoff', von: 't/bevoelkerung', nach: 't/erfassung',
+        woher: W(['kuratiert']), wissensstand: WS, ...REL() },
+      { id: 't/r-arbeitsmittel', art: 'rolle', als: 'arbeitsmittel', von: fehlt('Produkt nennt die Quelle nicht'), nach: 't/erfassung',
+        woher: W(['kuratiert']), wissensstand: WS, ...REL(),
+        beleg: { ebene: BELEG_EINTRAGSEBENE, eintrag: 't/eigentum', quellen: ['Testquelle A', 'Testquelle B'] } },
+      { id: 't/r-verkauf', art: 'einschliessen_realisieren', von: 't/eigentum', nach: 't/behoerde',
+        ware: fehlt('Produkt nennt die Quelle nicht'), woher: W(['kuratiert']), wissensstand: WS, ...REL() },
+      { id: 't/r-profil', art: 'stoffwechsel', bestand: 't/daten', von: 't/rohdaten', nach: 't/profil', prozess: 't/erfassung',
+        woher: W(['kuratiert']), wissensstand: WS, ...REL() },
+      { id: 't/r-konzern', art: 'anhaften', von: 't/geld', nach: 't/eigentum', woher: W(['kuratiert']), wissensstand: WS, ...REL() },
+      { id: 't/r-geber', art: 'einschliessen_realisieren', von: fehlt('Geldgeber nicht auflösbar'), nach: 't/eigentum',
+        woher: W(['kuratiert']), wissensstand: WS, ...REL(), bezugszeit: { skala: 'a CE', von: 2020, bis: 2024 } },
     ],
   };
 }
@@ -219,6 +247,31 @@ const VERSTOESSE = [
   [10, 'Fläche ohne Flächenverzerrung', b => { delete e(b, 't/kohle').wo.verzerrung.flaeche; }],
   [10, 'Überhöhung nicht als Zahl', b => { e(b, 't/modell').wo.verzerrung = { flaeche: 1, ueberhoehung: 'keine' }; }],
   [10, 'Grenze ohne Verzerrung', b => { delete e(b, 't/kueste').wo.verzerrung; }],
+  // Relationen: Bezugszeit, Beleg, fehlende Enden, Rolle, Ware
+  [8, 'Relation ohne Bezugszeit', b => { delete r(b, 't/r-haftet').bezugszeit; }],
+  ['S', 'Relation-Bezugszeit ohne Skala', b => { r(b, 't/r-geber').bezugszeit = { von: 2020, bis: 2024 }; }],
+  [8, 'Relation-Bezugszeit fehlend ohne Grund', b => { r(b, 't/r-haftet').bezugszeit = { fehlt: true }; }],
+  [6, 'Relation ohne Beleg', b => { delete r(b, 't/r-haftet').beleg; }],
+  [6, 'Beleg als leere Liste', b => { r(b, 't/r-haftet').beleg = []; }],
+  [6, 'Beleg als Text statt Liste', b => { r(b, 't/r-haftet').beleg = 'irgendwo'; }],
+  [6, 'Beleg auf Eintragsebene zu unbekanntem Eintrag', b => { r(b, 't/r-arbeitsmittel').beleg.eintrag = 't/nirgends'; }],
+  [6, 'Beleg auf Eintragsebene ohne Quellen', b => { r(b, 't/r-arbeitsmittel').beleg.quellen = []; }],
+  [1, 'beide Enden fehlend', b => { r(b, 't/r-geber').nach = fehlt('auch unbekannt'); }],
+  [8, 'fehlendes Ende ohne Grund', b => { r(b, 't/r-geber').von = { fehlt: true }; }],
+  ['S', 'Rolle ohne als', b => { delete r(b, 't/r-rohstoff').als; }],
+  ['S', 'Rolle mit unbekanntem als', b => { r(b, 't/r-rohstoff').als = 'kulisse'; }],
+  ['S', 'Rolle nicht in einen Prozess', b => { r(b, 't/r-rohstoff').nach = 't/co2'; }],
+  ['S', 'als an einer Nicht-Rolle', b => { r(b, 't/r-haftet').als = 'rohstoff'; }],
+  ['S', 'Ware an einem Nicht-Tausch', b => { r(b, 't/r-haftet').ware = fehlt('x'); }],
+  ['S', 'Ware verweist auf Unbekanntes', b => { r(b, 't/r-verkauf').ware = 't/nirgends'; }],
+  // Bestand Daten, Erhaltung
+  ['B', 'erhalten statt erhaltung', b => { best(b, 't/wasser').erhalten = true; }],
+  ['B', 'erhaltung unbekannt', b => { best(b, 't/wasser').erhaltung = 'ewig'; }],
+  [2, 'Bestand der 2. Natur ohne haengt_an', b => { delete best(b, 't/daten').haengt_an; }],
+  [2, 'haengt_an an einem Bestand der 1. Natur', b => { best(b, 't/wasser').haengt_an = ['t/kohle']; }],
+  ['B', 'verweist_auf Unbekanntes', b => { best(b, 't/daten').verweist_auf = ['t/nirgends']; }],
+  [5, 'vervielfältigbarer Bestand bilanziert', b => { r(b, 't/r-profil').bilanz = { einheit: 'B', zufluss: 1, abfluss: [1] }; }],
+  ['B', 'Formwechsel von Daten als Konversion', b => { r(b, 't/r-profil').art = 'konversion'; }],
   // Regel 11
   [11, 'mehrere Modelle ohne Spannweite', b => { delete e(b, 't/ideal').werte.y.punkte[0].fassungen[0].spannweite; }],
   [11, 'Spannweite ohne max', b => { delete e(b, 't/ideal').werte.y.punkte[0].fassungen[0].spannweite.max; }],
@@ -226,7 +279,7 @@ const VERSTOESSE = [
   [11, 'Spannweite ohne Modelle', b => { delete e(b, 't/ideal').werte.y.punkte[0].fassungen[0].woher.modelle; }],
   // Bestände und Formen
   ['B', 'Bestände nicht geführt', b => { delete b.bestaende; }],
-  ['B', 'erhalten nicht angegeben', b => { delete best(b, 't/wasser').erhalten; }],
+  ['B', 'erhaltung nicht angegeben', b => { delete best(b, 't/wasser').erhaltung; }],
   ['B', 'Bestand ohne Menge', b => { delete best(b, 't/wasser').menge; }],
   ['B', 'Formen über die Stapelgrenze', b => { best(b, 't/wasser').formen[1].eintrag = 't/eigentum'; }],
   ['B', 'Form in Stapel und Übergang', b => { best(b, 't/wasser').formen[1] = { id: 'ozean', name: 'Ozean', prozess: 't/p' }; }],
@@ -324,4 +377,11 @@ test('Manifest: modell und idealisiert gehören zusammen', () => {
   assert.ok(pruefeManifest(h(['modell'])).fehler.length > 0);
   assert.ok(pruefeManifest(h(['idealisiert'])).fehler.length > 0);
   assert.deepEqual(pruefeManifest(h(['modell', 'idealisiert'])).fehler, []);
+});
+
+test('nicht erhoben: fehlender Schlüssel und leere Liste heißen gleich, nie "keine Beziehung"', () => {
+  const x = nichtErhoben('providingTo');
+  assert.equal(x.fehlt, true);
+  assert.match(x.grund, /nicht erhoben/);
+  assert.match(x.grund, /keine Aussage, dass keine Beziehung besteht/);
 });

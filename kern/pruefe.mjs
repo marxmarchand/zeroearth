@@ -17,6 +17,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   STAPEL, UNTEREBENEN, stapelVon, UEBERGAENGE, GRUNDKRAEFTE, RICHTUNGEN, ZUFLUSSARTEN, AUSGANGSARTEN,
   KAPITALFORMEN, VORGAENGE, RUECKWIRKUNG, RELATIONSARTEN, VERWORFEN, TAUSCHVORGAENGE, MODI, formwechsel,
+  ERHALTUNG, ROLLEN, BELEG_EINTRAGSEBENE,
   ARCHIVARTEN, HERKUNFTSARTEN, KEIN_ERWARTUNGSTRAEGER, WISSENSSTATUS, GEOMETRIEN, MIT_VERZERRUNG,
   istFehlend, MANIFEST_PFLICHT, ZEITSEMANTIK_PFLICHT, REDUKTIONSSCHRITTE, SPANNWEITE,
 } from './schema.mjs';
@@ -43,6 +44,9 @@ export const REGELN = /** @type {const} */ ({
 const ORDNUNG = Object.keys(UNTEREBENEN).sort();
 const istZahl = (/** @type {any} */ x) => typeof x === 'number' && Number.isFinite(x);
 const istText = (/** @type {any} */ x) => typeof x === 'string' && x.trim() !== '';
+/** Bezugszeit {skala, wert} oder {skala, von, bis}. */
+const istBezugszeit = (/** @type {any} */ z) => istText(z?.skala)
+  && (istZahl(z.wert) || (istZahl(z.von) && istZahl(z.bis)));
 
 /**
  * Prüft einen Graphen gegen die Regeln.
@@ -126,7 +130,13 @@ export function pruefe(gr) {
   /* ── Bestände und Formen ───────────────────────────────────────── */
   for (const b of bestaende.values()) {
     if (!istText(b.name)) F('B', b.id, 'Bestand ohne Namen');
-    if (typeof b.erhalten !== 'boolean') F('B', b.id, 'erhalten muss true oder false sein');
+    if ('erhalten' in b) F('B', b.id, 'erhalten ist ersetzt durch erhaltung (erhalten, nicht_erhalten, vervielfaeltigbar)');
+    if (!(b.erhaltung in ERHALTUNG)) F('B', b.id, `erhaltung unbekannt: ${b.erhaltung} (${Object.keys(ERHALTUNG).join(', ')})`);
+    for (const k of ['haengt_an', 'verweist_auf']) {
+      if (!(k in b) || istFehlend(b[k])) continue;
+      if (!Array.isArray(b[k]) || !b[k].length) F('B', b.id, `${k} muss eine nichtleere Liste oder fehlend sein`);
+      else for (const t of b[k]) if (!eintraege.has(t)) F('B', b.id, `${k} verweist auf Unbekanntes: ${t}`);
+    }
     if (!('menge' in b)) F('B', b.id, 'ohne Menge; unbekannt heißt {fehlt, grund}');
     if (!Array.isArray(b.formen) || !b.formen.length) { F('B', b.id, 'ohne Formen'); continue; }
     const orte = new Set(), formIds = new Set();
@@ -141,6 +151,10 @@ export function pruefe(gr) {
     }
     if (orte.size > 1)
       F('B', b.id, `Formen in ${[...orte].join(' und ')}; ein Formwechsel bleibt innerhalb eines Stapels oder Übergangs, über die Grenze ist es Anhaften oder Rolle`);
+    // Regel 2 auch für Bestände: Daten und andere Bestände der 2. Natur hängen an einem Träger.
+    if (orte.size === 1 && orte.has('Stapel 2') && !('haengt_an' in b))
+      F(2, b.id, 'Bestand der 2. Natur ohne haengt_an; ein fehlender Träger wird als fehlend geführt');
+    else if (!orte.has('Stapel 2') && 'haengt_an' in b) F(2, b.id, 'haengt_an nur für Bestände der 2. Natur');
   }
   const formDes = (/** @type {any} */ b, /** @type {string} */ id) =>
     b.formen?.find((/** @type {any} */ f) => f?.eintrag === id || f?.prozess === id);
@@ -240,8 +254,7 @@ export function pruefe(gr) {
         const po = `${ort}[${i}]`;
         if (e.stapel === '0.1') { if (p?.bezugszeit) F('S', po, '0.1 ist ohne Zeit'); }
         else if (!p?.bezugszeit) F('S', po, 'ohne Bezugszeit');
-        else if (!istFehlend(p.bezugszeit) && (!istText(p.bezugszeit.skala)
-          || !(istZahl(p.bezugszeit.wert) || (istZahl(p.bezugszeit.von) && istZahl(p.bezugszeit.bis)))))
+        else if (!istFehlend(p.bezugszeit) && !istBezugszeit(p.bezugszeit))
           F('S', po, 'Bezugszeit braucht {skala, wert} oder {skala, von, bis}');
         pruefeFassungen(p?.fassungen, po);
       });
@@ -352,6 +365,20 @@ export function pruefe(gr) {
     else if (istZahl(f.wert) && (f.wert < sw.min || f.wert > sw.max)) F(11, ort, 'Wert liegt außerhalb seiner Spannweite');
   }
 
+  /** Regel 6: Beleg pro Relation, oder ausgewiesen nur auf Eintragsebene.
+      @param {any} b @param {string} ort */
+  function pruefeBeleg(b, ort) {
+    if (b === undefined) return F(6, ort, 'Relation ohne beleg; Quellen, nur auf Eintragsebene, oder {fehlt, grund}');
+    if (istFehlend(b)) return;
+    const quellen = (/** @type {any} */ q) => Array.isArray(q) && q.length > 0 && q.every(istText);
+    if (Array.isArray(b)) { if (!quellen(b)) F(6, ort, 'beleg: nichtleere Liste von Quellen'); return; }
+    if (b?.ebene !== BELEG_EINTRAGSEBENE)
+      return F(6, ort, `beleg ist eine Liste von Quellen, {ebene: "${BELEG_EINTRAGSEBENE}", eintrag, quellen} oder fehlend`);
+    if (!eintraege.has(b.eintrag)) F(6, ort, `beleg auf Eintragsebene verweist auf Unbekanntes: ${b.eintrag}`);
+    if (!quellen(b.quellen)) F(6, ort, 'beleg auf Eintragsebene ohne Quellen; ohne Quellen heißt {fehlt, grund}');
+    H(6, ort, 'Beleg nur auf Eintragsebene: nicht pro Beziehung belegt');
+  }
+
   /** Regel 3. @param {any} x @param {string} ort */
   function pruefeGegenwert(x, ort) {
     if (x.gegenwert === undefined) return;
@@ -402,9 +429,13 @@ export function pruefe(gr) {
       F(1, o, r.art in VERWORFEN ? /** @type {any} */ (VERWORFEN)[r.art] : `Relationsart unbekannt: ${r.art}`);
       continue;
     }
-    const von = eintraege.get(r.von) ?? prozesse.get(r.von), nach = eintraege.get(r.nach) ?? prozesse.get(r.nach);
-    if (!von) F(1, o, `von verweist auf Unbekanntes: ${r.von}`);
-    if (!nach) F(1, o, `nach verweist auf Unbekanntes: ${r.nach}`);
+    // Ein Ende darf fehlend sein (mit Grund), nicht beide.
+    const vonFehlt = istFehlend(r.von), nachFehlt = istFehlend(r.nach);
+    if (vonFehlt && nachFehlt) F(1, o, 'beide Enden fehlend; eine Relation braucht mindestens ein bekanntes Ende');
+    const von = vonFehlt ? undefined : eintraege.get(r.von) ?? prozesse.get(r.von);
+    const nach = nachFehlt ? undefined : eintraege.get(r.nach) ?? prozesse.get(r.nach);
+    if (!von && !vonFehlt) F(1, o, `von verweist auf Unbekanntes: ${r.von}`);
+    if (!nach && !nachFehlt) F(1, o, `nach verweist auf Unbekanntes: ${r.nach}`);
     if (r.prozess !== undefined && !prozesse.has(r.prozess)) F(1, o, `Prozess unbekannt: ${r.prozess}`);
     if (!r.woher) F(1, o, 'Relation ohne eigene Herkunft');
     else {
@@ -413,6 +444,19 @@ export function pruefe(gr) {
       pruefeWoher(r.woher, o);
     }
     pruefeWissensstand(r.wissensstand, o);
+    if (!('bezugszeit' in r)) F(8, o, 'Relation ohne Bezugszeit; unbekannt heißt {fehlt, grund}');
+    else if (!istFehlend(r.bezugszeit) && !istBezugszeit(r.bezugszeit))
+      F('S', o, 'Bezugszeit braucht {skala, wert} oder {skala, von, bis}');
+    pruefeBeleg(r.beleg, o);
+
+    if (r.art === 'rolle') {
+      if (!ROLLEN.includes(r.als)) F('S', o, `Rolle ohne "als" (${ROLLEN.join(', ')})`);
+      if (!nachFehlt && nach && !prozesse.has(r.nach)) F('S', o, 'eine Rolle spannt in einen Prozess ein: nach ist ein Prozess');
+    } else if ('als' in r) F('S', o, '"als" nur bei Rollen');
+    if ('ware' in r) {
+      if (!TAUSCHVORGAENGE.includes(r.art)) F('S', o, `Ware nur bei Tausch (${TAUSCHVORGAENGE.join(', ')})`);
+      else if (!istFehlend(r.ware) && !eintraege.has(r.ware)) F('S', o, `Ware verweist auf Unbekanntes: ${r.ware}`);
+    }
 
     if (r.art === RUECKWIRKUNG && von?.stapel && nach?.stapel) {
       const [sv, uv] = hoehe(von), [sn, un] = hoehe(nach);
@@ -433,13 +477,18 @@ export function pruefe(gr) {
       if (!b) F('B', o, `Bestand unbekannt: ${r.bestand}`);
       else {
         if (!formDes(b, r.von) || !formDes(b, r.nach)) F('B', o, 'Formwechsel zwischen Formen, die nicht zu diesem Bestand gehören');
-        if (typeof b.erhalten === 'boolean' && r.art !== formwechsel(b.erhalten))
-          F('B', o, `Formwechsel eines ${b.erhalten ? 'erhaltenen' : 'nicht erhaltenen'} Bestands ist ${formwechsel(b.erhalten)}, nicht ${r.art}`);
+        const zulaessig = formwechsel(b.erhaltung);
+        if (zulaessig.length && !zulaessig.includes(r.art))
+          F('B', o, `Formwechsel eines Bestands mit erhaltung ${b.erhaltung} ist ${zulaessig.join(' oder ')}, nicht ${r.art}`);
       }
     }
 
     // Regel 5
-    if (r.art === 'stoffwechsel') {
+    const kopierbar = bestaende.get(r.bestand)?.erhaltung === 'vervielfaeltigbar';
+    if (kopierbar) {
+      if (r.bilanz !== undefined || r.bilanzierbar === true)
+        F(5, o, 'Formwechsel eines vervielfältigbaren Bestands ist nicht bilanzierbar; Kopieren mindert das Original nicht');
+    } else if (r.art === 'stoffwechsel') {
       const bz = r.bilanz;
       if (!bz) F(5, o, 'Stoffwechsel ohne Bilanz; unbekannte Mengen werden als fehlend geführt');
       else {
