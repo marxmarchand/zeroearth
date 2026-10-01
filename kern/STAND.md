@@ -84,11 +84,12 @@ Die Spalte „Status“ unterscheidet beides, wo es darauf ankommt.
 | Auftrag | Status | Commit, Befund |
 | --- | --- | --- |
 | **a) Sintflut-Korrekturen** | **teilweise** | |
-| · Grenze nur aus Paläotopografie | offen | `transform.mjs:176`: Die Küste trägt `abgeleitet_aus: [meeresspiegel, paleo_topography]`, also beide |
-| · „Isostasie: ungeprüft“ | offen | `transform.mjs:32` sagt „ohne Isostasie“. Das ist eine Behauptung, kein „ungeprüft“. Der eigene Bericht (`BERICHT.md:84`) verlangt die Prüfung |
+| · Grenze nur aus Paläotopografie | offen, nur Metadaten | Gerechnet wird schon nur aus der Paläotopografie: `paleomist.py:75` setzt Land = `paleo_topography > 0`. Falsch ist die Herkunft in `transform.mjs:176`, die zusätzlich `meeresspiegel` als Grundlage nennt. Korrektur: `meeresspiegel` aus `abgeleitet_aus` streichen |
+| · „Isostasie: ungeprüft“ | offen, **jetzt beantwortbar** | `transform.mjs:32` sagt „ohne Isostasie“. Die Rohdatei sagt das Gegenteil: `paleo_topography` heißt dort „topography accounting for ice thickness, sea level change and deformation“, `base_topography` „deformed base topography“. Die glazial-isostatische Deformation (SELEN) ist also enthalten. Sedimentation nicht. Vorschlag für den Hinweis: „Deformation (Isostasie) laut Quelle enthalten; Sedimentation nicht; heutige Bathymetrie als Basis“. Geprüft an der 1°-Datei, gleiche Variablen wie 0,25° angenommen |
 | · „relativer Meeresspiegel, Mittel über Fenster“ | erledigt | `transform.mjs:152` „relativer Meeresspiegel, gemittelt über alle Zellen des Kastens“, Commit `79e5185` |
 | · Notizen als 2. Natur, Formation fehlend mit Begründung | erledigt | `transform.mjs:191`, Commit `79e5185` |
-| · Eisdicke in der PaleoMIST-Rohdatei geprüft | offen | Die Rohdatei `reconstruction_0.25_degree.nc` liegt nicht im Repo (`.gitignore`: `*.nc`). `paleomist.py` liest die Eisdicke nicht. `QUELLEN.md` führt sie. Ungeprüft |
+| · Eisdicke in der PaleoMIST-Rohdatei geprüft | **teilweise: Quelle bekannt, Rohdatei nicht lokal; Eisdicke an der 1°-Datei bestätigt** | Siehe „PaleoMIST-Rohdatei“ unten |
+| **a′) PaleoMIST-Rohdatei** (2026-10-01) | **erkundet** | Quelle: PANGAEA, doi:10.1594/PANGAEA.905800 (Gowan 2019; Gowan et al. 2021, Nature Communications, doi:10.1038/s41467-021-21469-w). Lizenz **CC BY 4.0**, Zugang frei. Die 0,25°-Rohdatei liegt nicht lokal. Einzelheiten unten |
 | **b) Satellitenbild „jüngste verfügbare Aufnahme je Stelle“** | **offen** | Stand `12f2a8f`: eine GIBS-Ebene (VIIRS SNPP True Color) mit einem festen Tag (jetzt − 30 h). Kein Kombinieren mehrerer Tage und Satelliten je Stelle, keine Transparenz für Lücken, kein Klick mit Satellit und Aufnahmezeit. Der Statustext sagt noch „beobachteter Zustand dieses Tages“ |
 | **c) Topografie als Schalter** (Höhenfarben, Überhöhung mit Faktor, Bathymetrie) | **offen** | Es gibt keinen Schalter. Cesium World Terrain wird beim Start geladen (`index.html:3905`, braucht Ion-Token), ohne Höhenfarben, ohne sichtbaren Überhöhungsfaktor, ohne Bathymetrie |
 | **d) „Bebauung (OSM) · Bevölkerung“** | **berichtet, Entscheidung offen** | Bericht in der Antwort zu `e4744bf`, hier wiederholt: `PopulationLayer` ist ganz prozedural, sechs gesetzte Siedlungskerne mit erfundenen Startjahren als wachsende Glockenkurven. Kein Datensatz, keine Herkunft (Regeln 6, 8, 12). `OSMLayer` zeigt echte Kacheln, aber ohne Zeitbezug, und die OSM-Quellenangabe ist per CSS ausgeblendet (Lizenzbedingung). Vorschlag: Bevölkerung entfernen und durch HYDE 3.2 ersetzen (im Code als `hyde_pop` geplant); Bebauung durch GHSL Built-up (Epochen 1975–2030) ersetzen oder OSM nur als Gegenwartsebene mit sichtbarer Quelle. Die Legende markiert beides bereits |
@@ -99,6 +100,76 @@ Die Spalte „Status“ unterscheidet beides, wo es darauf ankommt.
 | · NullNatur-Reiter überdeckt Fußzeile | offen, Ursache gefunden | Die Kopfzeile `#hdr` steht am unteren Rand, weil `#mini-null` die oberste Rasterzeile (Spalte 2) belegt und `#hdr` (alle Spalten) deshalb in eine neue Zeile rutscht. Die linke Leiste läuft zudem über die Masterzeit hinaus. Beides war schon vor `e4744bf` so (Vergleichs-Screenshot) |
 | · Terminator zeigt Nachtseite | offen, Ursache wahrscheinlich | Die Cesium-Uhr wird nie gesetzt (`index.html` hat kein `clock.currentTime`). Die Sonne steht also auf dem Zeitpunkt des Seitenaufrufs fest, nicht auf der Masterzeit, obwohl der Kommentar zu `_applyLicht` „Sonnenstand aus der Masterzeit-Uhr“ sagt |
 
+### PaleoMIST-Rohdatei (zu 2a)
+
+**Angebot.** PANGAEA bietet eine einzige Datei an: `Gowan_ice_reconstruction.zip`, 3 706 MB, mit 2 359
+Einträgen und 4 391 MB entpackt. Einen OPeNDAP- oder Teilzugang nennt die Seite nicht. Der Server erlaubt aber
+HTTP-Range. Damit ließ sich das Inhaltsverzeichnis lesen und ein einzelnes Mitglied holen, ohne das ganze ZIP
+herunterzuladen.
+
+| Datei im ZIP | entpackt | gepackt |
+| --- | --- | --- |
+| `global_grid/reconstruction_0.25_degree.nc` (bisherige Sintflut-Quelle) | 554 MB | 342 MB |
+| `global_grid/reconstruction_a1_0.25_degree.nc` (alternative Eisgeschichte) | 554 MB | 343 MB |
+| `global_grid/reconstruction_1_degree.nc` | 34,5 MB | 23,1 MB |
+| `global_grid/reconstruction_a1_1_degree.nc` | 34,5 MB | 23,1 MB |
+| dazu: regionale Eisdicken je Eisschild (`ice_reconstruction_files/…/thickness/*.nc`), Deformation, Stokes-Koeffizienten, Plots | | |
+
+**Geholt (unter 50 MB):** nur die beiden 1°-Dateien, je 23 MB Transfer, abgelegt im Scratchpad der Sitzung,
+nicht im Repo. Die 0,25°-Dateien sind nicht geholt.
+
+**Variablen** (beide 1°-Dateien gleich; NetCDF-4, CF-1.7, 33 Zeitschritte von −80 000 bis 0, 361 × 181):
+
+| Variable | Bedeutung laut Datei | Einheit |
+| --- | --- | --- |
+| `paleo_topography` | topography accounting for ice thickness, sea level change and deformation | m |
+| `sea_level` | calculated sea level excluding topography | m |
+| `base_topography` | deformed base topography excluding ice sheets | m |
+| **`ice_thickness`** | **grounded ice thickness** | m |
+
+**Befunde:**
+
+1. **Die Eisdicke ist da.** `paleomist.py` liest sie nur nicht. Damit wird die Bilanz Eis → Ozean (Regel 5),
+   bisher „nicht prüfbar, bis die Eisdicke geklärt ist“, prüfbar.
+   - Grobe Probe auf der 1°-Datei: Das aufliegende Eis entspricht heute etwa 72 m Meeresspiegel und beim
+     Maximum (20 ka) etwa 189 m, die Differenz also rund 117 m. Das ist plausibel; gerechnet ohne
+     Auftriebskorrektur.
+2. **Das Bezugsjahr ist geklärt.** Die Zeitachse heißt „years since 1950“. Im Sintflut-Manifest ist
+   `bezugsjahr` noch fehlend; es ist 1950 CE.
+3. **Die Isostasie ist enthalten** (siehe 2a). Der Hinweis „ohne Isostasie“ ist falsch.
+
+**Zwei Ideale nach Regel 13: Referenz und a1.** Beide Läufe teilen Gitter und Variablen. Verglichen auf 1°:
+
+| ka BP | Eis Referenz (m SLE) | Eis a1 (m SLE) | Differenz |
+| --- | --- | --- | --- |
+| 80 – 60 | 82 – 151 | gleich | ≤ 0,1 |
+| 55 | 129,3 | 130,4 | +1,1 |
+| 50 | 109,6 | 112,7 | +3,1 |
+| 45 | 111,0 | 119,9 | +8,9 |
+| 40 | 101,7 | 111,8 | +10,1 |
+| 35 – 0 | | | ≤ 0,4 |
+
+- Die beiden Eisgeschichten unterscheiden sich **nur im MIS 3** (etwa 55–40 ka), um bis zu etwa 10 m
+  Meeresspiegeläquivalent. Ab 35 ka sind sie praktisch gleich.
+- In allen sechs Sintflut-Fenstern ist die Landfläche bei 22,5 und 10 ka in beiden Läufen identisch (auf 1°).
+- Für die Sintflut zeigt Regel 13 also zwei Ideale, die hier zusammenfallen. Das ist selbst eine Aussage: Die
+  Fenster unterscheiden die beiden Geschichten nicht.
+- Sichtbar würde die Uneinigkeit erst vor 35 ka. Zeigt die Ansicht beide, muss die Differenz dort als
+  Spannweite erscheinen (Regel 11). Dafür braucht das Schema den Verweis `woher.ideal` (Regel 13, siehe 1).
+
+**Vorschlag zum Holen der 0,25°-Eisdicke:**
+
+- **Für die Bilanz reicht 1°.** Die Bilanz Eis gegen Meeresspiegel ist eine globale Summe, und die 1°-Dateien
+  (je 23 MB, CC BY 4.0) liefern sie für beide Ideale. Empfehlung: Ein erweitertes `paleomist.py` liest
+  `ice_thickness` aus den 1°-Dateien. Das läuft lokal, unter der Grenze.
+- **Nur die Variable Eisdicke aus der 0,25°-Datei zu holen geht nicht.** Das Mitglied ist im ZIP als Ganzes
+  komprimiert (deflate), und darin steckt eine HDF5-Datei. Ein Ausschnitt lässt sich erst lesen, wenn die
+  ganzen 342 MB übertragen und entpackt sind. Einen OPeNDAP-Dienst für dieses Archiv bietet PANGAEA nicht an.
+- **Falls 0,25° nötig ist** (Eisdicke je Sintflut-Fenster in voller Auflösung): als GitHub-Actions-Lauf wie
+  `gezeiten.yml`. Er holt per HTTP-Range nur die beiden Mitglieder (je etwa 342 MB), rechnet die Summen je
+  Fenster und committet nur das abgeleitete JSON. Die Rohdatei bleibt außerhalb des Repos (`.gitignore`
+  `*.nc`). Lokal nur nach Freigabe, wegen der Größe.
+
 ## 3. Quellen-Kandidaten
 
 Nichts heruntergeladen. „Geprüft“ heißt: in dieser Sitzung über die Quelle selbst nachgesehen.
@@ -106,6 +177,7 @@ Nichts heruntergeladen. „Geprüft“ heißt: in dieser Sitzung über die Quell
 
 | Quelle | Wofür | Status | Lizenz | Nächster Schritt |
 | --- | --- | --- | --- | --- |
+| PaleoMIST 1.0 (PANGAEA 905800), Referenz und a1 | Eis, Meeresspiegel, Paläotopografie; zwei Ideale (Regel 13) | erkundet, 1°-Dateien lokal geprüft (Scratchpad) | geprüft: CC BY 4.0 | `ice_thickness` in `paleomist.py` aufnehmen, für Referenz und a1 |
 | ISIMIP Wassersektor (`groundwstor`, `qr`, `ptotwwgw`) | Idealschicht Grundwasser | erkundet, `BERICHT-grundwasser.md` | geprüft: pro Modell CC0, CC BY 4.0 oder CC BY-NC 4.0 | Download etwa 1,2 GB (ISIMIP3a) braucht Freigabe. `wtd` des Grundwassersektors ist noch nicht veröffentlicht |
 | GROW (Zenodo 15149480) | Beobachtung Grundwasser (Brunnen) | erkundet, Spalten gelesen | geprüft: CC BY-NC-SA 4.0, dazu Lizenz pro Brunnen | Attributtabelle (etwa 15 MB) per HTTP-Range. Entscheidung zur Repo-Lizenz nötig (SA) |
 | Surveillance Watch API | Erfassung, Daten als Bestand | erkundet, lokal ausgewertet | **ungeklärt** (keine Angabe gefunden) | Anfrage bei DAIR; bis dahin nur lokal, kein Adapter |
