@@ -13,7 +13,7 @@ Die Naturen werden als Stapel bearbeitet. Die Trennung ist analytisch, nicht ont
 | Stapel | Unterebenen |
 | --- | --- |
 | 2. Natur | 2.3 symbolisches System · 2.2 Überbau · 2.1 kognitiver, gebauter Raum |
-| 1. Natur | 1.3 Basis · 1.2 Unterbau (Basement) · 1.1 Erdsystem |
+| 1. Natur | 1.3 Basis · 1.2 Biosphäre / Lebensnetz · 1.1 Erdsystem |
 | 0. Natur | 0.3 solarer Raum · 0.2 interstellarer Raum · 0.1 universell/fundamental |
 
 Die beiden Stoffwechsel sind keine Stapel, sondern **Übergänge**, in denen Prozesse laufen: der planetare Stoffwechsel zwischen 0. und 1. Natur, der gesellschaftliche zwischen 1. und 2. Natur. Zeit ist ebenfalls kein Stapel (siehe Abschnitt Zeit).
@@ -52,6 +52,49 @@ Jeder Zufluss trägt zwei Angaben: die Kette der Grundkräfte und die Richtung *
 | Elektromagnetismus | Sonnenstrahlung | Chemie, Photosynthese, Verbrennung |
 | starke Kraft | Fusion in der Sonne | Kernspaltung |
 | schwache Kraft | Anteile der Sonnenfusion | radioaktiver Zerfall, Erdwärme |
+
+### 1. Natur: Biomasse und Lebensnetz
+
+1.2 heißt **Biosphäre / Lebensnetz** (früher Arbeitstitel „mehr-als-menschliche Gesellschaften“). „Lebensnetz“ im Sinn von Jason W. Moore. Getrennt wird:
+
+- **1.1 Biomasse:** der stoffliche Teil, ein Bestand (Kohlenstoff in Lebewesen). Im Erdsystem neben Atmosphäre, Hydrosphäre, Lithosphäre.
+- **1.2 Biosphäre / Lebensnetz:** die Beziehungen zwischen Lebewesen: Abstammung, Fressen, Bestäuben, Symbiose.
+
+Die **evolutionären Hauptzweige** (etwa Bakterien, Archaeen, Pflanzen, Pilze, Tiere, Protisten) werden darstellbar: als zusammengeklappter Baum in der Netzansicht (Quelle Open Tree of Life, CC0), mit **Biomasse als Bestand pro Zweig** (Quelle etwa Bar-On et al. 2018, Rekonstruktion mit Spannweite) und **Artenzahl doppelt geführt: beschrieben und geschätzt**. Die Lücke zwischen beiden bleibt sichtbar.
+
+| Beziehung | Quelle (Kandidat) | Herkunft | Ansicht |
+| --- | --- | --- | --- |
+| Abstammung | Open Tree of Life | kuratiert, rekonstruktion; Stützung und Widerspruch je Knoten | Netzansicht (Baum) |
+| Fressen, Stofffluss | Madingley | modell, idealisiert | Karte, Flussansicht |
+| Funde | GBIF | beobachtung | Karte (Punkte) |
+
+Gegenbestand in 2.1: die vom Menschen hergestellte Masse (Elhacham et al. 2020), die um 2020 die gesamte Biomasse überholt hat.
+
+### 2.3 als Übergang: Signal – Symbol
+
+2.3 ist kein Entweder-oder, sondern eine Strecke von Signal zu Symbol. Kommunikation setzt keine Sprache voraus. Geprüft wird mit vier Kriterien:
+
+1. **Bezug auf Abwesendes:** Das Zeichen verweist auf etwas, das nicht da ist.
+2. **Willkürlichkeit:** Konvention statt chemischer oder physischer Bindung an die Funktion.
+3. **Weitergabe durch Lernen** statt durch Vererbung.
+4. **Freie Kombinierbarkeit:** neue Zeichen aus vorhandenen.
+
+Zuordnungen pro Spezies sind `kuratiert`, mit Quellen pro Kriterium.
+
+### Vergleichsspezies als Analysewerkzeug
+
+Eine zweite Spezies wird durch dieselben Zeilen der Matrix gelegt wie der Mensch. Die Felder, die leer bleiben oder sich anders füllen, sind der Befund: Sie zeigen, was an der 2. Natur spezifisch menschlich ist. Erste Vergleichsspezies: **Ameisen** (Biomasse etwa ein Fünftel der menschlichen; Pilzzucht, Blattlaushaltung, Arbeitsteilung, gebaute Umwelt, Kommunikation über Spuren in der Umwelt). Die 2. Natur bleibt dabei nur bedingt darstellbar.
+
+| Matrix | Mensch | Ameise |
+| --- | --- | --- |
+| 1.1 Biomasse | ja | ja |
+| 1.2 Biosphäre / Lebensnetz | ja | ja, stark |
+| Gesellschaftlicher Stoffwechsel | Arbeit, Produktionsmittel | Arbeit; Pilzgärten als Produktionsmittel? |
+| 2.1 Gebaute Umwelt | ja | ja (Nester, Straßen, Spuren) |
+| 2.2 Institutionen | ja | offen; Kasten sind entwicklungsbiologisch |
+| 2.3 Signal – Symbol | alle vier Kriterien | Kriterium 1, teilweise 3 (gelernter Nestgeruch) |
+
+Vokabular ist eine Setzung: Übertragene Begriffe wie „Landwirtschaft“ oder „Krieg“ werden als Analogie gekennzeichnet, etwa „Pilzzucht (analog: Landwirtschaft)“.
 
 ## Der Prozess als Knoten
 
@@ -169,6 +212,8 @@ Diese Regeln folgen aus der Struktur und gelten für jede Ansicht.
 9. Die Plattform ist selbst ein Objekt der 2. Natur, eine Verdinglichung, und weist sich als solches aus.
 10. Jede Verzerrung (Flächenverzerrung, Überhöhung, Projektion) steht als Zahl in der Ansicht.
 11. Jede Reduktion (Vergröbern, Mitteln, Auswählen, Zusammenfassen) steht im Manifest. Werden mehrere Modelle zusammengefasst, erscheint die Spannweite, nicht nur der Mittelwert: Die Uneinigkeit der Modelle ist selbst eine Aussage.
+12. zeroearth leitet ab, modelliert aber nicht. Ableiten heißt: was ohne zusätzliche Annahmen aus den Daten folgt (Summen, Mittel, Differenz, Bilanz). Eigene Modellierung nur als ausgewiesene Ausnahme: Herkunft modell, Autor zeroearth, Code, Parameter und Startwert im Repo, Annahmen im Manifest, mehrere Läufe mit Spannweite.
+13. Passen mehrere Ideale gleich gut zu derselben Beobachtung, werden alle gezeigt. Eine gute Passung beweist keinen Mechanismus.
 
 ## Ansichten
 
