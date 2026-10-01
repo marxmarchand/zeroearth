@@ -35,8 +35,39 @@
        bedienbar: er wird kleiner, nicht überdeckt. Der Griff schiebt
        die Grenze, --an-h ist die einzige Größe dafür. ── */
     :root{--an-h:42vh;}
-    body.analyse #cc, body.analyse #ss-canvas, body.analyse #ee-canvas{top:var(--an-h);}
-    #ee-canvas{position:absolute;inset:0;z-index:1;display:none;background:#06080e;}
+    body.analyse > #cc, body.analyse #ss-canvas{top:var(--an-h);}
+
+    /* ── Mittelspalte: oben frei für künftige Felder, unten Karte,
+       daneben Mini-Globus und Legende. Die Höhen setzt _layoutMitte(),
+       damit weder das Analysefeld noch die Masterzeit die Karte
+       überdecken. Nur die Fächer selbst nehmen Klicks an. ── */
+    #mitte{grid-column:2;grid-row:2;min-width:0;min-height:0;display:flex;flex-direction:column;
+      gap:9px;pointer-events:none!important;}
+    #felder{flex:1;min-height:0;}   /* bewusst leer: Platz für künftige Felder */
+    #unten{display:flex;gap:9px;align-items:flex-end;min-height:0;}
+    #karten-fach{flex:1;min-width:0;align-self:stretch;display:none;pointer-events:auto;
+      background:#06080e;border:1px solid var(--border);border-radius:3px;}
+    #ee-canvas{display:block;width:100%;height:100%;cursor:crosshair;}
+    #seite{width:230px;flex-shrink:0;margin-left:auto;display:flex;flex-direction:column;gap:9px;
+      max-height:100%;min-height:0;}
+    #globus-fach{position:relative;width:230px;height:230px;flex-shrink:0;display:none;
+      border:1px solid var(--border);border-radius:3px;overflow:hidden;pointer-events:auto;background:#000;}
+    #legende{pointer-events:auto;background:var(--panel);border:1px solid var(--border);border-radius:3px;
+      backdrop-filter:blur(8px);padding:7px 9px;font-size:8.5px;line-height:1.5;color:var(--text);
+      overflow-y:auto;min-height:0;}
+    #lg-kopf{font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;color:var(--muted);
+      text-transform:uppercase;cursor:pointer;user-select:none;}
+    #lg-kopf::before{content:'▾ ';opacity:.6;}
+    #legende.zu #lg-kopf::before{content:'▸ ';}
+    #legende.zu #lg-inhalt{display:none;}
+    .lg-gruppe{font-family:var(--mono);font-size:7px;color:var(--muted);letter-spacing:.08em;
+      text-transform:uppercase;margin-top:6px;}
+    .lg-e{padding:3px 0;border-bottom:1px solid var(--border);}
+    .lg-n{color:#fff;}
+    .lg-h,.lg-z{color:var(--muted);}
+    .lg-h b,.lg-z b{font-weight:500;color:var(--text);}
+    .lg-warn{color:#d98c6a;}
+    .lg-fuss{margin-top:6px;color:var(--muted);font-size:7.5px;}
     #analyse{position:absolute;top:0;left:0;right:0;height:var(--an-h);z-index:3;
       background:rgba(6,8,14,.94);border-bottom:1px solid rgba(255,255,255,.14);
       display:none;flex-direction:column;}
@@ -224,9 +255,9 @@
     #scale-strip .db{padding:4px 8px;}
     #scale-strip .dn{font-size:7px;}
     #scale-strip .dl{font-size:9.5px;}
-    #vocab,#sprache,#licht,#karte{font-size:8.5px;color:var(--muted);padding:5px 10px;cursor:pointer;letter-spacing:.4px;}
-    #vocab:hover,#sprache:hover,#licht:hover,#karte:hover{color:var(--text);}
-    #vocab-name,#sprache-name,#licht-name,#karte-name{color:var(--accent);}
+    #vocab,#sprache,#licht,#karte,#miniglobus{font-size:8.5px;color:var(--muted);padding:5px 10px;cursor:pointer;letter-spacing:.4px;}
+    #vocab:hover,#sprache:hover,#licht:hover,#karte:hover,#miniglobus:hover{color:var(--text);}
+    #vocab-name,#sprache-name,#licht-name,#karte-name,#miniglobus-name{color:var(--accent);}
     #ms-pts-btn.vis{display:flex;}
     .ms-slider{width:70px;height:3px;-webkit-appearance:none;appearance:none;
       background:rgba(255,255,255,.12);border-radius:2px;outline:none;cursor:pointer;}
@@ -358,9 +389,6 @@
 <!-- Rendering Layer 2: CesiumJS (Planetarer Stoffwechsel → Zweite Natur) -->
 <div id="cc"></div>
 
-<!-- Rendering Layer 3: Equal-Earth-Karte (flächentreu) — dieselbe Erde,
-     andere Projektion. Zeigt nur, was ohne Höhe darstellbar ist. -->
-<canvas id="ee-canvas"></canvas>
 
 <!-- Analysefeld: der relationale Zusammenhang aus dem Modell, gefüllt
      mit dem, was an dieser Position und in diesem Zeitfenster belegt ist -->
@@ -569,6 +597,9 @@
     <div id="karte" onclick="ze.toggleKarte()" title="Projektion — Globus (geozentrisch) oder Equal Earth (flächentreu). Derselbe Raum, andere Darstellung.">
       Ansicht: <span id="karte-name">Globus</span> ⇄
     </div>
+    <div id="miniglobus" onclick="ze.toggleMiniGlobus()" title="Kleiner Globus neben der Karte, gekoppelt: Auswahl und Beobachtungsposition erscheinen in beiden">
+      Mini-Globus: <span id="miniglobus-name">aus</span> ⇄
+    </div>
     <div class="sep"></div>
     <div class="dftr">ZEIT · relational · dimensionsspezifisch</div>
   </div>
@@ -712,6 +743,23 @@
       <div id="mini-title">NullNatur · Bahn</div>
       <div id="mini-val">—</div>
       <div id="mini-sub">—</div>
+    </div>
+  </div>
+
+  <!-- Mittelspalte: oben frei (künftige Felder), unten die Karte -->
+  <div id="mitte">
+    <div id="felder" data-bereich="kuenftige-felder"></div>
+    <div id="unten">
+      <!-- Equal-Earth-Karte (flächentreu) — dieselbe Erde, andere
+           Projektion. Zeigt nur, was ohne Höhe darstellbar ist. -->
+      <div id="karten-fach"><canvas id="ee-canvas"></canvas></div>
+      <div id="seite">
+        <div id="globus-fach" title="Mini-Globus — derselbe Globus, verkleinert"></div>
+        <div id="legende">
+          <div id="lg-kopf" onclick="this.parentElement.classList.toggle('zu')">aktuell übereinander</div>
+          <div id="lg-inhalt"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2035,6 +2083,52 @@ const MODELL = {
   adresseVonEbene(ebene) { return this.daten?.ebenen?.[ebene] ?? null; }
 };
 
+/* LEGENDE — Herkunft (h) und Zeit (z) je Ebene, aus Code und Kopfkommentaren
+   der Ebenen übernommen. karte: true = die Equal-Earth-Karte zeichnet sie. */
+const LEGENDE = {
+  // Grundlagen
+  grundbild:   { h: 'Natural Earth II (Cesium-Textur)', z: 'ohne Zeitbezug' },
+  landumrisse: { h: 'Natural Earth 110 m, gemeinfrei', z: 'ohne Zeitbezug' },
+  gradnetz:    { h: 'geometrisch, keine Daten', z: 'ohne Zeitbezug' },
+  sonnensystem:{ h: 'berechnet im Browser (Bahnmodell)', z: 'Masterzeit' },
+  // Marker (data/marker.json)
+  ueberbau:    { h: 'data/marker.json (kuratiert, unvollständig)', z: 'Masterzeit', karte: true },
+  riss:        { h: 'data/marker.json (kuratiert, unvollständig)', z: 'Masterzeit', karte: true },
+  bestaende:   { h: 'data/marker.json (kuratiert, unvollständig)', z: 'Masterzeit', karte: true },
+  basis:       { h: 'data/marker.json (kuratiert, unvollständig)', z: 'Masterzeit', karte: true },
+  ware:        { h: 'data/marker.json (kuratiert, unvollständig)', z: 'Masterzeit', karte: true },
+  erste_natur: { h: 'data/marker.json (kuratiert, unvollständig)', z: 'Masterzeit', karte: true },
+  pm:          { h: 'data/marker.json (kuratiert, unvollständig)', z: 'Masterzeit', karte: true },
+  // Erde, Erdsystem
+  moon:        { h: 'berechnet: gekürzte Näherungsreihe der Mondbahn', z: 'Masterzeit' },
+  tidal:       { h: 'berechnet aus der Mondposition', z: 'Masterzeit' },
+  magfield:    { h: 'IGRF-Dipol (Näherung)', z: 'ohne Zeitbezug' },
+  solarwind:   { h: 'NOAA SWPC (DSCOVR/ACE), live; Pfeile schematisch', z: 'jetzt (live)' },
+  sats:        { h: 'CelesTrak (GROUP=active), Fallback data/tle/active.txt; SGP4', z: 'Gegenwart; ausgeblendet, wenn Masterzeit mehr als ±5 a von heute', karte: true },
+  wind:        { h: 'GFS 10-m-Wind (Vorhersage), data/manifest.json', z: 'Vorhersagezeitraum; außerhalb ausgeblendet' },
+  stroeme:     { h: 'data/stroeme.json', z: 'Masterzeit' },
+  unterbau:    { h: 'data/unterbau.json (GBIF, beobachtungsverzerrt)', z: 'Beobachtungsjahre der Quelle' },
+  seismik:     { h: 'USGS live (M2.5+, ~30 d)', z: 'letzte ~30 Tage' },
+  platten:     { h: 'data/plattengrenzen.geojson (lokal kuratiert)' },
+  grenzen:     { h: 'data/grenzen.geojson (Natural Earth admin_0, lokal kuratiert)' },
+  kataster:    { h: 'data/kataster.geojson (lokal kuratiert)' },
+  gewaesser:   { h: 'data/fluesse.geojson; Pegel: GloFAS via Open-Meteo (Modell ~5 km)', z: 'Abfluss: aktuell (live)' },
+  gezeiten:    { h: 'SWOT River Tides (Zenodo 15223861, CC BY 4.0) über gezeiten.py', z: 'SWOT seit 2023; außerhalb leer', karte: true },
+  satbild:     { h: 'VIIRS SNPP True Color · NASA GIBS' },
+  nachtlicht:  { h: 'VIIRS Day/Night Band · NASA GIBS' },
+  // Linsen (Rasterebenen)
+  coastLayer:     { name: 'Paläotopographie/Küste', h: 'PaleoMIST 1.0 · paleo_topography', z: 'Masterzeit (0–80 ka BP)' },
+  iceLayer:       { name: 'Eisdicke', h: 'PaleoMIST 1.0 · Eisdicke', z: 'Masterzeit (0–80 ka BP)' },
+  tempLayer:      { name: 'Temperatur 2 m', h: 'GFS (Vorhersage)', z: 'Vorhersagezeitraum; außerhalb ausgeblendet' },
+  paleoTempLayer: { name: 'Paläotemperatur', h: 'Paläoklima-Datensatz paleo_t2m', z: 'Masterzeit (Tiefenzeit laut Datensatz)' },
+  klimaLayer:     { name: 'Klimazonen', h: 'Köppen-Geiger' },
+  popLayer:       { name: 'Bevölkerung', h: 'keine – prozedural (sechs gesetzte Siedlungskerne)', z: 'Masterzeit',
+                    warn: 'prozedural: kein Datum, keine Beobachtung' },
+  osmLayer:       { name: 'Bebauung (OSM)', h: 'OpenStreetMap-Kacheln (© OpenStreetMap-Mitwirkende, ODbL)', z: 'Gegenwart (Kachelstand)',
+                    warn: 'folgt der Masterzeit nicht' },
+  gridLayer:      { h: 'geometrisch, keine Daten', z: 'ohne Zeitbezug' },
+};
+
 /* LENSES — Linse = benannte Auswahl von Layern mit Deckkraft (S4-Konfig).
    Instanznamen beziehen sich auf ZeroEarth-Eigenschaften. */
 const LENSES = {
@@ -2152,6 +2246,7 @@ class DM {
     const sc = SCALES[ze.scale];
     const allowed = !!sc && sc.type==='cesium';
     this._showOv(name, this._ovState[name] && allowed);
+    ze.ebenenGeaendert?.();
   }
 
   _showOv(name,on) {
@@ -3610,7 +3705,26 @@ class EqualEarthKarte {
   constructor(canvasId) {
     this.cv = document.getElementById(canvasId);
     this.land = null; this.fehler = null; this.on = false;
+    this.proj = null; this._treffer = [];
     window.addEventListener('resize', () => this.zeichne());
+    this.cv.addEventListener('click', e => this._klick(e));
+  }
+
+  /* Klick: ein Marker → gemeinsame Auswahl; sonst eine Stelle der
+     Kartenfläche → Beobachtungsposition. Beides erscheint im Globus. */
+  _klick(e) {
+    if (!this.proj) return;
+    const b = this.cv.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top;
+    let best = null, dmin = 9;
+    for (const t of this._treffer) {
+      const d = Math.hypot(t.x - x, t.y - y);
+      if (d < dmin) { dmin = d; best = t; }
+    }
+    if (best) return ze.waehle(best.obj);
+    const ll = this.proj.invert([x, y]);
+    const zurueck = ll && this.proj(ll);
+    if (!zurueck || Math.hypot(zurueck[0] - x, zurueck[1] - y) > 1) return;   // außerhalb der Erde
+    ze.setzeBeobachtung(ll[1], ll[0]);
   }
 
   async laden() {
@@ -3669,7 +3783,9 @@ class EqualEarthKarte {
       if (st) st.innerHTML = `<span class="ds-err">Karte nicht ladbar</span> (${this.fehler ?? 'lädt …'})`;
       return;
     }
+    // fitExtent: die ganze Erde passt immer in die Fläche, nichts wird abgeschnitten
     const proj = d3.geoEqualEarth().fitExtent([[12, 12], [b.width - 12, b.height - 12]], { type: 'Sphere' });
+    this.proj = proj; this._treffer = [];
     const pfad = d3.geoPath(proj, x);
 
     x.beginPath(); pfad({ type: 'Sphere' });
@@ -3687,19 +3803,29 @@ class EqualEarthKarte {
 
     const kann = [`Landumrisse (${this.quelle})`, `Gradnetz ${gradStufe}°`];
 
-    // Matrix-Objekte, aktiv bei der Masterzeit
+    // Matrix-Objekte, aktiv bei der Masterzeit — nur Ebenen, die
+    // eingeschaltet sind: jede Ebene bleibt einzeln abschaltbar
     const jahr = 2000 + Tideline.t;
     let marker = 0;
     for (const obj of MarkerLayer._cache ?? []) {
       for (const a of obj.aspekte ?? []) {
+        if (!ze.dm?._ovState?.[a.ebene]) continue;
         if (jahr < a.jahr0 || (a.jahr1 !== null && jahr > a.jahr1)) continue;
         const p = proj([obj.lon, obj.lat]); if (!p) continue;
         x.beginPath(); x.arc(p[0], p[1], 3, 0, 2 * Math.PI);
         x.strokeStyle = MarkerLayer.STYLE[a.ebene]?.color ?? '#aaa'; x.lineWidth = 1.5; x.stroke();
+        this._treffer.push({ x: p[0], y: p[1], obj });
         marker++;
       }
     }
     if (marker) kann.push(`${marker} Aspekte`);
+
+    // Gemeinsame Auswahl (auch aus dem Globus)
+    const aw = ze.auswahl && proj([ze.auswahl.lon, ze.auswahl.lat]);
+    if (aw) {
+      x.beginPath(); x.arc(aw[0], aw[1], 7, 0, 2 * Math.PI);
+      x.strokeStyle = '#fff'; x.lineWidth = 2; x.stroke();
+    }
 
     // Gezeitenknoten (Sätze) — auf der flächentreuen Karte lesbarer als am Horizont
     if (ze.gezeitenLayer?.on && ze.gezeitenLayer.daten) {
@@ -3798,6 +3924,8 @@ class ZeroEarth {
     // erdansicht merkt sich Globus oder Karte über den Wechsel zur NullNatur hinweg.
     this.ansicht = 'globus';
     this.erdansicht = 'globus';
+    this.miniGlobus = false;   // Mini-Globus neben der Karte, Standard aus
+    window.addEventListener('resize', () => this._layoutMitte());
 
     // Zeitabhängige & statische Layer für den Matrixschnitt
     this.iceLayer = new IceLayer(this.cesiumV);
@@ -3951,19 +4079,7 @@ class ZeroEarth {
       }
       const m = picked?.id?.zeMarker;
       if (!m) return;
-      this.markiereAnalyse(m.obj);
-      const obj = m.obj, jahr = 2000 + Tideline.t;
-      const J = j => j === null ? 'heute' : (j < -9999 ? `${(j/1e6).toFixed(0)} Ma` : j);
-      const zeilen = (obj.aspekte || []).map(a => {
-        const aktiv = jahr >= a.jahr0 && (a.jahr1 === null || jahr <= a.jahr1);
-        return `${aktiv ? '✓' : '○'} ${MarkerLayer.KURZ[a.ebene] || a.ebene}: ` +
-               `${a.beschreibung || a.typ || ''} [${J(a.jahr0)}–${J(a.jahr1)}]`;
-      }).join('  ·  ');
-      document.querySelector('#ip .il').textContent =
-        'Matrix-Objekt — Aspekte an einer Adresse (✓ aktiv bei ' + Math.round(jahr).toLocaleString('de-DE') + ' CE)';
-      document.getElementById('i-title').textContent = obj.label;
-      document.getElementById('i-desc').textContent = zeilen;
-      document.getElementById('i-meta').textContent = obj.quelle || '';
+      this.waehle(m.obj);
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
     // Mini-Fenster initial zeichnen
@@ -4011,6 +4127,7 @@ class ZeroEarth {
         this.obs.lon = Cesium.Math.toDegrees(c.longitude);
         this._syncScaleFromCamera(c.height);
       }
+      this.karte?.zeichne();
       this._obsHud();
      this._writeHash();
     });
@@ -4028,7 +4145,7 @@ class ZeroEarth {
     this._gruppiereSchichten();
     this.applyLabels();
     this._applyLicht();
-    Tideline.onChange(() => { this.zeichneAnalyse(); this.karte?.zeichne(); this.gezeitenLayer?.update(); });
+    Tideline.onChange(() => { this.zeichneAnalyse(); this.karte?.zeichne(); this.gezeitenLayer?.update(); this.zeichneLegende(); });
     const st = this._readHash();
     if (st) this.setState(st); else this.setScale('solar');
   }
@@ -4111,6 +4228,54 @@ class ZeroEarth {
   }
 
   toggle(name) { this.dm.toggle(name); }
+
+  /* Gemeinsame Auswahl eines Matrix-Objekts: Info-Tafel, Analysefeld,
+     Ring auf dem Globus und auf der Karte. Globus und Karte rufen beide
+     hierher, deshalb erscheint die Auswahl in beiden. */
+  waehle(obj) {
+    this.auswahl = obj;
+    this.markiereAnalyse(obj);
+    if (this._auswahlEnt) this.cesiumV.entities.remove(this._auswahlEnt);
+    this._auswahlEnt = this.cesiumV.entities.add({
+      position: Cesium.Cartesian3.fromDegrees(obj.lon, obj.lat, 2000),
+      point: { pixelSize: 16, color: Cesium.Color.TRANSPARENT,
+        outlineColor: Cesium.Color.WHITE, outlineWidth: 2 } });
+    this.karte?.zeichne();
+    const jahr = 2000 + Tideline.t;
+    const J = j => j === null ? 'heute' : (j < -9999 ? `${(j/1e6).toFixed(0)} Ma` : j);
+    const zeilen = (obj.aspekte || []).map(a => {
+      const aktiv = jahr >= a.jahr0 && (a.jahr1 === null || jahr <= a.jahr1);
+      return `${aktiv ? '✓' : '○'} ${MarkerLayer.KURZ[a.ebene] || a.ebene}: ` +
+             `${a.beschreibung || a.typ || ''} [${J(a.jahr0)}–${J(a.jahr1)}]`;
+    }).join('  ·  ');
+    document.querySelector('#ip .il').textContent =
+      'Matrix-Objekt — Aspekte an einer Adresse (✓ aktiv bei ' + Math.round(jahr).toLocaleString('de-DE') + ' CE)';
+    document.getElementById('i-title').textContent = obj.label;
+    document.getElementById('i-desc').textContent = zeilen;
+    document.getElementById('i-meta').textContent = obj.quelle || '';
+  }
+
+  /* Beobachtungsposition von der Karte: der Globus folgt ohne Flug,
+     die Höhe bleibt. */
+  setzeBeobachtung(lat, lon) {
+    this.obs.lat = lat; this.obs.lon = lon;
+    const sc = SCALES[this.scale];
+    if (sc?.type === 'cesium') {
+      const h = this.cesiumV.camera.positionCartographic?.height ?? sc.h;
+      this.dm.flyTo(this._kamera(sc, h), true);
+    }
+    this._obsHud();
+    this.karte?.zeichne();
+    this._writeHash();
+  }
+
+  /* Kamera für eine Erdskala an der Beobachtungsposition. */
+  _kamera(sc, h = sc.h) {
+    const dest = Cesium.Cartesian3.fromDegrees(this.obs.lon, this.obs.lat, h);
+    return sc.lookEarth
+      ? { dest, lookEarth: true, dur: 1.8 }
+      : { dest, ori: { heading: 0, pitch: Cesium.Math.toRadians(sc.pitch ?? -88), roll: 0 }, dur: 1.8 };
+  }
 
 
   /* ══ ZUSTAND ALS ADRESSE (v0.9.8) — die Suchmaschinen-Schnittstelle.
@@ -4277,6 +4442,8 @@ class ZeroEarth {
     document.getElementById('tb-analyse')?.classList.toggle('on', auf);
     if (auf) { this._analyseGriff(); this.zeichneAnalyse(); }
     this.cesiumV?.resize();
+    this._layoutMitte();
+    this.karte?.zeichne();
     const st = document.getElementById('analyse-status');
     if (st) st.textContent = auf ? 'Griff unter dem Feld zieht die Grenze' : '';
   }
@@ -4290,6 +4457,7 @@ class ZeroEarth {
       document.documentElement.style.setProperty('--an-h', `${h}vh`);
       this.cesiumV?.resize();
       this.zeichneAnalyse();
+      this._layoutMitte();
       this.karte?.zeichne();
     };
     let zieht = false;
@@ -4443,10 +4611,18 @@ class ZeroEarth {
       if (this._ansichtZiel !== ansicht) return;   // inzwischen anders gewählt
     }
     this.ansicht = ansicht;
-    const ebenen = { 'ss-canvas': 'sonnensystem', 'cc': 'globus', 'ee-canvas': 'karte' };
-    for (const [id, a] of Object.entries(ebenen))
-      document.getElementById(id).style.display = a === ansicht ? 'block' : 'none';
+    // Mini-Globus: derselbe Cesium-Globus, ins Fach neben der Karte gesetzt
+    const klein = ansicht === 'karte' && this.miniGlobus;
+    const cc = document.getElementById('cc'), fach = document.getElementById('globus-fach');
+    if (klein && cc.parentElement !== fach) fach.appendChild(cc);
+    if (!klein && cc.parentElement !== document.body)
+      document.body.insertBefore(cc, document.getElementById('analyse'));
+    fach.style.display = klein ? 'block' : 'none';
+    cc.style.display = ansicht === 'globus' || klein ? 'block' : 'none';
+    document.getElementById('ss-canvas').style.display = ansicht === 'sonnensystem' ? 'block' : 'none';
+    document.getElementById('karten-fach').style.display = ansicht === 'karte' ? 'block' : 'none';
     if (this.karte) this.karte.on = ansicht === 'karte';
+    this._layoutMitte();
     const mini = document.getElementById('mini-null');
     // im Vollbild-Sonnensystem redundant, im Erdkontext Rahmen präsent halten
     if (mini) mini.style.display = ansicht === 'sonnensystem' ? 'none' : 'flex';
@@ -4455,7 +4631,102 @@ class ZeroEarth {
     const st = document.getElementById('karte-status');
     if (ansicht === 'karte') this.karte.zeichne();
     else if (st) st.textContent = '';
-    if (ansicht === 'globus') requestAnimationFrame(() => { try { this.cesiumV.resize(); } catch (e) {} });
+    if (ansicht === 'globus' || klein) requestAnimationFrame(() => { try { this.cesiumV.resize(); } catch (e) {} });
+    document.getElementById('miniglobus-name').textContent = this.miniGlobus ? 'an' : 'aus';
+    this.zeichneLegende();
+  }
+
+  /* ── Legende „aktuell übereinander“ (strukturstand, Ansichten) ─────
+     Zählt auf, was gerade übereinanderliegt, je Ebene mit Herkunft
+     und Zeit. Was der Code nicht belegt, heißt „nicht angegeben“. */
+  ebenenGeaendert() {
+    this.zeichneLegende();
+    this.karte?.zeichne();
+  }
+
+  zeichneLegende() {
+    const el = document.getElementById('lg-inhalt');
+    if (!el) return;
+    const tlv = document.getElementById('tlv')?.textContent || '—';
+    const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+    const zeile = (name, e = {}) =>
+      `<div class="lg-e"><div class="lg-n">${esc(name)}</div>` +
+      `<div class="lg-h">Herkunft: <b>${esc(e.h ?? 'nicht angegeben')}</b></div>` +
+      `<div class="lg-z">Zeit: <b>${esc(e.z === 'Masterzeit' ? `Masterzeit (${tlv})` : (e.z ?? 'nicht angegeben'))}</b></div>` +
+      (e.warn ? `<div class="lg-warn">${esc(e.warn)}</div>` : '') + '</div>';
+    const name = k => document.getElementById('tb-' + k)?.textContent.trim() || k;
+    const L = LEGENDE;
+    const an = Object.entries(this.dm?._ovState ?? {}).filter(([, v]) => v).map(([k]) => k);
+    let html = '';
+
+    if (this.ansicht === 'sonnensystem') {
+      html += '<div class="lg-gruppe">Sonnensystem</div>' +
+        zeile('Sonne, Planeten, Mond', L.sonnensystem) +
+        ['ekliptik', 'orbits', 'apex'].filter(f => this.ss?.opt?.[f]).map(f => zeile(name(f), L.sonnensystem)).join('');
+      if (an.length) html += `<div class="lg-fuss">ruhen (keine Erdhöhe): ${an.map(k => esc(name(k))).join(', ')}</div>`;
+    } else {
+      const globus = this.ansicht === 'globus' || this.miniGlobus;
+      const raster = [];   // was nur der Globus zeigt
+      raster.push(['Grundbild', L.grundbild]);
+      if (this.satbild) raster.push([name('satbild'), { ...L.satbild, z: `${this.satbildTag} (fest)` }]);
+      if (this.nachtlicht) raster.push([name('nachtlicht'), { ...L.nachtlicht, z: `${this.nachtlichtTag} (fest)` }]);
+      for (const [linse, keys] of Object.entries(LENSES)) {
+        if ((this.msAlpha?.[linse] ?? 0) <= 0.01) continue;
+        for (const k of keys) {
+          const lay = this[k];
+          if (lay?.layer || lay?.imagery?.layer) raster.push([L[k]?.name ?? k, L[k]]);
+        }
+      }
+      if (this.gridLayer?.on) raster.push(['Rasterlinien (1°/10°)', L.gridLayer]);
+      if (this.iceLayer?.pointsOn) raster.push(['Rasterpunkte (GPU)', L.iceLayer]);
+
+      if (this.ansicht === 'karte') {
+        const aufKarte = an.filter(k => L[k]?.karte);
+        html += '<div class="lg-gruppe">Karte · Equal Earth (flächentreu)</div>' +
+          zeile('Landumrisse', L.landumrisse) + zeile('Gradnetz', L.gradnetz) +
+          aufKarte.map(k => zeile(name(k) + (k === 'sats' ? ' — nur Bodenspur' : ''), L[k])).join('');
+        const nicht = [...an.filter(k => !L[k]?.karte).map(name), ...raster.slice(1).map(r => r[0])];
+        if (nicht.length) html += `<div class="lg-fuss">auf der Karte nicht darstellbar: ${nicht.map(esc).join(', ')}</div>`;
+      }
+      if (globus) {
+        html += `<div class="lg-gruppe">Globus${this.ansicht === 'karte' ? ' (Mini)' : ''}</div>` +
+          raster.map(([n, e]) => zeile(n, e)).join('') + an.map(k => zeile(name(k), L[k])).join('');
+      }
+    }
+    html += '<div class="lg-fuss">Zusammenstellung durch den Nutzer · jede Ebene einzeln abschaltbar</div>';
+    if (html !== this._legendeHtml) { el.innerHTML = html; this._legendeHtml = html; }
+  }
+
+  /* Mini-Globus neben der Karte; Standard aus. */
+  toggleMiniGlobus() {
+    this.miniGlobus = !this.miniGlobus;
+    return this.zeigeAnsicht(this.ansicht, this.erdansicht);
+  }
+
+  /* Höhen der Mittelspalte: Die Karte bekommt, was ihre Breite im
+     Equal-Earth-Verhältnis (~2,05 : 1) braucht, höchstens 62 % der
+     Spalte; darüber bleibt die Fläche frei. Ein offenes Analysefeld
+     zählt als belegt, damit es die Karte nie überdeckt. */
+  _layoutMitte() {
+    const mitte = document.getElementById('mitte');
+    if (!mitte) return;
+    const r = mitte.getBoundingClientRect();
+    let oben = r.top;
+    if (document.body.classList.contains('analyse'))
+      oben = Math.max(oben, document.getElementById('analyse').getBoundingClientRect().bottom + 9);
+    const H = Math.max(0, r.bottom - oben);
+    const unten = document.getElementById('unten'), seite = document.getElementById('seite');
+    if (this.ansicht === 'karte') {
+      const breite = r.width - 230 - 9;   // neben der Seitenspalte (Mini-Globus, Legende)
+      let h = Math.min(breite / 2.05, H * 0.62);
+      if (this.miniGlobus) h = Math.max(h, 230);
+      h = Math.floor(Math.min(h, H));
+      unten.style.height = `${h}px`;
+      seite.style.maxHeight = `${h}px`;
+    } else {
+      unten.style.height = '';
+      seite.style.maxHeight = `${Math.floor(H * 0.62)}px`;
+    }
   }
 
   cycleLicht() {
@@ -4486,7 +4757,7 @@ class ZeroEarth {
     if (this.satbild) {
       this.cesiumV.imageryLayers.remove(this.satbild, true);
       this.satbild = null; el?.classList.remove('on');
-      if (st) st.textContent = ''; return;
+      if (st) st.textContent = ''; this.ebenenGeaendert(); return;
     }
     const tag = new Date(Date.now() - 36e5 * 30).toISOString().slice(0, 10);
     const provider = new Cesium.WebMapTileServiceImageryProvider({
@@ -4500,7 +4771,9 @@ class ZeroEarth {
       if (st) st.innerHTML = `<span class="ds-err">GIBS nicht erreichbar</span> (${e.message ?? 'Kacheln fehlen'})`;
     });
     this.satbild = this.cesiumV.imageryLayers.addImageryProvider(provider);
+    this.satbildTag = tag;
     el?.classList.add('on');
+    this.ebenenGeaendert();
     if (st) st.innerHTML = `VIIRS True Color · ${tag} · NASA GIBS — beobachteter Zustand dieses Tages` +
       `<br><span style="opacity:.7">nicht zeitlich verschiebbar: die Masterzeit ändert das Bild nicht</span>`;
   }
@@ -4517,6 +4790,7 @@ class ZeroEarth {
       this.nachtlicht = null;
       el?.classList.remove('on');
       if (st) st.textContent = '';
+      this.ebenenGeaendert();
       return;
     }
     // GIBS liefert den Vortag verlässlich; „heute" ist oft noch nicht prozessiert
@@ -4534,7 +4808,9 @@ class ZeroEarth {
     this.nachtlicht = this.cesiumV.imageryLayers.addImageryProvider(provider);
     this.nachtlicht.dayAlpha = 0;      // am Tag unsichtbar
     this.nachtlicht.nightAlpha = 1;    // auf der Nachtseite voll
+    this.nachtlichtTag = tag;
     el?.classList.add('on');
+    this.ebenenGeaendert();
     if (st) st.innerHTML = `VIIRS DNB · ${tag} · NASA GIBS — Lichtemission, keine Beleuchtung`;
     this._applyLicht();
   }
@@ -4585,10 +4861,7 @@ class ZeroEarth {
       this.ss.stop();
       await this._showMode('cesium');
       document.querySelectorAll('.ov-side').forEach(b => b.classList.remove('dimmed'));
-      const dest = Cesium.Cartesian3.fromDegrees(this.obs.lon, this.obs.lat, sc.h);
-      const cam = sc.lookEarth
-        ? { dest, lookEarth: true, dur: 1.8 }
-        : { dest, ori: { heading: 0, pitch: Cesium.Math.toRadians(sc.pitch ?? -88), roll: 0 }, dur: 1.8 };
+      const cam = this._kamera(sc);
       // Solange die Karte sichtbar ist, keine Kamerafahrt: der Globus
       // wird ohne Flug nachgestellt, damit er bei der Rückkehr stimmt.
       await this.dm.flyTo(cam, this.ansicht === 'karte');
@@ -4739,6 +5012,7 @@ class ZeroEarth {
     if (!this.ss) return;
     this.ss.opt[flag] = !this.ss.opt[flag];
     document.getElementById('tb-' + flag)?.classList.toggle('on', this.ss.opt[flag]);
+    this.ebenenGeaendert();
   }
 
   toggleAbout() {
@@ -4790,6 +5064,7 @@ class ZeroEarth {
   msOpacity(dimId, val) {
     this.msAlpha[dimId] = val/100;
     this._refreshMatrixLayers();
+    this.ebenenGeaendert();
   }
 
   /* ── Matrixschnitt-Layer neu aufbauen (alle auf dasselbe t) ───── */
@@ -4844,12 +5119,14 @@ class ZeroEarth {
   toggleGrid() {
     const on = this.gridLayer.toggle();
     document.getElementById('ms-grid-btn')?.classList.toggle('on', on);
+    this.ebenenGeaendert();
   }
 
   /* Rasterpunkte-Ansicht (GPU / PointPrimitiveCollection) umschalten */
   togglePoints() {
     const on = this.iceLayer.togglePoints();
     document.getElementById('ms-pts-btn')?.classList.toggle('on', on);
+    this.ebenenGeaendert();
   }
 
   /* ── Mini-Fenster: NullNatur-Position je nach Zeitskala ───────── */

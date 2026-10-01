@@ -96,7 +96,7 @@ Bestand und Archiv werden getrennt geführt: Der Bestand gehört zur Welt, das A
 
 **Bestand (Welt).** Ein Bestand ist eine Substanz mit Menge, die ihre Form wechseln kann: Wasser als Eis, Ozean, Dampf; Kohlenstoff als Biomasse, Kohle, CO₂; Kapital als Geld, Ware, Geld. Der Formwechsel ist ein Stoffwechsel, bei Kapital Einschließen und Realisieren.
 
-- **Erhalten ja/nein:** Bei Stoff bleibt die Summe über alle Formen gleich; das ist prüfbar (Meeresspiegelanstieg muss zum Eisverlust passen). Bei Kapital gilt kein Erhaltungssatz.
+- **Erhalten ja/nein:** Bei Stoff bleibt die Summe über alle Formen gleich; das ist prüfbar (Meeresspiegelanstieg muss zum Eisverlust passen). Bei Kapital gilt kein Erhaltungssatz. Daten sind ein dritter Fall: vervielfältigbar. Eine Kopie kostet fast nichts, das Original bleibt; eine Bilanz ist nicht möglich, nur die Lage von Kopien. Merkmal jedes Bestands: erhalten | nicht erhalten | vervielfältigbar.
 - **Formwechsel nur innerhalb eines Stapels oder Übergangs.** Wasser wird Eis, Kohle wird nicht Eigentum. Was die Stapelgrenze überschreitet, ist Anhaften oder Rolle.
 - **Spuren von Formen:** Eine Grenze wie die Küstenlinie ist die Spur einer Form (Ozean) eines Bestands (Wasser).
 
@@ -111,6 +111,10 @@ Bestand und Archiv werden getrennt geführt: Der Bestand gehört zur Welt, das A
 Das zeroearth-Archiv wird aus den anderen gespeist. Das `woher` jeder Angabe ist deshalb eine Kette durch Archive, etwa zeroearth ← PaleoMIST ← Modell ← Sedimentkerne. Das ist die Erkenntnisrichtung von oben nach unten als Datenstruktur.
 
 Für die Sintflut heißt das: Erinnerung folgt dem Archivtyp. Natürliche Archive überdauern Gesellschaften, gesellschaftliche nur über Neuverankerung.
+
+**Daten als Bestand.** Erfasste Daten sind ein Bestand der 2. Natur: Sie akkumulieren, wechseln die Form (Rohdaten, Profil, Ware, Wissen), hängen an einem stofflichen Datenträger und verweisen auf die Menschen, von denen sie stammen. Erzeugt werden sie im Prozess „Erfassung“ im gesellschaftlichen Stoffwechsel: Menschen in der Rolle Rohstoff, Technik als Arbeitsmittel, Daten als Produkt.
+
+**Staat und Formation.** Der Staat ist eine Institution (2.2) und Glied in Ketten des Anhaftens, keine Gesellschaftsformation. Formation ist etwa Kapitalismus.
 
 ## Modi und Erwartung
 
@@ -181,6 +185,7 @@ Die Ansicht folgt dem Beobachtungsmodus der Unterebene, nicht dem Stratum. Alle 
 - **Ein Punkt auf Globus oder Karte ist immer ein Träger.** Eine Form der 2. Natur erscheint am Träger (Schraffur, Umrandung, Anhänger), nie als eigener Punkt. Hat sie keinen verortbaren Träger, wird sie auf der Karte als fehlend markiert.
 - **Die Netzansicht ist geschichtet:** Stapel als feste Bänder, Übergänge als Zonen, Prozessknoten in den Zonen, sechs Linienarten für die sechs Vorgänge. Position in der Höhe bedeutet Stapel; was die Horizontale bedeutet, steht in der Ansicht. Kraftbasierte Layouts sind ausgeschlossen.
 - **Jeder Netz- oder Flussausschnitt ist eine Auswahl** und wird als solche ausgewiesen.
+- Zusammenstellung durch den Nutzer, sichtbar als Zusammenstellung. Ebenen dürfen frei übereinandergelegt werden, auch was so nie gleichzeitig sichtbar ist (etwa Tagbild und Nachtlichter). Jede Ebene bleibt einzeln abschaltbar, die Legende zählt auf, was gerade übereinanderliegt, mit Herkunft und Zeit. Nichts wird fest in ein Bild eingebacken.
 
 ## Bauform
 
