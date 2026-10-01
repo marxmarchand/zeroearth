@@ -6,7 +6,7 @@
    Was hier fehlt, ist nicht entschieden. Offene Stellen: kern/BERICHT.md.
    ════════════════════════════════════════════════════════════════════ */
 
-export const SCHEMA_VERSION = '0.4.0';
+export const SCHEMA_VERSION = '0.5.0';
 
 /* ── Stapel ───────────────────────────────────────────────────────────
    Drei Stapel, je drei Unterebenen. Die Reihenfolge codiert die Genese
@@ -133,6 +133,25 @@ export function anzeige(/** @type {string[]} */ arten) {
   return { rang, merkmale };
 }
 
+/* ── Ideale (Regel 13) ───────────────────────────────────────────────
+   Welcher Zustand als Ideal gilt, ist eine Setzung (Regel 7). Ein Wert
+   aus einem Modell oder einer Rekonstruktion verweist mit woher.ideal
+   auf seine Ideal-Variante. Varianten derselben Gruppe sind konkurrierende
+   Ideale: Kommt eine vor, kommen alle vor, auch wo sie zusammenfallen.
+   @typedef {{id: string, name: string, gruppe: string, variante: string,
+              gesetzt_in: string, begruendung: string|Fehlend}} Ideal          */
+export const IDEAL_ARTEN = /** @type {const} */ (['modell', 'rekonstruktion']);
+
+/* ── Bilanz: zwei Prüfarten (Regel 5) ─────────────────────────────────
+   innere_stimmigkeit: beide Seiten aus derselben Quelle; zeigt, dass die
+     Quelle mit sich selbst übereinstimmt, nicht, dass sie die Welt trifft.
+   unabhaengige_beobachtung: eine Seite aus einer unabhängigen Quelle;
+     das ist die Prüfung Modell gegen Welt.                              */
+export const PRUEFARTEN = /** @type {const} */ ({
+  innere_stimmigkeit: 'innere Stimmigkeit',
+  unabhaengige_beobachtung: 'gegen unabhängige Beobachtung',
+});
+
 /** Die Plattform ist kein Erwartungsträger: sie rechnet keine eigenen Wahrscheinlichkeiten. */
 export const KEIN_ERWARTUNGSTRAEGER = /** @type {const} */ (['zeroearth', 'plattform']);
 
@@ -202,7 +221,8 @@ export const SPANNWEITE = /** @type {const} */ (['min', 'max']);
    @typedef {{skala: string, wert?: number, von?: number, bis?: number}} Bezugszeit
    @typedef {{archiv: string|Fehlend, art: keyof typeof ARCHIVARTEN|Fehlend}} Archivglied
    @typedef {{arten: string[], quelle: string, archivkette: (Archivglied|Fehlend)[],
-              abgeleitet_aus?: string[], verfahren?: string, erwartungstraeger?: string, modelle?: string[]}} Woher
+              abgeleitet_aus?: string[], verfahren?: string, erwartungstraeger?: string, modelle?: string[],
+              ideal?: string}} Woher
    @typedef {{wert: number|string|{verweis: string}|Fehlend, wissensstand: Wissensstand|Fehlend,
               woher: Woher, wahrscheinlichkeit?: number, gegenwert?: {betrag: number, einheit: string},
               tausch?: string, spannweite?: {min: number, max: number}}} Fassung
@@ -229,13 +249,14 @@ export const SPANNWEITE = /** @type {const} */ (['min', 'max']);
    @typedef {string[] | {ebene: typeof BELEG_EINTRAGSEBENE, eintrag: string, quellen: string[]} | Fehlend} Beleg
    @typedef {{id: string, art: string, von: string|Fehlend, nach: string|Fehlend, prozess?: string, bestand?: string, modus?: string,
               als?: typeof ROLLEN[number], ware?: string|Fehlend, bezugszeit: Bezugszeit|Fehlend, beleg: Beleg,
-              bilanz?: {einheit: string, zufluss: number|Fehlend, abfluss: (number|Fehlend)[], toleranz?: number},
+              bilanz?: {einheit: string, zufluss: number|Fehlend, abfluss: (number|Fehlend)[], toleranz?: number,
+                pruefart?: keyof typeof PRUEFARTEN, aus?: {zufluss: string, abfluss: string[]}},
               bilanzierbar?: boolean, erwartungstraeger?: string, wahrscheinlichkeit?: number,
               gegenwert?: {betrag: number, einheit: string}, tausch?: string,
               woher: Woher, wissensstand: Wissensstand|Fehlend}} Relation
    @typedef {{id: string, name: string, warenproduktion: boolean|Fehlend, gilt: {von: number|string, bis: number|string}}} Formation
    @typedef {{id: string, was: string, gesetzt_in: string, begruendung: string|Fehlend}} Auswahl
    @typedef {{schema: string, adapter?: any, formationen: Formation[], subjektachse: {status: string, grund?: string},
-              auswahl: Auswahl[], bestaende: Bestand[], eintraege: Eintrag[], prozesse: Prozess[],
+              auswahl: Auswahl[], ideale?: Ideal[], bestaende: Bestand[], eintraege: Eintrag[], prozesse: Prozess[],
               relationen: Relation[]}} Graph
 */

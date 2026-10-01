@@ -17,7 +17,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   STAPEL, UNTEREBENEN, stapelVon, UEBERGAENGE, GRUNDKRAEFTE, RICHTUNGEN, ZUFLUSSARTEN, AUSGANGSARTEN,
   KAPITALFORMEN, VORGAENGE, RUECKWIRKUNG, RELATIONSARTEN, VERWORFEN, TAUSCHVORGAENGE, MODI, formwechsel,
-  ERHALTUNG, ROLLEN, BELEG_EINTRAGSEBENE,
+  ERHALTUNG, ROLLEN, BELEG_EINTRAGSEBENE, IDEAL_ARTEN, PRUEFARTEN,
   ARCHIVARTEN, HERKUNFTSARTEN, KEIN_ERWARTUNGSTRAEGER, WISSENSSTATUS, GEOMETRIEN, MIT_VERZERRUNG,
   istFehlend, MANIFEST_PFLICHT, ZEITSEMANTIK_PFLICHT, REDUKTIONSSCHRITTE, SPANNWEITE,
 } from './schema.mjs';
@@ -34,6 +34,7 @@ export const REGELN = /** @type {const} */ ({
   9: 'Plattform weist sich als 2. Natur aus',
   10: 'Verzerrung als Zahl',
   11: 'Reduktion im Manifest, Spannweite bei zusammengefassten Modellen',
+  13: 'Mehrere Ideale werden alle gezeigt',
   B: 'Bestände und Formen',
   S: 'Struktur',
   M: 'Manifest',
@@ -117,6 +118,23 @@ export function pruefe(gr) {
     if (!istText(a.gesetzt_in)) F(7, a.id, 'sagt nicht, wo die Setzung steht');
     if (!istText(a.begruendung) && !istFehlend(a.begruendung)) F(7, a.id, 'Begründung fehlt; unbegründet heißt {fehlt, grund}');
   }
+
+  /* ── Regel 13: Ideale ──────────────────────────────────────────── */
+  const ideale = new Map(), gruppen = new Map();
+  if (gr.ideale !== undefined && !Array.isArray(gr.ideale)) F(13, 'ideale', 'ideale ist eine Liste');
+  else for (const i of gr.ideale ?? []) {
+    if (!istText(i?.id)) { F(13, 'ideale', 'Ideal ohne id'); continue; }
+    if (ideale.has(i.id)) F(13, i.id, 'Ideal doppelt');
+    ideale.set(i.id, i);
+    for (const k of ['name', 'gruppe', 'variante', 'gesetzt_in']) if (!istText(i[k])) F(13, i.id, `Ideal ohne ${k}`);
+    if (!istText(i.begruendung) && !istFehlend(i.begruendung)) F(7, i.id, 'Ideal ohne Begründung; welches Ideal gilt, ist eine Setzung');
+    if (istText(i.gruppe)) (gruppen.get(i.gruppe) ?? gruppen.set(i.gruppe, []).get(i.gruppe)).push(i.id);
+  }
+  for (const [g, ids] of gruppen) H(13, g, `${ids.length} Ideal(e) in der Gruppe: ${ids.join(', ')}`);
+  /** Fehlende Mitglieder einer Gruppe, gemessen an den benutzten Idealen. */
+  const unvollstaendig = (/** @type {Set<string>} */ benutzt) => [...new Set([...benutzt]
+    .map(id => ideale.get(id)?.gruppe).filter(Boolean))]
+    .flatMap(g => (gruppen.get(g) ?? []).filter(id => !benutzt.has(id)));
 
   /* ── Formationen ───────────────────────────────────────────────── */
   for (const f of formationen.values()) {
@@ -239,9 +257,14 @@ export function pruefe(gr) {
 
     // Werte
     if (!e.werte || typeof e.werte !== 'object') { F('S', e.id, 'ohne werte (keine Werte ist {})'); continue; }
+    const benutzteIdeale = new Set();
     for (const [k, g] of Object.entries(e.werte)) {
       const ort = `${e.id}#${k}`;
       if (istFehlend(g)) continue;
+      const idealeDerGroesse = new Set((g?.punkte ?? []).flatMap((/** @type {any} */ p) => (p?.fassungen ?? [])
+        .map((/** @type {any} */ f) => f?.woher?.ideal)).filter((/** @type {any} */ x) => x !== undefined));
+      if (idealeDerGroesse.size > 1) F(13, ort, `eine Größe, ein Ideal: hier ${[...idealeDerGroesse].join(', ')}; Varianten stehen in eigenen Größen`);
+      idealeDerGroesse.forEach(i => benutzteIdeale.add(i));
       if (!istText(g?.einheit)) F('S', ort, 'ohne Einheit');
       if (!Array.isArray(g?.punkte)) { F('S', ort, 'ohne punkte'); continue; }
       if (g.zeitsemantik) {
@@ -259,6 +282,8 @@ export function pruefe(gr) {
         pruefeFassungen(p?.fassungen, po);
       });
     }
+    for (const fehlt of unvollstaendig(benutzteIdeale))
+      F(13, e.id, `Ideal ${fehlt} fehlt; konkurrierende Ideale werden alle gezeigt, auch wo sie zusammenfallen`);
   }
 
   /** @param {any} fs @param {string} ort */
@@ -302,6 +327,10 @@ export function pruefe(gr) {
     if (new Set(arten).size !== arten.length) F(6, ort, 'arten ist eine Menge; doppelte Einträge');
     if (arten.includes('idealisiert') && !arten.includes('modell')) F(6, ort, 'idealisiert ohne modell; das Merkmal gehört zur Idealschicht');
     if (arten.includes('modell') && !arten.includes('idealisiert')) F(6, ort, 'modell ohne Merkmal idealisiert; Modellergebnisse bilden die Idealschicht');
+    if (w.ideal !== undefined) {
+      if (!ideale.has(w.ideal)) F(13, ort, `Ideal unbekannt: ${w.ideal}`);
+      if (!IDEAL_ARTEN.some(a => arten.includes(a))) F(13, ort, 'Ideal an einem Wert ohne modell oder rekonstruktion; eine Beobachtung ist kein Ideal');
+    }
     if (!istText(w.quelle)) F(6, ort, 'Herkunft ohne Quelle');
     pruefeArchivkette(w.archivkette, ort);
     if (w.abgeleitet_aus !== undefined) {
@@ -379,6 +408,25 @@ export function pruefe(gr) {
     H(6, ort, 'Beleg nur auf Eintragsebene: nicht pro Beziehung belegt');
   }
 
+  /** Regel 5: Welche Größen die Bilanzseiten tragen; „unabhängig“ nur bei verschiedenen Quellen.
+      @param {any} bz @param {string} ort */
+  function pruefeSeiten(bz, ort) {
+    if (bz.aus === undefined) {
+      if (bz.pruefart === 'unabhaengige_beobachtung') F(5, ort, 'Prüfart unabhängig ohne Angabe der Seiten (aus); die Unabhängigkeit ist so nicht prüfbar');
+      return;
+    }
+    const quellen = (/** @type {any} */ ref) => {
+      const g = groesse(ref);
+      if (g === undefined || istFehlend(g)) { F(5, ort, `Bilanzseite unbekannt oder fehlend: ${ref}`); return new Set(); }
+      return new Set(g.punkte.flatMap((/** @type {any} */ p) => p.fassungen.map((/** @type {any} */ f) => f.woher?.quelle)));
+    };
+    const zu = quellen(bz.aus.zufluss);
+    const ab = new Set((Array.isArray(bz.aus.abfluss) ? bz.aus.abfluss : []).flatMap(r => [...quellen(r)]));
+    const gemeinsam = [...zu].filter(q => ab.has(q));
+    if (bz.pruefart === 'unabhaengige_beobachtung' && gemeinsam.length)
+      F(5, ort, `als unabhängig ausgewiesen, beide Seiten aus derselben Quelle (${gemeinsam[0]}); das ist innere Stimmigkeit`);
+  }
+
   /** Regel 3. @param {any} x @param {string} ort */
   function pruefeGegenwert(x, ort) {
     if (x.gegenwert === undefined) return;
@@ -421,6 +469,15 @@ export function pruefe(gr) {
   }
 
   /* ── Relationen ────────────────────────────────────────────────── */
+  // Regel 13: Relationen mit Ideal kommen für alle Ideale ihrer Gruppe vor
+  const relIdeale = new Map();
+  for (const r of relationen.values()) if (r.woher?.ideal !== undefined) {
+    const k = `${r.art}|${JSON.stringify(r.von)}|${JSON.stringify(r.nach)}`;
+    (relIdeale.get(k) ?? relIdeale.set(k, new Set()).get(k)).add(r.woher.ideal);
+  }
+  for (const [k, benutzt] of relIdeale)
+    for (const fehlt of unvollstaendig(benutzt)) F(13, k.split('|')[0] + ' ' + k.split('|').slice(1).join(' → '), `Ideal ${fehlt} fehlt bei dieser Relation`);
+
   /** Höhe eines Eintrags: erst Stapel, dann Unterebene. */
   const hoehe = (/** @type {any} */ e) => [Number(stapelVon(e.stapel)), ORDNUNG.indexOf(e.stapel)];
   for (const r of relationen.values()) {
@@ -498,7 +555,12 @@ export function pruefe(gr) {
         else if (!mengen.every(istZahl)) F(5, o, 'Bilanz braucht Zahlen oder fehlend');
         else {
           const rest = bz.zufluss - bz.abfluss.reduce((/** @type {number} */ s, /** @type {number} */ x) => s + x, 0);
-          if (Math.abs(rest) > (bz.toleranz ?? 0)) F(5, o, `Bilanz nicht geschlossen: Rest ${rest} ${bz.einheit}`);
+          const art = /** @type {any} */ (PRUEFARTEN)[bz.pruefart];
+          if (!art) F(5, o, `Bilanz ohne Prüfart (${Object.keys(PRUEFARTEN).join(' oder ')}); innere Stimmigkeit ist nicht Modell gegen Welt`);
+          pruefeSeiten(bz, o);
+          const anteil = bz.zufluss ? ` (${(rest / bz.zufluss * 100).toFixed(1)} %)` : '';
+          if (Math.abs(rest) > (bz.toleranz ?? 0)) F(5, o, `Bilanz nicht geschlossen: Rest ${rest} ${bz.einheit}${anteil}`);
+          else if (art) H(5, o, `Bilanz geschlossen, ${art}: Rest ${rest.toPrecision(3)} ${bz.einheit}${anteil}, Toleranz ${(bz.toleranz ?? 0).toPrecision(3)}`);
         }
       }
     } else {
@@ -597,7 +659,10 @@ export async function ladeAdapter(/** @type {string} */ name) {
   const manifest = JSON.parse(await readFile(join(ordner, 'manifest.json'), 'utf8'));
   const { transform } = await import(pathToFileURL(join(ordner, 'transform.mjs')).href);
   const roh = JSON.parse(await readFile(join(REPO, manifest.eingabe), 'utf8'));
-  return { manifest, graph: transform(roh, manifest) };
+  // weitere Eingaben eines Adapters, etwa abgeleitete Zusatzdateien
+  const zusatz = Object.fromEntries(await Promise.all(Object.entries(manifest.zusatz ?? {})
+    .map(async ([k, pfad]) => [k, JSON.parse(await readFile(join(REPO, /** @type {string} */ (pfad)), 'utf8'))])));
+  return { manifest, graph: transform(roh, manifest, zusatz) };
 }
 
 async function main() {

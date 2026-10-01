@@ -83,12 +83,12 @@ Die Spalte „Status“ unterscheidet beides, wo es darauf ankommt.
 
 | Auftrag | Status | Commit, Befund |
 | --- | --- | --- |
-| **a) Sintflut-Korrekturen** | **teilweise** | |
-| · Grenze nur aus Paläotopografie | offen, nur Metadaten | Gerechnet wird schon nur aus der Paläotopografie: `paleomist.py:75` setzt Land = `paleo_topography > 0`. Falsch ist die Herkunft in `transform.mjs:176`, die zusätzlich `meeresspiegel` als Grundlage nennt. Korrektur: `meeresspiegel` aus `abgeleitet_aus` streichen |
-| · „Isostasie: ungeprüft“ | offen, **jetzt beantwortbar** | `transform.mjs:32` sagt „ohne Isostasie“. Die Rohdatei sagt das Gegenteil: `paleo_topography` heißt dort „topography accounting for ice thickness, sea level change and deformation“, `base_topography` „deformed base topography“. Die glazial-isostatische Deformation (SELEN) ist also enthalten. Sedimentation nicht. Vorschlag für den Hinweis: „Deformation (Isostasie) laut Quelle enthalten; Sedimentation nicht; heutige Bathymetrie als Basis“. Geprüft an der 1°-Datei, gleiche Variablen wie 0,25° angenommen |
+| **a) Sintflut-Korrekturen** | **erledigt** (2026-10-01, Commit „Sintflut: Eis aus 1°, Bilanz, zwei Ideale“) | |
+| · Grenze nur aus Paläotopografie | erledigt | `abgeleitet_aus` nennt nur noch `paleo_topography` (gerechnet wurde schon so, `paleomist.py:75`) |
+| · „Isostasie: ungeprüft“ | erledigt, beantwortet | Hinweis jetzt: „paleo_topography enthält isostatische Deformation (laut Datei); Sedimentation nicht berücksichtigt“ |
 | · „relativer Meeresspiegel, Mittel über Fenster“ | erledigt | `transform.mjs:152` „relativer Meeresspiegel, gemittelt über alle Zellen des Kastens“, Commit `79e5185` |
 | · Notizen als 2. Natur, Formation fehlend mit Begründung | erledigt | `transform.mjs:191`, Commit `79e5185` |
-| · Eisdicke in der PaleoMIST-Rohdatei geprüft | **teilweise: Quelle bekannt, Rohdatei nicht lokal; Eisdicke an der 1°-Datei bestätigt** | Siehe „PaleoMIST-Rohdatei“ unten |
+| · Eisdicke in der PaleoMIST-Rohdatei geprüft | erledigt (1°) | Quelle bekannt, 0,25°-Rohdatei nicht lokal; `ice_thickness` aus den 1°-Dateien (Referenz, a1) über `paleomist_eis.py`, Bilanz Eis → Ozean geprüft als innere Stimmigkeit. Siehe `kern/BERICHT.md` |
 | **a′) PaleoMIST-Rohdatei** (2026-10-01) | **erkundet** | Quelle: PANGAEA, doi:10.1594/PANGAEA.905800 (Gowan 2019; Gowan et al. 2021, Nature Communications, doi:10.1038/s41467-021-21469-w). Lizenz **CC BY 4.0**, Zugang frei. Die 0,25°-Rohdatei liegt nicht lokal. Einzelheiten unten |
 | **b) Satellitenbild „jüngste verfügbare Aufnahme je Stelle“** | **offen** | Stand `12f2a8f`: eine GIBS-Ebene (VIIRS SNPP True Color) mit einem festen Tag (jetzt − 30 h). Kein Kombinieren mehrerer Tage und Satelliten je Stelle, keine Transparenz für Lücken, kein Klick mit Satellit und Aufnahmezeit. Der Statustext sagt noch „beobachteter Zustand dieses Tages“ |
 | **c) Topografie als Schalter** (Höhenfarben, Überhöhung mit Faktor, Bathymetrie) | **offen** | Es gibt keinen Schalter. Cesium World Terrain wird beim Start geladen (`index.html:3905`, braucht Ion-Token), ohne Höhenfarben, ohne sichtbaren Überhöhungsfaktor, ohne Bathymetrie |
@@ -135,7 +135,7 @@ nicht im Repo. Die 0,25°-Dateien sind nicht geholt.
      Maximum (20 ka) etwa 189 m, die Differenz also rund 117 m. Das ist plausibel; gerechnet ohne
      Auftriebskorrektur.
 2. **Das Bezugsjahr ist geklärt.** Die Zeitachse heißt „years since 1950“. Im Sintflut-Manifest ist
-   `bezugsjahr` noch fehlend; es ist 1950 CE.
+   `bezugsjahr` jetzt eingetragen: 1950 CE.
 3. **Die Isostasie ist enthalten** (siehe 2a). Der Hinweis „ohne Isostasie“ ist falsch.
 
 **Zwei Ideale nach Regel 13: Referenz und a1.** Beide Läufe teilen Gitter und Variablen. Verglichen auf 1°:
@@ -151,7 +151,7 @@ nicht im Repo. Die 0,25°-Dateien sind nicht geholt.
 
 - Die beiden Eisgeschichten unterscheiden sich **nur im MIS 3** (etwa 55–40 ka), um bis zu etwa 10 m
   Meeresspiegeläquivalent. Ab 35 ka sind sie praktisch gleich.
-- In allen sechs Sintflut-Fenstern ist die Landfläche bei 22,5 und 10 ka in beiden Läufen identisch (auf 1°).
+- In allen sechs Sintflut-Fenstern ist die Landfläche bei 22,5 und 10 ka in beiden Läufen identisch (auf 1°). *Nachtrag 2026-10-01:* über die ganze Reihe nicht: echt verschieden 52,5–37,5 ka (MIS 3), sonst bis auf Zellkippen gleich (`kern/BERICHT.md`).
 - Für die Sintflut zeigt Regel 13 also zwei Ideale, die hier zusammenfallen. Das ist selbst eine Aussage: Die
   Fenster unterscheiden die beiden Geschichten nicht.
 - Sichtbar würde die Uneinigkeit erst vor 35 ka. Zeigt die Ansicht beide, muss die Differenz dort als

@@ -20,7 +20,8 @@ const fassung = (/** @type {any} */ wert, /** @type {any} */ woher = W(['beobach
   ({ wert, wissensstand: WS, woher, ...extra });
 const einzel = (/** @type {string} */ einheit, /** @type {any} */ f, bezugszeit = { skala: 'a CE', wert: 2000 }) =>
   ({ einheit, punkte: [{ bezugszeit, fassungen: [f] }] });
-const VERZERRUNG = { flaeche: 1, ueberhoehung: 1 };
+/** Je Aufruf ein frisches Objekt: Tests verändern es. */
+const VERZERRUNG = () => ({ flaeche: 1, ueberhoehung: 1 });
 /** Pflichtfelder jeder Relation: Bezugszeit und Beleg. */
 const REL = () => ({ bezugszeit: fehlt('Test: nicht datiert'), beleg: ['Testbeleg'] });
 
@@ -34,6 +35,10 @@ function gueltig() {
     ],
     subjektachse: { status: 'leer' },
     auswahl: [{ id: 't/a', was: 'Testausschnitt', gesetzt_in: 'test', begruendung: 'Test' }],
+    ideale: [
+      { id: 't/ideal-a', name: 'Variante A', gruppe: 't/g', variante: 'a.nc', gesetzt_in: 'test', begruendung: 'Test' },
+      { id: 't/ideal-b', name: 'Variante B', gruppe: 't/g', variante: 'b.nc', gesetzt_in: 'test', begruendung: fehlt('Test') },
+    ],
     bestaende: [
       { id: 't/wasser', name: 'Wasser', erhaltung: 'erhalten', menge: fehlt('nicht im Test'),
         formen: [{ id: 'eis', name: 'Eis', eintrag: 't/eis' }, { id: 'ozean', name: 'Ozean', eintrag: 't/ozean' }] },
@@ -49,7 +54,7 @@ function gueltig() {
       { id: 't/sonne', stapel: '0.3', name: 'Sonne', wo: { geometrie: 'punkt' }, werte: {} },
       {
         id: 't/kohle', stapel: '1.1', name: 'Kohle', auswahl: ['t/a'],
-        wo: { geometrie: 'flaeche', gesetzt: true, verzerrung: VERZERRUNG },
+        wo: { geometrie: 'flaeche', gesetzt: true, verzerrung: VERZERRUNG() },
         werte: {
           masse: {
             einheit: 'kg',
@@ -64,13 +69,17 @@ function gueltig() {
           },
         },
       },
-      { id: 't/modell', stapel: '1.1', name: 'Rekonstruktion', wo: { geometrie: 'feld', verzerrung: VERZERRUNG },
+      { id: 't/modell', stapel: '1.1', name: 'Rekonstruktion', wo: { geometrie: 'feld', verzerrung: VERZERRUNG() },
         werte: { x: einzel('m', fassung(1, W(['rekonstruktion']))) } },
-      { id: 't/ideal', stapel: '1.1', name: 'Idealschicht', wo: { geometrie: 'feld', verzerrung: VERZERRUNG },
+      { id: 't/ideal', stapel: '1.1', name: 'Idealschicht', wo: { geometrie: 'feld', verzerrung: VERZERRUNG() },
         werte: { y: einzel('m', fassung(2, W(['modell', 'idealisiert'], { modelle: ['A', 'B', 'C'] }),
           { spannweite: { min: 1, max: 4 } })) } },
       { id: 't/co2', stapel: '1.1', name: 'CO2', wo: { geometrie: 'punkt' }, werte: {} },
-      { id: 't/bevoelkerung', stapel: '1.3', name: 'Bevölkerung Testland', wo: { geometrie: 'flaeche', verzerrung: VERZERRUNG }, werte: {} },
+      { id: 't/varianten', stapel: '1.1', name: 'Zwei Ideale', wo: fehlt('nicht im Test'), werte: {
+        va: einzel('m', fassung(1, W(['rekonstruktion'], { ideal: 't/ideal-a' }))),
+        vb: einzel('m', fassung(1, W(['rekonstruktion'], { ideal: 't/ideal-b' }))),
+      } },
+      { id: 't/bevoelkerung', stapel: '1.3', name: 'Bevölkerung Testland', wo: { geometrie: 'flaeche', verzerrung: VERZERRUNG() }, werte: {} },
       { id: 't/rohdaten', stapel: '2.3', name: 'Rohdaten', haengt_an: fehlt('Datenträger unbekannt'),
         formation: { id: 't/f-ware', von: 2020, bis: 'offen' }, werte: {} },
       { id: 't/profil', stapel: '2.3', name: 'Profil', haengt_an: fehlt('Datenträger unbekannt'),
@@ -84,7 +93,7 @@ function gueltig() {
       } },
       { id: 't/kueste', stapel: '1.1', name: 'Grenze', werte: {}, spur_von: { bestand: 't/wasser', form: 'ozean' },
         wo: { geometrie: 'grenze', koordinaten: fehlt('nicht im Test'), hinweis: 'abgeleitet',
-          verzerrung: VERZERRUNG, woher: W(['rekonstruktion'], { abgeleitet_aus: ['t/modell#x'] }) } },
+          verzerrung: VERZERRUNG(), woher: W(['rekonstruktion'], { abgeleitet_aus: ['t/modell#x'] }) } },
       {
         id: 't/eigentum', stapel: '2.2', name: 'Eigentum', haengt_an: ['t/kohle'],
         formation: { id: 't/f-ware', von: 1990, bis: 'offen' }, verwertungsqualitaet: { modus: 'potenz' },
@@ -118,7 +127,8 @@ function gueltig() {
     }],
     relationen: [
       { id: 't/r-stoff', art: 'stoffwechsel', von: 't/kohle', nach: 't/co2', prozess: 't/p',
-        bilanz: { einheit: 'kg', zufluss: 10, abfluss: [7, 3] }, woher: W(['beobachtung']), wissensstand: WS, ...REL() },
+        bilanz: { einheit: 'kg', zufluss: 10, abfluss: [7, 3], pruefart: 'innere_stimmigkeit',
+          aus: { zufluss: 't/kohle#masse', abfluss: ['t/modell#x'] } }, woher: W(['beobachtung']), wissensstand: WS, ...REL() },
       { id: 't/r-schmelze', art: 'stoffwechsel', bestand: 't/wasser', von: 't/eis', nach: 't/ozean',
         bilanz: { einheit: 'kg', zufluss: fehlt('offen'), abfluss: [fehlt('offen')] }, woher: W(['kuratiert']), wissensstand: WS, ...REL() },
       { id: 't/r-kauf', art: 'einschliessen_realisieren', bestand: 't/kapital', von: 't/geld', nach: 't/eigentum',
@@ -272,6 +282,25 @@ const VERSTOESSE = [
   ['B', 'verweist_auf Unbekanntes', b => { best(b, 't/daten').verweist_auf = ['t/nirgends']; }],
   [5, 'vervielfältigbarer Bestand bilanziert', b => { r(b, 't/r-profil').bilanz = { einheit: 'B', zufluss: 1, abfluss: [1] }; }],
   ['B', 'Formwechsel von Daten als Konversion', b => { r(b, 't/r-profil').art = 'konversion'; }],
+  // Regel 13: mehrere Ideale
+  [13, 'ein Ideal der Gruppe fehlt', b => { delete e(b, 't/varianten').werte.vb; }],
+  [13, 'Ideal unbekannt', b => { e(b, 't/varianten').werte.vb.punkte[0].fassungen[0].woher.ideal = 't/ideal-x'; }],
+  [13, 'Beobachtung als Ideal', b => { e(b, 't/varianten').werte.va.punkte[0].fassungen[0].woher.arten = ['beobachtung']; }],
+  [13, 'eine Größe mit zwei Idealen', b => {
+    e(b, 't/varianten').werte.va.punkte.push({ bezugszeit: { skala: 'a CE', wert: 2001 },
+      fassungen: [fassung(2, W(['rekonstruktion'], { ideal: 't/ideal-b' }))] });
+  }],
+  [13, 'Ideal ohne Gruppe', b => { delete b.ideale[0].gruppe; }],
+  [7, 'Ideal ohne Begründung', b => { delete b.ideale[1].begruendung; }],
+  [13, 'Relation nur für ein Ideal', b => { r(b, 't/r-haftet').woher = W(['kuratiert', 'rekonstruktion'], { ideal: 't/ideal-a' }); }],
+  // Regel 5: Prüfart der Bilanz
+  [5, 'Bilanz ohne Prüfart', b => { delete r(b, 't/r-stoff').bilanz.pruefart; }],
+  [5, 'Prüfart unbekannt', b => { r(b, 't/r-stoff').bilanz.pruefart = 'gefühlt'; }],
+  [5, 'unabhängig, aber beide Seiten aus derselben Quelle', b => { r(b, 't/r-stoff').bilanz.pruefart = 'unabhaengige_beobachtung'; }],
+  [5, 'unabhängig ohne Angabe der Seiten', b => {
+    r(b, 't/r-stoff').bilanz.pruefart = 'unabhaengige_beobachtung'; delete r(b, 't/r-stoff').bilanz.aus;
+  }],
+  [5, 'Bilanzseite unbekannt', b => { r(b, 't/r-stoff').bilanz.aus.zufluss = 't/kohle#nichts'; }],
   // Regel 11
   [11, 'mehrere Modelle ohne Spannweite', b => { delete e(b, 't/ideal').werte.y.punkte[0].fassungen[0].spannweite; }],
   [11, 'Spannweite ohne max', b => { delete e(b, 't/ideal').werte.y.punkte[0].fassungen[0].spannweite.max; }],
@@ -384,4 +413,22 @@ test('nicht erhoben: fehlender Schlüssel und leere Liste heißen gleich, nie "k
   assert.equal(x.fehlt, true);
   assert.match(x.grund, /nicht erhoben/);
   assert.match(x.grund, /keine Aussage, dass keine Beziehung besteht/);
+});
+
+test('Regel 5: unabhängig nur mit verschiedenen Quellen; Ausgabe nennt die Prüfart', () => {
+  const b = gueltig();
+  const x = e(b, 't/modell').werte.x.punkte[0].fassungen[0];
+  x.woher = { ...x.woher, quelle: 'unabhängige Messreihe' };
+  r(b, 't/r-stoff').bilanz.pruefart = 'unabhaengige_beobachtung';
+  const { fehler, hinweise } = pruefe(b);
+  assert.deepEqual(fehler, []);
+  assert.ok(hinweise.some(h => h.regel === 5 && /gegen unabhängige Beobachtung/.test(h.text)));
+  const innen = pruefe(gueltig()).hinweise;
+  assert.ok(innen.some(h => h.regel === 5 && /innere Stimmigkeit/.test(h.text)));
+});
+
+test('Regel 13: beide Ideale gezeigt, Hinweis nennt die Gruppe', () => {
+  const { fehler, hinweise } = pruefe(gueltig());
+  assert.deepEqual(fehler, []);
+  assert.ok(hinweise.some(h => h.regel === 13 && /2 Ideal/.test(h.text)));
 });

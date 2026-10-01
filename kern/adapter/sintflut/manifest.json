@@ -4,46 +4,157 @@
   "quelle": {
     "name": "PaleoMIST 1.0",
     "datei": "reconstruction_0.25_degree.nc",
-    "variablen": ["paleo_topography", "sea_level"],
+    "variablen": [
+      "paleo_topography",
+      "sea_level"
+    ],
     "abgeleitet_durch": "matrix-scharnier/adapter/paleomist.py",
-    "pruefbar_gegen": "reconstruction_a1_0.25_degree.nc (alternative Eisgeschichte)"
+    "eis": {
+      "dateien": [
+        "reconstruction_1_degree.nc (Referenz)",
+        "reconstruction_a1_1_degree.nc (a1, alternative Eisgeschichte)"
+      ],
+      "variablen": [
+        "ice_thickness",
+        "paleo_topography"
+      ],
+      "abgeleitet_durch": "matrix-scharnier/adapter/paleomist_eis.py",
+      "pangaea": "doi:10.1594/PANGAEA.905800 (Gowan 2019; Gowan et al. 2021, doi:10.1038/s41467-021-21469-w)"
+    }
   },
-  "stapel": ["1.1", "2"],
+  "stapel": [
+    "1.1",
+    "2"
+  ],
   "uebergang": "planetar",
   "vorgang": "stoffwechsel",
   "herkunft": {
-    "arten": ["rekonstruktion"],
+    "arten": [
+      "rekonstruktion"
+    ],
     "ebene": "Datei",
     "hinweis": "Die Quelle nennt die Herkunft einmal für die ganze Datei. transform.mjs schreibt sie an jeden Wert und vermerkt, dass sie von der Dateiebene übernommen ist. Die Notizen tragen eine eigene Herkunft (kuratiert, gesellschaftliches Archiv).",
     "archivkette": [
-      { "archiv": "zeroearth (data/sintflut.json, Commit afe6d90)", "art": "zeroearth" },
-      { "archiv": "PaleoMIST 1.0, reconstruction_0.25_degree.nc",
-        "art": { "fehlt": true, "grund": "Archivart von PaleoMIST nicht festgelegt" } },
-      { "fehlt": true, "grund": "Welche natürlichen Archive PaleoMIST zugrunde liegen, nennen die Daten nicht" }
+      {
+        "archiv": "zeroearth (data/sintflut.json, Commit afe6d90)",
+        "art": "zeroearth"
+      },
+      {
+        "archiv": "PaleoMIST 1.0, reconstruction_0.25_degree.nc",
+        "art": {
+          "fehlt": true,
+          "grund": "Archivart von PaleoMIST nicht festgelegt"
+        }
+      },
+      {
+        "fehlt": true,
+        "grund": "Welche natürlichen Archive PaleoMIST zugrunde liegen, nennen die Daten nicht"
+      }
     ]
   },
   "zeitsemantik": {
     "skala": "ka BP",
-    "bezugsjahr": { "fehlt": true, "grund": "Die Quelle sagt nicht, ob 0 ka BP 1950 CE oder das Jahr der Rechnung meint." },
-    "aufloesung": { "wert": 2.5, "einheit": "ka" },
-    "abdeckung": { "von": 80, "bis": 0, "schritte": 33 },
-    "verzoegerung": { "fehlt": true, "grund": "Kein Wissensstand angegeben; der Abstand zwischen Bezugszeit und Wissensstand ist daher unbekannt." }
+    "bezugsjahr": {
+      "wert": "1950 CE",
+      "beleg": "Zeitachse der Quelle: units = 'years since 1950-01-1' (reconstruction_1_degree.nc, geprüft 2026-10-01)"
+    },
+    "aufloesung": {
+      "wert": 2.5,
+      "einheit": "ka"
+    },
+    "abdeckung": {
+      "von": 80,
+      "bis": 0,
+      "schritte": 33
+    },
+    "verzoegerung": {
+      "fehlt": true,
+      "grund": "Kein Wissensstand angegeben; der Abstand zwischen Bezugszeit und Wissensstand ist daher unbekannt."
+    }
   },
-  "geometrie": ["flaeche", "feld", "grenze"],
+  "geometrie": [
+    "flaeche",
+    "feld",
+    "grenze"
+  ],
   "lizenz": {
-    "angabe": "frei",
-    "quelle": "QUELLEN.md",
-    "geprueft": false
+    "angabe": "CC BY 4.0",
+    "quelle": "PANGAEA, doi:10.1594/PANGAEA.905800",
+    "geprueft": "2026-10-01"
   },
   "weitergabe": {
-    "im_repo": "data/sintflut.json: Flächensummen und Mittelwerte je Kasten",
-    "nicht_im_repo": "Raster reconstruction_0.25_degree.nc; wird nur als Verweis geführt"
+    "im_repo": "data/sintflut.json: Flächensummen und Mittelwerte je Kasten; data/paleomist_eis.json: globale Eis- und Ozeanvolumen und Landflächen je Kasten auf 1°, je Ideal",
+    "nicht_im_repo": "Raster reconstruction_0.25_degree.nc und die 1°-Dateien (Referenz, a1); nur als Verweis geführt"
   },
-  "auswahl": ["sintflut/auswahl/fenster", "sintflut/auswahl/kasten"],
+  "auswahl": [
+    "sintflut/auswahl/fenster",
+    "sintflut/auswahl/kasten",
+    "sintflut/auswahl/ideale"
+  ],
   "reduktion": [
-    { "schritt": "auswaehlen", "angabe": "2 Variablen: paleo_topography, sea_level" },
-    { "schritt": "auswaehlen", "angabe": "6 Fenster (Kästen) aus dem globalen Gitter" },
-    { "schritt": "vergroebern", "angabe": "0.25°-Gitter -> 1 Wert je Kasten: Landfläche als Flächensumme in km2" },
-    { "schritt": "mitteln", "angabe": "Meeresspiegel (sea_level) räumlich je Kasten, auf 0.1 m gerundet" }
-  ]
+    {
+      "schritt": "auswaehlen",
+      "angabe": "2 Variablen: paleo_topography, sea_level"
+    },
+    {
+      "schritt": "auswaehlen",
+      "angabe": "6 Fenster (Kästen) aus dem globalen Gitter"
+    },
+    {
+      "schritt": "vergroebern",
+      "angabe": "0.25°-Gitter -> 1 Wert je Kasten: Landfläche als Flächensumme in km2"
+    },
+    {
+      "schritt": "mitteln",
+      "angabe": "Meeresspiegel (sea_level) räumlich je Kasten, auf 0.1 m gerundet"
+    },
+    {
+      "schritt": "auswaehlen",
+      "angabe": "1°-Dateien statt 0,25° für Eis und Ozean (je 34,5 MB statt 554 MB); Variablen ice_thickness, paleo_topography"
+    },
+    {
+      "schritt": "vergroebern",
+      "angabe": "1°-Gitter -> globale Summe je Zeitschritt: Eisvolumen, Ozeanvolumen (m³)"
+    },
+    {
+      "schritt": "vergroebern",
+      "angabe": "1°-Gitter -> Landfläche je Kasten (km², paleo_topography > 0), je Ideal"
+    }
+  ],
+  "zusatz": {
+    "eis": "data/paleomist_eis.json"
+  },
+  "ideale": {
+    "gruppe": "sintflut/ideale/eisgeschichte",
+    "varianten": {
+      "referenz": {
+        "name": "PaleoMIST Referenz",
+        "variante": "reconstruction_1_degree.nc"
+      },
+      "a1": {
+        "name": "PaleoMIST a1 (alternative Eisgeschichte)",
+        "variante": "reconstruction_a1_1_degree.nc"
+      }
+    },
+    "gesetzt_in": "PaleoMIST 1.0 (Gowan et al. 2021): die Quelle liefert beide Läufe",
+    "begruendung": "Beide Eisgeschichten stammen aus derselben Quelle und sind dort gleichrangig; keine wird bevorzugt (Regel 13)",
+    "annahmen": {
+      "ozeanflaeche_m2": 361800000000000.0,
+      "unterschied_ab_m_sle": 1.0,
+      "begruendung": "Nur für die lesbare Ausgabe. Meter Meeresspiegeläquivalent mit heutiger Ozeanfläche und den Dichten der Bilanz. Ab 1 m gilt eine Eisdifferenz als Unterschied. Landflächen-Differenzen bis 2 Zellen à 1° heißen Zellkippen: einzelne Randzellen, die bei kleinsten Meeresspiegel-Differenzen zwischen Land und Meer wechseln (Auflösungsgrenze). Im Graphen stehen alle Differenzen ungefiltert in m³ und km².",
+      "zellkippen_bis_zellen": 2
+    }
+  },
+  "bilanz": {
+    "pruefart": "innere_stimmigkeit",
+    "warum_nur_innere_stimmigkeit": "Eis und Ozean stammen beide aus PaleoMIST. Die Bilanz zeigt, dass die Rekonstruktion mit sich selbst übereinstimmt, nicht, dass sie die Welt trifft. Gegen unabhängige Beobachtung: Spratt & Lisiecki 2016 (erkundet, kern/BERICHT.md).",
+    "zeitraum": "vom Eismaximum der Reihe bis heute",
+    "annahmen": {
+      "dichte_eis_kg_m3": 917,
+      "dichte_wasser_kg_m3": 1000,
+      "begruendung": "Dichten sind Annahmen von zeroearth (Regel 12), nicht Angaben der Quelle. Süßwasserdichte für das Schmelzwasser; mit Meerwasser (1028) wäre der Rest rund 3 Prozentpunkte größer."
+    },
+    "toleranz_anteil": 0.1,
+    "toleranz_begruendung": "Festgelegt nach der ersten Rechnung (Rest −6,8 % in beiden Idealen), begründet mit: 1°-Gitter (Eisrand und Küste fallen auf ganze Zellen), Dichteannahme (±3 %), Ozeanvolumen enthält Becken unter Meeresniveau im Landesinneren, nur aufliegendes Eis. Die Prüfung erkennt Fehler der Größenordnung (Einheit, Vorzeichen, falsche Variable), keine Feinheiten. Einzelne 2,5-ka-Schritte streuen weit stärker und werden nicht geprüft."
+  }
 }
