@@ -244,17 +244,6 @@
     .ds-err{color:#d98c6a;}
     #ms-pts-btn{display:none;margin:2px 0 4px 0;border:1px solid var(--border);border-radius:4px;}
     #ms-grid-btn{margin:2px 0 4px 0;border:1px solid var(--border);border-radius:4px;}
-    #scale-head{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--muted);
-      text-transform:uppercase;padding:4px 8px 6px 8px;cursor:pointer;user-select:none;}
-    #scale-head:hover{color:var(--text);}
-    #scale-head::before{content:'▸ ';opacity:.6;}
-    #scale-sec.open #scale-head::before{content:'▾ ';}
-    #scale-cur{color:var(--accent);text-transform:none;letter-spacing:0;}
-    #scale-strip{display:none;flex-direction:column;gap:2px;}
-    #scale-sec.open #scale-strip{display:flex;}
-    #scale-strip .db{padding:4px 8px;}
-    #scale-strip .dn{font-size:7px;}
-    #scale-strip .dl{font-size:9.5px;}
     #vocab,#sprache,#licht,#karte,#miniglobus{font-size:8.5px;color:var(--muted);padding:5px 10px;cursor:pointer;letter-spacing:.4px;}
     #vocab:hover,#sprache:hover,#licht:hover,#karte:hover,#miniglobus:hover{color:var(--text);}
     #vocab-name,#sprache-name,#licht-name,#karte-name,#miniglobus-name{color:var(--accent);}
@@ -413,71 +402,20 @@
   </div>
 
   <div id="left">
-    <!-- v0.9.12: Skalen sind BEOBACHTUNGSHÖHEN (S3) und stehen deshalb
-         eigenständig — nicht in den Dimensionsblöcken. Die Blöcke tragen
-         nur noch Dimensionsinhalte (S4), zuschaltbar. -->
-    <div id="scale-sec">
-    <div id="scale-head" onclick="ze.toggleScales()" title="Beobachtungshöhe wählen — ein Raum, neun Stufen">
-      BEOBACHTUNGSHÖHE · <span id="scale-cur">—</span></div>
-    <div id="scale-strip">
-      <button class="db sc" data-s="strasse" onclick="ze.setScale('strasse')">
-        <div class="dd"></div>
-        <div class="dt"><span class="dn">3 KM</span><span class="dl"></span></div>
-        <span class="dst">●</span>
-      </button>
-      <button class="db sc" data-s="stadt" onclick="ze.setScale('stadt')">
-        <div class="dd"></div>
-        <div class="dt"><span class="dn">60 KM</span><span class="dl"></span></div>
-        <span class="dst">●</span>
-      </button>
-      <button class="db sc" data-s="region" onclick="ze.setScale('region')">
-        <div class="dd"></div>
-        <div class="dt"><span class="dn">1.500 KM</span><span class="dl"></span></div>
-        <span class="dst">●</span>
-      </button>
-      <button class="db sc" data-s="kontinent" onclick="ze.setScale('kontinent')">
-        <div class="dd"></div>
-        <div class="dt"><span class="dn">6.500 KM</span><span class="dl"></span></div>
-        <span class="dst">●</span>
-      </button>
-      <button class="db sc" data-s="planet" onclick="ze.setScale('planet')">
-        <div class="dd"></div>
-        <div class="dt"><span class="dn">55.000 KM</span><span class="dl"></span></div>
-        <span class="dst">●</span>
-      </button>
-      <button class="db sc" data-s="erdmond" onclick="ze.setScale('erdmond')">
-        <div class="dd"></div>
-        <div class="dt"><span class="dn">450.000 KM</span><span class="dl"></span></div>
-        <span class="dst">●</span>
-      </button>
-      <button class="db sc" data-s="solar" onclick="ze.setScale('solar')">
-        <div class="dd"></div>
-        <div class="dt"><span class="dn">HEJ2000</span><span class="dl"></span></div>
-        <span class="dst">●</span>
-      </button>
-      <button class="db sc" data-s="interstellar" onclick="ze.setScale('interstellar')">
-        <div class="dd"></div>
-        <div class="dt"><span class="dn">HEJ2000</span><span class="dl"></span></div>
-        <span class="dst">●</span>
-      </button>
-      <button class="db sc" data-s="kosmologisch" onclick="ze.setScale('kosmologisch')">
-        <div class="dd"></div>
-        <div class="dt"><span class="dn">HEJ2000</span><span class="dl"></span></div>
-        <span class="dst">○</span>
-      </button>
-    </div>
-    </div>
+    <!-- Keine Höhenleiter: Skalen kommen aus den Inhalten (Auflösung pro
+         Quelle), nicht aus festen Beobachtungshöhen. Die Kamera bewegt
+         sich frei; was eine Ebene zeigen kann, sagt die Legende. -->
 
     <div class="sep"></div>
     <div class="dftr" style="padding-bottom:5px">DIMENSIONSINHALTE · LINSEN</div>
 
     <!-- Gegenstück zum NullNatur-Reiter: im heliozentrischen Bild haben die
          vier Erddimensionen keinen Ort. -->
-    <div class="dim-tab" id="erd-tab" onclick="ze.setScale('planet')"
+    <div class="dim-tab" id="erd-tab" onclick="ze.zeigeNatur('erde')"
          title="Die Erddimensionen werden im geozentrischen Renderer gezeichnet"></div>
 
     <div class="dim-sec" id="sec-zweite_natur">
-      <div class="dim-head" data-dim="zweite_natur" title="Dimensionen sind Linsen, keine Orte — die Gliederung markiert typische Beobachtungshöhen"></div>
+      <div class="dim-head" data-dim="zweite_natur" title="Dimensionen sind Linsen, keine Orte und keine Höhenstufen — was eine Ebene zeigen kann, hängt an der Auflösung ihrer Quelle"></div>
       <div class="dim-body">
 
       <!-- R.I.S.System: symbolische Vermittlung -->
@@ -502,7 +440,7 @@
     </div>
 
     <div class="dim-sec" id="sec-gesellschaftlicher_stoffwechsel">
-      <div class="dim-head" data-dim="gesellschaftlicher_stoffwechsel" title="Dimensionen sind Linsen, keine Orte — die Gliederung markiert typische Beobachtungshöhen"></div>
+      <div class="dim-head" data-dim="gesellschaftlicher_stoffwechsel" title="Dimensionen sind Linsen, keine Orte und keine Höhenstufen — was eine Ebene zeigen kann, hängt an der Auflösung ihrer Quelle"></div>
       <div class="dim-body">
       <div class="sub-head" data-sub="immat_pm"></div>
       <div class="ov-status" style="display:block">Wissen als Produktionsmittel — Kuratierung offen</div>
@@ -520,7 +458,7 @@
     </div>
 
     <div class="dim-sec" id="sec-erste_natur">
-      <div class="dim-head" data-dim="erste_natur" title="Dimensionen sind Linsen, keine Orte — die Gliederung markiert typische Beobachtungshöhen"></div>
+      <div class="dim-head" data-dim="erste_natur" title="Dimensionen sind Linsen, keine Orte und keine Höhenstufen — was eine Ebene zeigen kann, hängt an der Auflösung ihrer Quelle"></div>
       <div class="dim-body">
       <div class="sub-head" data-sub="basis"></div>
       <div class="ob ov-side" id="tb-basis" onclick="ze.toggle('basis')"><div class="obd"></div>Gesellschaftsformationen ●</div>
@@ -548,7 +486,7 @@
     </div>
 
     <div class="dim-sec" id="sec-planetarer_stoffwechsel">
-      <div class="dim-head" data-dim="planetarer_stoffwechsel" title="Dimensionen sind Linsen, keine Orte — die Gliederung markiert typische Beobachtungshöhen"></div>
+      <div class="dim-head" data-dim="planetarer_stoffwechsel" title="Dimensionen sind Linsen, keine Orte und keine Höhenstufen — was eine Ebene zeigen kann, hängt an der Auflösung ihrer Quelle"></div>
       <div class="dim-body">
       <div class="sub-head" data-sub="extern"></div>
       <div class="ob ov-side" id="tb-moon" onclick="ze.toggle('moon')"><div class="obd"></div>Mond · Phase &amp; Störgeometrie</div>
@@ -563,19 +501,19 @@
     </div>
 
     <div class="dim-sec" id="sec-nullnatur">
-      <div class="dim-head" data-dim="nullnatur" title="Dimensionen sind Linsen, keine Orte — die Gliederung markiert typische Beobachtungshöhen"></div>
+      <div class="dim-head" data-dim="nullnatur" title="Dimensionen sind Linsen, keine Orte und keine Höhenstufen — was eine Ebene zeigen kann, hängt an der Auflösung ihrer Quelle"></div>
       <div class="dim-body">
       <div class="sub-head" data-sub="solar"></div>
       <div class="ob ov-side on" id="tb-ekliptik" onclick="ze.toggleNull('ekliptik')"><div class="obd"></div>Ekliptik-Ringe ◎</div>
       <div class="ob ov-side on" id="tb-orbits" onclick="ze.toggleNull('orbits')"><div class="obd"></div>Planetenbahnen ⬭</div>
       <div class="sub-head" data-sub="interstellar"></div>
       <div class="ob ov-side on" id="tb-apex" onclick="ze.toggleNull('apex')"><div class="obd"></div>Sonnenapex-Drift →</div>
-      <div class="ov-status" style="display:block">Kontext im heliozentrischen Renderer — sichtbar auf den HEJ2000-Höhen.</div>
+      <div class="ov-status" style="display:block">Kontext im heliozentrischen Renderer (HEJ2000). Mausrad: herauszoomen führt nach außen, hineinzoomen nach innen bis zur Erde.</div>
       </div>
     </div>
 
-    <!-- NullNatur hat auf Erdhöhe keinen Ort. Statt zu ruhen wird sie zur Tür. -->
-    <div class="dim-tab" id="null-tab" onclick="ze.setScale('solar')"
+    <!-- NullNatur hat auf Erdkoordinaten keinen Ort. Statt zu ruhen wird sie zur Tür. -->
+    <div class="dim-tab" id="null-tab" onclick="ze.zeigeNatur('nullnatur')"
          title="NullNatur lässt sich nicht auf Erdkoordinaten legen — sichtbar erst im heliozentrischen Bild"></div>
 
     <div class="sep"></div>
@@ -615,8 +553,7 @@
 
   <h3>Architektur</h3>
   <p><b>Ein Raum.</b> Die fünf Naturdimensionen sind keine Orte, sondern Linsen —
-  Beschreibungen desselben Raums. Navigiert wird nur die Beobachtungshöhe (Straße …
-  kosmologischer Raum); die Dimensionen liegen permanent an.<br>
+  Beschreibungen desselben Raums. Navigiert wird frei: Die Kamera bewegt sich stufenlos, eine Höhenleiter gibt es nicht. Was eine Ebene zeigen kann, hängt an der Auflösung ihrer Quelle; die Legende sagt es. Die Dimensionen liegen permanent an.<br>
   <b>Eine Zeit.</b> Intern eine Achse <i>t</i> (Jahre seit J2000), angezeigt in
   skalengerechten Registern (RaumZeit · geologische Erdzeit · soziale Zeit).
   ZeitRäume (Epochen) überlappen, weil sie verschiedenen Beschreibungssystemen angehören.<br>
@@ -655,7 +592,7 @@
   </ul>
 
   <h3>Zustand als Adresse</h3>
-  <p>Jede Ansicht ist verlinkbar: Skala, Ort, Zeit, Zeitfenster, Linsen und Vokabular stehen
+  <p>Jede Ansicht ist verlinkbar: Natur, Ort, Kamerahöhe, Zeit, Zeitfenster, Linsen und Vokabular stehen
   im URL-Hash. Maschinenlesbar über <code>window.zeroearth.getState()/setState()</code>.</p>
 
   <p class="ab-foot"><span id="ab-ver"></span> · Max Marchand ·
@@ -703,7 +640,7 @@
     <div class="id" style="font-size:9.5px">Ein Raum, ein t. Regler = Deckkraft der Beschreibung.</div>
     <div class="ms-row">
       <div class="ms-dot" data-d="nullnatur"></div>
-      <div class="ms-label"><span class="lens-name" data-l="nullnatur"></span> <span class="ms-tag">Inhalt auf Skalen Solar+</span></div>
+      <div class="ms-label"><span class="lens-name" data-l="nullnatur"></span> <span class="ms-tag">Inhalt im heliozentrischen Bild</span></div>
     </div>
     <div class="ms-row">
       <div class="ms-dot" data-d="planetarer_stoffwechsel"></div>
@@ -850,18 +787,22 @@ function nowT() { return (new Date().getTime()/86400000 + 2440587.5 - J2000) / 3
 /* Zeitskalen des Masterzeit-Fensters — die Zeitleiste trägt ihre eigenen
    Skalierungen (analog zur Skalenleiter des Raums). Das Fenster ist ein
    endlicher Ausschnitt des unbegrenzten Kontinuums; Zoom = Fensterwechsel. */
-/* band: zulässige Raumskalen je Zeitfenster (Indizes in SCALE_ORDER).
-   Raum und Zeit führen einander nach — außerhalb des Bandes wird auf
-   die nächste zulässige Skala korrigiert (Kopplung, §9). */
-const SCALE_ORDER = ['strasse','stadt','region','kontinent','planet','erdmond','solar','interstellar','kosmologisch'];
+/* Raum und Zeit sind nicht gekoppelt: Das Zeitfenster bewegt keine
+   Kamera, die Kamera wechselt kein Zeitfenster (keine Höhenleiter,
+   kein einzelner Regler über alle Skalen). Das Anzeige-Register folgt
+   dem Zeitfenster selbst (fmt → REGISTER). */
 const TSCALES = [
-  { id:'ga',   span:9.2e9, fmt:'nullnatur',                       label:'±4,6 Ga',   band:[4,8] },
-  { id:'ma',   span:1e8,   fmt:'planetarer_stoffwechsel',         label:'±50 Ma',    band:[3,6] },
-  { id:'ka',   span:2e5,   fmt:'erste_natur',                     label:'±100 ka',   band:[3,5] },
-  { id:'a',    span:4e3,   fmt:'gesellschaftlicher_stoffwechsel', label:'±2.000 a',  band:[2,4] },
-  { id:'jahr', span:120,   fmt:'zweite_natur',                    label:'±60 a',     band:[1,5] },
-  { id:'live', span:0.1,   fmt:'live',                            label:'±18 Tage',  band:[0,5] }
+  { id:'ga',   span:9.2e9, fmt:'nullnatur',                       label:'±4,6 Ga'  },
+  { id:'ma',   span:1e8,   fmt:'planetarer_stoffwechsel',         label:'±50 Ma'   },
+  { id:'ka',   span:2e5,   fmt:'erste_natur',                     label:'±100 ka'  },
+  { id:'a',    span:4e3,   fmt:'gesellschaftlicher_stoffwechsel', label:'±2.000 a' },
+  { id:'jahr', span:120,   fmt:'zweite_natur',                    label:'±60 a'    },
+  { id:'live', span:0.1,   fmt:'live',                            label:'±18 Tage' }
 ];
+/** Zeitform der Anzeige je Fenster-Format. */
+const REGISTER = { nullnatur:'RaumZeit', planetarer_stoffwechsel:'geologische Erdzeit',
+  erste_natur:'geologische Erdzeit', gesellschaftlicher_stoffwechsel:'soziale Zeit',
+  zweite_natur:'soziale Zeit', live:'soziale Zeit' };
 
 const Tideline = {
   t: 26,                 // aktueller Zeitpunkt in Jahren seit J2000 (Default: 2026)
@@ -1403,8 +1344,11 @@ class SolarSystem2D {
     this.canvas.addEventListener('wheel', e => {
       e.preventDefault();
       this.zoomF = Math.max(0.15, Math.min(8, this.zoomF * (e.deltaY < 0 ? 1.12 : 0.89)));
-      // Durchgehender Raum: tief in die Ekliptik zoomen → zurück zur Erde
-      if (this.zoomF >= 8 && this.subLevel === 'solar') ze.setScale('erdmond');
+      // Durchgehender Raum, keine Leiter: am Rand der Ansicht in die nächste,
+      // aus der innersten (solar) hinein zur Erde.
+      const k = NULL_REIHE.indexOf(ze.nullAnsicht);
+      if (this.zoomF >= 8) k <= 0 ? ze.zeigeNatur('erde') : ze.zeigeNullAnsicht(NULL_REIHE[k - 1]);
+      else if (this.zoomF <= 0.15 && k >= 0 && k < NULL_REIHE.length - 1) ze.zeigeNullAnsicht(NULL_REIHE[k + 1]);
     }, { passive: false });
 
     // Trailing history für Vortex (universell)
@@ -2084,7 +2028,9 @@ const MODELL = {
 };
 
 /* LEGENDE — Herkunft (h) und Zeit (z) je Ebene, aus Code und Kopfkommentaren
-   der Ebenen übernommen. karte: true = die Equal-Earth-Karte zeichnet sie. */
+   der Ebenen übernommen. karte: true = die Equal-Earth-Karte zeichnet sie.
+   m: Auflösung der Quelle in Metern, nur wo der Code sie belegt; ist sie
+   gröber als die Ansicht, sagt die Legende es (statt einer Höhenstufe). */
 const LEGENDE = {
   // Grundlagen
   grundbild:   { h: 'Natural Earth II (Cesium-Textur)', z: 'ohne Zeitbezug' },
@@ -2112,13 +2058,13 @@ const LEGENDE = {
   platten:     { h: 'data/plattengrenzen.geojson (lokal kuratiert)' },
   grenzen:     { h: 'data/grenzen.geojson (Natural Earth admin_0, lokal kuratiert)' },
   kataster:    { h: 'data/kataster.geojson (lokal kuratiert)' },
-  gewaesser:   { h: 'data/fluesse.geojson; Pegel: GloFAS via Open-Meteo (Modell ~5 km)', z: 'Abfluss: aktuell (live)' },
+  gewaesser:   { h: 'data/fluesse.geojson; Pegel: GloFAS via Open-Meteo (Modell ~5 km)', z: 'Abfluss: aktuell (live)', m: 5000 },
   gezeiten:    { h: 'SWOT River Tides (Zenodo 15223861, CC BY 4.0) über gezeiten.py', z: 'SWOT seit 2023; außerhalb leer', karte: true },
-  satbild:     { h: 'VIIRS SNPP True Color · NASA GIBS' },
-  nachtlicht:  { h: 'VIIRS Day/Night Band · NASA GIBS' },
+  satbild:     { h: 'VIIRS SNPP True Color · NASA GIBS', m: 250 },
+  nachtlicht:  { h: 'VIIRS Day/Night Band · NASA GIBS', m: 500 },
   // Linsen (Rasterebenen)
-  coastLayer:     { name: 'Paläotopographie/Küste', h: 'PaleoMIST 1.0 · paleo_topography', z: 'Masterzeit (0–80 ka BP)' },
-  iceLayer:       { name: 'Eisdicke', h: 'PaleoMIST 1.0 · Eisdicke', z: 'Masterzeit (0–80 ka BP)' },
+  coastLayer:     { name: 'Paläotopographie/Küste', h: 'PaleoMIST 1.0 · paleo_topography', z: 'Masterzeit (0–80 ka BP)', m: 111e3 },
+  iceLayer:       { name: 'Eisdicke', h: 'PaleoMIST 1.0 · Eisdicke', z: 'Masterzeit (0–80 ka BP)', m: 111e3 },
   tempLayer:      { name: 'Temperatur 2 m', h: 'GFS (Vorhersage)', z: 'Vorhersagezeitraum; außerhalb ausgeblendet' },
   paleoTempLayer: { name: 'Paläotemperatur', h: 'Paläoklima-Datensatz paleo_t2m', z: 'Masterzeit (Tiefenzeit laut Datensatz)' },
   klimaLayer:     { name: 'Klimazonen', h: 'Köppen-Geiger' },
@@ -2174,33 +2120,23 @@ const PERIOD_COLORS = { geologisch:'#7a9cc4', 'archäologisch':'#c4a06a', histor
 const PERIOD_LANES  = { geologisch:0, 'archäologisch':1, historisch:2 };
 
 /* ════════════════════════════════════════════════════════════════════
-   SKALEN v0.9 — ein Raum, Beobachtungshöhe als primäre Navigation.
-   Dimensionen sind keine Orte, sondern Linsen (siehe Linsen-Panel);
-   die Skala bestimmt nur, von wo aus beobachtet wird. Die Masterzeit
-   bleibt EINE Achse t — 'register' benennt die Zeitform, in der sie
-   auf dieser Skala angezeigt wird (RaumZeit · geologische Erdzeit ·
-   soziale Zeit), 'dimTime' wählt die zugehörige Anzeige-Konversion.
+   ANSICHTEN DER NULLNATUR — innen nach außen. Keine Höhenleiter: Im
+   heliozentrischen Bild führt das Mausrad stufenlos von einer Ansicht
+   zur nächsten, aus der innersten hinein zur Erde. Auf der Erde bewegt
+   sich die Kamera frei; über ERDE_RAND_H geht sie in die NullNatur über.
    ════════════════════════════════════════════════════════════════════ */
-const SCALES = {
-  kosmologisch:{type:'canvas', view:'kosmologisch', label:'Kosmologischer Raum',
-                dimTime:'nullnatur', register:'RaumZeit'},
-  interstellar:{type:'canvas', view:'universell', label:'Interplanetar / Interstellar',
-                dimTime:'nullnatur', register:'RaumZeit'},
-  solar:       {type:'canvas', view:'solar', label:'Solarer Raum · Ekliptik',
-                dimTime:'nullnatur', register:'RaumZeit'},
-  erdmond:     {type:'cesium', h:4.5e8, lookEarth:true, label:'Erde + Mond',
-                dimTime:'planetarer_stoffwechsel', register:'geologische Erdzeit'},
-  planet:      {type:'cesium', h:5.5e7, lookEarth:true, label:'Planet',
-                dimTime:'erste_natur', register:'geologische Erdzeit'},
-  kontinent:   {type:'cesium', h:6.5e6, lookEarth:true, label:'Kontinent',
-                dimTime:'erste_natur', register:'geologische Erdzeit'},
-  region:      {type:'cesium', h:1.5e6, lookEarth:true, label:'Region',
-                dimTime:'zweite_natur', register:'soziale Zeit'},
-  stadt:       {type:'cesium', h:6e4,   lookEarth:true, label:'Stadt',
-                dimTime:'zweite_natur', register:'soziale Zeit'},
-  strasse:     {type:'cesium', h:3e3,   lookEarth:true, label:'Straße',
-                dimTime:'zweite_natur', register:'soziale Zeit'}
+const NULL_ANSICHTEN = {
+  solar:        { view:'solar' },
+  interstellar: { view:'universell' },
+  kosmologisch: { view:'kosmologisch' },
 };
+const NULL_REIHE = ['solar', 'interstellar', 'kosmologisch'];
+/** Einstieg in die Erde (ganze Erde im Bild) und Rand zur NullNatur, in m. */
+const ERDE_EINSTIEG_H = 5.5e7;
+const ERDE_RAND_H = 6.0e8;
+/** Ansicht feiner als ~250 m pro Pixel: Einzelakteure und Pegel statt
+    Gemeinschaften und Flussnetz (frühere Grenze Stadt/Region). */
+const FEIN_M_PRO_PX = 250;
 
 class DM {
   constructor(v) {
@@ -2242,9 +2178,8 @@ class DM {
   toggle(name) {
     this._ovState[name]=!this._ovState[name];
     document.getElementById(`tb-${name}`)?.classList.toggle('on',this._ovState[name]);
-    // v0.9: Overlays sind Linsen-Zubehör — verfügbar auf allen Cesium-Skalen
-    const sc = SCALES[ze.scale];
-    const allowed = !!sc && sc.type==='cesium';
+    // Overlays sind Linsen-Zubehör — sichtbar, solange die Erde gezeigt wird
+    const allowed = ze.natur === 'erde';
     this._showOv(name, this._ovState[name] && allowed);
     ze.ebenenGeaendert?.();
   }
@@ -2560,14 +2495,13 @@ class MarkerLayer {
    tierische Kooperationen als PRODUKTIVKRÄFTE, nicht als "Umwelt".
    Artvorkommen sind Akteure an einer Adresse, keine Umweltdaten
    (die gehören ins Erdsystem).
-   ZWEI EBENEN, die Skala entscheidet — der Akteur wird zur
-   Gesellschaft, wenn man weit genug rauszoomt:
-     Straße/Stadt      → Einzelvorkommen (○ Artakteur)
-     Region und höher  → Gemeinschaften (◍ Artenzahl, skaliert)
+   ZWEI EBENEN, die Auflösung der Ansicht entscheidet — der Akteur wird
+   zur Gesellschaft, wenn man weit genug rauszoomt:
+     feiner als FEIN_M_PRO_PX  → Einzelvorkommen (○ Artakteur)
+     gröber                    → Gemeinschaften (◍ Artenzahl, skaliert)
    Quelle: data/unterbau.json (GBIF, beobachtungsverzerrt).
    ───────────────────────────────────────────────────────────────── */
 class UnterbauLayer {
-  static FEIN = ['strasse', 'stadt'];    // Skalen mit Einzelakteuren
   constructor(viewer) {
     this.v = viewer; this.data = null;
     this.coll = null; this.ents = [];
@@ -2595,7 +2529,7 @@ class UnterbauLayer {
   update(t) {
     if (!this.on || !this.data) return;
     this.clear();
-    const fein = UnterbauLayer.FEIN.includes(ze.scale);
+    const fein = ze.ansichtFein();
     this.modus = fein ? 'vorkommen' : 'gemeinschaften';
     const jahr = 2000 + t;
     fein ? this._drawVorkommen(jahr) : this._drawGemeinschaften(jahr);
@@ -3122,15 +3056,14 @@ class FlowFieldLayer {
 
 /* ─────────────────────────────────────────────────────────────────
    GEWÄSSER LAYER — Erste Natur / Erdsystem (v0.9.16)
-   Zwei Ebenen, nach Skala gestaffelt (wie der Unterbau):
-     Region und weiter → Flussnetz als Linien (data/fluesse.geojson)
-     Stadt/Straße       → Pegel-Punkte mit Live-Abfluss (GloFAS)
+   Zwei Ebenen, nach Auflösung der Ansicht gestaffelt (wie der Unterbau):
+     gröber als FEIN_M_PRO_PX → Flussnetz als Linien (data/fluesse.geojson)
+     feiner                   → Pegel-Punkte mit Live-Abfluss (GloFAS)
    Der Abfluss (m³/s) ist ein Erdsystem-Fluss — eine Rate, kein Zustand.
    Live-Werte kommen direkt aus der Open-Meteo Flood API (kein Schlüssel);
    fehlt das Netz, fehlt die Antwort — keine Ersatzzahlen.
    ───────────────────────────────────────────────────────────────── */
 class GewaesserLayer {
-  static NAH = ['strasse', 'stadt'];
   constructor(viewer) {
     this.v = viewer; this.on = false;
     this.netz = null; this.pegel = null;
@@ -3160,7 +3093,7 @@ class GewaesserLayer {
   update() {
     if (!this.on) return;
     this.clear();
-    const nah = GewaesserLayer.NAH.includes(ze.scale);
+    const nah = ze.ansichtFein();
     this._drawNetz();
     if (nah) this._drawPegel();
     else this._statusNetz();
@@ -3251,7 +3184,7 @@ class GewaesserLayer {
   }
   _redrawPegel() {
     if (this.coll) { this.v.scene.primitives.remove(this.coll); this.coll = null; }
-    if (GewaesserLayer.NAH.includes(ze.scale)) {
+    if (ze.ansichtFein()) {
       const items = this.pegel?.pegel || [];
       this.coll = this.v.scene.primitives.add(new Cesium.PointPrimitiveCollection());
       for (const p of items) {
@@ -3792,8 +3725,8 @@ class EqualEarthKarte {
     x.fillStyle = '#080b12'; x.fill();
     x.strokeStyle = 'rgba(255,255,255,.18)'; x.lineWidth = 1; x.stroke();
 
-    // Gradnetz: die Stufe der aktuellen Beobachtungshöhe, sonst 20°
-    const gradStufe = { erdmond: 20, planet: 20, kontinent: 10, region: 5, stadt: 1, strasse: 1 }[ze.scale] ?? 20;
+    // Gradnetz: Maschenweite aus der Kamerahöhe des Globus
+    const gradStufe = ze.gradnetzStufe();
     x.beginPath(); pfad(d3.geoGraticule().step([gradStufe, gradStufe])());
     x.strokeStyle = 'rgba(255,255,255,.07)'; x.stroke();
 
@@ -3918,7 +3851,8 @@ class ZeroEarth {
 
     // Modus: 'nav' (eine Dimension) | 'matrix' (Layer überlagert)
     this.mode = 'matrix';          // v0.9: Matrixschnitt ist Normalzustand
-    this.scale = null;             // aktive Skala (SCALES-Key)
+    this.natur = null;             // 'erde' | 'nullnatur'
+    this.nullAnsicht = 'solar';    // Ansicht im heliozentrischen Bild (NULL_ANSICHTEN)
     this.obs = { lat: 50, lon: 10 }; // Beobachtungsposition (bleibt bei Skalenwechsel)
     // Ansichtszustand: genau eine Ebene sichtbar (sonnensystem | globus | karte).
     // erdansicht merkt sich Globus oder Karte über den Wechsel zur NullNatur hinweg.
@@ -4087,10 +4021,10 @@ class ZeroEarth {
 
     // CesiumJS muss einmal mit sichtbarem Container initialisieren
     // damit der WebGL-Renderer korrekte Viewport-Dimensionen bekommt.
-    // Sofort danach auf NullNatur umschalten.
+    // Danach die Ebene der gewählten Natur zeigen (Link oder Start: NullNatur).
     requestAnimationFrame(()=>{
       try { this.cesiumV.resize(); } catch(e){}
-      this._showMode('nullnatur');
+      this._showMode(this.natur === 'erde' ? 'cesium' : 'nullnatur');
     });
     // file://-Betrieb erkennen: dann sind ALLE fetch-Aufrufe blockiert
     // (manifest.json, SWPC, CelesTrak) — ein Hinweis statt drei Fehlermeldungen.
@@ -4125,7 +4059,7 @@ class ZeroEarth {
       if (c) {
         this.obs.lat = Cesium.Math.toDegrees(c.latitude);
         this.obs.lon = Cesium.Math.toDegrees(c.longitude);
-        this._syncScaleFromCamera(c.height);
+        this._kameraGeaendert(c.height);
       }
       this.karte?.zeichne();
       this._obsHud();
@@ -4147,7 +4081,8 @@ class ZeroEarth {
     this._applyLicht();
     Tideline.onChange(() => { this.zeichneAnalyse(); this.karte?.zeichne(); this.gezeitenLayer?.update(); this.zeichneLegende(); });
     const st = this._readHash();
-    if (st) this.setState(st); else this.setScale('solar');
+    this._zeitRegister();
+    if (st) this.setState(st); else this.zeigeNatur('nullnatur');
   }
 
   /* ── Masterzeit-Slider: Klick + Drag ──────────────────────────── */
@@ -4182,8 +4117,7 @@ class ZeroEarth {
 
   timeZoom(dir) {
     Tideline.setZoom(dir);
-    this._coupleSpaceToTime();
-    this.dm._renderTimeline(this.activeDimForTime);
+    this._zeitRegister();
   }
 
   /* ZeitRaum anspringen: Fenster passend wählen, t in die Mitte,
@@ -4197,35 +4131,19 @@ class ZeroEarth {
     Tideline.zoom = zi;
     Tideline.wc = (p.t0 + p.t1) / 2;
     Tideline.set(Tideline.wc);
-    this._coupleSpaceToTime();
+    this._zeitRegister();
+  }
+
+  /* Anzeige-Register aus dem Zeitfenster, nicht aus der Raumhöhe. */
+  _zeitRegister() {
+    const fmt = TSCALES[Tideline.zoom].fmt;
+    this.activeDimForTime = fmt === 'live' ? 'zweite_natur' : fmt;
+    const reg = document.getElementById('tl-register');
+    if (reg) reg.textContent = REGISTER[fmt];
     this.dm._renderTimeline(this.activeDimForTime);
+    this._obsHud?.();
   }
 
-  /* Raum-Zeit-Kopplung: außerhalb des Bandes → nächste zulässige Skala.
-     Symmetrisch: setScale ruft _coupleTimeToSpace. */
-  _coupleSpaceToTime() {
-    const band = TSCALES[Tideline.zoom].band;
-    const cur = SCALE_ORDER.indexOf(this.scale);
-    if (cur < 0) return;
-    if (cur < band[0]) this.setScale(SCALE_ORDER[band[0]]);
-    else if (cur > band[1]) this.setScale(SCALE_ORDER[band[1]]);
-  }
-
-  _coupleTimeToSpace(scaleId) {
-    const idx = SCALE_ORDER.indexOf(scaleId);
-    if (idx < 0) return;
-    const b = TSCALES[Tideline.zoom].band;
-    if (idx >= b[0] && idx <= b[1]) return;
-    // nächstes Zeitfenster, dessen Band die Skala enthält
-    let best = Tideline.zoom, dist = Infinity;
-    TSCALES.forEach((s, i) => {
-      if (idx >= s.band[0] && idx <= s.band[1]) {
-        const d = Math.abs(i - Tideline.zoom);
-        if (d < dist) { dist = d; best = i; }
-      }
-    });
-    if (best !== Tideline.zoom) { Tideline.zoom = best; Tideline.wc = Tideline.t; }
-  }
 
   toggle(name) { this.dm.toggle(name); }
 
@@ -4259,22 +4177,43 @@ class ZeroEarth {
      die Höhe bleibt. */
   setzeBeobachtung(lat, lon) {
     this.obs.lat = lat; this.obs.lon = lon;
-    const sc = SCALES[this.scale];
-    if (sc?.type === 'cesium') {
-      const h = this.cesiumV.camera.positionCartographic?.height ?? sc.h;
-      this.dm.flyTo(this._kamera(sc, h), true);
+    if (this.natur === 'erde') {
+      const h = this.cesiumV.camera.positionCartographic?.height ?? ERDE_EINSTIEG_H;
+      this.dm.flyTo(this._kamera(h), true);
     }
     this._obsHud();
     this.karte?.zeichne();
     this._writeHash();
   }
 
-  /* Kamera für eine Erdskala an der Beobachtungsposition. */
-  _kamera(sc, h = sc.h) {
-    const dest = Cesium.Cartesian3.fromDegrees(this.obs.lon, this.obs.lat, h);
-    return sc.lookEarth
-      ? { dest, lookEarth: true, dur: 1.8 }
-      : { dest, ori: { heading: 0, pitch: Cesium.Math.toRadians(sc.pitch ?? -88), roll: 0 }, dur: 1.8 };
+  /* Kamera über der Beobachtungsposition, Blick zum Erdmittelpunkt. */
+  _kamera(h) {
+    return { dest: Cesium.Cartesian3.fromDegrees(this.obs.lon, this.obs.lat, h), lookEarth: true, dur: 1.8 };
+  }
+
+  /* ── Aus der Kamera abgeleitet, nicht aus einer Stufe ──────────────
+     Höhe in m; Auflösung der Ansicht in m pro Pixel in Bildmitte
+     (Sichtfeld × Höhe / Bildbreite, Näherung für eine flache Erde unter
+     der Kamera). Auf der Karte: Äquatorlänge / Kartenbreite. */
+  kameraHoehe() { return this.cesiumV?.camera.positionCartographic?.height ?? ERDE_EINSTIEG_H; }
+  ansichtMProPx(globus = false) {
+    if (this.ansicht === 'karte' && !globus) {
+      const b = document.getElementById('ee-canvas')?.getBoundingClientRect();
+      return b?.width ? 40075e3 / (b.width - 24) : null;
+    }
+    const cam = this.cesiumV?.camera, breite = this.cesiumV?.canvas.clientWidth;
+    if (!cam || !breite) return null;
+    return 2 * this.kameraHoehe() * Math.tan((cam.frustum.fov ?? Math.PI / 3) / 2) / breite;
+  }
+  ansichtFein() {
+    const m = this.ansicht === 'karte' ? null : this.ansichtMProPx();
+    return m !== null && m < FEIN_M_PRO_PX;
+  }
+  /** Maschenweite des Gradnetzes aus der Kamerahöhe (Grenzen wie früher
+      zwischen den Stufen, aber stufenlos aus der Höhe gelesen). */
+  gradnetzStufe() {
+    const h = this.kameraHoehe();
+    return h > 2e7 ? 20 : h > 3e6 ? 10 : h > 3e5 ? 5 : 1;
   }
 
 
@@ -4288,7 +4227,9 @@ class ZeroEarth {
     const o = Object.entries(this.dm._ovState).filter(([,v])=>v).map(([k])=>k);
     const l = Object.entries(this.msAlpha).filter(([,v])=>v>0.01)
       .map(([k,v])=>`${k}:${v.toFixed(2)}`).join(',');
-    return { s:this.scale, la:+this.obs.lat.toFixed(3), lo:+this.obs.lon.toFixed(3),
+    const h = this.natur === 'erde' ? this.cesiumV?.camera.positionCartographic?.height : undefined;
+    return { n:this.natur, na:this.nullAnsicht, h: h ? Math.round(h) : undefined,
+      la:+this.obs.lat.toFixed(3), lo:+this.obs.lon.toFixed(3),
       t:+Tideline.t.toFixed(4), tz:TSCALES[Tideline.zoom].id,
       l, o:o.join(','), v:LABELS.active, s:LABELS.sprache, li:this.licht ?? 'terminator' };
   }
@@ -4311,7 +4252,11 @@ class ZeroEarth {
       for (const k of Object.keys(this.dm._ovState))
         if (this.dm._ovState[k] !== want.has(k)) this.dm.toggle(k);
     }
-    if (st.s && SCALES[st.s]) this.setScale(st.s);
+    this._zeitRegister();
+    if (st.na && NULL_ANSICHTEN[st.na]) this.nullAnsicht = st.na;
+    // ältere Links ohne n: Erde, wenn eine Position genannt ist
+    const natur = st.n === 'erde' || st.n === 'nullnatur' ? st.n : (st.la !== undefined ? 'erde' : 'nullnatur');
+    this.zeigeNatur(natur, { hoehe: st.h !== undefined ? +st.h : undefined });
     this._writeHash();
   }
 
@@ -4367,10 +4312,6 @@ class ZeroEarth {
      Umbenennung = Eingriff in genau eine Tabelle, nämlich LABELS) ── */
   applyLabels() {
     MODELL.anwenden(LABELS.sprache);
-    document.querySelectorAll('.db.sc').forEach(b => {
-      const el = b.querySelector('.dl');
-      if (el) el.textContent = LABELS.scale(b.dataset.s);
-    });
     document.querySelectorAll('.lens-name').forEach(el => {
       el.textContent = LABELS.lens(el.dataset.l);
     });
@@ -4649,21 +4590,26 @@ class ZeroEarth {
     if (!el) return;
     const tlv = document.getElementById('tlv')?.textContent || '—';
     const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-    const zeile = (name, e = {}) =>
+    const mGlobus = this.ansichtMProPx(true);
+    const laenge = (/** @type {number} */ m) => m < 1000 ? `${Math.round(m)} m` : `${(m / 1000).toLocaleString('de-DE', { maximumFractionDigits: m < 1e4 ? 1 : 0 })} km`;
+    const grob = (/** @type {any} */ e) => e.m && mGlobus && e.m > mGlobus
+      ? `Auflösung der Quelle (≈ ${laenge(e.m)}) gröber als Ansicht (≈ ${laenge(mGlobus)} pro Pixel)` : null;
+    const zeile = (name, e = {}, globus = false) =>
       `<div class="lg-e"><div class="lg-n">${esc(name)}</div>` +
       `<div class="lg-h">Herkunft: <b>${esc(e.h ?? 'nicht angegeben')}</b></div>` +
       `<div class="lg-z">Zeit: <b>${esc(e.z === 'Masterzeit' ? `Masterzeit (${tlv})` : (e.z ?? 'nicht angegeben'))}</b></div>` +
-      (e.warn ? `<div class="lg-warn">${esc(e.warn)}</div>` : '') + '</div>';
+      (e.warn ? `<div class="lg-warn">${esc(e.warn)}</div>` : '') +
+      (globus && grob(e) ? `<div class="lg-z">${esc(grob(e))}</div>` : '') + '</div>';
     const name = k => document.getElementById('tb-' + k)?.textContent.trim() || k;
     const L = LEGENDE;
     const an = Object.entries(this.dm?._ovState ?? {}).filter(([, v]) => v).map(([k]) => k);
     let html = '';
 
     if (this.ansicht === 'sonnensystem') {
-      html += '<div class="lg-gruppe">Sonnensystem</div>' +
+      html += `<div class="lg-gruppe">Sonnensystem · ${esc(LABELS.scale(this.nullAnsicht))}</div>` +
         zeile('Sonne, Planeten, Mond', L.sonnensystem) +
         ['ekliptik', 'orbits', 'apex'].filter(f => this.ss?.opt?.[f]).map(f => zeile(name(f), L.sonnensystem)).join('');
-      if (an.length) html += `<div class="lg-fuss">ruhen (keine Erdhöhe): ${an.map(k => esc(name(k))).join(', ')}</div>`;
+      if (an.length) html += `<div class="lg-fuss">ruhen (im heliozentrischen Bild ohne Ort): ${an.map(k => esc(name(k))).join(', ')}</div>`;
     } else {
       const globus = this.ansicht === 'globus' || this.miniGlobus;
       const raster = [];   // was nur der Globus zeigt
@@ -4683,14 +4629,14 @@ class ZeroEarth {
       if (this.ansicht === 'karte') {
         const aufKarte = an.filter(k => L[k]?.karte);
         html += '<div class="lg-gruppe">Karte · Equal Earth (flächentreu)</div>' +
-          zeile('Landumrisse', L.landumrisse) + zeile('Gradnetz', L.gradnetz) +
+          zeile('Landumrisse', L.landumrisse) + zeile(`Gradnetz ${this.gradnetzStufe()}°`, L.gradnetz) +
           aufKarte.map(k => zeile(name(k) + (k === 'sats' ? ' — nur Bodenspur' : ''), L[k])).join('');
         const nicht = [...an.filter(k => !L[k]?.karte).map(name), ...raster.slice(1).map(r => r[0])];
         if (nicht.length) html += `<div class="lg-fuss">auf der Karte nicht darstellbar: ${nicht.map(esc).join(', ')}</div>`;
       }
       if (globus) {
         html += `<div class="lg-gruppe">Globus${this.ansicht === 'karte' ? ' (Mini)' : ''}</div>` +
-          raster.map(([n, e]) => zeile(n, e)).join('') + an.map(k => zeile(name(k), L[k])).join('');
+          raster.map(([n, e]) => zeile(n, e, true)).join('') + an.map(k => zeile(name(k), L[k], true)).join('');
       }
     }
     html += '<div class="lg-fuss">Zusammenstellung durch den Nutzer · jede Ebene einzeln abschaltbar</div>';
@@ -4815,97 +4761,80 @@ class ZeroEarth {
     this._applyLicht();
   }
 
-  /* ── v0.9: Skala setzen — die einzige primäre Navigation ────────
-     Ein Raum: die Skala bestimmt, von wo aus beobachtet wird.
+  /* ── Natur wechseln: Erde (Globus/Karte) oder NullNatur (heliozentrisch).
+     Kein Höhenschritt: auf der Erde bewegt sich die Kamera frei.
      Beobachtungsposition (lat, lon) bleibt beim Wechsel erhalten. */
-  async setScale(id) {
-    const sc = SCALES[id];
-    if (!sc) return;
-    this.scale = id;
-    this._coupleTimeToSpace(id);
-    // Akkordeon: Abschnitt der Zielskala öffnen
-    const secOf = { strasse:'zweite_natur', stadt:'zweite_natur', region:'zweite_natur',
-      kontinent:'erste_natur', planet:'erste_natur', erdmond:'erste_natur',
-      solar:'nullnatur', interstellar:'nullnatur', kosmologisch:'nullnatur' };
-    const aufCanvas = sc.type === 'canvas';
+  async zeigeNatur(natur, { hoehe } = {}) {
+    const nn = natur === 'nullnatur';
+    this.natur = natur;
     document.querySelectorAll('.dim-sec').forEach(sec => {
-      const nn = sec.id === 'sec-nullnatur';
-      // Was auf dieser Beobachtungshöhe keinen Ort hat, ruht nicht — es fehlt.
-      // Die fehlende Seite bleibt als Reiter, der den Renderer wechselt.
-      sec.style.display = (aufCanvas === nn) ? '' : 'none';
-      sec.classList.toggle('open', sec.id === `sec-${secOf[id]}`);
+      const istNN = sec.id === 'sec-nullnatur';
+      // Die NullNatur hat auf Erdkoordinaten keinen Ort, die Erddimensionen
+      // im heliozentrischen Bild nicht. Die andere Seite bleibt als Reiter.
+      sec.style.display = (nn === istNN) ? '' : 'none';
+      if (nn) sec.classList.toggle('open', istNN);
     });
-    document.getElementById('null-tab')?.classList.toggle('an', !aufCanvas);
-    document.getElementById('erd-tab')?.classList.toggle('an', aufCanvas);
-    document.querySelectorAll('.db.sc').forEach(b =>
-      b.classList.toggle('active', b.dataset.s === id));
+    if (!nn && !document.querySelector('.dim-sec.open:not(#sec-nullnatur)'))
+      document.getElementById('sec-erste_natur')?.classList.add('open');
+    document.getElementById('null-tab')?.classList.toggle('an', !nn);
+    document.getElementById('erd-tab')?.classList.toggle('an', nn);
     const ov = document.getElementById('ov');
     ov.classList.add('act');
+    const ebenen = Object.keys(this.dm._ovState);
 
-    // Masterzeit: gleiche Achse t, skalengerechtes Anzeige-Register
-    this.activeDimForTime = sc.dimTime;
-    this.dm._renderTimeline(sc.dimTime);
-    const reg = document.getElementById('tl-register');
-    if (reg) reg.textContent = sc.register;
-
-    if (sc.type === 'canvas') {
-      // Heliozentrische Skalen (HEJ2000): eigener Renderer
+    if (nn) {
       this.ss.start();
-      this.ss.setSubLevel(sc.view);
+      this.zeigeNullAnsicht(this.nullAnsicht);
       this._showMode('nullnatur');
-      // Cesium-Overlays ruhen auf Canvas-Skalen (Zustand bleibt erhalten)
+      // Erd-Ebenen ruhen im heliozentrischen Bild (Zustand bleibt erhalten)
       document.querySelectorAll('.ov-side').forEach(b => b.classList.add('dimmed'));
-      ['moon','magfield','tidal','solarwind','sats','ueberbau','riss','bestaende','basis','ware','erste_natur','pm','wind','stroeme','unterbau','seismik','platten','grenzen','kataster','gewaesser'].forEach(k =>
-        this.dm._showOv(k, false));
+      ebenen.forEach(k => this.dm._showOv(k, false));
     } else {
       this.ss.stop();
       await this._showMode('cesium');
       document.querySelectorAll('.ov-side').forEach(b => b.classList.remove('dimmed'));
-      const cam = this._kamera(sc);
-      // Solange die Karte sichtbar ist, keine Kamerafahrt: der Globus
-      // wird ohne Flug nachgestellt, damit er bei der Rückkehr stimmt.
-      await this.dm.flyTo(cam, this.ansicht === 'karte');
+      // Einstieg: genannte Höhe, sonst ganze Erde, wenn die Kamera noch nicht
+      // auf der Erde war oder jenseits des Rands steht. Keine Fahrt bei Karte.
+      const h = this.cesiumV.camera.positionCartographic?.height;
+      if (hoehe !== undefined) await this.dm.flyTo(this._kamera(hoehe), true);
+      else if (!this._erdeGesehen || !(h < ERDE_RAND_H))
+        await this.dm.flyTo(this._kamera(ERDE_EINSTIEG_H), this.ansicht === 'karte');
+      this._erdeGesehen = true;
       this.dm.layers(['natural_earth']);
-      // Overlay-Zustände wieder anlegen
-      ['moon','magfield','tidal','solarwind','sats','ueberbau','riss','bestaende','basis','ware','erste_natur','pm','wind','stroeme','unterbau','seismik','platten','grenzen','kataster','gewaesser'].forEach(k =>
-        this.dm._showOv(k, this.dm._ovState[k]));
+      ebenen.forEach(k => this.dm._showOv(k, this.dm._ovState[k]));
       this._refreshMatrixLayers();
       this.unterbauLayer.update(Tideline.t);
       this.seismikLayer.update(Tideline.t);
       this._renderMoonPanel();
       if (this.gewaesserLayer.on) this.gewaesserLayer.update();
+      this._feinZuletzt = this.ansichtFein();
     }
     this._obsHud();
+    this.ebenenGeaendert?.();
     setTimeout(() => ov.classList.remove('act'), 300);
   }
 
-  /* Scroll-Sync: Skalenleiter folgt der Kamerahöhe (passiv — kein
-     Gegenflug). Über der obersten Erdskala: Übergang in die Solar-
-     Ansicht — der eine Raum, per Mausrad durchfahren. */
-  _syncScaleFromCamera(h) {
-    if (this.ansicht !== 'globus') return;   // unsichtbare Kamera steuert keine Skala
-    if (!SCALES[this.scale] || SCALES[this.scale].type !== 'cesium') return;
-    if (h > 6.0e8) { this.setScale('solar'); return; }
-    let best = null, dist = Infinity;
-    for (const [id, sc] of Object.entries(SCALES)) {
-      if (sc.type !== 'cesium') continue;
-      const d = Math.abs(Math.log(h / sc.h));
-      if (d < dist) { dist = d; best = id; }
+  /* Ansicht im heliozentrischen Bild (solar, interstellar, kosmologisch). */
+  zeigeNullAnsicht(id) {
+    if (!NULL_ANSICHTEN[id]) return;
+    this.nullAnsicht = id;
+    this.ss.setSubLevel(NULL_ANSICHTEN[id].view);
+    this._obsHud();
+    this._writeHash?.();
+  }
+
+  /* Kamera bewegt: über dem Rand in die NullNatur (der eine Raum, per
+     Mausrad durchfahren); sonst nachführen, was an der Auflösung hängt. */
+  _kameraGeaendert(h) {
+    if (this.ansicht !== 'globus' || this.natur !== 'erde') return;   // unsichtbare Kamera steuert nichts
+    if (h > ERDE_RAND_H) { this.zeigeNatur('nullnatur'); return; }
+    const fein = this.ansichtFein();
+    if (fein !== this._feinZuletzt) {
+      this._feinZuletzt = fein;
+      this.unterbauLayer.update(Tideline.t);
+      if (this.gewaesserLayer.on) this.gewaesserLayer.update();
     }
-    if (best && best !== this.scale) {
-      this.scale = best;
-      this._coupleTimeToSpace(best);
-      document.querySelectorAll('.db.sc').forEach(b =>
-        b.classList.toggle('active', b.dataset.s === best));
-      const sc = SCALES[best];
-      this.activeDimForTime = sc.dimTime;
-      this.dm._renderTimeline(sc.dimTime);
-      const reg = document.getElementById('tl-register');
-      if (reg) reg.textContent = sc.register;
-      const secOf = { strasse:'zweite_natur', stadt:'zweite_natur', region:'zweite_natur',
-        kontinent:'erste_natur', planet:'erste_natur', erdmond:'erste_natur' };
-      document.getElementById(`sec-${secOf[best]}`)?.classList.add('open');
-    }
+    this.ebenenGeaendert?.();
   }
 
   /* ── Mondfenster: Zustand zeichnen und setzen ─────────────────────
@@ -5022,7 +4951,6 @@ class ZeroEarth {
     if (v) v.textContent = document.querySelector('.wm small')?.textContent || '';
   }
 
-  toggleScales() { document.getElementById('scale-sec')?.classList.toggle('open'); }
 
   moonJump(kind) {
     const from = Tideline.t;
@@ -5045,20 +4973,26 @@ class ZeroEarth {
 
   /* ── Beobachtungsposition ins Info-Panel schreiben ─────────────── */
   _obsHud() {
-    const sc = SCALES[this.scale];
-    if (!sc) return;
+    if (!this.natur) return;
     const d = Tideline.display(this.activeDimForTime);
+    const reg = REGISTER[TSCALES[Tideline.zoom].fmt];
     document.querySelector('#ip .il').textContent = 'Beobachtungsposition';
-    document.getElementById('i-title').textContent = LABELS.scale(this.scale);
-    document.getElementById('i-desc').textContent = sc.type === 'canvas'
-      ? 'heliozentrisch · HEJ2000 · Sonne = Ursprung'
-      : `${this.obs.lat.toFixed(2)}°, ${this.obs.lon.toFixed(2)}° · WGS84`;
-    document.getElementById('i-meta').innerHTML =
-      `<span style="opacity:.65">${sc.register}</span> · ${d.value} ${d.unit}`;
-    document.getElementById('bc').textContent = LABELS.scale(this.scale).toUpperCase();
-    const sc0 = document.getElementById('scale-cur');
-    if (sc0) sc0.textContent = LABELS.scale(this.scale);
+    if (this.natur === 'nullnatur') {
+      const name = LABELS.scale(this.nullAnsicht);
+      document.getElementById('i-title').textContent = name;
+      document.getElementById('i-desc').textContent = 'heliozentrisch · HEJ2000 · Sonne = Ursprung';
+      document.getElementById('bc').textContent = `NULLNATUR · ${name}`.toUpperCase();
+    } else {
+      const km = this.kameraHoehe() / 1000, m = this.ansichtMProPx();
+      const zahl = (/** @type {number} */ x) => x.toLocaleString('de-DE', { maximumFractionDigits: x < 10 ? 1 : 0 });
+      document.getElementById('i-title').textContent = `Kamerahöhe ${zahl(km)} km`;
+      document.getElementById('i-desc').textContent = `${this.obs.lat.toFixed(2)}°, ${this.obs.lon.toFixed(2)}° · WGS84`
+        + (m ? ` · Ansicht ≈ ${m < 1000 ? `${zahl(m)} m` : `${zahl(m / 1000)} km`} pro Pixel` : '');
+      document.getElementById('bc').textContent = 'ERDE';
+    }
+    document.getElementById('i-meta').innerHTML = `<span style="opacity:.65">${reg}</span> · ${d.value} ${d.unit}`;
   }
+
 
   /* ── Deckkraft eines Matrixschnitt-Layers setzen ──────────────── */
   msOpacity(dimId, val) {
