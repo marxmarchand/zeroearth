@@ -1,0 +1,112 @@
+{
+  "id": "glottolog",
+  "eingabe": "data/glottolog.json",
+  "quelle": {
+    "name": "Glottolog 5.3 (CLDF)",
+    "zugang": "https://github.com/glottolog/glottolog-cldf, Release v5.3",
+    "dateien": [
+      "cldf/languages.csv",
+      "cldf/values.csv"
+    ],
+    "abgeleitet_durch": "matrix-scharnier/adapter/glottolog.py",
+    "zitierung": "Hammarström, Forkel, Haspelmath & Bank: Glottolog 5.3. Leipzig: MPI EVA (cldf-metadata.json nennt noch 5.2.1)"
+  },
+  "einordnung": {
+    "sprache": "2.2: Sprache als grundlegende Institutionalisierung von Kommunikation. Schon die Abgrenzung Sprache/Dialekt ist eine Setzung von Glottolog.",
+    "verweis": "2.3: symbolisches System (Signal – Symbol); jede Sprache verweist auf den Eintrag glottolog/zeichensystem",
+    "traeger": "1.3: Sprachgemeinschaft, Punkt als Näherung des Sprachgebiets",
+    "gesetzt": "Entscheidung Max, 2026-11-01"
+  },
+  "stapel": [
+    "2.2",
+    "2.3",
+    "1.3"
+  ],
+  "vorgang": "ueberlieferung",
+  "herkunft": {
+    "arten": [
+      "kuratiert"
+    ],
+    "archivkette": [
+      {
+        "archiv": "zeroearth (data/glottolog.json)",
+        "art": "zeroearth"
+      },
+      {
+        "archiv": "Glottolog 5.3",
+        "art": "gesellschaftlich"
+      },
+      {
+        "archiv": "Statusquelle je Sprache: Ethnologue 2025/2020/2018, ElCat 2022, UNESCO-Atlas 2010 oder Glottolog-Bibliografie; fehlt bei manchen",
+        "art": "gesellschaftlich"
+      }
+    ]
+  },
+  "status": {
+    "uebernommen": "AES-Stufe (1–6) als Modus der Überlieferung, Statusquelle, bei ElCat dessen Sicherheitsstufe als Text",
+    "nicht_uebernommen": "Kommentare der Statusquellen (Weitergabe des Ethnologue-Wortlauts ungeklärt)",
+    "quelle_fehlt": "Status ohne Quellenangabe bildet eine eigene Kategorie 'Quelle fehlt' und wird nicht mit belegten Stufen gemischt",
+    "konfidenz": "ElCat-Sicherheit ('20 percent certain' …) als Konfidenz der Quelle in woher, in ElCats Stufen, nicht als Zahl, keine Wahrscheinlichkeit, keine Erwartung"
+  },
+  "zeitsemantik": {
+    "skala": "a CE",
+    "aufloesung": {
+      "fehlt": true,
+      "grund": "Der Status trägt kein Datum"
+    },
+    "abdeckung": {
+      "fehlt": true,
+      "grund": "Glottolog nennt keine Bezugszeit des Status"
+    },
+    "verzoegerung": {
+      "fehlt": true,
+      "grund": "Abstand zwischen Erhebung und Quelle unbekannt; Quellenjahre 2010–2025 sind Wissensstand, nicht Bezugszeit"
+    }
+  },
+  "geometrie": [
+    "punkt"
+  ],
+  "lizenz": {
+    "angabe": "CC BY 4.0",
+    "quelle": "glottolog-cldf, cldf-metadata.json",
+    "geprueft": "2026-11-01"
+  },
+  "weitergabe": {
+    "im_repo": "data/glottolog.json: je Sprache Glottocode, Name, Kategorie, Familie, Punkt (0,01°), AES-Stufe, Statusquelle, ElCat-Sicherheitsstufe",
+    "nicht_im_repo": "values.csv, languages.csv, names.csv, sources.bib, Statuskommentare, Dialekte, Klassifikationsbäume"
+  },
+  "auswahl": [
+    "glottolog/auswahl/einordnung",
+    "glottolog/auswahl/level",
+    "glottolog/auswahl/kategorien",
+    "glottolog/auswahl/familie"
+  ],
+  "ausgeschlossen": {
+    "kategorien": {
+      "Unclassifiable": 128,
+      "Bookkeeping": 380,
+      "Unattested": 68,
+      "Artificial_Language": 31,
+      "Speech_Register": 19
+    },
+    "begruendung": "Kunstsprachen und Verwaltungskategorien (Bookkeeping, Unclassifiable, Unattested, Speech Register) sind keine Sprachgemeinschaften mit Überlieferung; Setzung (Regel 7)"
+  },
+  "reduktion": [
+    {
+      "schritt": "auswaehlen",
+      "angabe": "Level language (8 618 von 27 177 Languoiden); ohne Dialekte und Familien als Einträge"
+    },
+    {
+      "schritt": "auswaehlen",
+      "angabe": "Kategorien Spoken L1, Sign, Pidgin, Mixed: 7 992 Sprachen; ausgeschlossen: Unclassifiable 128, Bookkeeping 380, Unattested 68, Artificial_Language 31, Speech_Register 19"
+    },
+    {
+      "schritt": "auswaehlen",
+      "angabe": "Parameter aes, category und Familie; ohne med, medovertime, bib, names, Statuskommentare"
+    },
+    {
+      "schritt": "vergroebern",
+      "angabe": "Koordinaten auf 0,01° gerundet (≈ 1 km); die Punkte sind ohnehin Näherungen"
+    }
+  ]
+}

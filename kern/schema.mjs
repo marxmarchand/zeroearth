@@ -6,7 +6,7 @@
    Was hier fehlt, ist nicht entschieden. Offene Stellen: kern/BERICHT.md.
    ════════════════════════════════════════════════════════════════════ */
 
-export const SCHEMA_VERSION = '0.5.0';
+export const SCHEMA_VERSION = '0.6.0';
 
 /* ── Stapel ───────────────────────────────────────────────────────────
    Drei Stapel, je drei Unterebenen. Die Reihenfolge codiert die Genese
@@ -60,7 +60,7 @@ export const VORGAENGE = /** @type {const} */ ({
   anhaften:                  { name: 'Anhaften',                    bilanzierbar: false },
   einschliessen_realisieren: { name: 'Einschließen und Realisieren', bilanzierbar: false, modi: 'kapital' },
   konversion:                { name: 'Konversion',                  bilanzierbar: false },
-  ueberlieferung:            { name: 'Überlieferung',               bilanzierbar: false },
+  ueberlieferung:            { name: 'Überlieferung',               bilanzierbar: false, modi: 'ueberlieferung' },
 });
 
 /** Rolle: als was ein Ding in den Prozess eingespannt ist. */
@@ -113,6 +113,10 @@ export const MODI = /** @type {const} */ ({
   rolle:               ['vollzogen', 'erwartet', 'zugeschrieben'],
   kapital:             ['fliessend', 'eingeschlossen', 'realisiert', 'entwertet', 'verloren', 'ueberlagert'],
   verwertungsqualitaet:['potenz', 'realisiert'],
+  // Überlieferung: wie sicher die Weitergabe an die nächste Generation ist.
+  // Stufen der Quelle (Glottolog AES: EGIDS, UNESCO, ElCat zusammengeführt),
+  // nicht vergröbert. erloschen = Abbruch der Kette, als Verlust gezeigt.
+  ueberlieferung:      ['nicht_gefaehrdet', 'bedroht', 'im_wechsel', 'moribund', 'fast_erloschen', 'erloschen'],
 });
 
 /* ── Herkunft ─────────────────────────────────────────────────────────
@@ -152,6 +156,11 @@ export const PRUEFARTEN = /** @type {const} */ ({
   unabhaengige_beobachtung: 'gegen unabhängige Beobachtung',
 });
 
+/* ── Konfidenz einer Quelle ────────────────────────────────────────────
+   woher.konfidenz {skala, stufe}: wie sicher sich die Quelle selbst ist,
+   in ihren eigenen Stufen und als Text. Keine Zahl: Eine Zahl wäre eine
+   Wahrscheinlichkeit und bräuchte einen Erwartungsträger (Regel 4).     */
+
 /** Die Plattform ist kein Erwartungsträger: sie rechnet keine eigenen Wahrscheinlichkeiten. */
 export const KEIN_ERWARTUNGSTRAEGER = /** @type {const} */ (['zeroearth', 'plattform']);
 
@@ -166,6 +175,10 @@ export const WISSENSSTATUS = /** @type {const} */ (['vorlaeufig', 'revidiert']);
    Nur für Träger der 1. Natur (und verortbare Teile der 0. Natur).
    `grenze` ist nie gemessen, immer abgeleitet, und Spur einer Form.     */
 export const GEOMETRIEN = /** @type {const} */ (['punkt', 'flaeche', 'feld', 'grenze']);
+/** Näherung (Regel 10): Vertritt eine Geometrie eine andere, etwa ein Punkt
+    ein Gebiet, steht das in wo.naeherung {vertritt, angabe}; die Verzerrung
+    der vertretenen Geometrie ist dann Zahl oder fehlend, nie stillschweigend. */
+export const NAEHERUNG_VERTRITT = /** @type {const} */ (['flaeche', 'linie']);
 /** Geometrien, die ihre Verzerrung als Zahl mitführen müssen (Regel 10).
     Die Projektion entsteht erst in der Ansicht und wird dort ausgewiesen. */
 export const MIT_VERZERRUNG = /** @type {const} */ (['flaeche', 'feld', 'grenze']);
@@ -222,7 +235,7 @@ export const SPANNWEITE = /** @type {const} */ (['min', 'max']);
    @typedef {{archiv: string|Fehlend, art: keyof typeof ARCHIVARTEN|Fehlend}} Archivglied
    @typedef {{arten: string[], quelle: string, archivkette: (Archivglied|Fehlend)[],
               abgeleitet_aus?: string[], verfahren?: string, erwartungstraeger?: string, modelle?: string[],
-              ideal?: string}} Woher
+              ideal?: string, konfidenz?: {skala: string, stufe: string}}} Woher
    @typedef {{wert: number|string|{verweis: string}|Fehlend, wissensstand: Wissensstand|Fehlend,
               woher: Woher, wahrscheinlichkeit?: number, gegenwert?: {betrag: number, einheit: string},
               tausch?: string, spannweite?: {min: number, max: number}}} Fassung
@@ -233,11 +246,11 @@ export const SPANNWEITE = /** @type {const} */ (['min', 'max']);
    @typedef {{einheit: string, zeitsemantik?: Zeitsemantik, punkte: Punkt[]}} Groesse
    @typedef {{flaeche: number, ueberhoehung: number, [k: string]: any}} Verzerrung
    @typedef {{geometrie: string, gesetzt?: boolean, verzerrung?: Verzerrung, hinweis?: string,
-              woher?: Woher, [k: string]: any}} Wo
+              woher?: Woher, naeherung?: {vertritt: string, angabe: string}, [k: string]: any}} Wo
    @typedef {{id: string, stapel: string, unterebene?: Fehlend, name: string, wo?: Wo|Fehlend,
               haengt_an?: string[]|Fehlend, formation?: {id: string, von: number|string, bis: number|string}|Fehlend,
               auswahl?: string[], verwertungsqualitaet?: {modus: string},
-              spur_von?: {bestand: string, form: string}|Fehlend,
+              spur_von?: {bestand: string, form: string}|Fehlend, verweist_auf?: string[],
               werte: Record<string, Groesse|Fehlend>}} Eintrag
    @typedef {{id: string, name: string, eintrag?: string, prozess?: string}} Form
    @typedef {{id: string, name: string, erhaltung: keyof typeof ERHALTUNG, menge: Groesse|Fehlend, formen: Form[],

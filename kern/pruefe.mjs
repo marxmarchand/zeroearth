@@ -17,7 +17,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   STAPEL, UNTEREBENEN, stapelVon, UEBERGAENGE, GRUNDKRAEFTE, RICHTUNGEN, ZUFLUSSARTEN, AUSGANGSARTEN,
   KAPITALFORMEN, VORGAENGE, RUECKWIRKUNG, RELATIONSARTEN, VERWORFEN, TAUSCHVORGAENGE, MODI, formwechsel,
-  ERHALTUNG, ROLLEN, BELEG_EINTRAGSEBENE, IDEAL_ARTEN, PRUEFARTEN,
+  ERHALTUNG, ROLLEN, BELEG_EINTRAGSEBENE, IDEAL_ARTEN, PRUEFARTEN, NAEHERUNG_VERTRITT,
   ARCHIVARTEN, HERKUNFTSARTEN, KEIN_ERWARTUNGSTRAEGER, WISSENSSTATUS, GEOMETRIEN, MIT_VERZERRUNG,
   istFehlend, MANIFEST_PFLICHT, ZEITSEMANTIK_PFLICHT, REDUKTIONSSCHRITTE, SPANNWEITE,
 } from './schema.mjs';
@@ -191,6 +191,10 @@ export function pruefe(gr) {
 
     // Regel 1: keine Relationen im Eintrag, keine Identität über Stapel
     if ('identisch_mit' in e) F(1, e.id, VERWORFEN.identitaet);
+    if ('verweist_auf' in e) {
+      if (!Array.isArray(e.verweist_auf) || !e.verweist_auf.length) F('S', e.id, 'verweist_auf muss eine nichtleere Liste sein');
+      else for (const t of e.verweist_auf) if (!eintraege.has(t)) F('S', e.id, `verweist_auf verweist auf Unbekanntes: ${t}`);
+    }
     for (const k of ['relationen', 'setzt_voraus'])
       if (k in e) F(1, e.id, `Feld "${k}": Relationen stehen als eigene Einträge in relationen[]`);
 
@@ -242,6 +246,14 @@ export function pruefe(gr) {
       if (MIT_VERZERRUNG.includes(wo?.geometrie)) {
         if (!istZahl(wo.verzerrung?.flaeche)) F(10, e.id, 'Flächenverzerrung nicht als Zahl mitgeführt');
         if (!istZahl(wo.verzerrung?.ueberhoehung)) F(10, e.id, 'Überhöhung nicht als Zahl mitgeführt');
+      }
+      if (wo?.naeherung !== undefined) {
+        const n = wo.naeherung;
+        if (!NAEHERUNG_VERTRITT.includes(n?.vertritt)) F(10, e.id, `Näherung: vertritt muss ${NAEHERUNG_VERTRITT.join(' oder ')} sein`);
+        if (!istText(n?.angabe)) F(10, e.id, 'Näherung ohne Angabe, was vertreten wird');
+        const fl = wo.verzerrung?.flaeche;
+        if (n?.vertritt === 'flaeche' && !istZahl(fl) && !istFehlend(fl))
+          F(10, e.id, 'Näherung einer Fläche: Flächenverzerrung als Zahl oder fehlend mit Grund');
       }
       if (wo?.gesetzt === true && !(Array.isArray(e.auswahl) && e.auswahl.length))
         F(7, e.id, 'gesetzter Ausschnitt ohne Verweis auf eine Auswahl');
@@ -327,6 +339,12 @@ export function pruefe(gr) {
     if (new Set(arten).size !== arten.length) F(6, ort, 'arten ist eine Menge; doppelte Einträge');
     if (arten.includes('idealisiert') && !arten.includes('modell')) F(6, ort, 'idealisiert ohne modell; das Merkmal gehört zur Idealschicht');
     if (arten.includes('modell') && !arten.includes('idealisiert')) F(6, ort, 'modell ohne Merkmal idealisiert; Modellergebnisse bilden die Idealschicht');
+    if (w.konfidenz !== undefined) {
+      const k = w.konfidenz;
+      if (!istText(k?.skala) || !istText(k?.stufe)) F(6, ort, 'Konfidenz der Quelle braucht {skala, stufe} als Text');
+      if (typeof k === 'number' || istZahl(k?.stufe) || istZahl(k?.wert) || 'wahrscheinlichkeit' in (k ?? {}))
+        F(4, ort, 'Konfidenz als Zahl wäre eine Wahrscheinlichkeit; sie steht in den Stufen der Quelle, als Text');
+    }
     if (w.ideal !== undefined) {
       if (!ideale.has(w.ideal)) F(13, ort, `Ideal unbekannt: ${w.ideal}`);
       if (!IDEAL_ARTEN.some(a => arten.includes(a))) F(13, ort, 'Ideal an einem Wert ohne modell oder rekonstruktion; eine Beobachtung ist kein Ideal');
