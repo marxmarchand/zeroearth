@@ -18,6 +18,7 @@ import {
   STAPEL, UNTEREBENEN, stapelVon, UEBERGAENGE, GRUNDKRAEFTE, RICHTUNGEN, ZUFLUSSARTEN, AUSGANGSARTEN,
   KAPITALFORMEN, VORGAENGE, RUECKWIRKUNG, RELATIONSARTEN, VERWORFEN, TAUSCHVORGAENGE, MODI, formwechsel,
   ERHALTUNG, ROLLEN, BELEG_EINTRAGSEBENE, IDEAL_ARTEN, PRUEFARTEN, NAEHERUNG_VERTRITT,
+  EREIGNIS_NATUREN, STATION_STATUS, STATION_OHNE_QUELLE, EREIGNIS_PFLICHT, STATION_FELDER,
   ARCHIVARTEN, HERKUNFTSARTEN, KEIN_ERWARTUNGSTRAEGER, WISSENSSTATUS, GEOMETRIEN, MIT_VERZERRUNG,
   istFehlend, MANIFEST_PFLICHT, ZEITSEMANTIK_PFLICHT, REDUKTIONSSCHRITTE, SPANNWEITE,
 } from './schema.mjs';
@@ -38,6 +39,7 @@ export const REGELN = /** @type {const} */ ({
   B: 'Bestände und Formen',
   S: 'Struktur',
   M: 'Manifest',
+  E: 'Ereignis',
 });
 
 /** @typedef {{regel: keyof typeof REGELN, ort: string, text: string}} Meldung */
@@ -652,6 +654,84 @@ export function pruefeManifest(m) {
   return { fehler, hinweise };
 }
 
+/**
+ * Prüft ein Ereignis: alle Naturen als Station, Stationen nur mit Verweisen,
+ * ohne Quelle nur als fehlt/bewusst_leer mit Begründung, Auswahl begründet.
+ * @param {any} ev Ereignis
+ * @param {{adapter: Set<string>, graphen?: Map<string, any>}} kontext bekannte Adapter und ihre Graphen
+ * @returns {{fehler: Meldung[], hinweise: Meldung[]}}
+ */
+export function pruefeEreignis(ev, { adapter, graphen = new Map() }) {
+  /** @type {Meldung[]} */ const fehler = [];
+  /** @type {Meldung[]} */ const hinweise = [];
+  const F = (/** @type {any} */ regel, /** @type {string} */ ort, /** @type {string} */ text) => fehler.push({ regel, ort, text });
+  const H = (/** @type {any} */ regel, /** @type {string} */ ort, /** @type {string} */ text) => hinweise.push({ regel, ort, text });
+  const ort = `ereignis ${ev?.ereignis ?? '?'}`;
+  if (!ev || typeof ev !== 'object') { F('E', ort, 'kein Objekt'); return { fehler, hinweise }; }
+  for (const k of EREIGNIS_PFLICHT) if (!(k in ev)) F(k === 'auswahl_begruendung' ? 7 : 'E', ort, `Pflichtfeld "${k}" fehlt`);
+  for (const k of ['ereignis', 'satz', 'autor', 'stand']) if (k in ev && !istText(ev[k])) F('E', ort, `${k} ist ein Text`);
+  // Regel 7: Orte und Zeitfenster sind eine Setzung
+  if ('auswahl_begruendung' in ev && !istText(ev.auswahl_begruendung))
+    F(7, ort, 'auswahl_begruendung ist Pflicht: Orte und Zeitfenster sind eine Setzung und werden begründet');
+  if ('zeitfenster' in ev && !istBezugszeit(ev.zeitfenster)) F('E', ort, 'zeitfenster braucht {skala, wert} oder {skala, von, bis}');
+
+  /** Verweis "adapter-graph-id" oder "eintrag#groesse" im Graphen eines Adapters auflösen. */
+  const findet = (/** @type {any} */ g, /** @type {string} */ ref) => {
+    const [id, k] = ref.split('#');
+    const e = g.eintraege.find((/** @type {any} */ x) => x.id === id);
+    if (k !== undefined) return !!e?.werte?.[k];
+    return !!e || ['relationen', 'prozesse', 'bestaende'].some(t => g[t].some((/** @type {any} */ x) => x.id === id));
+  };
+  if ('orte' in ev) {
+    if (!Array.isArray(ev.orte) || !ev.orte.length) F('E', ort, 'orte ist eine nichtleere Liste');
+    else for (const o of ev.orte) {
+      if (!istText(o?.name)) F('E', ort, 'Ort ohne Namen');
+      if (o?.verweis !== undefined) {
+        const [a, id] = String(o.verweis).split(':');
+        if (!adapter.has(a)) F('E', ort, `Ort verweist auf unbekannten Adapter: ${a}`);
+        else if (id && graphen.has(a) && !findet(graphen.get(a), id)) F('E', ort, `Ort verweist auf Unbekanntes: ${o.verweis}`);
+      }
+    }
+  }
+
+  if (!Array.isArray(ev.stationen)) { F('E', ort, 'stationen ist eine Liste'); return { fehler, hinweise }; }
+  const vorkommend = new Set();
+  ev.stationen.forEach((/** @type {any} */ st, /** @type {number} */ i) => {
+    const so = `${ort} · Station ${i + 1} (${st?.natur ?? '?'})`;
+    if (!EREIGNIS_NATUREN.includes(st?.natur)) F('E', so, `Natur unbekannt: ${st?.natur} (${EREIGNIS_NATUREN.join(', ')})`);
+    else vorkommend.add(st.natur);
+    if (!istText(st?.frage)) F('E', so, 'Station ohne Frage');
+    if (!STATION_STATUS.includes(st?.status)) F('E', so, `Status unbekannt: ${st?.status} (${STATION_STATUS.join(', ')})`);
+    // Keine Daten: nur Verweise und Text
+    for (const k of Object.keys(st ?? {}))
+      if (!(/** @type {readonly string[]} */ (STATION_FELDER)).includes(k)) F('E', so, `Feld "${k}": Stationen enthalten keine Daten, nur Verweise auf Adapter`);
+    for (const k of ['frage', 'begruendung'])
+      if (st?.[k] !== undefined && typeof st[k] !== 'string') F('E', so, `${k} ist ein Text, keine Daten`);
+    if (st?.quelle === undefined) F('E', so, 'quelle fehlt; ohne Quelle heißt null');
+    else if (st.quelle === null) {
+      if (!STATION_OHNE_QUELLE.includes(st.status))
+        F(8, so, `ohne Quelle nur als ${STATION_OHNE_QUELLE.join(' oder ')}, nicht "${st.status}"`);
+      if (!istText(st.begruendung)) F(8, so, 'ohne Quelle braucht eine Begründung');
+      if (st.verweise !== undefined) F('E', so, 'Verweise ohne Quelle');
+    } else {
+      if (typeof st.quelle !== 'string') F('E', so, 'quelle ist der Name eines Adapters oder null, keine Daten');
+      else if (!adapter.has(st.quelle)) F('E', so, `quelle verweist auf unbekannten Adapter: ${st.quelle}`);
+      if (STATION_OHNE_QUELLE.includes(st.status)) F('E', so, `Status "${st.status}", aber mit Quelle ${st.quelle}`);
+      if (st.status === 'in_arbeit' && !istText(st.begruendung)) H('E', so, 'in Arbeit ohne Begründung, was noch fehlt');
+      if (st.verweise !== undefined) {
+        if (!Array.isArray(st.verweise) || !st.verweise.every(istText)) F('E', so, 'verweise ist eine Liste von Ids im Graphen des Adapters');
+        else if (graphen.has(st.quelle))
+          for (const v of st.verweise) if (!findet(graphen.get(st.quelle), v)) F('E', so, `Verweis unbekannt im Adapter ${st.quelle}: ${v}`);
+      }
+    }
+  });
+  for (const n of EREIGNIS_NATUREN)
+    if (!vorkommend.has(n)) F(8, ort, `Natur ${n} fehlt als Station; jede Natur kommt vor, auch leer (status fehlt oder bewusst_leer)`);
+  const zahl = (/** @type {string} */ s) => ev.stationen.filter((/** @type {any} */ x) => x?.status === s).length;
+  H('E', ort, `${ev.stationen.length} Stationen: ${STATION_STATUS.map(s => `${zahl(s)} ${s}`).join(', ')}`);
+  return { fehler, hinweise };
+}
+
 /* ── Ausgabe ───────────────────────────────────────────────────────── */
 /** @param {{fehler: Meldung[], hinweise: Meldung[]}} erg @param {string} titel */
 export function melde({ fehler, hinweise }, titel) {
@@ -683,6 +763,14 @@ export async function ladeAdapter(/** @type {string} */ name) {
   return { manifest, graph: transform(roh, manifest, zusatz) };
 }
 
+/** Alle Ereignisse unter kern/ereignisse/. */
+export async function ladeEreignisse() {
+  const ordner = join(HIER, 'ereignisse');
+  let dateien = [];
+  try { dateien = (await readdir(ordner)).filter(f => f.endsWith('.json')).sort(); } catch { return []; }
+  return Promise.all(dateien.map(async datei => ({ datei, inhalt: JSON.parse(await readFile(join(ordner, datei), 'utf8')) })));
+}
+
 async function main() {
   const arg = process.argv[2];
   let verstoesse = 0;
@@ -698,12 +786,16 @@ async function main() {
     zaehle(pruefe(JSON.parse(/** @type {string} */ (text))), arg === '-' ? 'Graph (stdin)' : arg);
   } else {
     const adapter = (await readdir(join(HIER, 'adapter'), { withFileTypes: true })).filter(d => d.isDirectory());
+    const graphen = new Map();
     for (const { name } of adapter) {
       const { manifest, graph } = await ladeAdapter(name);
+      graphen.set(name, graph);
       zaehle(pruefeManifest(manifest), `Manifest ${name}`);
       zaehle(pruefe(graph), `Graph ${name}: ${graph.bestaende.length} Bestände, ${graph.eintraege.length} Einträge, `
         + `${graph.prozesse.length} Prozesse, ${graph.relationen.length} Relationen`);
     }
+    for (const ev of await ladeEreignisse())
+      zaehle(pruefeEreignis(ev.inhalt, { adapter: new Set(graphen.keys()), graphen }), `Ereignis ${ev.datei}`);
   }
   process.exit(verstoesse ? 1 : 0);
 }

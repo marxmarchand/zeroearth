@@ -6,7 +6,7 @@
    Was hier fehlt, ist nicht entschieden. Offene Stellen: kern/BERICHT.md.
    ════════════════════════════════════════════════════════════════════ */
 
-export const SCHEMA_VERSION = '0.6.0';
+export const SCHEMA_VERSION = '0.7.0';
 
 /* ── Stapel ───────────────────────────────────────────────────────────
    Drei Stapel, je drei Unterebenen. Die Reihenfolge codiert die Genese
@@ -228,6 +228,24 @@ export const ZEITSEMANTIK_PFLICHT = /** @type {const} */ (['aufloesung', 'abdeck
 export const REDUKTIONSSCHRITTE = /** @type {const} */ (['vergroebern', 'mitteln', 'auswaehlen', 'zusammenfassen']);
 export const SPANNWEITE = /** @type {const} */ (['min', 'max']);
 
+/* ── Ereignis ─────────────────────────────────────────────────────────
+   Ein Ereignis legt einen Schnitt durch alle Naturverhältnisse zugleich.
+   Es enthält keine Daten, nur Stationen mit Verweisen auf Adapter. Jede
+   Natur kommt als Station vor, auch leer: Was fehlt, bleibt sichtbar
+   (Regel 8). Welche Orte und welches Zeitfenster gelten, ist eine
+   Setzung und braucht eine Begründung (Regel 7).                        */
+export const EREIGNIS_NATUREN = /** @type {const} */ ([
+  '0', 'planetarer_stoffwechsel', '1.1', '1.2', '1.3', 'gesellschaftlicher_stoffwechsel', '2.1', '2.2', '2.3',
+]);
+export const STATION_STATUS = /** @type {const} */ (['vorhanden', 'in_arbeit', 'fehlt', 'bewusst_leer']);
+/** Status, die ohne Quelle stehen dürfen (dann mit Begründung). */
+export const STATION_OHNE_QUELLE = /** @type {const} */ (['fehlt', 'bewusst_leer']);
+export const EREIGNIS_PFLICHT = /** @type {const} */ ([
+  'ereignis', 'satz', 'zeitfenster', 'orte', 'auswahl_begruendung', 'stationen', 'autor', 'stand',
+]);
+/** Erlaubte Felder einer Station: Verweise und Text, keine Daten. */
+export const STATION_FELDER = /** @type {const} */ (['natur', 'frage', 'quelle', 'verweise', 'status', 'begruendung']);
+
 /* ── Typen ────────────────────────────────────────────────────────────
    @typedef {{fehlt: true, grund: string}} Fehlend
    @typedef {{seit: string, status: 'vorlaeufig'|'revidiert'}} Wissensstand
@@ -272,4 +290,8 @@ export const SPANNWEITE = /** @type {const} */ (['min', 'max']);
    @typedef {{schema: string, adapter?: any, formationen: Formation[], subjektachse: {status: string, grund?: string},
               auswahl: Auswahl[], ideale?: Ideal[], bestaende: Bestand[], eintraege: Eintrag[], prozesse: Prozess[],
               relationen: Relation[]}} Graph
+   @typedef {{natur: typeof EREIGNIS_NATUREN[number], frage: string, quelle: string|null, verweise?: string[],
+              status: typeof STATION_STATUS[number], begruendung?: string}} Station
+   @typedef {{ereignis: string, satz: string, zeitfenster: Bezugszeit, orte: {name: string, verweis?: string}[],
+              auswahl_begruendung: string, stationen: Station[], autor: string, stand: string}} Ereignis
 */
