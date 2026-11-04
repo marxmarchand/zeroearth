@@ -119,7 +119,7 @@ function gueltig() {
         formation: fehlt('keine Formation genannt'), werte: {} },
     ],
     prozesse: [{
-      id: 't/p', name: 'Verbrennung', uebergang: 'gesellschaftlich',
+      id: 't/p', name: 'Verbrennung', uebergang: 'gesellschaftlicher_stoffwechsel',
       zufluesse: [
         { von: 't/kohle', herkunftsstapel: '1.1', art: 'stoff' },
         { von: 't/sonne', herkunftsstapel: '0.3', art: 'energie', kette: ['stark', 'elektromagnetismus'], richtung: 'extern' },
@@ -127,7 +127,7 @@ function gueltig() {
       ],
       ausgaenge: [{ nach: 't/co2', art: 'abfall' }],
     }, {
-      id: 't/erfassung', name: 'Erfassung', uebergang: 'gesellschaftlich',
+      id: 't/erfassung', name: 'Erfassung', uebergang: 'gesellschaftlicher_stoffwechsel',
       zufluesse: [], ausgaenge: [{ nach: 't/rohdaten', art: 'daten' }],
     }],
     relationen: [
@@ -301,6 +301,8 @@ const VERSTOESSE = [
   ['S', 'Überlieferung mit Kapitalmodus', b => { r(b, 't/r-ueberlieferung').modus = 'fliessend'; }],
   ['S', 'verweist_auf Unbekanntes', b => { e(b, 't/sprache').verweist_auf = ['t/nirgends']; }],
   [2, 'Sprache mit eigenem wo', b => { e(b, 't/sprache').wo = { geometrie: 'punkt' }; }],
+  // Regel 15: Fiktion
+  [15, 'fiktion neben echter Herkunft, nicht abgeleitet', b => { woherK(b).arten = ['fiktion', 'beobachtung']; delete woherK(b).abgeleitet_aus; }],
   // Regel 13: mehrere Ideale
   [13, 'ein Ideal der Gruppe fehlt', b => { delete e(b, 't/varianten').werte.vb; }],
   [13, 'Ideal unbekannt', b => { e(b, 't/varianten').werte.vb.punkte[0].fassungen[0].woher.ideal = 't/ideal-x'; }],
@@ -338,7 +340,9 @@ const VERSTOESSE = [
   ['B', 'Spur einer unbekannten Form', b => { e(b, 't/kueste').spur_von.form = 'dampf'; }],
   // Struktur
   ['S', 'Prozess in einem Stapel', b => { b.prozesse[0].stapel = '1.3'; }],
-  ['S', 'Übergang als Stapel', b => { e(b, 't/co2').stapel = 'planetar'; }],
+  ['S', 'Sphäre unbekannt', b => { e(b, 't/kennwert').sphaere = 'biosphaere'; }],
+  ['S', 'Sphäre außerhalb von 1.1', b => { e(b, 't/gemeinschaft').sphaere = 'biomasse'; }],
+  ['S', 'Übergang als Stapel', b => { e(b, 't/co2').stapel = 'planetarer_stoffwechsel'; }],
   ['S', 'Stapel ohne Unterebene und ohne Begründung', b => { delete e(b, 't/notiz').unterebene; }],
   ['S', 'Revision überschreibt', b => { e(b, 't/kohle').werte.masse.punkte[0].fassungen[1].wissensstand.seit = '2026-09-01'; }],
   ['S', 'Revision nicht als revidiert', b => { e(b, 't/kohle').werte.masse.punkte[0].fassungen[1].wissensstand.status = 'vorlaeufig'; }],
@@ -389,8 +393,50 @@ test('Manifest: Pflichtfeld fehlt', () => {
   assert.deepEqual(pruefeManifest({ ...m, lizenz: fehlt('ungeklärt') }).fehler, []);
 });
 
+test('Regel 15: reine Fiktion und abgeleitete Mischung sind gültig', () => {
+  const rein = gueltig();
+  woherK(rein).arten = ['fiktion'];
+  delete woherK(rein).abgeleitet_aus;
+  assert.deepEqual(pruefe(rein).fehler, []);
+  const gemischt = gueltig();
+  woherK(gemischt).arten = ['fiktion', 'beobachtung', 'rekonstruktion'];
+  assert.deepEqual(pruefe(gemischt).fehler, []);
+});
+
+test('Regel 15: Was aus fiktion abgeleitet wird, bleibt fiktion', () => {
+  const b = gueltig();
+  b.eintraege.push({ id: 't/erfunden', stapel: '1.1', name: 'Erfunden', werte: { x: einzel('1', fassung(1, W(['fiktion']))) } });
+  woherK(b).abgeleitet_aus.push('t/erfunden#x');
+  assert.ok(pruefe(b).fehler.some(f => f.regel === 6 && f.text.includes('fiktion')), JSON.stringify(pruefe(b).fehler));
+  woherK(b).arten.push('fiktion');
+  assert.deepEqual(pruefe(b).fehler, []);
+});
+
+test('Sphären: alle fünf in 1.1 gültig, Biomasse eingeschlossen', () => {
+  for (const s of ['atmosphaere', 'hydrosphaere', 'lithosphaere', 'kryosphaere', 'biomasse']) {
+    const b = gueltig();
+    e(b, 't/kennwert').sphaere = s;
+    assert.deepEqual(pruefe(b).fehler, [], s);
+  }
+});
+
+test('Regel 15: Fiktion wird immer angezeigt und hat keinen Rang', () => {
+  assert.deepEqual(anzeige(['fiktion']), { rang: null, merkmale: ['fiktion'] });
+  assert.deepEqual(anzeige(['fiktion', 'beobachtung']), { rang: 'beobachtung', merkmale: ['fiktion'] });
+});
+
+test('Regel 15: Manifest mischt Fiktion nicht mit echter Herkunft', () => {
+  const herkunft = (/** @type {string[]} */ arten) => ({ ...MANIFEST, herkunft: { ...MANIFEST.herkunft, arten } });
+  assert.deepEqual(pruefeManifest(herkunft(['fiktion'])).fehler, []);
+  assert.ok(pruefeManifest(herkunft(['fiktion', 'beobachtung'])).fehler.some(f => String(f.regel) === '15'));
+  assert.ok(pruefeManifest(herkunft(['fiktion', 'kuratiert'])).fehler.some(f => String(f.regel) === '15'));
+  // Echte Eingaben stehen in der Herkunftskette
+  const kette = [{ archiv: 'zeroearth', art: 'zeroearth' }, { archiv: 'Echte Quelle', art: 'gesellschaftlich' }];
+  assert.deepEqual(pruefeManifest({ ...MANIFEST, herkunft: { arten: ['fiktion'], archivkette: kette } }).fehler, []);
+});
+
 test('Manifest: Übergang als Stapel', () => {
-  assert.ok(pruefeManifest({ ...MANIFEST, stapel: ['planetar'] }).fehler.length > 0);
+  assert.ok(pruefeManifest({ ...MANIFEST, stapel: ['planetarer_stoffwechsel'] }).fehler.length > 0);
 });
 
 test('Manifest: Herkunft als einzelne Art oder ohne zeroearth', () => {

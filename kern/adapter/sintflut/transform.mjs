@@ -145,7 +145,7 @@ export function transform(roh, manifest, zusatz = {}) {
   const JE_IDEAL = fehlt(`je Ideal verschieden; siehe Relationen ${P}/relation/eis-ozean/<ideal>`);
   const prozess = {
     id: `${P}/prozess/wasserumverteilung`, name: 'Wasserumverteilung Eis → Ozean',
-    uebergang: 'planetar', richtung: 'intern',
+    uebergang: 'planetarer_stoffwechsel', richtung: 'intern',
     zufluesse: [{ von: eis.id, herkunftsstapel: '1.1', art: 'stoff', menge: JE_IDEAL }],
     ausgaenge: [{ nach: ozean.id, art: 'stoff', menge: JE_IDEAL }],
   };

@@ -15,11 +15,11 @@ import { readFile, readdir } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
-  STAPEL, UNTEREBENEN, stapelVon, UEBERGAENGE, GRUNDKRAEFTE, RICHTUNGEN, ZUFLUSSARTEN, AUSGANGSARTEN,
+  STAPEL, UNTEREBENEN, SPHAEREN, stapelVon, UEBERGAENGE, GRUNDKRAEFTE, RICHTUNGEN, ZUFLUSSARTEN, AUSGANGSARTEN,
   KAPITALFORMEN, VORGAENGE, RUECKWIRKUNG, RELATIONSARTEN, VERWORFEN, TAUSCHVORGAENGE, MODI, formwechsel,
   ERHALTUNG, ROLLEN, BELEG_EINTRAGSEBENE, IDEAL_ARTEN, PRUEFARTEN, NAEHERUNG_VERTRITT,
   EREIGNIS_NATUREN, STATION_STATUS, STATION_OHNE_QUELLE, EREIGNIS_PFLICHT, STATION_FELDER,
-  ARCHIVARTEN, HERKUNFTSARTEN, KEIN_ERWARTUNGSTRAEGER, WISSENSSTATUS, GEOMETRIEN, MIT_VERZERRUNG,
+  ARCHIVARTEN, HERKUNFTSARTEN, HERKUNFT_RANG, KEIN_ERWARTUNGSTRAEGER, WISSENSSTATUS, GEOMETRIEN, MIT_VERZERRUNG,
   istFehlend, MANIFEST_PFLICHT, ZEITSEMANTIK_PFLICHT, REDUKTIONSSCHRITTE, SPANNWEITE,
 } from './schema.mjs';
 
@@ -36,6 +36,7 @@ export const REGELN = /** @type {const} */ ({
   10: 'Verzerrung als Zahl',
   11: 'Reduktion im Manifest, Spannweite bei zusammengefassten Modellen',
   13: 'Mehrere Ideale werden alle gezeigt',
+  15: 'Fiktion erkennbar und getrennt von echten Daten',
   B: 'Bestände und Formen',
   S: 'Struktur',
   M: 'Manifest',
@@ -190,6 +191,10 @@ export function pruefe(gr) {
       if (!istFehlend(e.unterebene)) F('S', e.id, 'im Stapel ohne Unterebene; eine offene Unterebene wird als fehlend geführt');
     } else if ('unterebene' in e) F('S', e.id, 'Unterebene doppelt: steht schon in stapel');
     if (!istText(e.name)) F('S', e.id, 'ohne Namen');
+    if ('sphaere' in e) {
+      if (e.stapel !== '1.1') F('S', e.id, 'sphaere gibt es nur in 1.1');
+      else if (!SPHAEREN.includes(e.sphaere)) F('S', e.id, `Sphäre unbekannt: ${e.sphaere}`);
+    }
 
     // Regel 1: keine Relationen im Eintrag, keine Identität über Stapel
     if ('identisch_mit' in e) F(1, e.id, VERWORFEN.identitaet);
@@ -341,6 +346,8 @@ export function pruefe(gr) {
     if (new Set(arten).size !== arten.length) F(6, ort, 'arten ist eine Menge; doppelte Einträge');
     if (arten.includes('idealisiert') && !arten.includes('modell')) F(6, ort, 'idealisiert ohne modell; das Merkmal gehört zur Idealschicht');
     if (arten.includes('modell') && !arten.includes('idealisiert')) F(6, ort, 'modell ohne Merkmal idealisiert; Modellergebnisse bilden die Idealschicht');
+    if (arten.includes('fiktion') && arten.some((/** @type {any} */ a) => HERKUNFT_RANG.includes(a)) && !w.abgeleitet_aus?.length)
+      F(15, ort, 'fiktion neben echter Herkunft nur an abgeleiteten Werten (abgeleitet_aus); sonst verwischt die Grenze');
     if (w.konfidenz !== undefined) {
       const k = w.konfidenz;
       if (!istText(k?.skala) || !istText(k?.stufe)) F(6, ort, 'Konfidenz der Quelle braucht {skala, stufe} als Text');
@@ -629,6 +636,8 @@ export function pruefeManifest(m) {
     const arten = m.herkunft.arten ?? [];
     if (arten.includes('idealisiert') !== arten.includes('modell'))
       F(ort, 'herkunft: modell und idealisiert gehören zusammen (Idealschicht)');
+    if (arten.includes('fiktion') && arten.length > 1)
+      fehler.push({ regel: 15, ort, text: 'ein Adapter mit fiktion führt im Manifest nur fiktion; echte Eingaben stehen in der Herkunftskette' });
   }
 
   // Regel 11: Reduktion

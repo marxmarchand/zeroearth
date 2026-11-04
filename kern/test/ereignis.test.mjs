@@ -7,7 +7,12 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { pruefeEreignis, ladeEreignisse, ladeAdapter } from '../pruefe.mjs';
-import { EREIGNIS_NATUREN } from '../schema.mjs';
+import { EREIGNIS_NATUREN, UEBERGAENGE, UNTEREBENEN } from '../schema.mjs';
+
+test('Stationen und Übergänge führen dieselben Schlüssel', () => {
+  for (const u of Object.keys(UEBERGAENGE)) assert.ok(/** @type {readonly string[]} */ (EREIGNIS_NATUREN).includes(u), u);
+  for (const n of EREIGNIS_NATUREN) assert.ok(n === '0' || n in UEBERGAENGE || n in UNTEREBENEN, n);
+});
 
 const ereignisse = await ladeEreignisse();
 const sintflut = ereignisse.find(e => e.datei === 'sintflut.json')?.inhalt;

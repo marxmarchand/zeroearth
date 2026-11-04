@@ -6,7 +6,7 @@
    Was hier fehlt, ist nicht entschieden. Offene Stellen: kern/BERICHT.md.
    ════════════════════════════════════════════════════════════════════ */
 
-export const SCHEMA_VERSION = '0.7.0';
+export const SCHEMA_VERSION = '0.8.0';
 
 /* ── Stapel ───────────────────────────────────────────────────────────
    Drei Stapel, je drei Unterebenen. Die Reihenfolge codiert die Genese
@@ -16,9 +16,9 @@ export const STAPEL = /** @type {const} */ ({
   '0': { name: '0. Natur', unterebenen: {
     '0.1': 'universell/fundamental', '0.2': 'interstellarer Raum', '0.3': 'solarer Raum' } },
   '1': { name: '1. Natur', unterebenen: {
-    '1.1': 'Erdsystem', '1.2': 'Unterbau (Basement)', '1.3': 'Basis' } },
+    '1.1': 'Erdsystem', '1.2': 'Biosphäre / Lebensnetz', '1.3': 'Basis (vorgefundene Reproduktionsverhältnisse)' } },
   '2': { name: '2. Natur', unterebenen: {
-    '2.1': 'kognitiver, gebauter Raum', '2.2': 'Überbau', '2.3': 'symbolisches System' } },
+    '2.1': 'konstruierte Wirklichkeit', '2.2': 'Überbau', '2.3': 'symbolisches System' } },
 });
 
 /** Genese: Stapelreihenfolge von unten nach oben. */
@@ -33,11 +33,17 @@ export const UNTEREBENEN = Object.fromEntries(Object.entries(STAPEL).flatMap(([s
     und führt `unterebene` als fehlend. */
 export const stapelVon = (/** @type {string} */ u) => UNTEREBENEN[u]?.stapel ?? (u in STAPEL ? u : undefined);
 
+/* ── Sphären des Erdsystems (1.1) ─────────────────────────────────────
+   Biomasse ist der stoffliche Teil des Lebens, ein Bestand (Kohlenstoff in
+   Lebewesen); die Beziehungen zwischen Lebewesen stehen in 1.2.
+   Optional am Eintrag (`sphaere`), nur in 1.1.                          */
+export const SPHAEREN = /** @type {const} */ (['atmosphaere', 'hydrosphaere', 'lithosphaere', 'kryosphaere', 'biomasse']);
+
 /* ── Übergänge ────────────────────────────────────────────────────────
    Keine Stapel. In ihnen laufen Prozesse.                              */
 export const UEBERGAENGE = /** @type {const} */ ({
-  planetar:        { name: 'planetarer Stoffwechsel',       zwischen: ['0', '1'] },
-  gesellschaftlich:{ name: 'gesellschaftlicher Stoffwechsel', zwischen: ['1', '2'] },
+  planetarer_stoffwechsel:        { name: 'planetarer Stoffwechsel',        zwischen: ['0', '1'] },
+  gesellschaftlicher_stoffwechsel:{ name: 'gesellschaftlicher Stoffwechsel', zwischen: ['1', '2'] },
 });
 
 /* ── 0. Natur: Zuflüsse ───────────────────────────────────────────────
@@ -124,10 +130,15 @@ export const MODI = /** @type {const} */ ({
    rekonstruktion > modell; kuratiert, erwartung und idealisiert sind
    Merkmale. Abgeleitete Werte tragen alle beteiligten Arten.
    idealisiert: Modellergebnis als Idealschicht (Bauform, Ideal,
-   Beobachtung, Differenz). Gehört immer zu modell und umgekehrt.        */
-export const HERKUNFTSARTEN = /** @type {const} */ (['beobachtung', 'rekonstruktion', 'modell', 'kuratiert', 'erwartung', 'idealisiert']);
+   Beobachtung, Differenz). Gehört immer zu modell und umgekehrt.
+   fiktion: erfunden (Regel 15). Kein Rang, sondern ein Merkmal, das immer
+   angezeigt wird. Was aus fiktion abgeleitet wird, bleibt fiktion (wie
+   erwartung). Neben einer Art aus der Rangfolge steht sie nur an abgeleiteten
+   Werten. Ein solcher Adapter führt im Manifest nur fiktion; echte Eingaben
+   stehen in der Herkunftskette.                                          */
+export const HERKUNFTSARTEN = /** @type {const} */ (['beobachtung', 'rekonstruktion', 'modell', 'kuratiert', 'erwartung', 'idealisiert', 'fiktion']);
 export const HERKUNFT_RANG = /** @type {const} */ (['beobachtung', 'rekonstruktion', 'modell']);
-export const HERKUNFT_MERKMALE = /** @type {const} */ (['kuratiert', 'erwartung', 'idealisiert']);
+export const HERKUNFT_MERKMALE = /** @type {const} */ (['kuratiert', 'erwartung', 'idealisiert', 'fiktion']);
 
 /** Was angezeigt wird: die schwächste Art aus der Rangfolge plus die Merkmale. */
 export function anzeige(/** @type {string[]} */ arten) {
@@ -265,7 +276,7 @@ export const STATION_FELDER = /** @type {const} */ (['natur', 'frage', 'quelle',
    @typedef {{flaeche: number, ueberhoehung: number, [k: string]: any}} Verzerrung
    @typedef {{geometrie: string, gesetzt?: boolean, verzerrung?: Verzerrung, hinweis?: string,
               woher?: Woher, naeherung?: {vertritt: string, angabe: string}, [k: string]: any}} Wo
-   @typedef {{id: string, stapel: string, unterebene?: Fehlend, name: string, wo?: Wo|Fehlend,
+   @typedef {{id: string, stapel: string, unterebene?: Fehlend, sphaere?: typeof SPHAEREN[number], name: string, wo?: Wo|Fehlend,
               haengt_an?: string[]|Fehlend, formation?: {id: string, von: number|string, bis: number|string}|Fehlend,
               auswahl?: string[], verwertungsqualitaet?: {modus: string},
               spur_von?: {bestand: string, form: string}|Fehlend, verweist_auf?: string[],
