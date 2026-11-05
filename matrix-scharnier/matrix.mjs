@@ -109,7 +109,8 @@ export const FORMEN = /** @type {const} */ ({
   materialbestand:{ de: 'Materialbestände', en: 'Material Stocks',
                     bei: 'erste_natur/erdsystem', ebene: 'erste_natur' },
   lohnarbeit:     { de: 'Lohnarbeit', en: 'Wage Labour',
-                    bei: 'erste_natur/basis', ebene: null },
+                    // Übergang ohne Schicht: Arbeit ist kein Produktionsmittel
+                    bei: 'gesellschaftlicher_stoffwechsel', ebene: null },
   klassenstruktur:{ de: 'Gesellschaftliche Klassenstruktur', en: 'Social Class Structure',
                     bei: 'erste_natur/basis', ebene: 'basis' },
   produktionsmittel:{ de: 'Produktionsmittel', en: 'Means of Production',

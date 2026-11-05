@@ -1,5 +1,5 @@
 {
-  "erzeugt": "2026-11-05T12:38:21.117Z",
+  "erzeugt": "2026-11-05T13:03:35.688Z",
   "hinweis": "erzeugt aus matrix-scharnier/matrix.mjs — nicht von Hand ändern",
   "voraussetzung": [
     "nullnatur",
@@ -165,7 +165,7 @@
     "lohnarbeit": {
       "de": "Lohnarbeit",
       "en": "Wage Labour",
-      "bei": "erste_natur/basis",
+      "bei": "gesellschaftlicher_stoffwechsel",
       "ebene": null
     },
     "klassenstruktur": {
