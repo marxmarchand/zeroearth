@@ -11,6 +11,10 @@ Zwei Ursachen, beide behoben:
 
 Im Terminator-Licht liegt die Nachtseite weiter dunkel, das ist gewollt. Die Tour schaltet das Licht deshalb während der Tour auf gleichmäßig und stellt es am Ende zurück.
 
+## Kopfzeile und linke Spalte
+
+`#hdr` hatte keine feste Zeile im Raster. Sobald `#mini-null` in der Erdansicht Zeile 1 belegte, rutschte die Kopfzeile in eine vierte Zeile ans untere Bildende und nahm der Mittelzeile Platz. Jetzt steht sie fest in Zeile 1. Die linke Spalte lief dabei unter die Masterzeit; sie scrollt jetzt in ihrer Zeile. Unter 1180 px Breite entfällt der Zusatz neben dem Wortzeichen, damit er nicht unter `#mini-null` liegt.
+
 ## Was gebaut ist
 
 - **Motor:** liest `kern/ereignisse/*.json` über `data/ereignisse.json`, weil ein Browser keinen Ordner auflisten kann. Ein Test gleicht Liste und Ordner ab. Keine Tourdaten im HTML.

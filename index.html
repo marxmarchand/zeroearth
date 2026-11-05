@@ -171,13 +171,16 @@
       grid-template-rows:auto 1fr auto;padding:16px;gap:9px;}
     #ui>*{pointer-events:auto;}
 
-    #hdr{grid-column:1/-1;display:flex;align-items:center;gap:12px;pointer-events:none;}
+    /* Zeile fest: sonst schiebt #mini-null (Zeile 1) die Kopfzeile in eine vierte Zeile ans untere Ende */
+    #hdr{grid-column:1/-1;grid-row:1;align-self:start;display:flex;align-items:center;gap:12px;pointer-events:none;}
+    @media (max-width:1180px){.wm small{display:none;}}
     .wm{font-family:var(--disp);font-size:11px;letter-spacing:.12em;color:var(--accent);}
     .wm small{color:var(--muted);font-size:8px;margin-left:8px;}
     .hsep{flex:1;height:1px;background:var(--border);}
     #bc{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.12em;}
 
-    #left{grid-column:1;grid-row:2;display:flex;flex-direction:column;gap:3px;align-self:start;overflow-y:auto;}
+    #left{grid-column:1;grid-row:2;display:flex;flex-direction:column;gap:3px;align-self:start;max-height:100%;overflow-y:auto;}
+    #left>*{flex-shrink:0;}   /* scrollen statt stauchen */
 
     /* Dim buttons */
     .db{display:flex;align-items:center;gap:8px;padding:8px 10px;
