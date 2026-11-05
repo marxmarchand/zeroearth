@@ -3,21 +3,23 @@
    MATRIX — das Modell. Einzige Stelle, an der die Matrix steht.
    Daraus abgeleitet: Adressen · Beschriftungen (de/en) · TypeSafe-
    Kriterien · Diagramme (diagramm.mjs).
-   IDs sind Adressen, keine Begriffe (ZEIT_RAUM §8). Beschriftungen
-   sind Sprachvarianten derselben Adresse.
+   IDs sind Adressen, keine Begriffe; die Adressen `basis` (1.3),
+   `unterbau` (1.2) und `riss` (2.3) tragen frühere Namen und bleiben
+   stabil. Beschriftungen sind Sprachvarianten derselben Adresse und
+   folgen docs/strukturstand.md.
    Englische Begriffe: Diagramm „a4Matrixbasis mode of production“
-   (15.09.2026). Achtung: Paper 1/2 führen für `unterbau`
-   „Substructure/Basement“ — hier steht „Ecological Basis“.
+   (15.09.2026); die für 1.1, 1.2, 1.3, 2.2 und 2.3 sind Entwurf und
+   noch nicht abgestimmt (docs/woerterbuch.md).
    ════════════════════════════════════════════════════════════════════ */
 
 export const MATRIX = /** @type {const} */ ({
   zweite_natur: {
     de: 'Zweite Natur', en: 'Second Nature', farbe: '#e8807f',
     strata: {
-      riss: { de: 'R.I.S.System', en: 'Rel.-Ideo-Symbolic System',
+      riss: { de: 'Symbolisches System', en: 'Symbolic System',
         was: 'symbolische Vermittlung der Wirklichkeit einer Spezies',
         nicht: 'Wissen als Produktionsmittel' },
-      ueberbau: { de: 'Institutionalisierter Überbau', en: 'Institutionalized Superstructure',
+      ueberbau: { de: 'Überbau', en: 'Superstructure',
         was: 'integraler Staat, Recht, Verwaltung, Staatsapparate',
         nicht: 'bloße Bauten' },
       konstruierte_wirklichkeit: { de: 'Konstruierte Wirklichkeit', en: 'Constructed Reality',
@@ -38,18 +40,18 @@ export const MATRIX = /** @type {const} */ ({
   erste_natur: {
     de: 'Erste Natur', en: 'First Nature', farbe: '#a8cf74',
     strata: {
-      basis: { de: 'Gesellschaftliche Basis', en: 'Socially Base',
-        was: 'Produktionsverhältnisse, Gesellschaftsformation',
-        nicht: 'deren institutionelle Form',
-        info: { de: 'Gesellschaftsformation und sozialökonomische Verhältnisse. Die Basis umfasst Produktivkräfte und Produktionsverhältnisse — nicht nur menschliche Arbeit, sondern tierische, mikrobielle, fossile und digitale Produktivkraft.', en: `Social formation and social-economic relations. The Base encompasses productive forces and relations of production — not merely human labor but animal, microbial, fossil, and digital Produktivkraft.` }, zeitskala: '10¹–10³ a' },
-      unterbau: { de: 'Unterbau', en: 'Ecological Basis',
-        was: 'mehr-als-menschliche Gesellschaften als Produktivkräfte; ReProduktionsverhältnisse',
-        nicht: 'Umweltdaten ohne Akteurscharakter',
-        info: { de: `„Mehr-als-menschliche Gesellschaften" — Ökosysteme als Existenzbedingungen und ReProduktionsverhältnisse. Der Unterbau ist nicht bloß Natur, auf der Gesellschaft errichtet wird; er ist selbst eine Form von Vergesellschaftung, die menschlichen Gesellschaftsformationen vorausgeht, sie ermöglicht und sie durchdringt.`, en: `“More-than-human societies” — ecosystems as conditions of existence and relations of reproduction. The Basement is not merely nature upon which society is built; it is itself a form of sociality — a more-than-human sociality that precedes, enables, and interpenetrates human social formations.` }, zeitskala: '10³–10⁷ a' },
-      erdsystem: { de: 'Erdsystem', en: 'Earth (Sub)System',
-        was: 'Atmo-, Bio-, Hydro-, Lithosphäre als Umweltzustand',
-        nicht: 'Arten als Akteure',
-        info: { de: 'Atmo-, Bio-, Hydro- und Lithosphäre und ihre Wechselwirkungen. Ein Körper von Erdgröße (±10 %), Achsneigung 20–30°, ein großer Mond zur Stabilisierung, rund 2 km Wasser über die ganze Kugel gerechnet. Die kontinentale Kruste — im Sonnensystem einzig auf der Erde — reichert lebenswichtige Elemente durch Verwitterung an.', en: `Atmosphere, biosphere, hydrosphere, lithosphere and their interactions. Earth-sized body (±10%), axial tilt 20–30°, large moon for stabilization, approximately 2 km global water coverage. Continental crust — unique to Earth in our solar system — concentrates life-essential elements through weathering.` }, zeitskala: '10⁶–10¹⁰ a' },
+      basis: { de: 'Basis', en: 'Base',
+        was: 'vorgefundene Reproduktionsverhältnisse: Bedingungen, unter denen sich Menschen als Lebewesen erhalten und fortpflanzen',
+        nicht: 'Produktionsverhältnisse (entstehen im gesellschaftlichen Stoffwechsel, institutionalisiert in 2.2)',
+        info: { de: 'Die vorgefundenen Reproduktionsverhältnisse: die Bedingungen, unter denen sich Menschen als Lebewesen erhalten und fortpflanzen. In ihnen schafft sich eine Gesellschaftsformation ihre Produktionsverhältnisse; diese entstehen im gesellschaftlichen Stoffwechsel und werden in der 2. Natur institutionalisiert.', en: `The relations of reproduction as they are found: the conditions under which humans sustain and reproduce themselves as living beings. Within them a social formation creates its relations of production, which arise in social metabolism and are institutionalized in Second Nature.` }, zeitskala: '10¹–10³ a' },
+      unterbau: { de: 'Biosphäre / Lebensnetz', en: 'Biosphere / Web of Life',
+        was: 'Beziehungen zwischen Lebewesen: Abstammung, Fressen, Bestäuben, Symbiose',
+        nicht: 'Biomasse als Stoff (gehört ins Erdsystem)',
+        info: { de: `Die Beziehungen zwischen Lebewesen: Abstammung, Fressen, Bestäuben, Symbiose. „Lebensnetz" im Sinn von Jason W. Moore. Der stoffliche Teil des Lebens, die Biomasse, steht als Bestand im Erdsystem.`, en: `The relations between living beings: descent, feeding, pollination, symbiosis. “Web of life” in Jason W. Moore's sense. The material part of life, biomass, is a stock in the Earth system.` }, zeitskala: '10³–10⁷ a' },
+      erdsystem: { de: 'Erdsystem', en: 'Earth System',
+        was: 'Atmo-, Hydro-, Litho-, Kryosphäre und Biomasse als Bestand',
+        nicht: 'Beziehungen zwischen Lebewesen',
+        info: { de: 'Atmo-, Hydro-, Litho- und Kryosphäre, die Biomasse und ihre Wechselwirkungen. Ein Körper von Erdgröße (±10 %), Achsneigung 20–30°, ein großer Mond zur Stabilisierung, rund 2 km Wasser über die ganze Kugel gerechnet. Die kontinentale Kruste — im Sonnensystem einzig auf der Erde — reichert lebenswichtige Elemente durch Verwitterung an.', en: `Atmosphere, hydrosphere, lithosphere, cryosphere, biomass and their interactions. Earth-sized body (±10%), axial tilt 20–30°, large moon for stabilization, approximately 2 km global water coverage. Continental crust — unique to Earth in our solar system — concentrates life-essential elements through weathering.` }, zeitskala: '10⁶–10¹⁰ a' },
     },
   },
   planetarer_stoffwechsel: {

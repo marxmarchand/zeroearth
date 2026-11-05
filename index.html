@@ -418,7 +418,7 @@
       <div class="dim-head" data-dim="zweite_natur" title="Dimensionen sind Linsen, keine Orte und keine Höhenstufen — was eine Ebene zeigen kann, hängt an der Auflösung ihrer Quelle"></div>
       <div class="dim-body">
 
-      <!-- R.I.S.System: symbolische Vermittlung -->
+      <!-- Symbolisches System: symbolische Vermittlung -->
       <div class="sub-head" data-sub="riss"></div>
       <div class="ob ov-side" id="tb-riss" onclick="ze.toggle('riss')"><div class="obd"></div>Religionen · Kulturkreise · Schriftsysteme ▵</div>
       <div class="ov-status" id="riss-status"></div>
@@ -466,7 +466,7 @@
       <div class="ob ov-side" id="tb-basis" onclick="ze.toggle('basis')"><div class="obd"></div>Gesellschaftsformationen ●</div>
       <div class="ov-status" id="basis-status"></div>
       <div class="sub-head" data-sub="unterbau"></div>
-      <div class="ob ov-side" id="tb-unterbau" onclick="ze.toggle('unterbau')"><div class="obd"></div>Mehr-als-menschliche Gesellschaften ○◍</div>
+      <div class="ob ov-side" id="tb-unterbau" onclick="ze.toggle('unterbau')"><div class="obd"></div>Biosphäre / Lebensnetz ○◍</div>
       <div class="ov-status" id="unterbau-status"></div>
       <div class="sub-head" data-sub="erdsystem"></div>
       <div class="ob ov-side" id="tb-erste_natur" onclick="ze.toggle('erste_natur')"><div class="obd"></div>Materialbestände ●</div>
@@ -565,7 +565,7 @@
   <h3>Theoretische Grundlage</h3>
   <p>Marchand 2026a (ZeroNature / First Nature) und 2026b (Zur Zweiten Natur), publiziert
   über Zenodo. <span class="ab-todo">DOIs vor Veröffentlichung eintragen.</span>
-  Spezifikation der Raum-Zeit-Konventionen: ZEIT_RAUM.md (§§ 0–9).</p>
+  Raum-Konventionen: ZEIT_RAUM.md (§ 2). Zeit: docs/strukturstand.md, Abschnitt Zeit und Regel 16.</p>
 
   <h3>Datenquellen</h3>
   <p><b>Live:</b> USGS (Seismik) · NOAA SWPC (Sonnenwind) · CelesTrak + satellite.js
@@ -782,9 +782,10 @@ const J2000 = 2451545.0;
 function nowT() { return (new Date().getTime()/86400000 + 2440587.5 - J2000) / 36525; }
 
 /* ─────────────────────────────────────────────────────────────────
-   KANONISCHE ZEITACHSE (siehe ZEIT_RAUM.md §1)
-   Eine einzige interne Variable: Jahre seit J2000.0.
-   Negativ = Vergangenheit. Alle Anzeigen sind Konversionen darauf.
+   INTERNE RECHENGRÖSSE t: Jahre seit J2000.0, negativ = Vergangenheit.
+   Nur zum Rechnen. Gespeichert wird im Maß der Quelle; t ist kein
+   Bezugssystem und soll nie als einzelne Achse erscheinen
+   (docs/strukturstand.md, Abschnitt Zeit). Die Zeitleiste tut das noch.
    ───────────────────────────────────────────────────────────────── */
 /* Zeitskalen des Masterzeit-Fensters — die Zeitleiste trägt ihre eigenen
    Skalierungen (analog zur Skalenleiter des Raums). Das Fenster ist ein
@@ -1003,7 +1004,7 @@ class RasterField {
 }
 
 class TimeRasterStack {
-  /* timesteps_t: aufsteigend sortierte t-Werte (Jahre seit J2000, ZEIT_RAUM 1.1)
+  /* timesteps_t: aufsteigend sortierte t-Werte (Jahre seit J2000)
      buffer: ein ArrayBuffer mit T*H*W Float32 (Reihenfolge wie oben) */
   /* timesteps_t: t-Werte in PUFFER-Reihenfolge (Slice i ↔ timesteps_t[i]).
      Die Sortierung nach t übernimmt der Stack intern — sonst invertiert
@@ -1093,7 +1094,7 @@ const DataStore = {
       const r = await fetch(this.base + ds.file);
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const buffer = await r.arrayBuffer();
-      // Zeitachse: Manifest führt a BP (quellnativ) → t = -50 - aBP (ZEIT_RAUM 1.3)
+      // Zeitachse: Manifest führt a BP (quellnativ) → t = -50 - aBP (BP: Nullpunkt 1950)
       // WICHTIG: Reihenfolge = Puffer-Reihenfolge (Slice i ↔ Wert i).
       // Sortierung übernimmt TimeRasterStack intern.
       let ts_t;
@@ -1832,16 +1833,16 @@ const DIMS = {
   erste_natur:{
     id:'erste_natur', label:'Erste Natur',
     sub:'1. Natur — materiell-physische Dimension',
-    desc:'Planet Erde: Erdsystem, Substructure (mehr-als-menschliche Gesellschaften), gesellschaftliche Basis.',
+    desc:'Planet Erde: Erdsystem, Biosphäre / Lebensnetz, Basis (vorgefundene Reproduktionsverhältnisse).',
     layers:['natural_earth','paleomist_ice','land_cover','sea_level'], overlays:[],
     tr:{min:-120000,max:2100,cur:-10000}, unit:'a BP',
     fmt:t=>t<0?`${Math.abs(t).toLocaleString()} a BP`:`${t} CE`,
-    meta:{'Zeitskala':'120 ka → heute','Unterk.':'Erdsystem · Unterbau · Basis'}
+    meta:{'Zeitskala':'120 ka → heute','Unterk.':'Erdsystem · Lebensnetz · Basis'}
   },
   gesellschaftlicher_stoffwechsel:{
     id:'gesellschaftlicher_stoffwechsel', label:'Ges. Stoffwechsel',
     sub:'Übergang — gesellschaftlich-metabolische Prozesse',
-    desc:'Übergang von ReProduktionsverhältnissen zu Produktionsverhältnissen. Materielle und immaterielle Produktionsmittel.',
+    desc:'Übergang zwischen 1. und 2. Natur: Hier entstehen die Produktionsverhältnisse. Materielle und immaterielle Produktionsmittel.',
     layers:['natural_earth','hyde_pop','osm'], overlays:['sats'],
     tr:{min:-10000,max:2100,cur:1800}, unit:'CE/BP', fmt:t=>t<0?`${Math.abs(t)} v.Chr.`:`${t} n.Chr.`,
     meta:{'Zeitskala':'10 ka → Gegenwart','Unterk.':'Immat. PM · Mat. PM'}
@@ -1849,10 +1850,10 @@ const DIMS = {
   zweite_natur:{
     id:'zweite_natur', label:'Zweite Natur',
     sub:'2. Natur — kulturell-symbolische Dimension',
-    desc:'R.I.S.S., institutionalisierter Überbau, konstruierte Wirklichkeit.',
+    desc:'Symbolisches System, Überbau, konstruierte Wirklichkeit.',
     layers:[], overlays:[],
     tr:{min:1700,max:2100,cur:2024}, unit:'Jahr', fmt:t=>`${t}`,
-    meta:{'Zeitskala':'~1700 → Gegenwart','Unterk.':'R.I.S.S. · Überbau · Konstr. Wirklichkeit',
+    meta:{'Zeitskala':'~1700 → Gegenwart','Unterk.':'Symb. System · Überbau · Konstr. Wirklichkeit',
       'Equal Earth':'[geplant]'}
   }
 };
@@ -1920,7 +1921,7 @@ const NULL_INFO = {
 
 
 /* ════════════════════════════════════════════════════════════════════
-   BESCHREIBUNGSSCHICHT (S4) — ZEIT_RAUM §8
+   BESCHREIBUNGSSCHICHT (S4)
    Begriffe sind variabel und liegen in der Beobachtung; invariant ist
    die Adresse. Alle UI-Begriffe leben hier, nirgends sonst. Die
    Varianten der Serie sind wählbare Beschriftungssätze über denselben
@@ -1936,9 +1937,9 @@ const LABELS = {
       region:'Region', stadt:'Stadt', strasse:'Straße'
     },
     subHeads: {
-      basis:'BASIS', unterbau:'UNTERBAU', erdsystem:'ERDSYSTEM',
-      riss:'R.I.S.SYSTEM',
-      ueberbau:'INSTITUTIONALISIERTER ÜBERBAU',
+      basis:'BASIS', unterbau:'BIOSPHÄRE / LEBENSNETZ', erdsystem:'ERDSYSTEM',
+      riss:'SYMBOLISCHES SYSTEM',
+      ueberbau:'ÜBERBAU',
       konstruierte_wirklichkeit:'KONSTRUIERTE WIRKLICHKEIT',
       immat_pm:'IMMATERIELLE PRODUKTIONSMITTEL',
       mat_pm:'MATERIELLE PRODUKTIONSMITTEL',
@@ -1984,7 +1985,7 @@ const LABELS = {
    MODELL (S4-Quelle) — data/matrix.json wird aus matrix-scharnier/
    matrix.mjs erzeugt. Die Matrix steht dort EINMAL; die Plattform
    liest sie. Begriffe kommen damit aus dem Modell, Adressen bleiben
-   invariant (ZEIT_RAUM §8.2). Sprache ist eine zweite Achse über den
+   invariant. Sprache ist eine zweite Achse über den
    Beschriftungssätzen: Satz (Paper 1/2/Gliederung) × Sprache (de/en).
    Fehlt die Datei, sagt die Oberfläche das — sie erfindet nichts.
    ════════════════════════════════════════════════════════════════════ */
@@ -2359,7 +2360,7 @@ class DM {
 
 /* ─────────────────────────────────────────────────────────────────
    MARKER LAYER — Matrix-Objekte (v0.9.5)
-   Objekte sind EBENENLOS (§8-Bindungsregel: keine S4-Zuordnung im
+   Objekte sind EBENENLOS (keine S4-Zuordnung im
    Datenobjekt). Ein Objekt hat ASPEKTE — je Ebene + Zeitfenster +
    Beschreibung. Dieselbe Adresse erscheint in mehreren Dimensionen:
    Ruhrkohle ist PM-Produkt seit dem Karbon, Materialbestand ebenso
@@ -2367,7 +2368,7 @@ class DM {
    entscheidet, welche Aspekte aktiv sind; jede Ebene zeichnet ihr
    Symbol als Badge neben die anderen — der Matrixschnitt am
    Einzelding. Quelle: data/marker.json (kuratiert, unvollständig).
-   Formsprache: △ Überbau · ▵ R.I.S.S. · ▢ Wertform · ⬠ Bestände &
+   Formsprache: △ Überbau · ▵ Symbolisches System · ▢ Wertform · ⬠ Bestände &
    Mittel · ● gefüllt Materialbestand (1N) · ● gepunktet Basis ·
    ◆ Stoffwechselprodukt (PM)
    ───────────────────────────────────────────────────────────────── */
@@ -2382,7 +2383,7 @@ class MarkerLayer {
     riss:        { shape:'dreieck',  dash:true,  color:'#e88c8c', text:'#e8a0a0', idx:6 }
   };
   static KURZ = { pm:'PM', erste_natur:'1N', basis:'1N·Basis',
-                  bestaende:'GS', ware:'W', ueberbau:'2N·ÜB', riss:'2N·RISS' };
+                  bestaende:'GS', ware:'W', ueberbau:'2N·ÜB', riss:'2N·Symb' };
   static _cache = null;   // marker.json einmal laden, alle Ebenen teilen es
   static _imgCache = new Map();   // Symbolbilder je Form+Farbe
 
@@ -2497,12 +2498,10 @@ class MarkerLayer {
 
 
 /* ─────────────────────────────────────────────────────────────────
-   UNTERBAU LAYER — mehr-als-menschliche Gesellschaften (v0.9.9)
-   Marchand 2026b: Der Unterbau ist das Terrain der mehr-als-
-   menschlichen Gesellschaften — Ökosysteme, Mikroorganismen,
-   tierische Kooperationen als PRODUKTIVKRÄFTE, nicht als "Umwelt".
-   Artvorkommen sind Akteure an einer Adresse, keine Umweltdaten
-   (die gehören ins Erdsystem).
+   BIOSPHÄRE / LEBENSNETZ (1.2), Adresse erste_natur/unterbau
+   Artvorkommen an einer Adresse. Biomasse als Stoff gehört ins
+   Erdsystem (1.1). Die Beziehungen zwischen Lebewesen zeigt diese
+   Ebene noch nicht, nur die Funde.
    ZWEI EBENEN, die Auflösung der Ansicht entscheidet — der Akteur wird
    zur Gesellschaft, wenn man weit genug rauszoomt:
      feiner als FEIN_M_PRO_PX  → Einzelvorkommen (○ Artakteur)
@@ -4108,21 +4107,21 @@ class ZeroEarth {
       if (ub) {
         const il = document.querySelector('#ip .il');
         if (ub.arten_n !== undefined) {
-          il.textContent = 'Mehr-als-menschliche Gesellschaft — Unterbau (Erste Natur)';
+          il.textContent = 'Artenvorkommen — Biosphäre / Lebensnetz (1. Natur)';
           document.getElementById('i-title').textContent =
             `${ub.arten_n} Arten · ${ub.beobachtungen_n} Beobachtungen`;
           document.getElementById('i-desc').textContent =
             (ub.top_arten || []).map(a => `${a.art} (${a.n})`).join(' · ') +
             (ub.jahr0 ? `  [${ub.jahr0}–${ub.jahr1}]` : '');
         } else {
-          il.textContent = 'Artakteur — Unterbau (Erste Natur)';
+          il.textContent = 'Artvorkommen — Biosphäre / Lebensnetz (1. Natur)';
           document.getElementById('i-title').textContent = ub.label;
           document.getElementById('i-desc').textContent =
             [ub.taxon, ub.jahr ? `beobachtet ${ub.jahr}` : null, ub.nachweis]
               .filter(Boolean).join(' · ');
         }
         document.getElementById('i-meta').textContent =
-          (this.unterbauLayer.data?.quelle || '') + ' · Produktivkraft, nicht Umweltdatum';
+          this.unterbauLayer.data?.quelle || '';
         return;
       }
       const sp = picked?.primitive?.zeSprache;
@@ -4245,7 +4244,7 @@ class ZeroEarth {
   }
 
   /* ZeitRaum anspringen: Fenster passend wählen, t in die Mitte,
-     Raum folgt der Zeit (Kopplung §9). */
+     Raum folgt der Zeit. */
   gotoPeriod(id) {
     const p = PERIODS.find(x => x.id === id);
     if (!p) return;
@@ -4434,8 +4433,8 @@ class ZeroEarth {
     });
   }
 
-  /* ── S4: Beschriftungen anwenden (ZEIT_RAUM §8.2 Bindungsregel:
-     Umbenennung = Eingriff in genau eine Tabelle, nämlich LABELS) ── */
+  /* ── S4: Beschriftungen anwenden (Umbenennung = Eingriff in genau
+     eine Tabelle, nämlich LABELS) ── */
   applyLabels() {
     MODELL.anwenden(LABELS.sprache);
     document.querySelectorAll('.lens-name').forEach(el => {
@@ -5131,7 +5130,7 @@ class ZeroEarth {
   /* ── Matrixschnitt-Layer neu aufbauen (alle auf dasselbe t) ───── */
   _refreshMatrixLayers() {
     const t = Tideline.t;
-    // S4-Konfiguration: Linse → Layer-Instanzen (ZEIT_RAUM §8.4)
+    // S4-Konfiguration: Linse → Layer-Instanzen
     for (const [lens, layers] of Object.entries(LENSES)) {
       const a = this.msAlpha[lens] ?? 0;
       for (const key of layers) {
