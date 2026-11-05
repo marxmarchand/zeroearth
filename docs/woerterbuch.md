@@ -34,6 +34,8 @@ Stand: abgestimmt sind die Einträge **2** und **2.1**. Alle übrigen Stellen un
 - **Vorgefunden** · Stellung zum Akteur, nicht Stapel. Bezug: Marx, 18. Brumaire; Althusser.
 - **Takt** · en: rhythm / zeitgeber · die zyklische Seite der Zeit, Master für das Maß; verschachtelt von Tag bis galaktischem Jahr. Abgrenzung: Richtung (gerichtete, irreversible Zeit). Bezüge: Aschoff (Zeitgeber), Lefebvre (Rhythmanalyse), Thompson (Zeitdisziplin), Marx (Produktionszeit/Arbeitszeit).
 - **Entäußerung** · en: externalization · Verstetigung von Kommunikation nach außen; Beginn der 2. Natur. Gegenbegriff: Einverleibung (nach innen, 1. Natur). Bezüge: Hegel; Marx, Pariser Manuskripte.
+- **Riss** · en: rift · Ort, an dem die 2. Natur beginnt: das Zeichen löst sich vom Verhältnis (Reflex gebunden, Symbol ablösbar und fehlbar). Doppelt: R.I.S.S. (religiös-ideologisch-symbolisches System) und Riss im Stoffwechsel. Bezüge: Whitehead (symbolische Referenz); Marx, Kapital III.
+- **Ableiten** · en: derive · Umformen fremder Aussagen ohne eigene Aussagen über die Welt; Gegenbegriff: Modellieren. Begründung ökonomisch (Regel 12).
 
 ---
 

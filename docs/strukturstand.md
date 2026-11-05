@@ -30,9 +30,11 @@ Die Reihenfolge der Stapel ist keine bloße Lesereihenfolge. In ihr laufen drei 
 
 | Richtung | Verlauf | Art | Im Modell |
 | --- | --- | --- | --- |
-| Genese | unten nach oben | real, historisch | codiert durch die Stapelreihenfolge |
+| Genese | unten nach oben | real, historisch | eigene Relation, nicht aus der Nummer gelesen |
 | Rückwirkung | oben nach unten, darf Ebenen überspringen | real, kausal | eigene Relation |
 | Erkenntnis | oben nach unten | epistemisch: Begriff, Instrument, Modell | steckt im `woher` jeder Angabe |
+
+Die Nummern der Stapel ordnen nach Nähe zum Stoff, nicht nach Entstehung. Innerhalb der 2. Natur geht die Genese vom Riss aus, vom Zeichen über die Institution in den Raum. Sie wird als Relation geführt, nicht aus der Nummer gelesen. So stehen zwei Ableitungen nebeneinander: nach Stoffnähe (die Nummern) und nach Genese (die Relationen).
 
 Erkenntnis und Rückwirkung laufen in dieselbe Richtung, dürfen aber nicht verwechselt werden: Das eine ist Denken, das andere Kausalität. Je tiefer der Stapel, desto länger und theoriegeladener der Erkenntnisweg. Die 0. Natur ist damit die am stärksten vermittelte Ebene, nicht die am unmittelbarsten gegebene.
 
@@ -76,7 +78,11 @@ Gegenbestand, ebenfalls in der 1. Natur: die vom Menschen hergestellte Masse (El
 
 ### Kommunikation und 2. Natur
 
-Die 2. Natur einer Spezies ist ihre verstetigte Kommunikation. Kommunikation gehört allem Lebendigen. Verstetigt sie sich nach innen, durch **Einverleibung** in den Körper (etwa Endosymbiose), wird sie 1. Natur. Verstetigt sie sich nach außen, durch **Entäußerung** in Spuren, Gebautes, gelernte Muster und Institutionen, wird sie 2. Natur (Bezug: Hegel; Marx, Pariser Manuskripte). Die 2. Natur anderer Spezies lässt sich nur aus unserer eigenen heraus mutmaßen; jede Zuschreibung ist kuratiert und als Deutung gekennzeichnet. Sprache ist die grundlegende Institutionalisierung von Kommunikation beim Menschen; konkrete Sprachen sind Einträge in 2.2 (Glottolog).
+Die 2. Natur einer Spezies ist ihre verstetigte Kommunikation. Kommunikation gehört allem Lebendigen. Verstetigt sie sich nach innen, durch **Einverleibung** in den Körper (etwa Endosymbiose), wird sie 1. Natur. Verstetigt sie sich nach außen, durch **Entäußerung** in Spuren, Gebautes, gelernte Muster und Institutionen, wird sie 2. Natur (Bezug: Hegel; Marx, Pariser Manuskripte). Die 2. Natur anderer Spezies lässt sich nur aus unserer eigenen heraus mutmaßen; jede Zuschreibung ist kuratiert und als Deutung gekennzeichnet. 
+
+**Vom Riss aus.** Die 2. Natur beginnt am Riss: dort, wo ein Zeichen sich vom Verhältnis ablösen kann (Reflex: an das Verhältnis gebunden, unfehlbar; Symbol: ablösbar, fehlbar; Whitehead). Getragen wird das Symbolische vom Stoffwechselverhältnis selbst, nicht von einer Institution. Riss meint beides: das R.I.S.S. als symbolisches System und den Riss im Stoffwechsel (Marx).
+
+**Sprache und Schrift.** Gesprochene Sprache ist die erste Form des Risses und gehört nach 2.3 (Glottolog: Sprachen und ihre Verwandtschaft). Sie braucht keinen Überbau; gesprochenes Wort hat keine Rechtschreibung. Ihre Träger: Körper (1. Natur, Stimme, Gehör, Gehirn), Wiederholung und Weitergabe im Vollzug, Schriftträger (2.1, als Ding). Schrift als Norm (Rechtschreibung, Kanon, Amtssprache) gehört nach 2.2 (ISO 15924); der Überbau regelt Sprache, er trägt sie nicht.
 
 ### 2.3 als Übergang: Signal – Symbol
 
@@ -114,8 +120,10 @@ Ein Gebäude sind zwei Einträge (Identität pro Stapel): **Stoff** in der 1. Na
 2. Haus als Wohnung, Laden, Denkmal: 2.1, hängt am Stoff
 3. Parzelle im Kataster: 2.2, hängt am Boden
 4. Eigentum: 2.2, hängt an Parzelle und Haus
-5. Hypothek: Kapital, im Eigentum eingeschlossen
-6. Preis, Bodenrichtwert: Gegenwert nur, wo ein Tausch ihn hergestellt hat (Regel 3)
+5. Hypothek: Kapital, im Eigentum eingeschlossen; Vorschlag: 2.2, Vorgang einschließen/realisieren, Herkunft späterer Daten `erwartung` (Anspruch auf künftiges Einkommen)
+6. Preis, Bodenrichtwert: Gegenwert nur, wo ein Tausch ihn hergestellt hat (Regel 3); Vorschlag: gesellschaftlicher Stoffwechsel, Vorgang Konversion
+
+Dazu, noch ohne festgelegte Relation: Holz und Baumaterial aus dem Lebensnetz (1.2) und Wohnen als Reproduktion (1.3).
 
 Ein Eigentümerwechsel ändert den Stoff nicht, wohl aber, welche Prozesse daran laufen (Abriss, Sanierung, Leerstand).
 
@@ -215,7 +223,7 @@ Erwartungen öffnen die Zeit nach vorn. Ein einzelner Zeitregler über alle Skal
 
 **Takt und Richtung.** Verschiedene Zeiten stehen nebeneinander, mit einem gemeinsamen Grund. Zeit hat zwei Seiten:
 
-- **Takt (zyklisch)** ist der Master für das Maß. Die 0. Natur gibt verschachtelte Takte vor: Erdrotation (Tag), Mond (Monat, Gezeiten), Erdumlauf (Jahr), Milanković-Zyklen (rund 21, 41 und 100 ka), Umlauf um das Zentrum der Galaxie (rund 230 Ma). Die Zeitebenen der Plattform sind diese verschachtelten Takte, keine Ausschnitte aus einer Achse. Bezüge: Aschoff („Zeitgeber“), Lefebvre („Rhythmanalyse“).
+- **Takt (zyklisch)** ist der Master für das Maß. Die 0. Natur gibt verschachtelte Takte vor: Erdrotation (Tag), Mond (Monat, Gezeiten), Erdumlauf (Jahr), Milanković-Zyklen (rund 21, 41 und 100 ka), Umlauf um das Zentrum der Galaxie (rund 230 Ma). Dazu aus der 1. Natur der Superkontinent-Zyklus (rund 400 bis 600 Ma, mit Spannweite). Die Zeitebenen der Plattform sind diese verschachtelten Takte, keine Ausschnitte aus einer Achse. Bezüge: Aschoff („Zeitgeber“), Lefebvre („Rhythmanalyse“).
 - **Richtung (gerichtet, irreversibel):** Entropie, Akkumulation, Evolution, Verbrauch. Sie wird in Takten gezählt, entsteht aber nicht aus ihnen. Der Takt misst die gerichtete Zeit, er erzeugt sie nicht.
 
 - **Bruch:** Ereignisse sind Brüche mit dem erwarteten Takt (Vulkanausbruch, Schmelzwasserpuls, Erdbeben). Auch Brüche können einen eigenen Rhythmus haben (Plattentektonik: langsame Richtung, unterbrochen von Beben). Der „Normalzustand“, von dem ein Bruch abweicht, ist selbst eine Setzung (Regel 7): Er ist das Ideal, der Bruch die Differenz zur Beobachtung. Ein Bruch kann einen neuen Takt einleiten.
@@ -224,7 +232,9 @@ Erwartungen öffnen die Zeit nach vorn. Ein einzelner Zeitregler über alle Skal
 
 Fossile Energie ist der Punkt, an dem sich Takt und Richtung treffen: Gerichtete Zeit (Jahrmillionen Aufbau) wird verbraucht, um sich vom Takt zu lösen.
 
-**Technische Umsetzung.** Zwei Zeiten pro Wert (Bezugszeit, Wissensstand) sind in Datenbanken gelöst. Offen ist die Verbindung verschiedener Zeitarten: zyklisch, gerichtet, Bruch, unscharfe Datierungen („um 12 000 BP ± 500“), verschiedene Kalender und relative Abfolgen. zeroearth erfindet dafür nichts, sondern stützt sich auf bestehende Standards: OWL-Time (Zeitangaben und Intervalle), PeriodO (benannte Epochen mit Quelle), Allens Intervallrelationen (vorher, während, überlappend). Jede Bezugszeit wird in ihrem eigenen Maß und mit ihrer Unschärfe gespeichert; umgerechnet wird nur für die Anzeige.
+**Technische Umsetzung.** Zwei Zeiten pro Wert (Bezugszeit, Wissensstand) sind in Datenbanken gelöst. Offen ist die Verbindung verschiedener Zeitarten: zyklisch, gerichtet, Bruch, unscharfe Datierungen („um 12 000 BP ± 500“), verschiedene Kalender und relative Abfolgen. zeroearth erfindet dafür nichts, sondern stützt sich auf bestehende Standards: OWL-Time (Zeitangaben und Intervalle), PeriodO (benannte Epochen mit Quelle), Allens Intervallrelationen (vorher, während, überlappend). Jede Bezugszeit wird in ihrem eigenen Maß und mit ihrer Unschärfe gespeichert; umgerechnet wird nur für die Anzeige. Für die Erdzeit kommt das Bezugssystem `ma_bp` (Ma vor heute laut Modell) hinzu.
+
+**Takt-Leiste.** Die untere Zeitleiste wird eine Leiste aus Zeilen, jede Zeile ein Takt mit ihrem eigenen Maß (Ma, ka, a). Ein Umlauf öffnet darunter die nächste Zeile. Wählbar sind nur Stützstellen einer Quelle, nie ein Punkt dazwischen. Lücken bleiben grau mit Grund. Sind mehrere Quellen gewählt, gilt ein Zeitpunkt je Quelle, kein gemeinsamer Regler.
 
 **Zeit „0“.** Zeit hat keine eigenen Unterebenen, weil sie die Klammer aller Naturen ist. Ihr Grund liegt in der 0. Natur als Raumzeit-Kontinuum: Raum und Zeit sind dort nicht getrennt (anschaulich im Lichtjahr, einer Länge, die über die Lichtgeschwindigkeit als Zeit gemessen wird). Das Lichtjahr zeigt zugleich, dass auch kosmische Maße aus einem planetaren Takt stammen: Es ist die Strecke, die Licht in einem Erdumlauf zurücklegt, eine erdzentrierte Setzung der 2. Natur (Regel 9). Darum heißen die Felder „0. Natur (Raum/Zeit)“ und „Zeit (Raum)“.
 
@@ -263,7 +273,7 @@ Diese Regeln folgen aus der Struktur und gelten für jede Ansicht.
 9. Die Plattform ist selbst ein Objekt der 2. Natur, eine Verdinglichung, und weist sich als solches aus.
 10. Jede Verzerrung (Flächenverzerrung, Überhöhung, Projektion) steht als Zahl in der Ansicht.
 11. Jede Reduktion (Vergröbern, Mitteln, Auswählen, Zusammenfassen) steht im Manifest. Werden mehrere Modelle zusammengefasst, erscheint die Spannweite, nicht nur der Mittelwert: Die Uneinigkeit der Modelle ist selbst eine Aussage.
-12. zeroearth leitet ab, modelliert aber nicht. Ableiten heißt: was ohne zusätzliche Annahmen aus den Daten folgt (Summen, Mittel, Differenz, Bilanz). Eigene Modellierung nur als ausgewiesene Ausnahme: Herkunft modell, Autor zeroearth, Code, Parameter und Startwert im Repo, Annahmen im Manifest, mehrere Läufe mit Spannweite.
+12. zeroearth leitet ab, modelliert aber nicht. Der Grund ist ökonomisch: Ein Modell zu bauen, zu prüfen und zu pflegen kostet mehr, als ein Projekt dieser Größe tragen kann; zeroearth nutzt die Arbeit, die andere schon geleistet haben, formt sie um und zeigt, wo die Quellen aneinanderstoßen. Ableiten heißt nicht „ohne Annahmen“, sondern keine eigenen Aussagen über die Welt: Steht im Ergebnis nichts, was nicht in der Quelle steht, werden keine freien Parameter gewählt, und käme jemand anderes mit derselben Quelle zum selben Ergebnis, ist es abgeleitet. Die Annahmen der Quelle wandern mit, eigene Setzungen (Ausschnitt, Auflösung, Vereinfachung) werden ausgewiesen. Ableiten heißt: was ohne zusätzliche Annahmen aus den Daten folgt (Summen, Mittel, Differenz, Bilanz). Eigene Modellierung nur als ausgewiesene Ausnahme: Herkunft modell, Autor zeroearth, Code, Parameter und Startwert im Repo, Annahmen im Manifest, mehrere Läufe mit Spannweite.
 13. Passen mehrere Ideale gleich gut zu derselben Beobachtung, werden alle gezeigt. Eine gute Passung beweist keinen Mechanismus.
 14. Die Ansicht für Menschen darf vereinfachen, aber der Ausgabe für Maschinen nie widersprechen. Jede Ansicht führt zu „Daten dahinter“, also zu genau der Datei, die eine Maschine auch bekäme. Unsicherheit wird in Touren verständlich gezeigt, nicht weggelassen.
 15. Fiktion ist eine eigene Herkunftsart (`fiktion`). Sie erscheint immer erkennbar als erfunden und gerät nie in eine Ebene mit echten Daten. Gedankenexperimente dürfen Echtes und Erfundenes mischen, wenn die Grenze sichtbar bleibt.
@@ -327,9 +337,18 @@ zeroearth rechnet nicht selbst. Es bindet Ergebnisse großer Modelle und Messrei
 - **Reduktion als Pflichtfeld im Manifest:** räumlich vergröbern, zeitlich mitteln, Variablen auswählen, Modelle zusammenfassen. Jeder Schritt steht in der Herkunftskette, etwa zeroearth (Jahresmittel, 2°) ← ISIMIP ← Grundwassermodell.
 - **Größe:** eine Ebene im Bereich weniger Megabyte; einzelne Dateien unter 100 MB, Repo unter etwa 1 GB.
 
+### Erdgestalt über die Erdzeit
+
+Küsten und Höhen über die Erdzeit sind kein eigenes Modell, sondern eine Reihe aus mehreren Quellen, jede in ihrem Zeitraum: Plattenmodelle (Merdith et al. 2021, Müller et al. 2022; Cao et al. 2024 nur jenseits von 1 Ga), PALEOMAP-Paläo-Höhenmodelle und Paläoküsten (Scotese; Kocsis & Scotese), PaleoMIST für die letzten Zehntausende Jahre, GEBCO für heute. Die Nähte bleiben sichtbar; wo Quellen sich überlappen, stehen sie nebeneinander (Regel 13) und werden nicht verschmolzen. Gerade an den Nähten zeigt sich, wo Wissen aufhört und Setzung anfängt.
+
+- **Zwei Dinge, nie gemischt:** gedrehte heutige Umrisse (nur die Lage ist rekonstruiert) und Paläoküsten aus Paläo-Höhenmodellen (die Verteilung von Land und Meer ist rekonstruiert). Getrennte Ebenen, getrennte Zeichen.
+- **Längengrad:** Paläomagnetik legt nur die Breite fest; die Länge ist eine Setzung des Modells. Ebenso die Wahl des Bezugsrahmens (Paläomagnetik oder Mantel). Beides steht im Bild.
+- **Umsetzung:** Geometrie einmal, je Zeitschritt nur die fertigen Drehungen aus dem Plattenmodell; die Seite wendet sie an, ohne Interpolation.
+- **Was fehlt:** vor rund 1,8 Ga kein Plattenmodell, vor rund 4 Ga keine zusammenhängende Kruste; wann Plattentektonik begann, ist umstritten. Das bleibt als fehlt sichtbar.
+
 ### Ideal, Beobachtung, Differenz
 
-Modellergebnisse bilden die **Idealschicht**: Herkunft `modell`, Merkmal „idealisiert“ für Referenz- und Gleichgewichtszustände, „berechnet“ für physikalische Ableitungen wie die Einstrahlung aus Bahnparametern, eigene Bildsprache (schematisch, nie wie Beobachtung). Messungen und Rekonstruktionen bilden die **Beobachtung**, mit ihren Lücken. Die **Differenz** erscheint nur, wo beides vorliegt; sie ist der eigentliche Forschungsgegenstand. Welcher Zustand als Ideal gilt, ist eine Setzung und steht im Bild (Regel 7): Ein vorindustrieller Referenzzustand ist kein natürlicher Normalzustand.
+Modellergebnisse bilden die **Idealschicht**: Herkunft `modell`, Merkmal „idealisiert“ für Referenz- und Gleichgewichtszustände, „berechnet“ für physikalische Ableitungen wie die Einstrahlung aus Bahnparametern (das Merkmal steht auch bei Rekonstruktionen, etwa einer 0-m-Linie aus einem Paläo-Höhenmodell), eigene Bildsprache (schematisch, nie wie Beobachtung). Messungen und Rekonstruktionen bilden die **Beobachtung**, mit ihren Lücken. Die **Differenz** erscheint nur, wo beides vorliegt; sie ist der eigentliche Forschungsgegenstand. Welcher Zustand als Ideal gilt, ist eine Setzung und steht im Bild (Regel 7): Ein vorindustrieller Referenzzustand ist kein natürlicher Normalzustand.
 
 Die 2. Natur tritt dabei nicht als Zahlenparameter auf, sondern als **Regime**, das festlegt, welche Flüsse laufen, etwa Grundwasser als Gemeingut oder als Eigentum mit Entnahmerecht.
 
@@ -355,6 +374,8 @@ Ein Ereignis ist eine Verdichtung aller Naturverhältnisse an einem Geschehen un
 3. **Eine Station pro Natur**, jeweils mit einer Frage: Was löst es aus (0)? Was fließt oder wandelt sich (planetarer Stoffwechsel)? Was verändert sich an Land, Wasser, Leben (1)? Was tun Menschen, was verlieren sie (gesellschaftlicher Stoffwechsel)? Wie wird es gedeutet, geregelt, erinnert (2)?
 4. **Pro Station ein Status:** vorhanden, in Arbeit, fehlt oder bewusst leer, mit Begründung.
 5. **Keine eigenen Daten:** Stationen verweisen nur auf Adapter.
+
+In der Tour bekommt jede Station mit `fehlt` eine eigene graue Seite mit Begründung. Alle Stationen mit `bewusst leer` stehen gesammelt auf einer Seite „Nicht berührt“, je mit Begründung; übersprungen wird nichts. `bewusst leer` heißt: diese Natur ist vom Ereignis nicht berührt. Fehlen nur Daten, ist es `fehlt`. Zeigt eine Tour ein Schema statt eines Einzelfalls (etwa das Haus), dürfen Zeit und Ort `bewusst leer` sein, solange keine Station eine Quelle hat.
 
 Die Sintflut ist vor allem Takt: Die Transgression ist die reguläre Phase eines Eiszeitzyklus. Ihre Brüche, die Schmelzwasserpulse, fallen zwischen die Zeitschritte der Daten und bleiben als fehlend sichtbar (Regel 8). Tour-Satz: „Die Sintflut zeigt an einem einzigen Ereignis alle Naturverhältnisse zugleich: Die Umlaufbahn der Erde stößt das Abschmelzen an, Rückkopplungen verstärken es, das Meer steigt, Land und Lebensräume verschwinden, und erinnert wird die Flut nur dort, wo sie aufgeschrieben und weitergegeben wurde.“
 
@@ -403,6 +424,9 @@ Diese Annahmen stecken im bisherigen Code oder kamen in der Diskussion auf und g
 - Die 0. Natur als bloße Randbedingung der Erde. Sie ist die gemeinsame Bedingung aller möglichen Naturen.
 - Die vom Menschen hergestellte Masse als Bestand der 2. Natur. Der Stoff bleibt 1. Natur; nur seine Bedeutung ist 2.1.
 - Eine feste Höhenleiter (Beobachtungshöhe). Skalen kommen aus der Auflösung der Quellen.
+- Die Genese ist aus der Stapelnummer ablesbar. Die Nummern ordnen nach Stoffnähe; die Genese ist eine Relation.
+- Sprache braucht einen Überbau; konkrete Sprachen in 2.2. Gesprochene Sprache gehört nach 2.3, erst Schrift als Norm nach 2.2.
+- Eine einzige Küstenkarte über die Erdzeit. Es ist eine Reihe aus Quellen mit sichtbaren Nähten.
 
 ## Offene Fragen
 
@@ -422,3 +446,5 @@ Diese Annahmen stecken im bisherigen Code oder kamen in der Diskussion auf und g
 - [ ] Verdinglichung: im Zeichendreieck (ein Begriff wird zur Bezeichnung) oder bei Lukács und Adorno (Verhältnisse erscheinen als Dinge)? Vorerst Ansichtssache, beide Bedeutungen werden geführt.
 - [ ] Klassenstruktur und soziales Kapital sind in den Zeichnungen grün, also 1. Natur: Teil der vorgefundenen Reproduktionsverhältnisse? Offen gehalten.
 - [ ] Ob die oberen Unterebenen (2.2, 2.3) nur menschlich gedacht sind. Offen gehalten; Primaten als nächster Vergleich.
+- [ ] Wo liegt die Weitergabe der Sprache im Vollzug (Muttersprache)? In der Reproduktion vorgefunden, also 1.3, oder in 2.1?
+- [ ] Haus: Hypothek in 2.2 und Preis im gesellschaftlichen Stoffwechsel sind Vorschläge. Hängt der Preis an der Hypothek oder am Eigentum? Formen der Knoten bestätigen.
