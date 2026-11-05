@@ -1,5 +1,6 @@
 {
   "ereignis": "sintflut",
+  "titel": "Sintflut",
   "satz": "Die Sintflut zeigt an einem einzigen Ereignis alle Naturverhältnisse zugleich: Die Umlaufbahn der Erde stößt das Abschmelzen an, Rückkopplungen verstärken es, das Meer steigt, Land und Lebensräume verschwinden, und erinnert wird die Flut nur dort, wo sie aufgeschrieben und weitergegeben wurde.",
   "zeitfenster": {
     "bezugssystem": "ka_bp_1950",
@@ -56,6 +57,11 @@
           "fehlt": true,
           "grund": "Bei NOAA keine Lizenz genannt, das Readme bittet um Zitierung; vor dem Einbinden zu klären"
         }
+      },
+      "zeigt": {
+        "ansicht": "sonnensystem",
+        "ebenen": [],
+        "orte": []
       }
     },
     {
@@ -68,7 +74,14 @@
         "sintflut/relation/eis-ozean/a1",
         "sintflut/ideale/vergleich"
       ],
-      "begruendung": "Bilanz Eis → Ozean geprüft, aber nur als innere Stimmigkeit (beide Seiten aus PaleoMIST). Die Prüfung gegen unabhängige Beobachtung (Spratt & Lisiecki 2016) ist erkundet, nicht eingebunden. Die Einstrahlung als Antrieb fehlt (Station 0)."
+      "begruendung": "Bilanz Eis → Ozean geprüft, aber nur als innere Stimmigkeit (beide Seiten aus PaleoMIST). Die Prüfung gegen unabhängige Beobachtung (Spratt & Lisiecki 2016) ist erkundet, nicht eingebunden. Die Einstrahlung als Antrieb fehlt (Station 0). Eisflächen sind in der Tour nicht zu sehen: Das Raster liegt nicht im Repo.",
+      "zeigt": {
+        "ansicht": "globus",
+        "ebenen": [
+          "sintflut"
+        ],
+        "orte": "alle"
+      }
     },
     {
       "natur": "1.1",
@@ -94,7 +107,14 @@
         "sintflut/yucatan#landflaeche",
         "sintflut/yucatan#verlust",
         "sintflut/yucatan/kueste"
-      ]
+      ],
+      "zeigt": {
+        "ansicht": "globus",
+        "ebenen": [
+          "sintflut"
+        ],
+        "orte": "alle"
+      }
     },
     {
       "natur": "1.2",
@@ -108,35 +128,62 @@
       "frage": "Wer lebte auf dem Schelfland, und wohin wichen die Menschen aus?",
       "quelle": null,
       "status": "fehlt",
-      "begruendung": "Keine Bevölkerungsrekonstruktion für die Schelfe. Die prozedurale Bevölkerungsebene der Oberfläche ist keine Quelle."
+      "begruendung": "Keine Bevölkerungsrekonstruktion für die Schelfe. Die prozedurale Bevölkerungsebene der Oberfläche ist keine Quelle.",
+      "zeigt": {
+        "ansicht": "globus",
+        "ebenen": [],
+        "orte": "alle"
+      }
     },
     {
       "natur": "gesellschaftlicher_stoffwechsel",
       "frage": "Welche Jagd-, Sammel- und Fischgründe gingen verloren?",
       "quelle": null,
       "status": "fehlt",
-      "begruendung": "Keine Quelle zur Nutzung des Schelflands im Zeitfenster."
+      "begruendung": "Keine Quelle zur Nutzung des Schelflands im Zeitfenster.",
+      "zeigt": {
+        "ansicht": "globus",
+        "ebenen": [],
+        "orte": "alle"
+      }
     },
     {
       "natur": "2.1",
       "frage": "Welche Fundstellen liegen heute unter Wasser (etwa in Doggerland)?",
       "quelle": null,
       "status": "fehlt",
-      "begruendung": "Kein Adapter für archäologische Fundstellen. Die Notiz zu Doggerland nennt Funde aus Schleppnetzen, aber keine Quelle."
+      "begruendung": "Kein Adapter für archäologische Fundstellen. Die Notiz zu Doggerland nennt Funde aus Schleppnetzen, aber keine Quelle.",
+      "zeigt": {
+        "ansicht": "globus",
+        "ebenen": [],
+        "orte": [
+          "sintflut:sintflut/doggerland"
+        ]
+      }
     },
     {
       "natur": "2.2",
       "frage": "Welche Institutionen (Territorien, Bündnisse, Besitz) hingen am verlorenen Land?",
       "quelle": null,
       "status": "fehlt",
-      "begruendung": "Für das Zeitfenster nicht überliefert; allenfalls über Fundstellen erschließbar, die selbst fehlen (Station 2.1)."
+      "begruendung": "Für das Zeitfenster nicht überliefert; allenfalls über Fundstellen erschließbar, die selbst fehlen (Station 2.1).",
+      "zeigt": {
+        "ansicht": "globus",
+        "ebenen": [],
+        "orte": "alle"
+      }
     },
     {
       "natur": "2.3",
       "frage": "Wo wurde die Flut erzählt, aufgeschrieben und weitergegeben?",
       "quelle": null,
       "status": "fehlt",
-      "begruendung": "Kein Adapter für Fluttexte. Die Notizen im Sintflut-Adapter nennen nur Literatur (Nunn & Reid 2016; Ryan/Pitman 1997), keine Texte und keine Überlieferungsketten."
+      "begruendung": "Kein Adapter für Fluttexte. Die Notizen im Sintflut-Adapter nennen nur Literatur (Nunn & Reid 2016; Ryan/Pitman 1997), keine Texte und keine Überlieferungsketten.",
+      "zeigt": {
+        "ansicht": "globus",
+        "ebenen": [],
+        "orte": "alle"
+      }
     }
   ],
   "brueche": {

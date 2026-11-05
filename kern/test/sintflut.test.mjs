@@ -119,8 +119,31 @@ test('Küstenlinie: Spur der Form Ozean, abgeleitet, mit Pflichthinweis, ohne er
   assert.deepEqual(k.spur_von, { bestand: 'sintflut/wasser', form: 'ozean' });
   assert.match(k.wo.hinweis, /^paleo_topography enthält isostatische Deformation \(laut Datei\)/);
   assert.deepEqual(k.wo.woher.abgeleitet_aus, ['sintflut/feld/paleo_topography#raster']);
-  assert.deepEqual(k.wo.woher.arten, ['rekonstruktion']);
-  assert.ok(istFehlend(k.wo.koordinaten));
+  assert.deepEqual(k.wo.woher.arten, ['rekonstruktion', 'berechnet']);
+  assert.equal(k.wo.woher.kette, 'PaleoMIST 1.0 (paleo_topography) -> 0-m-Linie');
+  assert.equal(k.wo.koordinaten.verweis, 'data/sintflut_kuesten.json#orte.doggerland.linien');
+  assert.equal(k.wo.koordinaten.aufloesung_grad, 0.25);
+  assert.ok(istFehlend(k.wo.koordinaten.unschaerfe));
+  // ohne die Datei bleibt die Küste fehlend
+  assert.ok(istFehlend(transform(roh, manifest).eintraege.find(e => e.id === 'sintflut/doggerland/kueste')?.wo?.koordinaten));
+});
+
+test('Küstenlinien: 9 Schritte im Zeitfenster, in der Fensterbox, ohne Raster, Lizenz genannt', async () => {
+  const k = JSON.parse(await readFile(`${REPO}/data/sintflut_kuesten.json`, 'utf8'));
+  assert.deepEqual(k.ka_bp, [20, 17.5, 15, 12.5, 10, 7.5, 5, 2.5, 0]);
+  assert.deepEqual(Object.keys(k.orte), Object.keys(roh.orte));
+  assert.deepEqual(k.woher.arten, ['rekonstruktion', 'berechnet']);
+  assert.match(k.woher.lizenz, /CC BY 4\.0/);
+  assert.equal(manifest.lizenz.angabe, 'CC BY 4.0');
+  for (const [schluessel, o] of Object.entries(k.orte)) {
+    const b = roh.orte[schluessel].bbox;
+    assert.equal(o.linien.length, 9);
+    for (const schritt of o.linien) {
+      assert.ok(schritt.length > 0, schluessel);
+      for (const zug of schritt) for (const [x, y] of zug)
+        assert.ok(x >= b.west && x <= b.ost && y >= b.sued && y <= b.nord, `${schluessel} ${x},${y}`);
+    }
+  }
 });
 
 test('Notizen: 2. Natur, am Fenster, gesellschaftliches Archiv, Formation fehlend mit Begründung', () => {

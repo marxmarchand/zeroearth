@@ -600,13 +600,15 @@ test('Regel 16 im Manifest: Bezugssystem und Unschärfe sind Pflicht, Fehlendes 
   assert.ok(pruefeManifest({ ...MANIFEST, zeitsemantik: ohne }).fehler.some(f => f.regel === 16));
 });
 
-test('Merkmal berechnet: gehört zu modell, getrennt von idealisiert', () => {
+test('Merkmal berechnet: an modell oder rekonstruktion, getrennt von idealisiert', () => {
   const mit = (/** @type {string[]} */ arten) => { const b = gueltig(); woherK(b).arten = arten; delete woherK(b).abgeleitet_aus; return pruefe(b).fehler; };
   assert.deepEqual(mit(['modell', 'berechnet']), []);
+  assert.deepEqual(mit(['rekonstruktion', 'berechnet']), []);
   assert.ok(mit(['berechnet']).some(f => f.regel === 6 && f.text.includes('berechnet')));
   assert.ok(mit(['modell']).some(f => f.regel === 6));
   assert.deepEqual(anzeige(['modell', 'berechnet']), { rang: 'modell', merkmale: ['berechnet'] });
   const h = (/** @type {string[]} */ arten) => pruefeManifest({ ...MANIFEST, herkunft: { ...MANIFEST.herkunft, arten } }).fehler;
   assert.deepEqual(h(['modell', 'berechnet']), []);
+  assert.deepEqual(h(['rekonstruktion', 'berechnet']), []);
   assert.ok(h(['berechnet']).length > 0);
 });

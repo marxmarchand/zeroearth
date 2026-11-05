@@ -22,9 +22,6 @@
 
    node kern/adapter/sintflut/transform.mjs   Graph als JSON auf stdout
    ════════════════════════════════════════════════════════════════════ */
-import { readFile } from 'node:fs/promises';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
 import { SCHEMA_VERSION, fehlt } from '../../schema.mjs';
 
 const P = 'sintflut';
@@ -248,9 +245,12 @@ export function transform(roh, manifest, zusatz = {}) {
       spur_von: { bestand: wasser.id, form: 'ozean' },
       wo: {
         geometrie: 'grenze',
-        koordinaten: fehlt('data/sintflut.json enthält keine Küstengeometrie, nur Flächensummen je Kasten'),
+        koordinaten: zusatz.kuesten?.orte?.[k]
+          ? { verweis: `${manifest.zusatz.kuesten}#orte.${k}.linien`, schritte_ka: zusatz.kuesten.ka_bp, aufloesung_grad: zusatz.kuesten.raum.aufloesung_grad, unschaerfe: zusatz.kuesten.raum.unschaerfe }
+          : fehlt('Ohne data/sintflut_kuesten.json keine Küstengeometrie, nur Flächensummen je Kasten'),
         hinweis: HINWEIS_GRENZE,
-        woher: woher([TOPO], 'Küste als Grenze paleo_topography = 0; abgeleitet, nie gemessen'),
+        woher: { ...woher([TOPO], 'Küste als 0-m-Linie von paleo_topography; abgeleitet, nie gemessen'),
+          ...(zusatz.kuesten ? { arten: zusatz.kuesten.woher.arten, kette: zusatz.kuesten.woher.kette } : {}) },
         verzerrung,
       },
       werte: {},
@@ -416,7 +416,12 @@ function pruefeKennwerte(/** @type {string} */ k, /** @type {any} */ o) {
     if (ist !== erwartet) throw new Error(`${k}.${name}: Datei ${ist}, nachgerechnet ${erwartet}`);
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+// Nur auf der Kommandozeile; im Browser baut die Tour mit transform() denselben Graphen.
+const aufruf = typeof process !== 'undefined' && process.argv?.[1];
+if (aufruf && import.meta.url === (await import('node:url')).pathToFileURL(process.argv[1]).href) {
+  const { readFile } = await import('node:fs/promises');
+  const { dirname, join, resolve } = await import('node:path');
+  const { fileURLToPath } = await import('node:url');
   const hier = dirname(fileURLToPath(import.meta.url));
   const manifest = JSON.parse(await readFile(join(hier, 'manifest.json'), 'utf8'));
   const roh = JSON.parse(await readFile(resolve(hier, '../../..', manifest.eingabe), 'utf8'));

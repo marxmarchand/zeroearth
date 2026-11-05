@@ -20,6 +20,14 @@
       ],
       "abgeleitet_durch": "matrix-scharnier/adapter/paleomist_eis.py",
       "pangaea": "doi:10.1594/PANGAEA.905800 (Gowan 2019; Gowan et al. 2021, doi:10.1038/s41467-021-21469-w)"
+    },
+    "kuesten": {
+      "datei": "reconstruction_0.25_degree.nc",
+      "variablen": [
+        "paleo_topography"
+      ],
+      "abgeleitet_durch": "matrix-scharnier/adapter/paleomist_kuesten.py",
+      "kette": "PaleoMIST -> 0-m-Linie"
     }
   },
   "stapel": [
@@ -31,7 +39,8 @@
   "herkunft": {
     "arten": [
       "rekonstruktion",
-      "kuratiert"
+      "kuratiert",
+      "berechnet"
     ],
     "ebene": "Datei",
     "hinweis": "Die Quelle nennt die Herkunft einmal für die ganze Datei. transform.mjs schreibt sie an jeden Wert und vermerkt, dass sie von der Dateiebene übernommen ist. Die Notizen tragen eine eigene Herkunft (kuratiert, gesellschaftliches Archiv).",
@@ -84,11 +93,12 @@
   ],
   "lizenz": {
     "angabe": "CC BY 4.0",
-    "quelle": "PANGAEA, doi:10.1594/PANGAEA.905800",
-    "geprueft": "2026-10-01"
+    "quelle": "PANGAEA, doi:10.1594/PANGAEA.905800 (Gowan 2019); DataCite: rightsIdentifier cc-by-4.0",
+    "geprueft": "2026-11-05",
+    "bearbeitung": "Von zeroearth abgeleitet: Summen, Mittel und Küstenlinien. Raster nicht enthalten."
   },
   "weitergabe": {
-    "im_repo": "data/sintflut.json: Flächensummen und Mittelwerte je Kasten; data/paleomist_eis.json: globale Eis- und Ozeanvolumen und Landflächen je Kasten auf 1°, je Ideal",
+    "im_repo": "data/sintflut.json: Flächensummen und Mittelwerte je Kasten; data/paleomist_eis.json: globale Eis- und Ozeanvolumen und Landflächen je Kasten auf 1°, je Ideal; data/sintflut_kuesten.json: 0-m-Linien je Kasten, 9 Zeitschritte (20 bis 0 ka)",
     "nicht_im_repo": "Raster reconstruction_0.25_degree.nc und die 1°-Dateien (Referenz, a1); nur als Verweis geführt"
   },
   "auswahl": [
@@ -124,10 +134,19 @@
     {
       "schritt": "vergroebern",
       "angabe": "1°-Gitter -> Landfläche je Kasten (km², paleo_topography > 0), je Ideal"
+    },
+    {
+      "schritt": "auswaehlen",
+      "angabe": "Küstenlinien nur im Zeitfenster des Ereignisses: 20 bis 0 ka, 9 von 33 Schritten"
+    },
+    {
+      "schritt": "vergroebern",
+      "angabe": "0.25°-Gitter -> 0-m-Linie von paleo_topography je Kasten (Kontur, linear zwischen Gitterpunkten; zwischen den Zeitschritten nichts interpoliert; auf 0,01° gerundet); Auflösung bleibt 0,25°, Unschärfe fehlt"
     }
   ],
   "zusatz": {
-    "eis": "data/paleomist_eis.json"
+    "eis": "data/paleomist_eis.json",
+    "kuesten": "data/sintflut_kuesten.json"
   },
   "ideale": {
     "gruppe": "sintflut/ideale/eisgeschichte",

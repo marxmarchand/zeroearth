@@ -288,7 +288,22 @@ export const EREIGNIS_PFLICHT = /** @type {const} */ ([
   'ereignis', 'satz', 'zeitfenster', 'orte', 'auswahl_begruendung', 'stationen', 'brueche', 'autor', 'stand',
 ]);
 /** Erlaubte Felder einer Station: Verweise und Text, keine Daten. */
-export const STATION_FELDER = /** @type {const} */ (['natur', 'frage', 'quelle', 'verweise', 'status', 'begruendung', 'vorgemerkt']);
+export const STATION_FELDER = /** @type {const} */ (['natur', 'frage', 'quelle', 'verweise', 'status', 'begruendung', 'vorgemerkt', 'zeigt', 'kette']);
+
+/* Eine Tour setzt je Station, was zu sehen ist. zeigt: {ansicht, ebenen, orte}.
+   ebenen sind Namen der Oberfläche, orte die Verweise aus ev.orte oder 'alle'.
+   Die Zeit kommt aus ev.zeitfenster, darum stehen hier keine Zahlen. Pflicht an
+   jeder Station außer bewusst_leer: die stehen gesammelt auf einer Seite.
+   kette: ein Knoten der Netzansicht, wenn das Ereignis eine Kette ist:
+   {knoten, name, form, umriss, haengt_an: [{knoten, vorgang}], vorschlag?, herkunft_spaeter?}.
+   vorschlag nennt, was der Strukturstand noch nicht festlegt (Regel 7).   */
+export const TOUR_ANSICHTEN = /** @type {const} */ (['globus', 'karte', 'sonnensystem', 'netz']);
+export const KETTE_FORMEN = /** @type {const} */ (['institution', 'bestand', 'prozess']);
+export const KETTE_UMRISSE = /** @type {const} */ (['ding', 'verhaeltnis', 'fluss']);
+
+/** Zeitfenster und Orte eines Schemas ohne Einzelfall: {bewusst_leer: true, grund}.
+    Nur zulässig, wenn keine Station eine Quelle hat. */
+export const istBewusstLeer = (/** @type {any} */ v) => v?.bewusst_leer === true;
 
 /* ── Typen ────────────────────────────────────────────────────────────
    @typedef {{fehlt: true, grund: string}} Fehlend

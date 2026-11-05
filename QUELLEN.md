@@ -14,6 +14,7 @@ abgeleitet · `modell` — gerechnet · `kuratiert` — von Hand zusammengetrage
 | GEBCO 2025 | Bathymetrie, Topographie | `erste_natur/erdsystem` | 15″ | beobachtung | frei, Namensnennung |
 | GFS (NOAA) | Wind, Wetter | `erste_natur/erdsystem` | 0,25° (Stufe 5) | beobachtung/Vorhersage | gemeinfrei |
 | PaleoMIST 1.0 | Eisdicke, Paläotopographie | `erste_natur/erdsystem` | 1°, 33 Zeitschnitte 0–80 ka | rekonstruktion | frei |
+| PaleoMIST 1.0 -> 0-m-Linie | Küstenlinien der sechs Sintflut-Fenster (`data/sintflut_kuesten.json`) | `erste_natur/erdsystem` | 0,25°, 9 Zeitschnitte 20–0 ka; Unschärfe fehlt | rekonstruktion, berechnet | CC BY 4.0 (Gowan 2019, doi:10.1594/PANGAEA.905800; geprüft 2026-11-05) |
 | Spratt & Lisiecki | Meeresspiegelkurve | `erste_natur/erdsystem` | 1D-Zeitreihe | rekonstruktion | PANGAEA, CC BY |
 | Scotese PALEOMAP | Paläogeographie-Texturen | `erste_natur/erdsystem` | Textur | rekonstruktion | MIT |
 | Berger & Loutre 1991 (NOAA NCEI) | Einstrahlung aus Bahnparametern, vorgemerkt für Station 0 der Sintflut, noch kein Adapter | `nullnatur/solar` | 1-ka-Zeitreihe, 0–5 Ma | modell, berechnet | keine genannt, zu klären |

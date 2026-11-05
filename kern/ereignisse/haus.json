@@ -1,0 +1,229 @@
+{
+  "ereignis": "haus",
+  "titel": "Was hängt an einem Haus?",
+  "satz": "An einem Haus hängt eine ganze Kette: Der Stoff bleibt derselbe, aber Bedeutung, Parzelle, Eigentum, Hypothek und Preis entscheiden, welche Prozesse an ihm laufen.",
+  "zeitfenster": {
+    "bewusst_leer": true,
+    "grund": "Schema, kein Einzelfall"
+  },
+  "orte": {
+    "bewusst_leer": true,
+    "grund": "Schema, kein Einzelfall"
+  },
+  "auswahl_begruendung": "Die Kette folgt docs/strukturstand.md, Abschnitt 2.1. Ein Haus steht hier für die Struktur, nicht für einen Einzelfall, darum ohne Zeit, Ort und Werte (Regel 8). Welcher Knoten wo steht, ist eine Setzung (Regel 7).",
+  "stationen": [
+    {
+      "natur": "1.1",
+      "frage": "Woraus besteht das Haus, und worauf steht es?",
+      "quelle": null,
+      "status": "fehlt",
+      "begruendung": "Noch kein Adapter für Boden und Baumaterial. Ein Haus ist hier Schema, kein Einzelfall; ein Wert wäre ein Platzhalter.",
+      "zeigt": {
+        "ansicht": "netz",
+        "ebenen": [],
+        "orte": []
+      },
+      "kette": {
+        "knoten": "stoff",
+        "name": "Boden und Baumaterial",
+        "form": "bestand",
+        "umriss": "ding",
+        "haengt_an": []
+      }
+    },
+    {
+      "natur": "2.1",
+      "frage": "Was ist das Gebaute für eine Gesellschaft: Wohnung, Laden, Denkmal?",
+      "quelle": null,
+      "status": "fehlt",
+      "begruendung": "Noch keine Quelle. Die Bedeutung hängt am Stoff und ist keine Eigenschaft des Stoffs.",
+      "zeigt": {
+        "ansicht": "netz",
+        "ebenen": [],
+        "orte": []
+      },
+      "kette": {
+        "knoten": "bedeutung",
+        "name": "Haus als Wohnung, Laden, Denkmal",
+        "form": "bestand",
+        "umriss": "ding",
+        "haengt_an": [
+          {
+            "knoten": "stoff",
+            "vorgang": "anhaften"
+          }
+        ]
+      }
+    },
+    {
+      "natur": "2.2",
+      "frage": "Welche Parzelle im Kataster hängt am Boden?",
+      "quelle": null,
+      "status": "fehlt",
+      "begruendung": "Kataster sind regional, es gibt keinen globalen Dienst; noch kein Adapter.",
+      "zeigt": {
+        "ansicht": "netz",
+        "ebenen": [],
+        "orte": []
+      },
+      "kette": {
+        "knoten": "parzelle",
+        "name": "Parzelle im Kataster",
+        "form": "institution",
+        "umriss": "verhaeltnis",
+        "haengt_an": [
+          {
+            "knoten": "stoff",
+            "vorgang": "anhaften"
+          }
+        ]
+      }
+    },
+    {
+      "natur": "2.2",
+      "frage": "Wem gehört es, und was ändert ein Eigentümerwechsel?",
+      "quelle": null,
+      "status": "fehlt",
+      "begruendung": "Noch keine Quelle. Ein Eigentümerwechsel ändert den Stoff nicht, wohl aber, welche Prozesse daran laufen (Abriss, Sanierung, Leerstand).",
+      "zeigt": {
+        "ansicht": "netz",
+        "ebenen": [],
+        "orte": []
+      },
+      "kette": {
+        "knoten": "eigentum",
+        "name": "Eigentum",
+        "form": "institution",
+        "umriss": "verhaeltnis",
+        "haengt_an": [
+          {
+            "knoten": "parzelle",
+            "vorgang": "anhaften"
+          },
+          {
+            "knoten": "bedeutung",
+            "vorgang": "anhaften"
+          }
+        ]
+      }
+    },
+    {
+      "natur": "2.2",
+      "frage": "Welches Kapital ist im Eigentum eingeschlossen?",
+      "quelle": null,
+      "status": "fehlt",
+      "begruendung": "Noch keine Quelle. Eine spätere Angabe wäre eine Erwartung mit Erwartungsträger, keine Beobachtung (Regel 4).",
+      "zeigt": {
+        "ansicht": "netz",
+        "ebenen": [],
+        "orte": []
+      },
+      "kette": {
+        "knoten": "hypothek",
+        "name": "Hypothek",
+        "form": "bestand",
+        "umriss": "verhaeltnis",
+        "haengt_an": [
+          {
+            "knoten": "eigentum",
+            "vorgang": "einschliessen_realisieren"
+          }
+        ],
+        "vorschlag": "Natur 2.2 und Vorgang einschliessen_realisieren sind ein Vorschlag; docs/strukturstand.md legt sie noch nicht fest.",
+        "herkunft_spaeter": [
+          "erwartung"
+        ]
+      }
+    },
+    {
+      "natur": "gesellschaftlicher_stoffwechsel",
+      "frage": "Wo hat ein Tausch einen Gegenwert hergestellt?",
+      "quelle": null,
+      "status": "fehlt",
+      "begruendung": "Noch keine Quelle. Ein Preis oder Bodenrichtwert erscheint nur, wo ein Tausch ihn hergestellt hat (Regel 3).",
+      "zeigt": {
+        "ansicht": "netz",
+        "ebenen": [],
+        "orte": []
+      },
+      "kette": {
+        "knoten": "preis",
+        "name": "Preis, Bodenrichtwert",
+        "form": "prozess",
+        "umriss": "fluss",
+        "haengt_an": [
+          {
+            "knoten": "hypothek",
+            "vorgang": "konversion"
+          }
+        ],
+        "vorschlag": "Natur gesellschaftlicher Stoffwechsel und Vorgang konversion sind ein Vorschlag; docs/strukturstand.md legt sie noch nicht fest."
+      }
+    },
+    {
+      "natur": "1.2",
+      "frage": "Welches Holz und Baumaterial kommt aus dem Lebensnetz?",
+      "quelle": null,
+      "status": "fehlt",
+      "begruendung": "Noch keine Quelle. Welche Relation das Baumaterial zur Kette hat, ist nicht festgelegt und bleibt ungezeichnet.",
+      "zeigt": {
+        "ansicht": "netz",
+        "ebenen": [],
+        "orte": []
+      },
+      "kette": {
+        "knoten": "baumaterial",
+        "name": "Holz, Baumaterial aus dem Lebensnetz",
+        "form": "bestand",
+        "umriss": "ding",
+        "haengt_an": []
+      }
+    },
+    {
+      "natur": "1.3",
+      "frage": "Wie hängt Wohnen an der Reproduktion der Menschen?",
+      "quelle": null,
+      "status": "fehlt",
+      "begruendung": "Noch keine Quelle. Welche Relation das Wohnen als Reproduktion zur Kette hat, ist nicht festgelegt und bleibt ungezeichnet.",
+      "zeigt": {
+        "ansicht": "netz",
+        "ebenen": [],
+        "orte": []
+      },
+      "kette": {
+        "knoten": "wohnen",
+        "name": "Wohnen als Reproduktion",
+        "form": "prozess",
+        "umriss": "verhaeltnis",
+        "haengt_an": []
+      }
+    },
+    {
+      "natur": "0",
+      "frage": "Welche Änderung der Einstrahlung oder Bahn betrifft ein Haus?",
+      "quelle": null,
+      "status": "bewusst_leer",
+      "begruendung": "Die Kette aus dem Strukturstand berührt die 0. Natur nicht. Sonne und Schwerkraft wirken, gehören aber nicht zu dieser Kette."
+    },
+    {
+      "natur": "planetarer_stoffwechsel",
+      "frage": "Was fließt im planetaren Stoffwechsel?",
+      "quelle": null,
+      "status": "bewusst_leer",
+      "begruendung": "Die Kette aus dem Strukturstand berührt den planetaren Stoffwechsel nicht."
+    },
+    {
+      "natur": "2.3",
+      "frage": "Welche Zeichen und Erzählungen hängen am Haus?",
+      "quelle": null,
+      "status": "bewusst_leer",
+      "begruendung": "Die Kette aus dem Strukturstand endet bei Eigentum und Preis; das symbolische System gehört nicht zu ihr."
+    }
+  ],
+  "brueche": {
+    "bewusst_leer": true,
+    "grund": "Schema, kein Einzelfall"
+  },
+  "autor": "Max",
+  "stand": "2026-11-05"
+}

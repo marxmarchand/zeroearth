@@ -87,6 +87,81 @@ for (const [regel, name, verletze] of VERSTOESSE) {
   });
 }
 
+const haus = ereignisse.find(e => e.datei === 'haus.json')?.inhalt;
+
+test('Haus besteht die Prüfung: Kette, Status ehrlich, Zeit und Ort bewusst leer', () => {
+  assert.ok(haus);
+  assert.deepEqual(pruefeEreignis(haus, KONTEXT).fehler, []);
+  assert.ok(haus.stationen.every((/** @type {any} */ s) => s.quelle === null));
+  for (const n of ['1.1', '1.2', '1.3', '2.1', 'gesellschaftlicher_stoffwechsel']) assert.equal(station(haus, n).status, 'fehlt', n);
+  for (const n of ['0', 'planetarer_stoffwechsel', '2.3']) assert.equal(station(haus, n).status, 'bewusst_leer', n);
+  assert.deepEqual(haus.stationen.slice(0, 6).map((/** @type {any} */ s) => s.kette.knoten),
+    ['stoff', 'bedeutung', 'parzelle', 'eigentum', 'hypothek', 'preis']);
+  const hypothek = haus.stationen[4].kette, preis = haus.stationen[5].kette;
+  assert.equal(haus.stationen[4].natur, '2.2');
+  assert.equal(hypothek.haengt_an[0].vorgang, 'einschliessen_realisieren');
+  assert.deepEqual(hypothek.herkunft_spaeter, ['erwartung']);
+  assert.equal(preis.haengt_an[0].vorgang, 'konversion');
+  assert.ok(hypothek.vorschlag && preis.vorschlag);
+  assert.equal(haus.zeitfenster.grund, 'Schema, kein Einzelfall');
+  assert.equal(haus.orte.grund, 'Schema, kein Einzelfall');
+});
+
+test('Haus trägt keine Zahlen und keine Werte', () => {
+  const zahlfrei = (/** @type {any} */ v) => typeof v !== 'number' && (typeof v !== 'object' || v === null || Object.values(v).every(zahlfrei));
+  assert.ok(zahlfrei(haus));
+});
+
+test('Zeit und Ort bewusst leer: unzulässig, sobald eine Station eine Quelle hat', () => {
+  const e = structuredClone(haus);
+  e.stationen[0].quelle = 'sintflut'; e.stationen[0].status = 'in_arbeit';
+  assert.ok(pruefeEreignis(e, KONTEXT).fehler.some(f => f.regel === 8 && /zeitfenster bewusst leer/.test(f.text)));
+  assert.ok(pruefeEreignis(e, KONTEXT).fehler.some(f => f.regel === 8 && /orte bewusst leer/.test(f.text)));
+  const s = structuredClone(sintflut);
+  s.zeitfenster = { bewusst_leer: true, grund: 'x' };
+  assert.ok(pruefeEreignis(s, KONTEXT).fehler.some(f => f.regel === 8));
+  const g = structuredClone(haus);
+  delete g.zeitfenster.grund;
+  assert.ok(pruefeEreignis(g, KONTEXT).fehler.some(f => f.regel === 8));
+});
+
+/** @type {[string, (e: any) => void][]} */
+const TOUR_VERSTOESSE = [
+  ['Station ohne zeigt', e => { delete e.stationen[0].zeigt; }],
+  ['Ansicht unbekannt', e => { e.stationen[0].zeigt.ansicht = 'tunnel'; }],
+  ['Ebenen keine Liste', e => { e.stationen[0].zeigt.ebenen = 'x'; }],
+  ['Kette an unbekanntem Knoten', e => { e.stationen[1].kette.haengt_an[0].knoten = 'nirgends'; }],
+  ['Kette mit unbekanntem Vorgang', e => { e.stationen[1].kette.haengt_an[0].vorgang = 'gehoert'; }],
+  ['Kette mit unbekannter Form', e => { e.stationen[1].kette.form = 'stern'; }],
+  ['Kette ohne Name', e => { delete e.stationen[1].kette.name; }],
+  ['herkunft_spaeter unbekannt', e => { e.stationen[4].kette.herkunft_spaeter = ['geraten']; }],
+];
+for (const [name, verletze] of TOUR_VERSTOESSE) {
+  test(`Tourfelder: ${name}`, () => {
+    const e = structuredClone(haus);
+    verletze(e);
+    assert.ok(pruefeEreignis(e, KONTEXT).fehler.some(f => f.regel === 'E'), name);
+  });
+}
+
+test('Sintflut: Ort in zeigt, den das Ereignis nicht führt, ist ein Verstoß', () => {
+  const e = structuredClone(sintflut);
+  station(e, '2.1').zeigt.orte = ['sintflut:sintflut/atlantis'];
+  assert.ok(pruefeEreignis(e, KONTEXT).fehler.some(f => /nicht führt/.test(f.text)));
+});
+
+test('data/ereignisse.json führt genau die Dateien in kern/ereignisse/', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const liste = JSON.parse(await readFile(fileURLToPath(new URL('../../data/ereignisse.json', import.meta.url)), 'utf8'));
+  assert.deepEqual([...liste.ereignisse].sort(), ereignisse.map(e => e.datei.replace(/\.json$/, '')).sort());
+});
+
+test('Der Transform läuft ohne node: im Modulkopf (die Tour lädt ihn im Browser)', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const text = await readFile(fileURLToPath(new URL('../adapter/sintflut/transform.mjs', import.meta.url)), 'utf8');
+  assert.equal(/^import .*node:/m.test(text), false);
+});
+
 test('in Arbeit ohne Begründung: Hinweis, kein Abbruch', () => {
   const e = structuredClone(sintflut);
   delete station(e, 'planetarer_stoffwechsel').begruendung;

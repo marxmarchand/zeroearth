@@ -19,6 +19,7 @@ import {
   KAPITALFORMEN, VORGAENGE, RUECKWIRKUNG, RELATIONSARTEN, VERWORFEN, TAUSCHVORGAENGE, MODI, formwechsel,
   ERHALTUNG, ROLLEN, BELEG_EINTRAGSEBENE, IDEAL_ARTEN, PRUEFARTEN, NAEHERUNG_VERTRITT,
   EREIGNIS_NATUREN, STATION_STATUS, STATION_OHNE_QUELLE, EREIGNIS_PFLICHT, STATION_FELDER,
+  TOUR_ANSICHTEN, KETTE_FORMEN, KETTE_UMRISSE, istBewusstLeer,
   ARCHIVARTEN, HERKUNFTSARTEN, HERKUNFT_RANG, MODELL_MERKMALE, BEZUGSSYSTEME, KEIN_ERWARTUNGSTRAEGER, WISSENSSTATUS, GEOMETRIEN, MIT_VERZERRUNG,
   istFehlend, MANIFEST_PFLICHT, ZEITSEMANTIK_PFLICHT, REDUKTIONSSCHRITTE, SPANNWEITE,
 } from './schema.mjs';
@@ -366,7 +367,8 @@ export function pruefe(gr) {
     for (const a of arten) if (!HERKUNFTSARTEN.includes(a)) F(6, ort, `Herkunftsart unbekannt: ${a}`);
     if (new Set(arten).size !== arten.length) F(6, ort, 'arten ist eine Menge; doppelte Einträge');
     if (arten.includes('idealisiert') && !arten.includes('modell')) F(6, ort, 'idealisiert ohne modell; das Merkmal gehört zur Idealschicht');
-    if (arten.includes('berechnet') && !arten.includes('modell')) F(6, ort, 'berechnet ohne modell; das Merkmal gehört zu einem Modellergebnis');
+    // berechnet: am Modellergebnis oder an einer Linie, die aus einer Rekonstruktion berechnet ist (Küste)
+    if (arten.includes('berechnet') && !arten.includes('modell') && !arten.includes('rekonstruktion')) F(6, ort, 'berechnet ohne modell oder rekonstruktion; das Merkmal braucht eine Grundlage');
     if (arten.includes('modell') && !MODELL_MERKMALE.some(m => arten.includes(m))) F(6, ort, 'modell ohne Merkmal idealisiert oder berechnet; Modellergebnisse bilden die Idealschicht');
     if (arten.includes('fiktion') && arten.some((/** @type {any} */ a) => HERKUNFT_RANG.includes(a)) && !w.abgeleitet_aus?.length)
       F(15, ort, 'fiktion neben echter Herkunft nur an abgeleiteten Werten (abgeleitet_aus); sonst verwischt die Grenze');
@@ -657,8 +659,12 @@ export function pruefeManifest(m) {
   for (const g of [m.geometrie].flat()) if (g !== undefined && !istFehlend(g) && !GEOMETRIEN.includes(g)) F(ort, `Geometrie unbekannt: ${g}`);
   if (m.herkunft && !istFehlend(m.herkunft)) {
     const arten = m.herkunft.arten ?? [];
-    if (MODELL_MERKMALE.some(k => arten.includes(k)) !== arten.includes('modell'))
+    if (arten.includes('modell') && !MODELL_MERKMALE.some(k => arten.includes(k)))
       F(ort, 'herkunft: modell gehört mit idealisiert oder berechnet zusammen (Idealschicht)');
+    if (arten.includes('idealisiert') && !arten.includes('modell'))
+      F(ort, 'herkunft: idealisiert gehört zu modell (Idealschicht)');
+    if (arten.includes('berechnet') && !arten.includes('modell') && !arten.includes('rekonstruktion'))
+      F(ort, 'herkunft: berechnet braucht modell oder rekonstruktion');
     if (arten.includes('fiktion') && arten.length > 1)
       fehler.push({ regel: 15, ort, text: 'ein Adapter mit fiktion führt im Manifest nur fiktion; echte Eingaben stehen in der Herkunftskette' });
   }
@@ -738,11 +744,18 @@ export function pruefeEreignis(ev, { adapter, graphen = new Map() }) {
   // Regel 7: Orte und Zeitfenster sind eine Setzung
   if ('auswahl_begruendung' in ev && !istText(ev.auswahl_begruendung))
     F(7, ort, 'auswahl_begruendung ist Pflicht: Orte und Zeitfenster sind eine Setzung und werden begründet');
-  if ('zeitfenster' in ev) {
+  // Ein Schema ohne Einzelfall hat weder Zeit noch Ort; mit einer Quelle gäbe es beides.
+  const hatQuelle = Array.isArray(ev.stationen) && ev.stationen.some((/** @type {any} */ st) => st?.quelle);
+  for (const k of ['zeitfenster', 'orte']) {
+    if (!istBewusstLeer(ev[k])) continue;
+    if (!istText(ev[k].grund)) F(8, ort, `${k} bewusst leer ohne Grund`);
+    if (hatQuelle) F(8, ort, `${k} bewusst leer ist nur zulässig, wenn keine Station eine Quelle hat`);
+  }
+  if ('zeitfenster' in ev && !istBewusstLeer(ev.zeitfenster)) {
     if (istFehlend(ev.zeitfenster)) F('E', ort, 'zeitfenster ist Pflicht: Es ist die Setzung, die das Ereignis schneidet');
     else pruefeZeitangabe(ev.zeitfenster, `${ort} · zeitfenster`, F);
   }
-  if ('brueche' in ev) {
+  if ('brueche' in ev && !istBewusstLeer(ev.brueche)) {
     if (istFehlend(ev.brueche)) { if (!istText(ev.brueche.grund)) F(8, ort, 'brueche fehlend ohne Grund'); else H(8, ort, `Brüche fehlen: ${ev.brueche.grund}`); }
     else if (!Array.isArray(ev.brueche) || !ev.brueche.length) F('E', ort, 'brueche ist eine nichtleere Liste oder {fehlt, grund}');
   }
@@ -754,7 +767,7 @@ export function pruefeEreignis(ev, { adapter, graphen = new Map() }) {
     if (k !== undefined) return !!e?.werte?.[k];
     return !!e || ['relationen', 'prozesse', 'bestaende'].some(t => g[t].some((/** @type {any} */ x) => x.id === id));
   };
-  if ('orte' in ev) {
+  if ('orte' in ev && !istBewusstLeer(ev.orte)) {
     if (!Array.isArray(ev.orte) || !ev.orte.length) F('E', ort, 'orte ist eine nichtleere Liste');
     else for (const o of ev.orte) {
       if (!istText(o?.name)) F('E', ort, 'Ort ohne Namen');
@@ -805,11 +818,45 @@ export function pruefeEreignis(ev, { adapter, graphen = new Map() }) {
       }
     }
   });
+  pruefeTourFelder(ev, ort, F);
   for (const n of EREIGNIS_NATUREN)
     if (!vorkommend.has(n)) F(8, ort, `Natur ${n} fehlt als Station; jede Natur kommt vor, auch leer (status fehlt oder bewusst_leer)`);
   const zahl = (/** @type {string} */ s) => ev.stationen.filter((/** @type {any} */ x) => x?.status === s).length;
   H('E', ort, `${ev.stationen.length} Stationen: ${STATION_STATUS.map(s => `${zahl(s)} ${s}`).join(', ')}`);
   return { fehler, hinweise };
+}
+
+/** Was eine Station in der Tour zeigt und, bei einer Kette, wie ihre Knoten hängen. */
+function pruefeTourFelder(/** @type {any} */ ev, /** @type {string} */ ort, /** @type {(r: any, o: string, t: string) => void} */ F) {
+  const orte = new Set(Array.isArray(ev.orte) ? ev.orte.map((/** @type {any} */ o) => o?.verweis) : []);
+  const knoten = new Set(ev.stationen.map((/** @type {any} */ st) => st?.kette?.knoten).filter(Boolean));
+  ev.stationen.forEach((/** @type {any} */ st, /** @type {number} */ i) => {
+    const so = `${ort} · Station ${i + 1} (${st?.natur ?? '?'})`;
+    const z = st?.zeigt;
+    if (z === undefined) {
+      if (st?.status !== 'bewusst_leer') F('E', so, 'zeigt fehlt: Die Tour setzt je Station Ansicht, Ebenen und Orte');
+    } else {
+      if (!(/** @type {readonly string[]} */ (TOUR_ANSICHTEN)).includes(z?.ansicht)) F('E', so, `zeigt.ansicht unbekannt: ${z?.ansicht} (${TOUR_ANSICHTEN.join(', ')})`);
+      if (!Array.isArray(z?.ebenen) || !z.ebenen.every(istText)) F('E', so, 'zeigt.ebenen ist eine Liste von Namen');
+      if (z?.orte !== 'alle') {
+        if (!Array.isArray(z?.orte)) F('E', so, "zeigt.orte ist 'alle' oder eine Liste von Ortsverweisen des Ereignisses");
+        else for (const o of z.orte) if (!orte.has(o)) F('E', so, `zeigt.orte nennt einen Ort, den das Ereignis nicht führt: ${o}`);
+      }
+      if (Object.values(z ?? {}).flat().some(v => typeof v === 'number')) F('E', so, 'zeigt trägt keine Zahlen; die Zeit kommt aus dem Zeitfenster');
+    }
+    const k = st?.kette;
+    if (k === undefined) return;
+    if (!istText(k?.knoten) || !istText(k?.name)) F('E', so, 'kette braucht knoten und name');
+    if (!(/** @type {readonly string[]} */ (KETTE_FORMEN)).includes(k?.form)) F('E', so, `kette.form unbekannt: ${k?.form}`);
+    if (!(/** @type {readonly string[]} */ (KETTE_UMRISSE)).includes(k?.umriss)) F('E', so, `kette.umriss unbekannt: ${k?.umriss}`);
+    if (!Array.isArray(k?.haengt_an)) F('E', so, 'kette.haengt_an ist eine Liste, auch leer');
+    else for (const h of k.haengt_an) {
+      if (!knoten.has(h?.knoten)) F('E', so, `kette hängt an einem unbekannten Knoten: ${h?.knoten}`);
+      if (!(h?.vorgang in VORGAENGE)) F('E', so, `kette: Vorgang unbekannt: ${h?.vorgang}`);
+    }
+    if (k?.herkunft_spaeter !== undefined && !(Array.isArray(k.herkunft_spaeter) && k.herkunft_spaeter.every((/** @type {any} */ a) => HERKUNFTSARTEN.includes(a))))
+      F('E', so, 'kette.herkunft_spaeter nennt Herkunftsarten');
+  });
 }
 
 /* ── Ausgabe ───────────────────────────────────────────────────────── */

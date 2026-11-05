@@ -21,6 +21,76 @@
     *{margin:0;padding:0;box-sizing:border-box;}
     body{background:#000;color:var(--text);font-family:var(--ui);overflow:hidden;height:100vh;}
 
+    /* ── Touren: Seite rechts, freier Modus tritt zurück. Grau heißt: keine Daten (Regel 8). ── */
+    #tour-start{margin:0 0 9px;position:relative;}
+    #tour-start>button{width:100%;padding:8px 10px;background:var(--accent);border:0;border-radius:3px;color:#04101d;
+      font:600 12px var(--ui);cursor:pointer;letter-spacing:.02em;}
+    #tour-liste{margin-top:6px;display:grid;gap:5px;}
+    #tour-liste[hidden]{display:none;}
+    .tour-wahl{padding:8px;background:var(--panel);border:1px solid var(--border);border-radius:3px;cursor:pointer;font-size:10.5px;line-height:1.4;}
+    .tour-wahl:hover{border-color:var(--accent);}
+    .tour-wahl b{display:block;color:#eef1f6;font-size:12px;margin-bottom:3px;}
+    .tour-wahl span{color:#8d97a8;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+    body.tour #left,body.tour #ms-panel,body.tour #ip,body.tour #mini-null,body.tour #moon-panel{display:none!important;}
+    #tour{position:fixed;top:44px;right:12px;bottom:58px;width:min(392px,calc(100vw - 24px));z-index:40;pointer-events:none;display:flex;align-items:stretch;}
+    #tour[hidden]{display:none;}
+    #tour-rahmen{pointer-events:auto;flex:1;display:flex;flex-direction:column;min-height:0;background:rgba(6,8,14,.95);border:1px solid rgba(255,255,255,.14);border-radius:4px;backdrop-filter:blur(8px);}
+    #tour-kopf{padding:9px 13px;font:9px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#8d97a8;border-bottom:1px solid var(--border);}
+    #tour-inhalt{flex:1;overflow-y:auto;padding:13px;font-size:12.5px;line-height:1.5;color:#c6cdda;min-height:0;}
+    #tour-zeichen{padding:6px 13px;font:8.5px var(--mono);color:#8d97a8;border-top:1px solid var(--border);line-height:1.6;}
+    #tour-knoepfe{display:flex;gap:6px;padding:9px 13px;border-top:1px solid var(--border);}
+    #tour-knoepfe button{flex:1;padding:8px 6px;background:rgba(255,255,255,.06);color:#e6e9ef;border:1px solid rgba(255,255,255,.14);border-radius:3px;font:500 11.5px var(--ui);cursor:pointer;}
+    #tour-knoepfe button:hover:not(:disabled){background:rgba(255,255,255,.13);}
+    #tour-knoepfe button:disabled{opacity:.35;cursor:default;}
+    #tour-weiter{background:var(--accent)!important;color:#04101d!important;border-color:var(--accent)!important;font-weight:600!important;}
+    .tour-satz{font-size:15px;line-height:1.5;color:#f0f2f6;margin-bottom:13px;}
+    .tour-titel{font:600 16px/1.35 var(--ui);color:#f0f2f6;margin-bottom:8px;}
+    .tour-grau-t{color:#a7acb6;}
+    .tour-frage{color:#d7dbe3;margin-bottom:8px;}
+    .tour-leise{color:#8d97a8;font-size:10.5px;margin:8px 0;}
+    .tour-natur{display:inline-block;font:9px var(--mono);border:1px solid;border-radius:2px;padding:2px 6px;margin-bottom:9px;letter-spacing:.05em;}
+    .tour-status{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:10px;font-size:11.5px;}
+    .tour-status b{padding:2px 7px;border-radius:2px;background:#39424f;color:#eaedf2;font-weight:600;}
+    .tour-status.s-vorhanden b{background:#2f6b3c;}
+    .tour-status.s-in_arbeit b{background:#7a6b1a;}
+    .tour-status.s-fehlt b,.tour-status.s-bewusst_leer b{background:#5b5f68;}
+    .tour-z em,.tw em{font-style:normal;color:#9aa3b2;font-size:10.5px;}
+    .tz{font-size:13px;color:#f0f2f6;}
+    .tz-grau{color:#70757f;}
+    .tz-kur{background:repeating-linear-gradient(45deg,rgba(198,205,218,.3) 0 1px,transparent 1px 4px);padding:0 3px;}
+    .tour-block{margin:9px 0;padding:8px 10px;background:rgba(255,255,255,.035);border-radius:3px;}
+    .tour-block h4{font:500 8.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#8d97a8;margin-bottom:4px;}
+    .tour-leer{background:rgba(120,124,132,.17);border-left:2px solid #70757f;color:#b4b9c2;}
+    .tour-vorschlag{border-left:2px solid #d9c74a;}
+    .tour-daten{margin-top:12px;padding-top:9px;border-top:1px solid var(--border);font-size:10.5px;display:flex;flex-wrap:wrap;gap:4px 10px;}
+    .tour-daten span{width:100%;font:500 8.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#8d97a8;}
+    .tour-daten a{color:#7fb6ea;word-break:break-all;}
+    .tour-regler{margin:10px 0;padding:8px 10px;background:rgba(74,143,212,.1);border-radius:3px;font-size:11px;}
+    .tour-regler input{width:100%;margin:5px 0;accent-color:var(--accent);}
+    .tour-regler b{color:#fff;}
+    .tour-regler small{color:#8d97a8;font-size:9.5px;line-height:1.4;display:block;}
+    .tw-gruppe{margin:8px 0;}
+    .tw-ort{font-weight:600;color:#e6e9ef;cursor:pointer;font-size:11.5px;margin-bottom:3px;}
+    .tw-ort:hover{color:#7fb6ea;}
+    .tw{display:grid;grid-template-columns:1fr auto;gap:1px 8px;padding:3px 0;border-top:1px solid var(--border);font-size:11px;}
+    .tw small{color:#8d97a8;font-size:9.5px;}
+    .tw b{color:#f0f2f6;font-weight:500;font-variant-numeric:tabular-nums;text-align:right;}
+    .tw i{grid-column:1/-1;font-style:normal;}
+    .tw-bilanz{grid-template-columns:1fr;}
+    .tw-bilanz b{text-align:left;}
+    .tw-hinweis{display:block;}
+    body.tour #mitte{grid-column:1/-1;margin-right:404px;}
+    body.tour > #cc{right:416px;width:auto;}
+    body.tour-grau #cc,body.tour-grau #ss-canvas{filter:grayscale(1) brightness(.5);}
+    #netz-fach{position:absolute;top:44px;left:12px;right:416px;bottom:58px;z-index:2;display:none;background:#07090e;border:1px solid var(--border);border-radius:4px;}
+    #netz-fach svg{width:100%;height:100%;display:block;}
+    .nz-band{font:9px var(--mono);}
+    .nz-leer{font:8.5px var(--mono);fill:#70757f;}
+    .nz-name{font:9.5px var(--ui);fill:#c6cdda;paint-order:stroke;stroke:#07090e;stroke-width:3px;stroke-linejoin:round;}
+    .nz-name.an{fill:#fff;font-weight:600;}
+    .nz-k{cursor:pointer;}
+    .nz-fuss{font:8.5px var(--mono);fill:#8d97a8;}
+    @media (max-width:780px){#netz-fach{right:12px;bottom:46vh;}#tour{top:auto;height:44vh;bottom:50px;}}
     /* ── Zwei Rendering-Ebenen ─────────────────────────────────── */
     #ss-canvas {
       position:absolute;inset:0;z-index:1;
@@ -391,6 +461,7 @@
   <div id="an-griff" title="Ziehen: Globus und Analysefeld teilen sich die Höhe"></div>
 </div>
 
+<div id="netz-fach"></div>
 <div id="ov"></div>
 
 <div id="ui">
@@ -401,7 +472,24 @@
     <div id="about-btn" onclick="ze.toggleAbout()">über · quellen · grenzen</div>
   </div>
 
+  <aside id="tour" hidden>
+    <div id="tour-rahmen">
+      <div id="tour-kopf"></div>
+      <div id="tour-inhalt"></div>
+      <div id="tour-zeichen" title="Zeichensystem, Kanal Füllung">● beobachtet · ◐ rekonstruiert · ○ Modell/Ideal · ⏵ Erwartung · ✱ Fiktion · ▨ kuratiert · <span class="tz-grau">■</span> fehlt</div>
+      <div id="tour-knoepfe">
+        <button id="tour-zurueck" onclick="ze.tour.zurueck()">Zurück</button>
+        <button id="tour-ende" onclick="ze.tour.beenden()">Beenden</button>
+        <button id="tour-weiter" onclick="ze.tour.weiter()">Weiter</button>
+      </div>
+    </div>
+  </aside>
+
   <div id="left">
+    <div id="tour-start">
+      <button onclick="const l=document.getElementById('tour-liste');l.hidden=!l.hidden">Tour starten</button>
+      <div id="tour-liste" hidden></div>
+    </div>
     <!-- Keine Höhenleiter: Skalen kommen aus den Inhalten (Auflösung pro
          Quelle), nicht aus festen Beobachtungshöhen. Die Kamera bewegt
          sich frei; was eine Ebene zeigen kann, sagt die Legende. -->
@@ -469,6 +557,8 @@
       <div class="ob ov-side" id="tb-unterbau" onclick="ze.toggle('unterbau')"><div class="obd"></div>Biosphäre / Lebensnetz ○◍</div>
       <div class="ov-status" id="unterbau-status"></div>
       <div class="sub-head" data-sub="erdsystem"></div>
+      <div class="ob ov-side" id="tb-sintflut" onclick="ze.toggle('sintflut')"><div class="obd"></div>Sintflut: Küsten, Kästen ◐</div>
+      <div class="ov-status" id="sintflut-status"></div>
       <div class="ob ov-side" id="tb-erste_natur" onclick="ze.toggle('erste_natur')"><div class="obd"></div>Materialbestände ●</div>
       <div class="ov-status" id="erste_natur-status"></div>
       <div class="ob ov-side" id="tb-wind" onclick="ze.toggle('wind')"><div class="obd"></div>Windströmung (GFS) ≋</div>
@@ -1797,12 +1887,10 @@ const Mag = {
    ───────────────────────────────────────────────────────────────── */
 const LR = {
   natural_earth:{ label:'Natural Earth II', status:'active',
-    p:()=>new Cesium.TileMapServiceImageryProvider({
-      url:Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII'),
-      fileExtension:'jpg',maximumLevel:5,
-      rectangle:new Cesium.Rectangle(
-        Cesium.Math.toRadians(-180),Cesium.Math.toRadians(-90),
-        Cesium.Math.toRadians(180),Cesium.Math.toRadians(90))})},
+    // Seit Cesium 1.107 lädt new TileMapServiceImageryProvider({url}) nichts mehr
+    // (der Globus blieb schwarz); der Weg ist fromUrl, also asynchron.
+    p:()=>Cesium.TileMapServiceImageryProvider.fromUrl(
+      Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII'))},   // Stufen laut tilemapresource.xml
   osm:{ label:'OpenStreetMap', status:'active',
     p:()=>new Cesium.OpenStreetMapImageryProvider({url:'https://tile.openstreetmap.org/'})},
   // ZEIT_RAUM §5: Spratt & Lisiecki ist eine 1D-Meeresspiegelkurve, keine
@@ -2068,6 +2156,9 @@ const LEGENDE = {
   gezeiten:    { h: 'SWOT River Tides (Zenodo 15223861, CC BY 4.0) über gezeiten.py', z: 'SWOT seit 2023; außerhalb leer', karte: true },
   satbild:     { h: 'VIIRS SNPP True Color · NASA GIBS', m: 250 },
   nachtlicht:  { h: 'VIIRS Day/Night Band · NASA GIBS', m: 500 },
+  sintflut:    { h: 'PaleoMIST 1.0 -> 0-m-Linie (rekonstruktion, berechnet; CC BY 4.0); Kästen: Setzung',
+                 get z() { const l = ze.sintflutLayer, i = l?.aktuellerSchritt(); return i === null || i === undefined ? 'außerhalb von 20–0 ka BP: keine Linie' : `${tourKa(l.schritte[i])} ka BP (Bezug 1950), Schritt 2,5 ka; Unschärfe fehlt`; },
+                 m: 28e3, warn: 'isostatische Deformation enthalten; Sedimentation nicht berücksichtigt' },
   // Linsen (Rasterebenen)
   coastLayer:     { name: 'Paläotopographie/Küste', h: 'PaleoMIST 1.0 · paleo_topography', z: 'Masterzeit (0–80 ka BP)', m: 111e3 },
   iceLayer:       { name: 'Eisdicke', h: 'PaleoMIST 1.0 · Eisdicke', z: 'Masterzeit (0–80 ka BP)', m: 111e3 },
@@ -2149,7 +2240,7 @@ const FEIN_M_PRO_PX = 250;
 class DM {
   constructor(v) {
     this.v=v; this.curDim=null; this.curSL=null;
-    this._ent={}; this._ovState={moon:false,magfield:false,tidal:false,solarwind:false,sats:false,ueberbau:false,riss:false,bestaende:false,basis:false,ware:false,erste_natur:false,pm:false,wind:false,stroeme:false,unterbau:false,seismik:false,platten:false,grenzen:false,kataster:false,gewaesser:false,sprachen:false};
+    this._ent={}; this._ovState={moon:false,magfield:false,tidal:false,solarwind:false,sats:false,ueberbau:false,riss:false,bestaende:false,basis:false,ware:false,erste_natur:false,pm:false,wind:false,stroeme:false,unterbau:false,seismik:false,platten:false,grenzen:false,kataster:false,gewaesser:false,sprachen:false,sintflut:false};
   }
 
   async flyTo(cam, instant=false) {
@@ -2175,7 +2266,7 @@ class DM {
   layers(ids) {
     const L=this.v.imageryLayers;
     while(L.length>0) L.remove(L.get(0));
-    ids.forEach(id=>{const c=LR[id];if(c?.status==='active'&&c.p){try{L.addImageryProvider(c.p());}catch(e){}}});
+    ids.forEach(id=>{const c=LR[id];if(c?.status==='active'&&c.p){try{L.add(Cesium.ImageryLayer.fromProviderAsync(Promise.resolve(c.p())));}catch(e){}}});
   }
 
   _highlightSL(group, sl) {
@@ -2218,6 +2309,7 @@ class DM {
     if(name==='gewaesser') { on ? ze.gewaesserLayer.show() : ze.gewaesserLayer.hide(); }
     if(name==='gezeiten') { on ? ze.gezeitenLayer.show() : ze.gezeitenLayer.hide(); }
     if(name==='sprachen') { on ? ze.sprachenLayer.show() : ze.sprachenLayer.hide(); }
+    if(name==='sintflut') { on ? ze.sintflutLayer.show() : ze.sintflutLayer.hide(); }
   }
 
   _moon(on) {
@@ -3923,12 +4015,7 @@ class ZeroEarth {
       geocoder:false,homeButton:false,infoBox:false,
       sceneModePicker:false,selectionIndicator:false,
       timeline:false,navigationHelpButton:false,
-      imageryProvider:new Cesium.TileMapServiceImageryProvider({
-        url:Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII'),
-        fileExtension:'jpg',maximumLevel:5,
-        rectangle:new Cesium.Rectangle(
-          Cesium.Math.toRadians(-180),Cesium.Math.toRadians(-90),
-          Cesium.Math.toRadians(180),Cesium.Math.toRadians(90))}),
+      baseLayer:false,   // Grundbild setzt dm.layers beim Betreten der Erde
       // terrainProvider wird nach Init async gesetzt (World Terrain braucht Ion-Token)
       terrainProvider:new Cesium.EllipsoidTerrainProvider()
     });
@@ -4005,6 +4092,8 @@ class ZeroEarth {
     this.gewaesserLayer = new GewaesserLayer(this.cesiumV);
     this.gezeitenLayer = new GezeitenLayer(this.cesiumV);
     this.sprachenLayer = new SprachenLayer(this.cesiumV);
+    this.sintflutLayer = new SintflutLayer(this.cesiumV);
+    this.tour = new TourMotor(this);
     // Klimazonen (Köppen-Geiger): kategoriales Raster über den FieldLayer
     this.klimaLayer = new FieldLayer(this.cesiumV, 'koeppen', { alpha:0.55,
       colormap: v => {
@@ -4067,6 +4156,7 @@ class ZeroEarth {
       if (this.stroemeLayer.on) this.stroemeLayer._rebuild();
       this.unterbauLayer.update(Tideline.t);
       this.seismikLayer.update(Tideline.t);
+      this.sintflutLayer.update(Tideline.t);
       this._renderMoonPanel();
       if (this.gewaesserLayer.on) this.gewaesserLayer.update();
       this._renderMiniNull();
@@ -4199,6 +4289,7 @@ class ZeroEarth {
       }));
     // Modell laden (data/matrix.json), dann S4-Beschriftungen anwenden
     await MODELL.laden();
+    this.tour.liste();
     this._gruppiereSchichten();
     this.applyLabels();
     this._applyLicht();
@@ -4687,6 +4778,7 @@ class ZeroEarth {
     cc.style.display = ansicht === 'globus' || klein ? 'block' : 'none';
     document.getElementById('ss-canvas').style.display = ansicht === 'sonnensystem' ? 'block' : 'none';
     document.getElementById('karten-fach').style.display = ansicht === 'karte' ? 'block' : 'none';
+    document.getElementById('netz-fach').style.display = ansicht === 'netz' ? 'block' : 'none';
     if (this.karte) this.karte.on = ansicht === 'karte';
     this._layoutMitte();
     const mini = document.getElementById('mini-null');
@@ -4730,7 +4822,10 @@ class ZeroEarth {
     const an = Object.entries(this.dm?._ovState ?? {}).filter(([, v]) => v).map(([k]) => k);
     let html = '';
 
-    if (this.ansicht === 'sonnensystem') {
+    if (this.ansicht === 'netz') {
+      html += '<div class="lg-gruppe">Netzansicht · Schema</div>' +
+        zeile('Kette aus dem Strukturstand', { h: 'keine Daten, nur Struktur (fehlt)', z: 'bewusst leer: Schema, kein Einzelfall' });
+    } else if (this.ansicht === 'sonnensystem') {
       html += `<div class="lg-gruppe">Sonnensystem · ${esc(LABELS.scale(this.nullAnsicht))}</div>` +
         zeile('Sonne, Planeten, Mond', L.sonnensystem) +
         ['ekliptik', 'orbits', 'apex'].filter(f => this.ss?.opt?.[f]).map(f => zeile(name(f), L.sonnensystem)).join('');
@@ -5245,6 +5340,457 @@ class ZeroEarth {
       valEl.textContent = `${d.value} ${d.unit}`;
       subEl.textContent = 'Exzentrizität 100ka';
     }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   SINTFLUT-EBENE — Küsten und Kästen der sechs Fenster. Die Linien
+   stehen je Zeitschritt in data/sintflut_kuesten.json; zwischen den
+   Schritten wird nichts interpoliert. Außerhalb von 20–0 ka bleibt
+   die Küste leer und die Kästen stehen allein (Regel 8).
+   ───────────────────────────────────────────────────────────────── */
+class SintflutLayer {
+  constructor(v) { this.v = v; this.on = false; this.daten = null; this._schritt = undefined; }
+  get schritte() { return this.daten?.ka_bp ?? []; }
+  /** Masterzeit t (Jahre seit J2000) in ka BP, Bezugsjahr 1950. */
+  static kaAus(t) { return (-50 - t) / 1000; }
+  static tAus(ka) { return -50 - ka * 1000; }
+  aktuellerSchritt(t = Tideline.t) {
+    const ka = SintflutLayer.kaAus(t);
+    const i = this.schritte.findIndex(s => Math.abs(s - ka) <= 1.25);
+    return i < 0 ? null : i;
+  }
+  async laden() {
+    if (!this.daten) this.daten = await fetch('data/sintflut_kuesten.json').then(r => r.json());
+    return this.daten;
+  }
+  async show() {
+    this.on = true;
+    await this.laden();
+    if (!this.on) return;
+    this._kaesten();
+    this._schritt = undefined;
+    this.update(Tideline.t);
+  }
+  hide() {
+    this.on = false;
+    for (const k of ['linien', 'boxen', 'namen']) if (this[k]) { this.v.scene.primitives.remove(this[k]); this[k] = null; }
+    this._schritt = undefined;
+    const st = document.getElementById('sintflut-status'); if (st) st.textContent = '';
+  }
+  _kaesten() {
+    if (this.boxen) return;
+    const hoch = 3000;
+    this.boxen = this.v.scene.primitives.add(new Cesium.PolylineCollection());
+    this.namen = this.v.scene.primitives.add(new Cesium.LabelCollection());
+    const strich = Cesium.Material.fromType('PolylineDash', { color: Cesium.Color.fromCssColorString('#e8e2c8').withAlpha(.75), dashLength: 12 });
+    for (const o of Object.values(this.daten.orte)) {
+      const { west: w, ost: e, sued: s, nord: n } = o.bbox;
+      this.boxen.add({ width: 1.2, material: strich,
+        positions: Cesium.Cartesian3.fromDegreesArrayHeights([w,s,hoch, e,s,hoch, e,n,hoch, w,n,hoch, w,s,hoch]) });
+      this.namen.add({ position: Cesium.Cartesian3.fromDegrees(w, n, hoch), text: o.name,
+        font: '10px "JetBrains Mono",monospace', fillColor: Cesium.Color.fromCssColorString('#f0ecd8'),
+        outlineColor: Cesium.Color.BLACK, outlineWidth: 3, style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        pixelOffset: new Cesium.Cartesian2(0, -6), horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM });
+    }
+  }
+  update(t) {
+    if (!this.on || !this.daten) return;
+    const i = this.aktuellerSchritt(t);
+    if (i === this._schritt) return;
+    this._schritt = i;
+    if (this.linien) { this.v.scene.primitives.remove(this.linien); this.linien = null; }
+    const st = document.getElementById('sintflut-status');
+    if (i === null) { if (st) st.innerHTML = '<span class="ds-err">Masterzeit außerhalb von 20–0 ka BP: keine Küstenlinie</span>'; return; }
+    this.linien = this.v.scene.primitives.add(new Cesium.PolylineCollection());
+    const farbe = Cesium.Material.fromType('Color', { color: Cesium.Color.fromCssColorString('#8fe89a') });
+    for (const o of Object.values(this.daten.orte))
+      for (const zug of o.linien[i]) {
+        if (zug.length < 2) continue;
+        this.linien.add({ width: 1.6, material: farbe,
+          positions: Cesium.Cartesian3.fromDegreesArrayHeights(zug.flatMap(([x, y]) => [x, y, 3000])) });
+      }
+    if (st) st.innerHTML = `<span class="ds-ok">Küste bei ${tourKa(this.schritte[i])} ka BP</span> · Schritt 2,5 ka, nichts interpoliert`;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   TOUR-MOTOR. Keine Tourdaten hier: alles kommt aus kern/ereignisse/.
+   data/ereignisse.json führt die Dateien, weil der Browser einen Ordner
+   nicht auflisten kann (ein Test gleicht beides ab). Die Werte kommen
+   aus demselben Transform wie die Prüfung (Regel 14), die Herkunft
+   aus anzeige() im Schema (Regel 6).
+   ───────────────────────────────────────────────────────────────── */
+const tourEsc = t => String(t).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' })[c]);
+const tourKa = ka => Number(ka).toLocaleString('de-DE', { maximumFractionDigits: 1 });
+const TOUR_NATUR = {
+  '0': ['0. Natur', '#7d6bd0'], planetarer_stoffwechsel: ['Planetarer Stoffwechsel', '#d9c74a'],
+  '1.1': ['1.1 Erdsystem', '#6fb56a'], '1.2': ['1.2 Biosphäre / Lebensnetz', '#6fb56a'], '1.3': ['1.3 Basis', '#6fb56a'],
+  gesellschaftlicher_stoffwechsel: ['Gesellschaftlicher Stoffwechsel', '#d9c74a'],
+  '2.1': ['2.1 Konstruierte Wirklichkeit', '#d0605a'], '2.2': ['2.2 Überbau', '#d0605a'], '2.3': ['2.3 Symbolisches System', '#d0605a'],
+};
+const TOUR_STATUS = { vorhanden: 'vorhanden', in_arbeit: 'in Arbeit', fehlt: 'fehlt', bewusst_leer: 'bewusst leer' };
+/** Zeichensystem, Kanal Füllung (Strukturstand, Zeichensystem). */
+const TOUR_RANG = { beobachtung: ['●', 'beobachtet'], rekonstruktion: ['◐', 'rekonstruiert'], modell: ['○', 'Modell / Ideal'],
+                    erwartung: ['⏵', 'Erwartung'], fiktion: ['✱', 'Fiktion'] };
+const TOUR_GROESSE = { landflaeche: 'Landfläche', land_anteil: 'Landanteil', meeresspiegel: 'Meeresspiegel', verlust: 'Landverlust',
+                       verlust_anteil: 'Verlustanteil', schnellster_schritt: 'Schnellster Schritt' };
+const TOUR_EINHEIT = { km2: ' km²', m: ' m', kg: ' kg', m3: ' m³' };
+/** Die sechs Vorgänge als Linienarten der Netzansicht. */
+const NETZ_LINIE = { stoffwechsel: ['Stoffwechsel', ''], rolle: ['Rolle', '14 6'], anhaften: ['Anhaften', '6 5'],
+                     einschliessen_realisieren: ['Einschließen und Realisieren', '12 4 2 4'], konversion: ['Konversion', '2 5'], ueberlieferung: ['Überlieferung', '18 5 2 5 2 5'] };
+
+class TourMotor {
+  constructor(erde) { this.ze = erde; this.ev = null; this.graphen = new Map(); this.manifeste = new Map(); this.ereignisse = []; }
+
+  async liste() {
+    const el = document.getElementById('tour-liste');
+    try {
+      const { ereignisse } = await fetch('data/ereignisse.json').then(r => r.json());
+      this.ereignisse = await Promise.all(ereignisse.map(id => fetch(`kern/ereignisse/${id}.json`).then(r => r.json())));
+      el.innerHTML = this.ereignisse.map(e =>
+        `<div class="tour-wahl" onclick="ze.tour.start('${tourEsc(e.ereignis)}')"><b>${tourEsc(e.titel ?? e.ereignis)}</b><span>${tourEsc(e.satz)}</span></div>`).join('');
+    } catch (err) { el.textContent = `Ereignisse nicht lesbar: ${err.message}`; }
+  }
+
+  async adapter(name) {
+    if (this.graphen.has(name)) return this.graphen.get(name);
+    const lese = pfad => fetch(pfad).then(r => { if (!r.ok) throw new Error(pfad); return r.json(); });
+    const manifest = await lese(`kern/adapter/${name}/manifest.json`);
+    const roh = await lese(manifest.eingabe);
+    const zusatz = Object.fromEntries(await Promise.all(Object.entries(manifest.zusatz ?? {}).map(async ([k, p]) => [k, await lese(p)])));
+    const { transform } = await import(`./kern/adapter/${name}/transform.mjs`);
+    const graph = transform(roh, manifest, zusatz);
+    this.manifeste.set(name, manifest);
+    this.graphen.set(name, graph);
+    return graph;
+  }
+
+  async start(id) {
+    const ev = this.ereignisse.find(e => e.ereignis === id);
+    if (!ev) return;
+    this.schema ??= await import('./kern/schema.mjs');
+    await Promise.all([...new Set(ev.stationen.map(s => s.quelle).filter(Boolean))].map(q => this.adapter(q)));
+    this.ev = ev;
+    this.ka = undefined;
+    this.seiten = [{ art: 'satz' },
+      ...ev.stationen.filter(s => s.status !== 'bewusst_leer').map(st => ({ art: 'station', st })),
+      ...(ev.stationen.some(s => s.status === 'bewusst_leer') ? [{ art: 'nicht_beruehrt' }] : []),
+      { art: 'schluss' }];
+    this.tourEbenen = new Set();
+    this.frei = { rate: Tideline.rate, licht: this.ze.licht };
+    this.ze.simSpeed('stop');
+    this.ze.licht = 'an'; this.ze._applyLicht();       // die Nachtseite verdeckte sonst Orte
+    document.body.classList.add('tour');
+    document.getElementById('tour').hidden = false;
+    document.getElementById('tour-liste').hidden = true;
+    this.geheZu(0);
+  }
+
+  geheZu(i) {
+    this.i = Math.max(0, Math.min(this.seiten.length - 1, i));
+    const s = this.seiten[this.i];
+    document.getElementById('tour-kopf').textContent = `${this.ev.titel ?? this.ev.ereignis} · ${this.i + 1} / ${this.seiten.length}`;
+    document.getElementById('tour-zurueck').disabled = this.i === 0;
+    document.getElementById('tour-weiter').textContent = s.art === 'schluss' ? 'In den freien Modus' : 'Weiter';
+    this._zeichne();
+    // Ansichtswechsel laufen nacheinander; wer inzwischen überholt ist, entfällt
+    const nr = this._nr = (this._nr ?? 0) + 1;
+    this._lauf = (this._lauf ?? Promise.resolve())
+      .then(() => nr === this._nr ? this._setze(s) : null)
+      .catch(e => console.error('Tour', e));
+    document.getElementById('tour-inhalt').scrollTop = 0;
+  }
+  weiter() { this.seiten[this.i].art === 'schluss' ? this.beenden() : this.geheZu(this.i + 1); }
+  zurueck() { this.geheZu(this.i - 1); }
+
+  /** Zurück in den freien Modus; die Ebenen bleiben an und stehen in der Legende. */
+  async beenden() {
+    if (!this.ev) return;
+    this._nr = (this._nr ?? 0) + 1;
+    await this._lauf;
+    this.ev = null;
+    document.body.classList.remove('tour', 'tour-grau');
+    document.getElementById('tour').hidden = true;
+    document.getElementById('tour-liste').hidden = true;
+    document.getElementById('legende').classList.remove('zu');
+    this.ze.licht = this.frei.licht; this.ze._applyLicht();
+    // Graue Stationen schalten ihre Ebenen ab; zum Schluss sind alle der Tour wieder an
+    for (const k of this.tourEbenen) if (!this.ze.dm._ovState[k]) this.ze.toggle(k);
+    if (this.frei.rate) this.ze.simSpeed('echtzeit');
+    if (this.ze.ansicht === 'netz') await this.ze.zeigeAnsicht('globus', 'globus');
+    this.ze.ebenenGeaendert();
+  }
+
+  /* ── Was die Seite in der Ansicht setzt ── */
+  async _setze(s) {
+    const ev = this.ev, st = s.st, z = st?.zeigt;
+    document.body.classList.toggle('tour-grau', !!st && !st.quelle);
+    if (!z) return;
+    const ze = this.ze;
+    if (z.ansicht === 'sonnensystem') { if (ze.natur !== 'nullnatur') await ze.zeigeNatur('nullnatur'); }
+    else {
+      if (ze.natur !== 'erde') await ze.zeigeNatur('erde', { hoehe: ERDE_EINSTIEG_H / 2.4 });
+      await ze.zeigeAnsicht(z.ansicht, z.ansicht === 'karte' ? 'karte' : 'globus');
+    }
+    if (z.ansicht === 'netz') { this._netz(st); document.getElementById('legende').classList.add('zu'); return; }
+    document.getElementById('legende').classList.remove('zu');
+    // Zeit: nur intern als t; angezeigt wird das Maß des Ereignisses
+    const f = ev.zeitfenster;
+    if (typeof f?.von === 'number') {
+      const ka = this.ka ?? f.von;
+      Tideline.zoom = TSCALES.findIndex(x => x.id === 'ka');
+      Tideline.wc = SintflutLayer.tAus((f.von + f.bis) / 2);
+      Tideline.set(SintflutLayer.tAus(ka));
+      ze._zeitRegister();
+    }
+    // Ebenen: was die Station nennt, an; was die Tour früher einschaltete, aus
+    for (const k of this.tourEbenen) if (!z.ebenen.includes(k) && ze.dm._ovState[k]) ze.toggle(k);
+    for (const k of z.ebenen) { this.tourEbenen.add(k); if (!ze.dm._ovState[k]) ze.toggle(k); }
+    if (z.ansicht === 'globus') await this._orte(z.orte);
+  }
+  async _orte(orte) {
+    const ze = this.ze;
+    if (orte === 'alle' || !orte?.length) {
+      const box = this._boxen(ev => ev.orte.map(o => o.verweis))[0];
+      if (box) { ze.obs.lat = (box.sued + box.nord) / 2; ze.obs.lon = (box.west + box.ost) / 2; }
+      return ze.dm.flyTo(ze._kamera(ERDE_EINSTIEG_H / 2.4));
+    }
+    const box = this._boxen(() => orte)[0];
+    if (box) return this.fliege(box);
+  }
+  _boxen(wahl) {
+    const ev = this.ev;
+    return wahl(ev).map(v => { const [a, id] = String(v).split(':');
+      return this.graphen.get(a)?.eintraege.find(e => e.id === id)?.wo?.bbox; }).filter(Boolean);
+  }
+  fliege(box) {
+    const ze = this.ze;
+    ze.obs.lat = (box.sued + box.nord) / 2; ze.obs.lon = (box.west + box.ost) / 2;
+    const breit = Math.max(box.nord - box.sued, box.ost - box.west);
+    return ze.dm.flyTo(ze._kamera(Math.max(breit * 111e3 * 2.1, 8e5)));
+  }
+  flieheOrt(verweis) { const b = this._boxen(() => [verweis])[0]; if (b) this.fliege(b); }
+
+  /** Zeitschritt in einer Station mit Ebene: nur die Schritte der Quelle, nichts dazwischen. */
+  setzeSchritt(i) {
+    const s = this.ze.sintflutLayer.schritte[+i];
+    if (s === undefined) return;
+    this.ka = s;
+    Tideline.set(SintflutLayer.tAus(s));
+    this._werte();
+  }
+
+  /* ── Zeichen ── */
+  _zeichen(arten) {
+    if (!arten?.length) return '<span class="tz tz-grau" title="fehlt">■</span> <em>fehlt</em>';
+    const { rang, merkmale } = this.schema.anzeige(arten);
+    const [z, name] = TOUR_RANG[rang] ?? ['■', 'nicht angegeben'];
+    const kur = merkmale.includes('kuratiert');
+    const rest = merkmale.filter(m => m !== 'kuratiert');
+    return `<span class="tz${kur ? ' tz-kur' : ''}" title="${tourEsc(arten.join(', '))}">${z}</span> <em>${tourEsc(name)}${kur ? ', kuratiert' : ''}${rest.length ? ` · ${tourEsc(rest.join(', '))}` : ''}</em>`;
+  }
+  _arten(o, sammel = new Set()) {
+    if (Array.isArray(o)) { o.forEach(x => this._arten(x, sammel)); return sammel; }
+    if (!o || typeof o !== 'object') return sammel;
+    if (Array.isArray(o.arten)) o.arten.forEach(a => sammel.add(a));
+    for (const [k, v] of Object.entries(o)) if (k !== 'archivkette') this._arten(v, sammel);
+    return sammel;
+  }
+  _objekt(g, ref) {
+    const [id, k] = ref.split('#');
+    const e = g.eintraege.find(x => x.id === id) ?? g.relationen.find(x => x.id === id) ?? g.prozesse.find(x => x.id === id) ?? g.bestaende.find(x => x.id === id);
+    return { e, k, wert: k ? e?.werte?.[k] : e };
+  }
+  _zeit(z) {
+    if (!z) return '';
+    if (z.fehlt) return `Zeit fehlt: ${z.grund}`;
+    const einheit = this.schema.BEZUGSSYSTEME[z.bezugssystem]?.name ?? z.bezugssystem;
+    return z.von !== undefined ? `${tourKa(z.von)}–${z.bis === 'offen' ? 'offen' : tourKa(z.bis)} ${einheit}` : `${tourKa(z.wert)} ${einheit}`;
+  }
+  _zahl(v, einheit) {
+    if (einheit === '1') return `${(v * 100).toLocaleString('de-DE', { maximumFractionDigits: 1 })} %`;
+    if (Math.abs(v) >= 1e9) { const e = Math.floor(Math.log10(Math.abs(v))); return `${(v / 10 ** e).toLocaleString('de-DE', { maximumFractionDigits: 2 })} · 10<sup>${e}</sup>${TOUR_EINHEIT[einheit] ?? ''}`; }
+    return `${Number(v).toLocaleString('de-DE')}${TOUR_EINHEIT[einheit] ?? ''}`;
+  }
+
+  /** Eine Zeile je Verweis, gruppiert nach Ort. */
+  _werteHtml(st) {
+    const g = this.graphen.get(st.quelle);
+    if (!g || !st.verweise) return '';
+    const gruppen = new Map();
+    for (const ref of st.verweise) {
+      const id = ref.split('#')[0], kurz = id.split('/').slice(0, 2).join('/');
+      const ort = (Array.isArray(this.ev.orte) ? this.ev.orte : []).find(o => o.verweis === `${st.quelle}:${kurz}`);
+      const key = ort?.verweis ?? '';
+      if (!gruppen.has(key)) gruppen.set(key, { ort, zeilen: [] });
+      gruppen.get(key).zeilen.push(this._zeile(g, ref));
+    }
+    return [...gruppen.values()].map(({ ort, zeilen }) =>
+      `<div class="tw-gruppe">${ort ? `<div class="tw-ort" onclick="ze.tour.flieheOrt('${tourEsc(ort.verweis)}')">${tourEsc(ort.name)} ↗</div>` : ''}${zeilen.join('')}</div>`).join('');
+  }
+  _zeile(g, ref) {
+    const { e, k, wert } = this._objekt(g, ref);
+    if (!wert) return `<div class="tw"><span>${tourEsc(ref)}</span><b>fehlt im Graphen</b></div>`;
+    const zei = z => `<i>${this._zeichen([...this._arten(z)])}</i>`;
+    if (k) {
+      const reihe = wert.punkte.length > 1;
+      const p = reihe ? wert.punkte.find(x => x.bezugszeit.wert === (this.ka ?? 0)) ?? wert.punkte.at(-1) : wert.punkte[0];
+      const f = p.fassungen[0];
+      return `<div class="tw"><span>${tourEsc(TOUR_GROESSE[k] ?? k)} <small>${tourEsc(this._zeit(p.bezugszeit))}</small></span><b>${typeof f.wert === 'number' ? this._zahl(f.wert, wert.einheit) : 'Verweis'}</b>${zei(f.woher)}</div>`;
+    }
+    if (e.bilanz) {
+      const b = e.bilanz, abfluss = b.abfluss?.[0];
+      const rest = typeof b.zufluss === 'number' ? ((b.zufluss - abfluss) / b.zufluss * 100).toLocaleString('de-DE', { maximumFractionDigits: 1 }) : null;
+      const ideal = ref.split('/').at(-1);
+      return `<div class="tw tw-bilanz"><span>Eis → Ozean · Ideal ${tourEsc(ideal)} <small>${tourEsc(this._zeit(e.bezugszeit))}</small></span>` +
+        `<b>${this._zahl(b.zufluss, b.einheit)} → ${this._zahl(abfluss, b.einheit)}</b>` +
+        `<small class="tw-hinweis">Rest ${rest} %, Toleranz ±${Math.round(b.toleranz / b.zufluss * 100)} %. ${b.pruefart === 'innere_stimmigkeit' ? 'Nur innere Stimmigkeit: beide Seiten aus derselben Quelle.' : ''}</small>${zei(e.woher)}</div>`;
+    }
+    if (e.wo?.geometrie === 'grenze') {
+      const koord = e.wo.koordinaten;
+      return `<div class="tw"><span>Küstenlinie <small>${koord.fehlt ? 'Geometrie fehlt' : `0-m-Linie, ${String(koord.aufloesung_grad).replace('.', ',')}°, Unschärfe fehlt`}</small></span>${zei(e.wo.woher)}</div>`;
+    }
+    return `<div class="tw"><span>${tourEsc(e.name ?? ref)}</span>${zei(e)}</div>`;
+  }
+  _werte() {
+    const s = this.seiten?.[this.i];
+    const el = document.getElementById('tour-werte');
+    if (el && s?.st) el.innerHTML = this._werteHtml(s.st);
+    const lab = document.getElementById('tour-schritt-wert');
+    if (lab) lab.textContent = `${tourKa(this.ka ?? 0)} ka BP`;
+    this.ze.zeichneLegende();
+  }
+
+  /* ── Seiten ── */
+  _daten(st) {
+    const links = [];
+    const dat = (pfad, name) => links.push(`<a href="${tourEsc(pfad)}" target="_blank" rel="noopener">${tourEsc(name ?? pfad)}</a>`);
+    if (st?.quelle) {
+      const m = this.manifeste.get(st.quelle);
+      dat(`kern/adapter/${st.quelle}/manifest.json`);
+      if (m?.eingabe) dat(m.eingabe);
+      for (const p of Object.values(m?.zusatz ?? {})) dat(p);
+    }
+    dat(`kern/ereignisse/${this.ev.ereignis}.json`);
+    if (st?.vorgemerkt?.ort) { const u = /https?:\/\/\S+/.exec(st.vorgemerkt.ort)?.[0]; if (u) dat(u, `vorgemerkt: ${st.vorgemerkt.quelle}`); }
+    return `<div class="tour-daten"><span>Daten dahinter</span>${links.join('')}</div>`;
+  }
+  _zeitfenster() {
+    const f = this.ev.zeitfenster;
+    if (f?.bewusst_leer) return `Zeit bewusst leer: ${tourEsc(f.grund)}`;
+    const u = f.unschaerfe?.fehlt ? `Unschärfe fehlt: ${f.unschaerfe.grund}` : `± ${f.unschaerfe?.plusminus} (${f.unschaerfe?.quelle})`;
+    const einheit = this.schema.BEZUGSSYSTEME[f.bezugssystem];
+    return `${tourEsc(this._zeit(f))}, Bezugsjahr ${tourEsc(einheit?.nullpunkt ?? '')}. Auflösung ${tourKa(f.aufloesung)} ${tourEsc(einheit?.einheit ?? '')}. ${tourEsc(u)}`;
+  }
+  _zeichne() {
+    const ev = this.ev, s = this.seiten[this.i], el = document.getElementById('tour-inhalt');
+    if (s.art === 'satz') {
+      const orte = ev.orte?.bewusst_leer ? `Orte bewusst leer: ${ev.orte.grund}` : ev.orte.map(o => o.name).join(' · ');
+      el.innerHTML = `<p class="tour-satz">${tourEsc(ev.satz)}</p>
+        <div class="tour-block"><h4>Wann</h4><p>${this._zeitfenster()}</p></div>
+        <div class="tour-block"><h4>Wo</h4><p>${tourEsc(orte)}</p></div>
+        <div class="tour-block"><h4>Auswahl (Regel 7)</h4><p>${tourEsc(ev.auswahl_begruendung)}</p></div>
+        ${this._daten()}`;
+      return;
+    }
+    if (s.art === 'nicht_beruehrt') {
+      el.innerHTML = `<h3 class="tour-titel">Nicht berührt</h3>
+        <p class="tour-leise">Diese Naturen sind bewusst leer. Das ist Teil der Aussage (Regel 8).</p>` +
+        ev.stationen.filter(x => x.status === 'bewusst_leer').map(x =>
+          `<div class="tour-block tour-leer"><h4 style="color:${TOUR_NATUR[x.natur][1]}">${tourEsc(TOUR_NATUR[x.natur][0])}</h4>
+            <p class="tour-frage">${tourEsc(x.frage)}</p><p>${tourEsc(x.begruendung)}</p></div>`).join('') + this._daten();
+      return;
+    }
+    if (s.art === 'schluss') {
+      const b = ev.brueche;
+      const zahl = st => ev.stationen.filter(x => x.status === st).length;
+      el.innerHTML = `<h3 class="tour-titel">Ende der Tour</h3>
+        <p class="tour-satz">${tourEsc(ev.satz)}</p>
+        <div class="tour-block"><h4>Stand</h4><p>${Object.entries(TOUR_STATUS).map(([k, n]) => `${zahl(k)} ${n}`).join(' · ')}</p></div>
+        ${b?.fehlt ? `<div class="tour-block tour-leer"><h4>Brüche fehlen</h4><p>${tourEsc(b.grund)}</p></div>` : ''}
+        ${b?.bewusst_leer ? `<div class="tour-block tour-leer"><h4>Brüche bewusst leer</h4><p>${tourEsc(b.grund)}</p></div>` : ''}
+        <p class="tour-leise">Der freie Modus übernimmt: Die Ebenen bleiben an, die Legende „aktuell übereinander“ zählt sie auf.</p>
+        ${this._daten()}`;
+      return;
+    }
+    const st = s.st, [nat, farbe] = TOUR_NATUR[st.natur];
+    const ohne = !st.quelle;
+    const lage = this.ze.sintflutLayer;
+    const regler = st.zeigt?.ebenen?.includes('sintflut') && lage?.daten;
+    if (st.zeigt?.ebenen?.includes('sintflut') && !lage?.daten) lage.laden().then(() => { if (this.seiten[this.i] === s) this._zeichne(); });
+    if (this.ka === undefined && typeof ev.zeitfenster?.von === 'number') this.ka = ev.zeitfenster.von;
+    const arten = ohne ? [] : [...this._arten((st.verweise ?? []).map(r => this._objekt(this.graphen.get(st.quelle), r).wert))];
+    const k = st.kette;
+    const schritte = regler ? lage.schritte : [];
+    el.innerHTML = `<div class="tour-natur" style="color:${farbe};border-color:${farbe}">${tourEsc(nat)}</div>
+      <h3 class="tour-titel ${ohne ? 'tour-grau-t' : ''}">${tourEsc(k?.name ?? st.frage)}</h3>
+      ${k ? `<p class="tour-frage">${tourEsc(st.frage)}</p>` : ''}
+      <div class="tour-status s-${st.status}"><b>${tourEsc(TOUR_STATUS[st.status])}</b> <span class="tour-z">${this._zeichen(arten)}</span></div>
+      ${st.begruendung ? `<div class="tour-block ${ohne ? 'tour-leer' : ''}"><h4>Begründung</h4><p>${tourEsc(st.begruendung)}</p></div>` : ''}
+      ${k?.vorschlag ? `<div class="tour-block tour-vorschlag"><h4>Vorschlag</h4><p>${tourEsc(k.vorschlag)}</p></div>` : ''}
+      ${k?.herkunft_spaeter ? `<div class="tour-block"><h4>Herkunft später</h4><p>${tourEsc(k.herkunft_spaeter.join(', '))} ${this._zeichen(k.herkunft_spaeter)}</p></div>` : ''}
+      ${st.vorgemerkt ? `<div class="tour-block tour-leer"><h4>Vorgemerkt</h4><p>${tourEsc(st.vorgemerkt.quelle)} ${this._zeichen(st.vorgemerkt.arten)}${st.vorgemerkt.lizenz?.fehlt ? `<br>Lizenz fehlt: ${tourEsc(st.vorgemerkt.lizenz.grund)}` : ''}</p></div>` : ''}
+      ${regler ? `<div class="tour-regler"><label>Zeitschritt <b id="tour-schritt-wert">${tourKa(this.ka)} ka BP</b></label>
+        <input type="range" min="0" max="${schritte.length - 1}" step="1" value="${Math.max(0, schritte.indexOf(this.ka))}" oninput="ze.tour.setzeSchritt(this.value)">
+        <small>Nur die Schritte der Quelle, nichts dazwischen. Unschärfe fehlt; ${tourKa(ev.zeitfenster.aufloesung)} ka ist die Auflösung, nur eine Untergrenze.</small></div>` : ''}
+      <div id="tour-werte">${this._werteHtml(st)}</div>
+      ${regler ? `<p class="tour-leise">Küste: ${tourEsc(lage.daten.woher.grenzen[0])}. Der Kasten ist eine Setzung (Regel 7); das Grundbild ist heutig.</p>` : ''}
+      ${this._daten(st)}`;
+  }
+
+  /* ── Netzansicht: Stapel als feste Bänder, Übergänge als Zonen, Position
+     in der Höhe bedeutet Stapel, kein kraftbasiertes Layout. ── */
+  _netz(aktiv) {
+    const ev = this.ev, W = 720, H = 560, links = 150, rechts = W - 70;
+    const reihen = [...this.schema.EREIGNIS_NATUREN].reverse();
+    const hoch = (H - 74) / reihen.length;
+    const y = n => 8 + (reihen.indexOf(n) + .5) * hoch;
+    const knoten = ev.stationen.filter(s => s.kette);
+    const dx = (rechts - links - 40) / Math.max(1, knoten.length - 1);
+    const pos = new Map(knoten.map((s, i) => [s.kette.knoten, { x: links + 20 + i * dx, y: y(s.natur), s }]));
+    const form = (f, x, y, r) => {
+      if (f === 'prozess') return `<circle cx="${x}" cy="${y}" r="${r}"`;
+      const n = f === 'institution' ? 3 : 5;
+      const pts = Array.from({ length: n }, (_, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / n; return `${(x + r * 1.15 * Math.cos(a)).toFixed(1)},${(y + r * 1.15 * Math.sin(a)).toFixed(1)}`; });
+      return `<polygon points="${pts.join(' ')}"`;
+    };
+    const umriss = { ding: '', verhaeltnis: '4 3', fluss: '1.5 3' };
+    /** Name auf höchstens zwei Zeilen, an einem Wortende umbrochen. */
+    const zeilen = name => { if (name.length <= 16) return [name]; const m = name.lastIndexOf(' ', 20); return m < 1 ? [name] : [name.slice(0, m), name.slice(m + 1)]; };
+    const bander = reihen.map(n => {
+      const [name, farbe] = TOUR_NATUR[n], y0 = y(n) - hoch / 2, zone = n.includes('stoffwechsel');
+      const leer = ev.stationen.filter(s => s.natur === n).every(s => s.status === 'bewusst_leer');
+      return `<rect x="0" y="${y0}" width="${W}" height="${hoch - 2}" fill="${farbe}" fill-opacity="${zone ? .13 : .05}" ${zone ? `stroke="${farbe}" stroke-opacity=".35" stroke-dasharray="2 4"` : ''}/>` +
+        `<text x="7" y="${y0 + hoch / 2 + 3}" class="nz-band" fill="${farbe}">${tourEsc(name.length > 19 ? name.replace('Stoffwechsel', 'Stoffw.') : name)}</text>` +
+        (leer ? `<text x="${W - 12}" y="${y0 + hoch / 2 + 3}" class="nz-leer" text-anchor="end">nicht berührt</text>` : '');
+    }).join('');
+    const kanten = knoten.flatMap(s => s.kette.haengt_an.map(h => {
+      const a = pos.get(s.kette.knoten), b = pos.get(h.knoten);
+      return `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="#c8ccd6" stroke-width="1.4" stroke-dasharray="${NETZ_LINIE[h.vorgang][1]}" marker-end="url(#nz-pfeil)"/>`;
+    })).join('');
+    const knotenSvg = knoten.map(s => {
+      const k = s.kette, p = pos.get(k.knoten), an = s === aktiv;
+      const farbe = TOUR_NATUR[s.natur][1];
+      return `<g class="nz-k" onclick="ze.tour.geheZuStation('${tourEsc(k.knoten)}')">${an ? `<circle cx="${p.x}" cy="${p.y}" r="21" fill="none" stroke="#fff" stroke-width="1.5"/>` : ''}` +
+        `${form(k.form, p.x, p.y, 13)} fill="#5b5f68" stroke="${farbe}" stroke-width="2" stroke-dasharray="${umriss[k.umriss]}"/>` +
+        `<text x="${p.x}" y="${p.y + 26}" text-anchor="middle" class="nz-name ${an ? 'an' : ''}">${zeilen(k.name + (k.vorschlag ? ' *' : '')).map((t, i) => `<tspan x="${p.x}" dy="${i ? 11 : 0}">${tourEsc(t)}</tspan>`).join('')}</text></g>`;
+    }).join('');
+    const genutzt = [...new Set(knoten.flatMap(s => s.kette.haengt_an.map(h => h.vorgang)))];
+    const legendeY = H - 50;
+    const linien = genutzt.map((v, i) => `<line x1="${8 + i * 232}" y1="${legendeY}" x2="${44 + i * 232}" y2="${legendeY}" stroke="#c8ccd6" stroke-width="1.4" stroke-dasharray="${NETZ_LINIE[v][1]}"/><text x="${50 + i * 232}" y="${legendeY + 3}" class="nz-fuss">${tourEsc(NETZ_LINIE[v][0])}</text>`).join('');
+    document.getElementById('netz-fach').innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Netzansicht ${tourEsc(ev.titel ?? ev.ereignis)}">
+      <defs><marker id="nz-pfeil" viewBox="0 0 8 8" refX="22" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L8 4L0 8z" fill="#c8ccd6"/></marker></defs>
+      ${bander}${kanten}${knotenSvg}${linien}
+      <text x="8" y="${H - 32}" class="nz-fuss">Höhe = Stapel. Horizontale = Reihenfolge der Stationen, eine Setzung, keine Zeit und keine Menge.</text>
+      <text x="8" y="${H - 19}" class="nz-fuss">Grau gefüllt: keine Daten, nur Struktur. * = Zuordnung ist ein Vorschlag. Dreieck Institution · Fünfeck Bestand, Mittel · Kreis Prozess.</text>
+      <text x="8" y="${H - 6}" class="nz-fuss">Dieser Ausschnitt ist eine Auswahl (Regel 7): die Kette aus dem Strukturstand, Abschnitt 2.1.</text>
+    </svg>`;
+  }
+  geheZuStation(knoten) {
+    const i = this.seiten.findIndex(s => s.st?.kette?.knoten === knoten);
+    if (i >= 0) this.geheZu(i);
   }
 }
 
