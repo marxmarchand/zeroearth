@@ -36,8 +36,7 @@ test('Sintflut: Satz, alle neun Naturen, ehrlicher Status', () => {
   assert.deepEqual([...new Set(sintflut.stationen.map((/** @type {any} */ s) => s.natur))].sort(), [...EREIGNIS_NATUREN].sort());
   assert.equal(station(sintflut, '1.1').status, 'vorhanden');
   assert.equal(station(sintflut, 'planetarer_stoffwechsel').status, 'in_arbeit');
-  for (const n of ['0', '2.1', '2.3']) assert.equal(station(sintflut, n).status, 'fehlt', n);
-  assert.equal(station(sintflut, '1.2').status, 'bewusst_leer');
+  for (const n of ['0', '1.2', '2.1', '2.3']) assert.equal(station(sintflut, n).status, 'fehlt', n);
   assert.ok(station(sintflut, '1.2').begruendung.length > 40);
   assert.equal(sintflut.orte.length, 6);
 });
@@ -52,7 +51,7 @@ const VERSTOESSE = [
   [8, 'eine Natur fehlt als Station', e => { e.stationen = e.stationen.filter((/** @type {any} */ s) => s.natur !== '1.2'); }],
   [8, 'ohne Quelle, aber "vorhanden"', e => { station(e, '2.3').status = 'vorhanden'; }],
   [8, 'ohne Quelle, ohne Begründung', e => { delete station(e, '0').begruendung; }],
-  [8, 'bewusst leer ohne Begründung', e => { station(e, '1.2').begruendung = ''; }],
+  [8, 'bewusst leer ohne Begründung', e => { station(e, '1.2').status = 'bewusst_leer'; station(e, '1.2').begruendung = ''; }],
   ['E', 'Station mit Daten', e => { station(e, '1.1').werte = { landflaeche_km2: 610103 }; }],
   ['E', 'Daten statt Quelle', e => { station(e, '1.1').quelle = { land_km2: 610103 }; }],
   ['E', 'Frage als Zahl', e => { station(e, '1.1').frage = 42; }],

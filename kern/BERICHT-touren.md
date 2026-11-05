@@ -80,3 +80,22 @@ Im Terminator-Licht liegt die Nachtseite weiter dunkel, das ist gewollt. Die Tou
 ![Nicht berührt](bericht-touren/haus-10-nicht_beruehrt.jpg)
 ![Schluss](bericht-touren/haus-11-schluss.jpg)
 ![Freier Modus](bericht-touren/haus-frei.jpg)
+
+## Nachtrag 2026-11-05: Sintflut 1.2 und Doggerland-Küste
+
+- **Station 1.2 (Lebensgemeinschaften):** Sie steht jetzt auf `fehlt` statt `bewusst_leer` und hat damit eine eigene graue Seite. Die Seite „Nicht berührt“ entfällt bei der Sintflut, weil keine bewusst leere Station bleibt.
+- **Prüfung der Doggerland-Küstenlinie gegen die Landfläche** (`data/sintflut.json`):
+
+| Schritt | Fläche innerhalb der 0-m-Linie | Zellsumme | Abweichung | Linienpunkte an einer Land/Meer-Grenze |
+| --- | --- | --- | --- | --- |
+| 20 ka | 477 897 km² | 506 517 km² | −5,7 % | 23 von 23 |
+| 10 ka | 326 813 km² | 347 909 km² | −6,1 % | 175 von 175 |
+| 0 ka | 173 715 km² | 195 941 km² | −11,3 % | 127 von 127 |
+
+- **Lage:** Jeder Punkt der Linie liegt zwischen einer Land- und einer Meerzelle. Die Linie stimmt also mit dem Raster überein.
+- **Woher die Flächendifferenz kommt:**
+  - Die Zellsumme zählt ganze 0,25°-Zellen, deren Mittelpunkt über 0 m liegt.
+  - Die Kontur verläuft linear zwischen den Zellmittelpunkten und endet an den äußeren Zellmittelpunkten. Ein halber Zellrand rund um den Kasten fehlt ihr, bei 11° × 6° rund 6 %.
+  - Bei 0 ka ist der Landanteil klein und die Küste lang, darum wiegt das Halbieren der Küstenzellen schwerer.
+- **Einordnung:** Beides sind zwei Lesarten desselben Rasters, kein Fehler. Bei 20 ka ist der Kasten fast ganz Land; die Linie besteht nur aus drei kurzen Stücken am Nordrand.
+

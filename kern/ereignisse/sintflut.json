@@ -120,8 +120,15 @@
       "natur": "1.2",
       "frage": "Welche Lebensräume und Lebensgemeinschaften gingen mit dem Schelfland unter?",
       "quelle": null,
-      "status": "bewusst_leer",
-      "begruendung": "Für die überfluteten Schelfe im Zeitfenster liegen keine Daten zu Lebensgemeinschaften vor. Ein Lebensnetz aus heutigen Verbreitungen (etwa GBIF) zurückzurechnen wäre eigene Modellierung (Regel 12). Leer gelassen, bis eine Rekonstruktion als Quelle vorliegt."
+      "status": "fehlt",
+      "begruendung": "Für die überfluteten Schelfe im Zeitfenster liegen keine Daten zu Lebensgemeinschaften vor. Ein Lebensnetz aus heutigen Verbreitungen (etwa GBIF) zurückzurechnen wäre eigene Modellierung (Regel 12). Leer gelassen, bis eine Rekonstruktion als Quelle vorliegt.",
+      "zeigt": {
+        "ansicht": "globus",
+        "ebenen": [
+          "sintflut"
+        ],
+        "orte": "alle"
+      }
     },
     {
       "natur": "1.3",
