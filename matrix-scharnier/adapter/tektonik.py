@@ -103,22 +103,25 @@ def main():
     rot_pm = pygplates.RotationModel(pm + 'm06c9h_3id_forPgeog_19o_r1c.rot')
     rot_c = pygplates.RotationModel([cao + '1000_0_rotfile.rot', cao + '1800_1000_rotfile.rot'])
 
-    # PALEOMAP bringt keine Küsten mit: die Merdith-Küsten werden an den
-    # PALEOMAP-Plattenpolygonen geteilt und erhalten deren Plattennummern.
+    # PALEOMAP bringt keine Küsten mit: Jedes Merdith-Polygon erhält ganz die
+    # Plattennummer der PALEOMAP-Platte, mit der es sich am meisten überlappt.
+    # Früher: Teilung an den Plattengrenzen (split_into_plates). Sie zerlegt
+    # die Polygone in Linienstücke; da nur Polygone übernommen wurden, fielen
+    # zwei Drittel weg (266 statt 848 Kontinentmerkmale).
     geteilt = pygplates.partition_into_plates(
         pm + 'PALEOMAP_PlatePolygons__forPgeog_v19o.gpml', rot_pm, kueste_m,
-        partition_method=pygplates.PartitionMethod.split_into_plates)
+        partition_method=pygplates.PartitionMethod.most_overlapping_plate)
 
     kueste_c = pygplates.FeatureCollection(cao + 'shapes_coasts.gpmlz')
     kont_m = pygplates.FeatureCollection(merdith + 'Continents/shapes_continents.gpml')
     kont_c = pygplates.FeatureCollection(cao + 'shapes_continents.gpmlz')
     kont_pm = pygplates.partition_into_plates(
         pm + 'PALEOMAP_PlatePolygons__forPgeog_v19o.gpml', rot_pm, kont_m,
-        partition_method=pygplates.PartitionMethod.split_into_plates)
+        partition_method=pygplates.PartitionMethod.most_overlapping_plate)
     geo = {
         'merdith': {'name': 'Merdith et al. 2021: Küstenpolygone (shapes_coastlines_v2) und Kontinentpolygone (shapes_continents)',
                     'kueste': geometrie(kueste_m), 'kontinente': geometrie(kont_m)},
-        'paleomap': {'name': 'Merdith-Polygone, geteilt an den PALEOMAP-Plattenpolygonen v19o_r1c (Setzung: PALEOMAP bringt keine eigenen mit)',
+        'paleomap': {'name': 'Merdith-Polygone, je ganz der PALEOMAP-Platte (v19o_r1c) mit der größten Überlappung zugeordnet (Setzung: PALEOMAP bringt keine eigenen mit)',
                      'kueste': geometrie(geteilt), 'kontinente': geometrie(kont_pm)},
         'cao': {'name': 'Cao et al. 2024: Küstenpolygone (shapes_coasts) und Kontinentpolygone (shapes_continents)',
                 'kueste': geometrie(kueste_c), 'kontinente': geometrie(kont_c)},

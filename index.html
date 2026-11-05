@@ -24,6 +24,8 @@
     #referenz-hinweis{position:fixed;top:88px;left:50%;transform:translateX(-50%);z-index:35;padding:5px 12px;border-radius:3px;
       background:rgba(120,60,10,.9);border:1px solid #e8a54a;color:#ffe2b8;font:600 11px var(--ui);letter-spacing:.04em;pointer-events:none;}
     #referenz-hinweis[hidden]{display:none;}
+    .hz{margin-left:3px;font-size:10px;color:#2b3020;}
+    .hz-fehlt{color:#8b8f96;}
     .tw-wahl{display:block;font-size:10px;line-height:1.5;color:#2b3020;cursor:pointer;}
     .tw-wahl input{margin-right:4px;vertical-align:-1px;}
     .tw-auto{cursor:default;opacity:.8;}
@@ -549,23 +551,23 @@
 
       <!-- Symbolisches System: symbolische Vermittlung -->
       <div class="sub-head" data-sub="riss"></div>
-      <div class="ob ov-side" id="tb-riss" onclick="ze.toggle('riss')"><div class="obd"></div>Religionen · Kulturkreise · Schriftsysteme ▵</div>
+      <div class="ob ov-side" id="tb-riss" onclick="ze.toggle('riss')"><div class="obd"></div>Religionen · Kulturkreise · Schriftsysteme <span class="hz" data-hz="riss"></span></div>
       <div class="ov-status" id="riss-status"></div>
 
       <!-- Institutionalisierter Überbau: Rechtsakte, Institutionen -->
       <div class="sub-head" data-sub="ueberbau"></div>
-      <div class="ob ov-side" id="tb-ueberbau" onclick="ze.toggle('ueberbau')"><div class="obd"></div>Staaten / staatsähnliche Strukturen △</div>
+      <div class="ob ov-side" id="tb-ueberbau" onclick="ze.toggle('ueberbau')"><div class="obd"></div>Staaten / staatsähnliche Strukturen <span class="hz" data-hz="ueberbau"></span></div>
       <div class="ov-status" id="ueberbau-status"></div>
-      <div class="ob ov-side" id="tb-grenzen" onclick="ze.toggle('grenzen')"><div class="obd"></div>Staatsgrenzen ╱</div>
+      <div class="ob ov-side" id="tb-grenzen" onclick="ze.toggle('grenzen')"><div class="obd"></div>Staatsgrenzen <span class="hz" data-hz="grenzen"></span></div>
       <div class="ov-status" id="grenzen-status"></div>
-      <div class="ob ov-side" id="tb-sprachen" onclick="ze.toggle('sprachen')" title="Sprachen (2.2) am Träger Sprachgemeinschaft (1.3); Umrandung = Gefährdung der Überlieferung"><div class="obd"></div>Sprachen · Gefährdung (Glottolog) ◌</div>
+      <div class="ob ov-side" id="tb-sprachen" onclick="ze.toggle('sprachen')" title="Sprachen (2.2) am Träger Sprachgemeinschaft (1.3); Umrandung = Gefährdung der Überlieferung"><div class="obd"></div>Sprachen · Gefährdung (Glottolog) <span class="hz" data-hz="sprachen"></span></div>
       <div class="ov-status" id="sprachen-status"></div>
 
       <!-- Konstruierte Wirklichkeit: eingeschriebener und gebauter Raum -->
       <div class="sub-head" data-sub="konstruierte_wirklichkeit"></div>
-      <div class="ob ov-side" id="tb-kataster" onclick="ze.toggle('kataster')"><div class="obd"></div>Kataster · Parzellen ▦</div>
+      <div class="ob ov-side" id="tb-kataster" onclick="ze.toggle('kataster')"><div class="obd"></div>Kataster · Parzellen <span class="hz" data-hz="kataster"></span></div>
       <div class="ov-status" id="kataster-status"></div>
-      <div class="ob ov-side" id="tb-ware" onclick="ze.toggle('ware')"><div class="obd"></div>Wertformen (Ware · Kapital) ▢</div>
+      <div class="ob ov-side" id="tb-ware" onclick="ze.toggle('ware')"><div class="obd"></div>Wertformen (Ware · Kapital) <span class="hz" data-hz="ware"></span></div>
       <div class="ov-status" id="ware-status"></div>
       </div>
     </div>
@@ -576,13 +578,13 @@
       <div class="sub-head" data-sub="immat_pm"></div>
       <div class="ov-status" style="display:block">Wissen als Produktionsmittel — Kuratierung offen</div>
       <div class="sub-head" data-sub="mat_pm"></div>
-      <div class="ob ov-side" id="tb-bestaende" onclick="ze.toggle('bestaende')"><div class="obd"></div>Bestände &amp; Mittel ⬠</div>
+      <div class="ob ov-side" id="tb-bestaende" onclick="ze.toggle('bestaende')"><div class="obd"></div>Bestände &amp; Mittel <span class="hz" data-hz="bestaende"></span></div>
       <div class="ov-status" id="bestaende-status"></div>
-      <div class="ob ov-side" id="tb-stroeme" onclick="ze.toggle('stroeme')"><div class="obd"></div>Netzströme (Waren · Kapital · Arbeit) →</div>
+      <div class="ob ov-side" id="tb-stroeme" onclick="ze.toggle('stroeme')"><div class="obd"></div>Netzströme (Waren · Kapital · Arbeit) <span class="hz" data-hz="stroeme"></span></div>
       <div class="ov-status" id="stroeme-status"></div>
-      <div class="ob ov-side" id="tb-nachtlicht" onclick="ze.toggleNachtlicht()"><div class="obd"></div>Nachtlichter (VIIRS · NASA GIBS) ☾</div>
+      <div class="ob ov-side" id="tb-nachtlicht" onclick="ze.toggleNachtlicht()"><div class="obd"></div>Nachtlichter (VIIRS · NASA GIBS) <span class="hz" data-hz="nachtlicht"></span></div>
       <div class="ov-status" id="nachtlicht-status"></div>
-      <div class="ob ov-side" id="tb-sats" onclick="ze.toggle('sats')"><div class="obd"></div>Satelliten (CelesTrak) ⌖</div>
+      <div class="ob ov-side" id="tb-sats" onclick="ze.toggle('sats')"><div class="obd"></div>Satelliten (CelesTrak) <span class="hz" data-hz="sats"></span></div>
       <div class="ov-status" id="sats-status"></div>
       <div class="ov-status" style="display:block">Straßen &amp; Bebauung (OSM): Regler „Ges. Stoffwechsel" im Linsen-Panel</div>
       </div>
@@ -592,32 +594,32 @@
       <div class="dim-head" data-dim="erste_natur" title="Dimensionen sind Linsen, keine Orte und keine Höhenstufen — was eine Ebene zeigen kann, hängt an der Auflösung ihrer Quelle"></div>
       <div class="dim-body">
       <div class="sub-head" data-sub="basis"></div>
-      <div class="ob ov-side" id="tb-basis" onclick="ze.toggle('basis')"><div class="obd"></div>Gesellschaftsformationen ●</div>
+      <div class="ob ov-side" id="tb-basis" onclick="ze.toggle('basis')"><div class="obd"></div>Gesellschaftsformationen <span class="hz" data-hz="basis"></span></div>
       <div class="ov-status" id="basis-status"></div>
       <div class="sub-head" data-sub="unterbau"></div>
-      <div class="ob ov-side" id="tb-unterbau" onclick="ze.toggle('unterbau')"><div class="obd"></div>Biosphäre / Lebensnetz ○◍</div>
+      <div class="ob ov-side" id="tb-unterbau" onclick="ze.toggle('unterbau')"><div class="obd"></div>Biosphäre / Lebensnetz <span class="hz" data-hz="unterbau"></span></div>
       <div class="ov-status" id="unterbau-status"></div>
       <div class="sub-head" data-sub="erdsystem"></div>
-      <div class="ob ov-side" id="tb-sintflut" onclick="ze.toggle('sintflut')"><div class="obd"></div>Sintflut: Küsten, Kästen ◐</div>
+      <div class="ob ov-side" id="tb-sintflut" onclick="ze.toggle('sintflut')"><div class="obd"></div>Sintflut: Küsten, Kästen <span class="hz" data-hz="sintflut"></span></div>
       <div class="ov-status" id="sintflut-status"></div>
-      <div class="ob ov-side" id="tb-tektonik" onclick="ze.toggle('tektonik')"><div class="obd"></div>Tektonik: Kontinente (Standard Merdith 2021) ◐</div>
+      <div class="ob ov-side" id="tb-tektonik" onclick="ze.toggle('tektonik')"><div class="obd"></div>Tektonik: Kontinente (Standard Merdith 2021) <span class="hz" data-hz="tektonik"></span></div>
       <div class="ov-status" id="tektonik-status"></div>
       <div class="ov-status" id="tektonik-wahl" style="display:block"></div>
-      <div class="ob ov-side" id="tb-palaeokueste" onclick="ze.toggle('palaeokueste')"><div class="obd"></div>Paläoküsten (PALEOMAP-DEM, 540–0 Ma) ◐▨</div>
+      <div class="ob ov-side" id="tb-palaeokueste" onclick="ze.toggle('palaeokueste')"><div class="obd"></div>Paläoküsten (PALEOMAP-DEM, 540–0 Ma) <span class="hz" data-hz="palaeokueste"></span></div>
       <div class="ov-status" id="palaeokueste-status"></div>
-      <div class="ob ov-side" id="tb-erste_natur" onclick="ze.toggle('erste_natur')"><div class="obd"></div>Materialbestände ●</div>
+      <div class="ob ov-side" id="tb-erste_natur" onclick="ze.toggle('erste_natur')"><div class="obd"></div>Materialbestände <span class="hz" data-hz="erste_natur"></span></div>
       <div class="ov-status" id="erste_natur-status"></div>
-      <div class="ob ov-side" id="tb-wind" onclick="ze.toggle('wind')"><div class="obd"></div>Windströmung (GFS) ≋</div>
+      <div class="ob ov-side" id="tb-wind" onclick="ze.toggle('wind')"><div class="obd"></div>Windströmung (GFS) <span class="hz" data-hz="wind"></span></div>
       <div class="ov-status" id="wind-status"></div>
-      <div class="ob ov-side" id="tb-seismik" onclick="ze.toggle('seismik')"><div class="obd"></div>Seismik · Erdinneres (USGS) ✳</div>
+      <div class="ob ov-side" id="tb-seismik" onclick="ze.toggle('seismik')"><div class="obd"></div>Seismik · Erdinneres (USGS) <span class="hz" data-hz="seismik"></span></div>
       <div class="ov-status" id="seismik-status"></div>
-      <div class="ob ov-side" id="tb-platten" onclick="ze.toggle('platten')"><div class="obd"></div>Plattengrenzen ╳</div>
+      <div class="ob ov-side" id="tb-platten" onclick="ze.toggle('platten')"><div class="obd"></div>Plattengrenzen <span class="hz" data-hz="platten"></span></div>
       <div class="ov-status" id="platten-status"></div>
-      <div class="ob ov-side" id="tb-gewaesser" onclick="ze.toggle('gewaesser')"><div class="obd"></div>Gewässer · Flüsse &amp; Pegel ⋲</div>
+      <div class="ob ov-side" id="tb-gewaesser" onclick="ze.toggle('gewaesser')"><div class="obd"></div>Gewässer · Flüsse &amp; Pegel <span class="hz" data-hz="gewaesser"></span></div>
       <div class="ov-status" id="gewaesser-status"></div>
-      <div class="ob ov-side" id="tb-gezeiten" onclick="ze.toggle('gezeiten')"><div class="obd"></div>Gezeiten in Küstenflüssen (SWOT) ≈</div>
+      <div class="ob ov-side" id="tb-gezeiten" onclick="ze.toggle('gezeiten')"><div class="obd"></div>Gezeiten in Küstenflüssen (SWOT) <span class="hz" data-hz="gezeiten"></span></div>
       <div class="ov-status" id="gezeiten-status"></div>
-      <div class="ob ov-side" id="tb-satbild" onclick="ze.toggleSatbild()"><div class="obd"></div>Satellitenbild (VIIRS True Color · NASA GIBS) ▩</div>
+      <div class="ob ov-side" id="tb-satbild" onclick="ze.toggleSatbild()"><div class="obd"></div>Satellitenbild (VIIRS True Color · NASA GIBS) <span class="hz" data-hz="satbild"></span></div>
       <div class="ov-status" id="satbild-status"></div>
       <div class="ov-status" style="display:block">Klimazonen (Köppen): Regler „Erste Natur" im Linsen-Panel</div>
       </div>
@@ -627,13 +629,13 @@
       <div class="dim-head" data-dim="planetarer_stoffwechsel" title="Dimensionen sind Linsen, keine Orte und keine Höhenstufen — was eine Ebene zeigen kann, hängt an der Auflösung ihrer Quelle"></div>
       <div class="dim-body">
       <div class="sub-head" data-sub="extern"></div>
-      <div class="ob ov-side" id="tb-moon" onclick="ze.toggle('moon')"><div class="obd"></div>Mond · Phase &amp; Störgeometrie</div>
-      <div class="ob ov-side" id="tb-tidal" onclick="ze.toggle('tidal')"><div class="obd"></div>Gezeitenkraft</div>
-      <div class="ob ov-side" id="tb-solarwind" onclick="ze.toggle('solarwind')"><div class="obd"></div>Sonnenwind (SWPC)</div>
+      <div class="ob ov-side" id="tb-moon" onclick="ze.toggle('moon')"><div class="obd"></div>Mond · Phase &amp; Störgeometrie <span class="hz" data-hz="moon"></span></div>
+      <div class="ob ov-side" id="tb-tidal" onclick="ze.toggle('tidal')"><div class="obd"></div>Gezeitenkraft <span class="hz" data-hz="tidal"></span></div>
+      <div class="ob ov-side" id="tb-solarwind" onclick="ze.toggle('solarwind')"><div class="obd"></div>Sonnenwind (SWPC) <span class="hz" data-hz="solarwind"></span></div>
       <div class="ov-status" id="sw-status"></div>
       <div class="sub-head" data-sub="intern"></div>
-      <div class="ob ov-side" id="tb-magfield" onclick="ze.toggle('magfield')"><div class="obd"></div>Magnetfeld (IGRF)</div>
-      <div class="ob ov-side" id="tb-pm" onclick="ze.toggle('pm')"><div class="obd"></div>Stoffwechselprodukte ◆</div>
+      <div class="ob ov-side" id="tb-magfield" onclick="ze.toggle('magfield')"><div class="obd"></div>Magnetfeld (IGRF) <span class="hz" data-hz="magfield"></span></div>
+      <div class="ob ov-side" id="tb-pm" onclick="ze.toggle('pm')"><div class="obd"></div>Stoffwechselprodukte <span class="hz" data-hz="pm"></span></div>
       <div class="ov-status" id="pm-status"></div>
       </div>
     </div>
@@ -642,10 +644,10 @@
       <div class="dim-head" data-dim="nullnatur" title="Dimensionen sind Linsen, keine Orte und keine Höhenstufen — was eine Ebene zeigen kann, hängt an der Auflösung ihrer Quelle"></div>
       <div class="dim-body">
       <div class="sub-head" data-sub="solar"></div>
-      <div class="ob ov-side on" id="tb-ekliptik" onclick="ze.toggleNull('ekliptik')"><div class="obd"></div>Ekliptik-Ringe ◎</div>
-      <div class="ob ov-side on" id="tb-orbits" onclick="ze.toggleNull('orbits')"><div class="obd"></div>Planetenbahnen ⬭</div>
+      <div class="ob ov-side on" id="tb-ekliptik" onclick="ze.toggleNull('ekliptik')"><div class="obd"></div>Ekliptik-Ringe <span class="hz" data-hz="ekliptik"></span></div>
+      <div class="ob ov-side on" id="tb-orbits" onclick="ze.toggleNull('orbits')"><div class="obd"></div>Planetenbahnen <span class="hz" data-hz="orbits"></span></div>
       <div class="sub-head" data-sub="interstellar"></div>
-      <div class="ob ov-side on" id="tb-apex" onclick="ze.toggleNull('apex')"><div class="obd"></div>Sonnenapex-Drift →</div>
+      <div class="ob ov-side on" id="tb-apex" onclick="ze.toggleNull('apex')"><div class="obd"></div>Sonnenapex-Drift <span class="hz" data-hz="apex"></span></div>
       <div class="ov-status" style="display:block">Kontext im heliozentrischen Renderer (HEJ2000). Mausrad: herauszoomen führt nach außen, hineinzoomen nach innen bis zur Erde.</div>
       </div>
     </div>
@@ -656,7 +658,7 @@
 
     <div class="sep"></div>
     <div class="dftr" style="padding-bottom:5px">WERKZEUGE · keine Dimension</div>
-    <div class="ob ov-side" id="tb-analyse" onclick="ze.toggleAnalyse()"><div class="obd"></div>Analysefeld — Relationen an dieser Position ▤</div>
+    <div class="ob ov-side" id="tb-analyse" onclick="ze.toggleAnalyse()"><div class="obd"></div>Analysefeld — Relationen an dieser Position <span class="hz" data-hz="analyse"></span></div>
     <div class="ov-status" id="analyse-status"></div>
     <div class="ov-status" id="karte-status"></div>
 
@@ -799,7 +801,7 @@
       <div class="obd"></div>Rasterlinien (1°/10°)</div>
     <div class="ms-row">
       <div class="ms-dot" data-d="gesellschaftlicher_stoffwechsel"></div>
-      <div class="ms-label"><span class="lens-name" data-l="gesellschaftlicher_stoffwechsel"></span> — Bebauung (OSM) · Bevölkerung <span class="ms-tag">prozedural</span></div>
+      <div class="ms-label"><span class="lens-name" data-l="gesellschaftlicher_stoffwechsel"></span> — Bebauung (OSM)</div>
       <input type="range" class="ms-slider" min="0" max="100" value="0"
         oninput="ze.msOpacity('gesellschaftlicher_stoffwechsel', this.value)">
     </div>
@@ -2222,7 +2224,7 @@ const LEGENDE = {
                  farben: [{ farbe: '#8fe89a', text: 'grüne Linie: Küste (0-m-Linie) im Fenster', linie: true }, { farbe: '#e8e2c8', text: 'helle gestrichelte Linie: Kasten des Fensters (Setzung)', linie: true }],
                  get z() { const l = ze.sintflutLayer, i = l?.aktuellerSchritt(); return i === null || i === undefined ? 'außerhalb von 20–0 ka BP: keine Linie' : `${tourKa(l.schritte[i])} ka BP (Bezug 1950), Schritt 2,5 ka; Unschärfe fehlt`; },
                  m: 28e3, warn: 'isostatische Deformation enthalten; Sedimentation nicht berücksichtigt' },
-  tektonik:    { h: 'Plattenmodelle -> heutige Kontinent- und Küstenpolygone gedreht (pyGPlates); Standard Merdith 2021, weitere Ideale zuschaltbar: Müller 2022 (Mantelbezug, Modell), PALEOMAP-Rotation v19o; jenseits 1 Ga Cao 2024; CC BY 4.0',
+  tektonik:    { h: 'Plattenmodelle -> heutige Kontinent- und Küstenpolygone gedreht (pyGPlates); Standard Merdith 2021, weitere Ideale zuschaltbar: Müller 2022 (Mantelbezug, Modell), PALEOMAP-Rotation v19o (Merdith-Polygone je ganz der PALEOMAP-Platte mit größter Überlappung zugeordnet; Setzung); jenseits 1 Ga Cao 2024; CC BY 4.0',
                  get z() { return ze.tektonikLayer?.zeit() ?? 'keine Linie'; },
                  get farben() { return ze.tektonikLayer?.farben() ?? []; },
                  warn: 'Form heutig, nur die Lage ist rekonstruiert. Im paläomagnetischen Bezug ist die Länge eine Konvention des Modells, keine Messung.' },
@@ -2236,8 +2238,6 @@ const LEGENDE = {
   tempLayer:      { name: 'Temperatur 2 m', h: 'GFS (Vorhersage)', z: 'Vorhersagezeitraum; außerhalb ausgeblendet' },
   paleoTempLayer: { name: 'Paläotemperatur', h: 'Paläoklima-Datensatz paleo_t2m', z: 'Masterzeit (Tiefenzeit laut Datensatz)' },
   klimaLayer:     { name: 'Klimazonen', h: 'Köppen-Geiger' },
-  popLayer:       { name: 'Bevölkerung', h: 'keine – prozedural (sechs gesetzte Siedlungskerne)', z: 'Masterzeit',
-                    warn: 'prozedural: kein Datum, keine Beobachtung' },
   osmLayer:       { name: 'Bebauung (OSM)', h: 'OpenStreetMap-Kacheln (© OpenStreetMap-Mitwirkende, ODbL)', z: 'Gegenwart (Kachelstand)',
                     warn: 'folgt der Masterzeit nicht' },
   gridLayer:      { h: 'geometrisch, keine Daten', z: 'ohne Zeitbezug' },
@@ -2248,7 +2248,7 @@ const LEGENDE = {
 const LENSES = {
   planetarer_stoffwechsel: ['coastLayer'],
   erste_natur:             ['iceLayer','tempLayer','paleoTempLayer','klimaLayer'],
-  gesellschaftlicher_stoffwechsel: ['popLayer','osmLayer'],
+  gesellschaftlicher_stoffwechsel: ['osmLayer'],   // prozedurale Bevölkerung entfernt (keine Daten)
   // Konstruierte Wirklichkeit liegt noch nicht als Rasterebene vor —
   // Kataster und Wertformen sind Setzungen, keine Flächen.
   zweite_natur:            []
@@ -3065,59 +3065,6 @@ class IceLayer {
   setAlpha(a) { this.imagery.setAlpha(a); }
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   POPULATION LAYER — Ges. Stoffwechsel (prozedural, zeitabhängig)
-   Vereinfachtes HYDE-artiges Signal: Siedlungskerne setzen zu
-   bekannten Zeitpunkten ein und wachsen. Platzhalter bis HYDE 3.2.
-   ───────────────────────────────────────────────────────────────── */
-class PopulationLayer {
-  constructor(viewer) {
-    this.v = viewer; this.layer = null; this._alpha = 0.6;
-    this.canvas = document.createElement('canvas');
-    this.W = 720; this.H = 360;
-    this.canvas.width = this.W; this.canvas.height = this.H;
-    this.ctx = this.canvas.getContext('2d');
-  }
-  static CORES = [
-    {lon:44, lat:33, since:11000},  // Mesopotamien
-    {lon:31, lat:27, since:7000},   // Niltal
-    {lon:68, lat:27, since:8000},   // Indus
-    {lon:114,lat:35, since:9000},   // Gelber Fluss
-    {lon:10, lat:50, since:7000},   // Mitteleuropa
-    {lon:-90,lat:19, since:4000},   // Mesoamerika
-  ];
-  update(t) {
-    const aBP = -50 - t;
-    const {ctx,W,H} = this;
-    ctx.clearRect(0,0,W,H);
-    const img = ctx.createImageData(W,H);
-    for (let y=0;y<H;y++){
-      const lat=90-(y/H)*180;
-      for(let x=0;x<W;x++){
-        const lon=(x/W)*360-180;
-        let v=0;
-        for(const c of PopulationLayer.CORES){
-          if(aBP > c.since) continue;
-          const age=c.since-aBP, grow=Math.min(1, age/8000);
-          const d=Math.hypot(lon-c.lon, lat-c.lat), spread=4+grow*10;
-          v+=grow*Math.exp(-(d*d)/(2*spread*spread));
-        }
-        v=Math.min(1,v);
-        const i=(y*W+x)*4;
-        if(v>0.02){ img.data[i]=255; img.data[i+1]=200-v*120; img.data[i+2]=60; img.data[i+3]=v*200; }
-        else img.data[i+3]=0;
-      }
-    }
-    ctx.putImageData(img,0,0);
-    if(this.layer) this.v.imageryLayers.remove(this.layer,false);
-    this.layer=this.v.imageryLayers.addImageryProvider(new Cesium.SingleTileImageryProvider({
-      url:this.canvas.toDataURL(),
-      rectangle:Cesium.Rectangle.fromDegrees(-180,-90,180,90), tileWidth:W,tileHeight:H }));
-    this.layer.alpha=this._alpha;
-  }
-  hide(){ if(this.layer){this.v.imageryLayers.remove(this.layer,false);this.layer=null;} }
-  setAlpha(a){ this._alpha=a; if(this.layer) this.layer.alpha=a; }
-}
 
 
 /* ─────────────────────────────────────────────────────────────────
@@ -4203,7 +4150,6 @@ class ZeroEarth {
           : [255, Math.round(255*(1-s*0.6)), Math.round(255*(1-s)), 190];
       }
     });
-    this.popLayer = new PopulationLayer(this.cesiumV);
     this.osmLayer = new OSMLayer(this.cesiumV);
 
     // Datenschicht: Manifest laden, Eisdaten holen, Status in die UI
@@ -4376,6 +4322,7 @@ class ZeroEarth {
     await MODELL.laden();
     this.tour.liste();
     this.leiste.laden();
+    import('./kern/schema.mjs').then(m => herkunftszeichen(m.anzeige));
     this._gruppiereSchichten();
     this.applyLabels();
     this._applyLicht();
@@ -4902,7 +4849,7 @@ class ZeroEarth {
       `<div class="lg-h">Herkunft: <b>${esc(e.h ?? 'nicht angegeben')}</b></div>` +
       `<div class="lg-z">Zeit: <b>${esc(e.z === 'Masterzeit' ? `Masterzeit (${tlv})` : (e.z ?? 'nicht angegeben'))}</b></div>` +
       (e.warn ? `<div class="lg-warn">${esc(e.warn)}</div>` : '') +
-      ((e.farben ?? []).length ? `<div class="lg-farben">${e.farben.map(f => `<div><span class="lg-farbe${f.linie ? ' linie' : ''}" style="background:${f.farbe}"></span>${esc(f.text)}</div>`).join('')}</div>` : '') +
+      ((e.farben ?? []).length ? `<div class="lg-farben">${e.farben.map(f => `<div><span class="lg-farbe${f.linie ? ' linie' : ''}" style="background:${f.farbe}${f.staerke ? `;height:${f.staerke}px` : ''}"></span>${esc(f.text)}</div>`).join('')}</div>` : '') +
       (globus && grob(e) ? `<div class="lg-z">${esc(grob(e))}</div>` : '') + '</div>';
     const name = k => document.getElementById('tb-' + k)?.textContent.trim() || k;
     const L = LEGENDE;
@@ -5380,8 +5327,9 @@ class ZeroEarth {
     const el = document.getElementById('ms-data-status');
     if (!el) return;
     if (id === '__manifest__') {
-      el.innerHTML = `<span class="ds-err">data/manifest.json nicht erreichbar</span>
-        — lokal per <code>python -m http.server</code> testen, nicht file://`;
+      // Bekannter Zustand (Raster nicht im Repo): in die Konsole, nicht in die Oberfläche
+      console.warn('data/manifest.json nicht erreichbar: Rasterdatensätze (PaleoMIST-Raster, GFS, Paläoklima) liegen nicht im Repo');
+      el.textContent = '';
       return;
     }
     // Status aller bekannten Datensätze rendern
@@ -5575,7 +5523,13 @@ class SintflutLayer {
    · Paläoküsten: 0-m-Linie der PALEOMAP-Paläo-DEMs, 540–0 Ma.
    Nur Stützstellen der Quelle; dazwischen bleibt die Ebene leer.
    ───────────────────────────────────────────────────────────────── */
-const TEKTONIK_FARBE = { merdith2021: '#e0a656', mueller2022: '#b48ee8', paleomap: '#5fc4e0', cao2024: '#e07a7a' };
+/* Ein Modell: Kontinentpolygone gefüllt (Sandton). Mehrere Modelle: nur Umrisse in
+   einer Farbe, unterschieden durch Strichstärke und Beschriftung; Linienarten
+   (gestrichelt, gepunktet) sind im Zeichensystem an Vorgänge vergeben. */
+const TEKTONIK_FLAECHE = '#d9b77c', TEKTONIK_UMRISS = '#f0e2c4';
+const TEKTONIK_STAERKE = { merdith2021: 4, mueller2022: 2, paleomap: 1, cao2024: 2 };   // px im 2048er Bild
+const TEKTONIK_KURZ = { merdith2021: 'Merdith 2021', mueller2022: 'Müller 2022', paleomap: 'PALEOMAP', cao2024: 'Cao 2024' };
+const TEKTONIK_FARBE = { merdith2021: TEKTONIK_FLAECHE, mueller2022: TEKTONIK_FLAECHE, paleomap: TEKTONIK_FLAECHE, cao2024: TEKTONIK_FLAECHE };
 const PALAEOKUESTE_FARBE = '#f2ee9a';
 const tektonikMa = t => Math.max(0, -t / 1e6);
 /** Ab hier (Ma vor heute) gilt die Tiefenzeit: neutrale Kugel statt heutigem Bild. */
@@ -5612,6 +5566,7 @@ class TektonikLayer {
   async show() { this.on = true; await this.laden(); if (!this.on) return; this._schluessel = undefined; this.update(Tideline.t); }
   _leeren() {
     if (this.linien) { this.v.scene.primitives.remove(this.linien); this.linien = null; }
+    if (this.namen) { this.v.scene.primitives.remove(this.namen); this.namen = null; }
     for (const l of this.flaechen.values()) this.v.imageryLayers.remove(l, false);
     this.flaechen.clear();
   }
@@ -5664,16 +5619,68 @@ class TektonikLayer {
         x.closePath(); x.fill();
       }
     }
+    const luecken = TektonikLayer.lueckenMarkieren(x, W, H);
+    return { url: c.toDataURL(), luecken, canvas: c };
+  }
+  /** Nur der Rand der Kontinentfläche (Lücken zählen als innen), in einer Farbe
+      und Strichstärke; für den Modellvergleich ohne Füllung. */
+  static randbild(flaeche, staerke, farbe) {
+    const W = flaeche.width, H = flaeche.height;
+    const a = flaeche.getContext('2d').getImageData(0, 0, W, H).data;
+    const innen = i => a[i * 4 + 3] > 8;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const x = c.getContext('2d'); x.fillStyle = farbe;
+    const r = Math.max(0.5, staerke / 2);
+    for (let i = 0; i < W * H; i++) {
+      if (!innen(i)) continue;
+      const z = (i / W) | 0, s = i % W;
+      const rand = !innen(z * W + (s + 1) % W) || !innen(z * W + (s + W - 1) % W) || (z > 0 && !innen(i - W)) || (z < H - 1 && !innen(i + W));
+      if (rand) x.fillRect(s - r + 0.5, z - r + 0.5, 2 * r, 2 * r);
+    }
     return c.toDataURL();
+  }
+  /** Lücken im Modell: Gebiete ohne Kontinentpolygon, die ganz von Polygonen
+      umschlossen sind. Das Modell sagt dort nichts, auch kein Meer; sie werden
+      schraffiert, damit sie nicht als Wasser gelesen werden. Das größte freie
+      Gebiet (der Ozean ohne Kontinentkruste) bleibt frei. Längen laufen um. */
+  static lueckenMarkieren(x, W, H) {
+    const a = x.getImageData(0, 0, W, H).data, frei = new Uint8Array(W * H), marke = new Int32Array(W * H);
+    for (let i = 0; i < W * H; i++) frei[i] = a[i * 4 + 3] < 8 ? 1 : 0;
+    const groesse = [0], stapel = new Int32Array(W * H);
+    let n = 0;
+    for (let s = 0; s < W * H; s++) {
+      if (!frei[s] || marke[s]) continue;
+      n++; let oben = 0, z = 0; stapel[oben++] = s; marke[s] = n;
+      while (oben) {
+        const i = stapel[--oben]; z++;
+        const r = (i / W) | 0, c = i % W;
+        for (const j of [r * W + (c + 1) % W, r * W + (c + W - 1) % W, r > 0 ? i - W : -1, r < H - 1 ? i + W : -1])
+          if (j >= 0 && frei[j] && !marke[j]) { marke[j] = n; stapel[oben++] = j; }
+      }
+      groesse.push(z);
+    }
+    if (n < 2) return { anzahl: 0, anteil: 0 };
+    let ozean = 1; for (let k = 2; k <= n; k++) if (groesse[k] > groesse[ozean]) ozean = k;
+    const bild = x.getImageData(0, 0, W, H), d = bild.data;
+    let flaeche = 0;
+    for (let i = 0; i < W * H; i++) {
+      const k = marke[i]; if (!k || k === ozean) continue;
+      const r = (i / W) | 0, c = i % W; flaeche++;
+      const strich = ((r + c) % 6) < 2;
+      d[i * 4] = strich ? 205 : 120; d[i * 4 + 1] = strich ? 205 : 120; d[i * 4 + 2] = strich ? 210 : 128; d[i * 4 + 3] = 210;
+    }
+    x.putImageData(bild, 0, 0);
+    return { anzahl: n - 1, anteil: flaeche / (W * H) };
   }
   _wahl() {
     const el = document.getElementById('tektonik-wahl');
     if (!el || this.art !== 'umrisse' || !this.daten || !this.on) return;
     const d = this.daten, ma = tektonikMa(Tideline.t);
-    const box = (k, an, text, onclick) => `<label class="tw-wahl"><input type="checkbox" ${an ? 'checked' : ''} onchange="${onclick}"><span style="color:${TEKTONIK_FARBE[k] ?? '#ccc'}">■</span> ${tourEsc(text)}</label>`;
+    const box = (k, an, text, onclick) => `<label class="tw-wahl"><input type="checkbox" ${an ? 'checked' : ''} onchange="${onclick}"> ${tourEsc(text)}</label>`;
     el.innerHTML =
       ['merdith2021', 'mueller2022', 'paleomap'].map(k => box(k, this.aktiv.has(k), `${d.modelle[k].name} · ${d.modelle[k].bezugsrahmen}`, `ze.tektonikLayer.schalte('${k}')`)).join('') +
-      `<div class="tw-wahl tw-auto"><span style="color:${TEKTONIK_FARBE.cao2024}">■</span> ${tourEsc(d.modelle.cao2024.name)}: jenseits von 1 Ga automatisch (einziges Modell)</div>` +
+      `<div class="tw-wahl tw-auto">${tourEsc(d.modelle.cao2024.name)}: jenseits von 1 Ga automatisch (einziges Modell)</div>` +
+      `<div class="tw-wahl tw-auto">Mehrere Modelle an: nur Umrisse, Strichstärke je Modell, beschriftet</div>` +
       `<label class="tw-wahl"><input type="checkbox" ${this.kuesten ? 'checked' : ''} onchange="ze.tektonikLayer.schalteKuesten()"> Küstenpolygone als Linien (heutige Form)</label>` +
       `<label class="tw-wahl"><input type="checkbox" ${ze.referenzBild ? 'checked' : ''} onchange="ze.schalteReferenz()"> Heutige Erde als Referenz (Tiefenzeit)</label>`;
   }
@@ -5703,16 +5710,39 @@ class TektonikLayer {
           return r ? f.l.map(ring => ring.map(p => D.drehe(p, r))) : [];   // keine Drehung: nicht zeigen, nie an heutiger Lage
         });
         const flaechen = gedreht(geo.kontinente);
-        const lay = this.v.imageryLayers.addImageryProvider(new Cesium.SingleTileImageryProvider({
-          url: TektonikLayer.flaechenbild(flaechen, TEKTONIK_FARBE[k]), rectangle: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90), tileWidth: 2048, tileHeight: 1024 }));
-        lay.alpha = mehrere ? 0.45 : 0.78;
-        this.flaechen.set(k, lay);
-        let n = 0;
-        if (this.kuesten) {
-          const material = Cesium.Material.fromType('Color', { color: Cesium.Color.fromCssColorString(TEKTONIK_FARBE[k]).brighten(0.35, new Cesium.Color()) });
-          for (const ring of gedreht(geo.kueste)) { this.linien.add({ width: 1.1, material, positions: TektonikLayer.punkte(ring) }); n++; }
+        let luecken = null;
+        if (!mehrere) {
+          // ein Modell: Kontinentpolygone gefüllt, Lücken schraffiert
+          const bild = TektonikLayer.flaechenbild(flaechen, TEKTONIK_FLAECHE);
+          luecken = bild.luecken;
+          const lay = this.v.imageryLayers.addImageryProvider(new Cesium.SingleTileImageryProvider({
+            url: bild.url, rectangle: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90), tileWidth: 2048, tileHeight: 1024 }));
+          lay.alpha = 0.8;
+          this.flaechen.set(k, lay);
+        } else {
+          // Vergleich: nur der Rand der Kontinentfläche, gleiche Farbe, unterschieden durch
+          // Strichstärke und Beschriftung (innere Polygonkanten und Lücken nicht gezeichnet)
+          const bild = TektonikLayer.flaechenbild(flaechen, '#000');
+          const lay = this.v.imageryLayers.addImageryProvider(new Cesium.SingleTileImageryProvider({
+            url: TektonikLayer.randbild(bild.canvas, TEKTONIK_STAERKE[k], TEKTONIK_UMRISS),
+            rectangle: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90), tileWidth: 2048, tileHeight: 1024 }));
+          this.flaechen.set(k, lay);
+          let groesster = null, laenge = 0;
+          for (const ring of flaechen) if (ring.length > laenge) { laenge = ring.length; groesster = ring; }
+          if (groesster) {
+            const [lo, la] = groesster[Math.floor(groesster.length / 3)];
+            this.namen ??= this.v.scene.primitives.add(new Cesium.LabelCollection());
+            this.namen.add({ position: Cesium.Cartesian3.fromDegrees(lo, la, 6000), text: TEKTONIK_KURZ[k],
+              font: '11px "JetBrains Mono",monospace', fillColor: Cesium.Color.fromCssColorString(TEKTONIK_UMRISS),
+              outlineColor: Cesium.Color.BLACK, outlineWidth: 3, style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+              pixelOffset: new Cesium.Cartesian2(6, -6), horizontalOrigin: Cesium.HorizontalOrigin.LEFT });
+          }
         }
-        this.stand.push({ k, ma: s, n: flaechen.length, name: m.name });
+        if (this.kuesten) {
+          const material = Cesium.Material.fromType('Color', { color: Cesium.Color.fromCssColorString('#e9eef5').withAlpha(0.8) });
+          for (const ring of gedreht(geo.kueste)) this.linien.add({ width: 0.8, material, positions: TektonikLayer.punkte(ring) });
+        }
+        this.stand.push({ k, ma: s, n: flaechen.length, name: m.name, luecken, mehrere });
       } else {
         const karte = d.karten[i];
         const material = Cesium.Material.fromType('Color', { color: Cesium.Color.fromCssColorString(PALAEOKUESTE_FARBE) });
@@ -5723,7 +5753,8 @@ class TektonikLayer {
     const st = document.getElementById(this.statusId);
     if (st) st.innerHTML = this.stand.map(x => x.ma === null
       ? `<span class="ds-err">${tourEsc(this.art === 'umrisse' ? d.modelle[x.k].name : 'PALEOMAP-DEM')}: ${this.art === 'umrisse' ? `kein Schritt bei ${takt.zahl(ma, 1)} Ma` : 'fehlt, die Paläo-DEMs reichen nur 540–0 Ma'}</span>`
-      : `<span style="color:${this.art === 'umrisse' ? TEKTONIK_FARBE[x.k] : PALAEOKUESTE_FARBE}">■</span> ${tourEsc(x.name)}: ${takt.zahl(x.ma, 1)} Ma`).join('<br>');
+      : `<span style="color:${this.art === 'umrisse' ? TEKTONIK_FARBE[x.k] : PALAEOKUESTE_FARBE}">■</span> ${tourEsc(x.name)}: ${takt.zahl(x.ma, 1)} Ma`
+        + (x.luecken?.anzahl ? ` · <span class="ds-err">${x.luecken.anzahl} Lücken im Modell (schraffiert), kein Meer</span>` : '')).join('<br>');
     this._wahl();
     ze.zeichneLegende?.();
   }
@@ -5744,14 +5775,78 @@ class TektonikLayer {
   farben() {
     if (!this.daten) return [];
     if (this.art !== 'umrisse') return this.stand.some(x => x.ma !== null) ? [{ farbe: PALAEOKUESTE_FARBE, text: 'hellgelbe Linie: 0-m-Linie des PALEOMAP-DEM (Paläoküste der Zeit)', linie: true }] : [];
-    return this.stand.filter(x => x.ma !== null).flatMap(x => [
-      { farbe: TEKTONIK_FARBE[x.k], text: `Fläche: Kontinentpolygone, ${this.daten.modelle[x.k].name}, ${takt.zahl(x.ma, 1)} Ma` },
-      ...(this.kuesten ? [{ farbe: TEKTONIK_FARBE[x.k], text: `Linie (heller): Küstenpolygone in heutiger Form, ${this.daten.modelle[x.k].name}`, linie: true }] : []),
-    ]);
+    const an = this.stand.filter(x => x.ma !== null);
+    const aus = an.flatMap(x => x.mehrere
+      ? [{ farbe: TEKTONIK_UMRISS, staerke: TEKTONIK_STAERKE[x.k], text: `Rand, ${['', 'dünn', 'mittel', '', 'dick'][TEKTONIK_STAERKE[x.k]]}, beschriftet „${TEKTONIK_KURZ[x.k]}“: Rand der Kontinentfläche ${this.daten.modelle[x.k].name}, ${takt.zahl(x.ma, 1)} Ma`, linie: true }]
+      : [{ farbe: TEKTONIK_FLAECHE, text: `sandfarbene Fläche: Kontinentpolygone ${this.daten.modelle[x.k].name}, ${takt.zahl(x.ma, 1)} Ma` },
+         ...(x.luecken?.anzahl ? [{ farbe: 'repeating-linear-gradient(45deg,#cdcdd2 0 2px,#78787f 2px 6px)', text: `schraffiert: Lücke im Modell, kein Meer (${x.luecken.anzahl} Gebiete ohne Polygon, ganz von Polygonen umschlossen)` }] : [])]);
+    aus.push({ farbe: '#39414d', text: 'grau (Tiefenzeit): kein Kontinentpolygon; das Modell sagt dort nichts über Land oder Meer' });
+    if (this.kuesten && an.length) aus.push({ farbe: '#e9eef5', text: 'dünne weiße Linie: Küstenpolygone in heutiger Form, gedreht', linie: true });
+    return aus;
   }
   zeit() {
     if (!this.stand.length) return 'keine Linie';
     return this.stand.map(x => x.ma === null ? `${x.k}: kein Schritt` : `${x.k} ${takt.zahl(x.ma, 1)} Ma`).join(' · ') + ' (Ma BP); Unschärfe fehlt';
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   HERKUNFTSZEICHEN DER EBENEN (linke Spalte). Zeichensystem, Kanal Füllung:
+   ● beobachtet · ◐ rekonstruiert · ○ Modell/Ideal · ⏵ Erwartung · ✱ Fiktion ·
+   ▨ kuratiert · ■ grau fehlt. Geprüft gegen die tatsächlichen Daten: Liegt die
+   Datei nicht vor, steht ■ (fehlt), was immer die Ebene sonst wäre.
+   ───────────────────────────────────────────────────────────────── */
+const EBENEN_HERKUNFT = {
+  riss:        { arten: ['kuratiert'], datei: 'data/marker.json' },
+  ueberbau:    { arten: ['kuratiert'], datei: 'data/marker.json' },
+  ware:        { arten: ['kuratiert'], datei: 'data/marker.json' },
+  bestaende:   { arten: ['kuratiert'], datei: 'data/marker.json' },
+  basis:       { arten: ['kuratiert'], datei: 'data/marker.json' },
+  erste_natur: { arten: ['kuratiert'], datei: 'data/marker.json' },
+  pm:          { arten: ['kuratiert'], datei: 'data/marker.json' },
+  grenzen:     { arten: ['kuratiert'], datei: 'data/grenzen.geojson' },
+  kataster:    { arten: ['kuratiert'], datei: 'data/kataster.geojson' },
+  platten:     { arten: ['kuratiert'], datei: 'data/plattengrenzen.geojson' },
+  stroeme:     { arten: [], datei: 'data/stroeme.json', text: 'Herkunft nicht angegeben' },
+  unterbau:    { arten: ['beobachtung'], datei: 'data/unterbau.json', text: 'GBIF' },
+  gewaesser:   { arten: ['modell'], datei: 'data/fluesse.geojson', text: 'Flussnetz kuratiert, Pegel GloFAS (Modell)' },
+  gezeiten:    { arten: ['beobachtung'], datei: 'data/gezeiten.json', text: 'SWOT' },
+  wind:        { arten: ['modell'], datei: 'data/manifest.json', text: 'GFS (Vorhersage, Modell)' },
+  sprachen:    { arten: ['kuratiert'], datei: 'data/glottolog.json', text: 'Glottolog' },
+  sintflut:    { arten: ['rekonstruktion', 'berechnet'], datei: 'data/sintflut_kuesten.json' },
+  tektonik:    { arten: ['rekonstruktion', 'berechnet'], datei: 'data/tektonik_umrisse.json', text: 'Standard Merdith 2021; Müller 2022 zuschaltbar ist Modell (○)' },
+  palaeokueste:{ arten: ['rekonstruktion', 'kuratiert', 'berechnet'], datei: 'data/tektonik_palaeokuesten.json' },
+  nachtlicht:  { arten: ['beobachtung'], text: 'NASA GIBS, live' },
+  satbild:     { arten: ['beobachtung'], text: 'NASA GIBS, live' },
+  seismik:     { arten: ['beobachtung'], text: 'USGS, live' },
+  solarwind:   { arten: ['beobachtung'], text: 'NOAA SWPC, live' },
+  sats:        { arten: ['modell', 'berechnet'], text: 'Bahnen aus TLE mit SGP4 berechnet' },
+  moon:        { arten: ['modell', 'berechnet'], text: 'Meeus-Reihe; gilt 1800–2050 CE (gesetzt)' },
+  tidal:       { arten: ['modell', 'berechnet'], text: 'aus der Mondposition' },
+  magfield:    { arten: ['modell', 'idealisiert'], text: 'IGRF-Dipol, Näherung' },
+  ekliptik:    { arten: ['modell', 'berechnet'], text: 'Bahnmodell' },
+  orbits:      { arten: ['modell', 'berechnet'], text: 'Bahnmodell Standish, gilt 1800–2050 CE' },
+  apex:        { arten: ['modell', 'berechnet'], text: 'schematisch' },
+};
+const ZEICHEN_RANG = { beobachtung: '●', rekonstruktion: '◐', modell: '○', erwartung: '⏵', fiktion: '✱' };
+async function herkunftszeichen(anzeige) {
+  const vorhanden = new Map();
+  for (const [k, e] of Object.entries(EBENEN_HERKUNFT)) {
+    if (e.datei && !vorhanden.has(e.datei))
+      vorhanden.set(e.datei, await fetch(e.datei, { method: 'HEAD' }).then(r => r.ok).catch(() => false));
+    const el = document.querySelector(`.hz[data-hz="${k}"]`);
+    if (!el) continue;
+    const fehlt = e.datei && !vorhanden.get(e.datei);
+    let zeichen, titel;
+    if (fehlt) { zeichen = '■'; titel = `fehlt: ${e.datei} liegt nicht vor`; el.className = 'hz hz-fehlt'; }
+    else if (!e.arten.length) { zeichen = '?'; titel = e.text ?? 'Herkunft nicht angegeben'; el.className = 'hz'; }
+    else {
+      const { rang, merkmale } = anzeige(e.arten);
+      zeichen = (ZEICHEN_RANG[rang] ?? '') + (merkmale.includes('kuratiert') ? '▨' : '');
+      titel = `${e.arten.join(', ')}${e.text ? ` · ${e.text}` : ''}`;
+      el.className = 'hz';
+    }
+    el.textContent = zeichen; el.title = titel;
   }
 }
 

@@ -68,6 +68,11 @@ test('Kontinentpolygone je Modell, als geschlossene Ringe; Küsten ganz, nicht z
   assert.match(eintrag('tektonik/kontinente').wo.koordinaten.verweis.merdith, /#geometrien\.merdith\.kontinente$/);
 });
 
+test('PALEOMAP verliert keine Polygone (Zuordnung je ganzes Polygon statt Teilung)', () => {
+  assert.equal(roh.geometrien.paleomap.kontinente.length, roh.geometrien.merdith.kontinente.length);
+  assert.equal(roh.geometrien.paleomap.kueste.length, roh.geometrien.merdith.kueste.length);
+});
+
 test('PALEOMAP: Rotation und Paläo-DEM getrennt benannt, DEM nur bis 540 Ma', () => {
   assert.match(roh.modelle.paleomap.name, /^PALEOMAP-Rotation/);
   assert.match(pk.woher.kette, /^PALEOMAP-DEM .*unabhängig von der PALEOMAP-Rotation/);

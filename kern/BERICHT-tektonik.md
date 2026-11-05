@@ -223,6 +223,45 @@ Gebaut nach den Entscheidungen: Variante B, Ideale Merdith 2021, Müller 2022 un
 ![250 Ma, zugeschaltet: Müller 2022, Küstenlinien und Referenzbild](bericht-tektonik/korrektur-250-vergleich.jpg)
 ![Sonnensystem bei 250 Ma: Bahnmodell fehlt mit Grund](bericht-tektonik/korrektur-sonnensystem-250.jpg)
 
+## Nachbesserung (2026-11-05, zweite Runde)
+
+1. **Dunkle Flecken in Pangäa: Lücken im Modell, keine Meere.**
+   - **Befund:** Bei 250 Ma liegen 152 Gebiete ohne Kontinentpolygon, die ganz von Polygonen umschlossen sind (Analyse auf 0,5°, ungeglättete Polygone), das größte 0,44 Mio km². Das Plattenmodell kennt dort weder Land noch Meer; es sind Lücken zwischen seinen Polygonen.
+   - **Gegenprobe im PALEOMAP-DEM:** Es ergibt an diesen Stellen mal Land, mal Meer. Wegen des anderen Bezugsrahmens ist das nur grob.
+   - **Darstellung:**
+     - Umschlossene Gebiete ohne Polygon werden im Bild der Kontinentfläche schraffiert. Die Seite zählt bei 2048 × 1024 Pixeln 254 solche Gebiete, mehr als die Analyse, weil das Raster feiner ist.
+     - Legende und Status sagen „Lücke im Modell, kein Meer“.
+     - Das größte freie Gebiet bleibt grau. Auch dort sagt das Modell nur „kein Kontinentpolygon“, nicht „Meer“; die Legende sagt das jetzt.
+2. **PALEOMAP 266 statt 848, Ursache und Behebung.**
+   - **Ursache:** Die Teilung an den PALEOMAP-Plattengrenzen (`split_into_plates`) liefert neben 269 Polygonen 4 100 Linienstücke. Übernommen wurden nur Polygone, darum fielen zwei Drittel weg.
+   - **Jetzt:** Jedes Merdith-Polygon geht ganz an die PALEOMAP-Platte mit der größten Überlappung (`most_overlapping_plate`). Damit sind es 848 Kontinent- und 2 041 Küstenmerkmale wie bei Merdith; ein Test prüft das.
+   - **Preis (Setzung, in Legende und Graph):** Ein Polygon über einer Plattengrenze folgt ganz einer Platte.
+3. **Rechtes Feld.**
+   - „data/manifest.json nicht erreichbar“ steht nicht mehr in der Oberfläche, nur noch als Warnung in der Konsole.
+   - Die prozedurale Bevölkerungsebene (sechs gesetzte Siedlungskerne) ist samt Code entfernt; die Zeile heißt nur noch „Bebauung (OSM)“.
+4. **Herkunftszeichen der linken Spalte gegen die Daten geprüft.**
+   - Die Zeichen am Ende der Ebenennamen mischten Form (△ ⬠ ◆) und Herkunft (● ○◍). Jetzt steht dort nur das Herkunftszeichen nach dem Zeichensystem.
+   - Es wird beim Start gegen die tatsächlichen Dateien geprüft: Fehlt die Datei, steht ■ (fehlt).
+   - Ergebnis:
+
+   | Zeichen | Ebenen |
+   | --- | --- |
+   | ■ (Datei fehlt im Repo) | alle Marker-Ebenen (`data/marker.json`), darunter Gesellschaftsformationen, vorher ●; Staatsgrenzen, Kataster, Plattengrenzen, Netzströme, Biosphäre/Lebensnetz (`data/unterbau.json`), Gewässer (`data/fluesse.geojson`), Gezeiten (`data/gezeiten.json`), Wind (`data/manifest.json`) |
+   | ● | Nachtlichter, Satellitenbild, Seismik, Sonnenwind (live) |
+   | ○ | Satelliten (SGP4), Mond, Gezeitenkraft, Magnetfeld, Bahnen, Ekliptik, Apex |
+   | ◐ | Sintflut, Tektonik |
+   | ◐▨ | Paläoküsten |
+   | ▨ | Sprachen (Glottolog, kuratiert) |
+
+   Die Zuordnung steht in `EBENEN_HERKUNFT` (index.html). Wo die Herkunft nicht angegeben ist (Netzströme), stünde „?“.
+5. **Modellvergleich.**
+   - Sind mehrere Modelle an, gibt es keine Füllung mehr. Gezeichnet wird nur der Rand der Kontinentfläche je Modell; innere Polygonkanten und Lücken entfallen, sonst war es ein Gewirr.
+   - Alle Ränder haben dieselbe helle Farbe. Unterschieden wird durch die Strichstärke (Merdith dick, Müller mittel, PALEOMAP dünn) und durch eine Beschriftung je Modell; keine Strichelung.
+   - Die Legende nennt Stärke und Beschriftung.
+
+![250 Ma, Merdith allein: Lücken schraffiert](bericht-tektonik/nachbesserung-250.jpg)
+![250 Ma, Vergleich: Ränder nach Strichstärke, dazu PALEOMAP-DEM-Küste hellgelb](bericht-tektonik/nachbesserung-250-vergleich.jpg)
+
 ## Zeitgrenzen je Quelle (für eine Küsten- und Höhenreihe über die Erdzeit)
 
 Ziel ist eine Reihe aus mehreren Quellen, jede in ihrem Zeitraum: Nähte bleiben sichtbar, Überlappungen stehen nebeneinander (Regel 13), nichts wird verschmolzen.
