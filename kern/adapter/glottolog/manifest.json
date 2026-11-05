@@ -49,7 +49,14 @@
     "konfidenz": "ElCat-Sicherheit ('20 percent certain' …) als Konfidenz der Quelle in woher, in ElCats Stufen, nicht als Zahl, keine Wahrscheinlichkeit, keine Erwartung"
   },
   "zeitsemantik": {
-    "skala": "a CE",
+    "bezugssystem": {
+      "fehlt": true,
+      "grund": "Der Status trägt kein Datum; es gibt keine Zeitangabe, die ein Bezugssystem bräuchte"
+    },
+    "unschaerfe": {
+      "fehlt": true,
+      "grund": "Der Status trägt kein Datum"
+    },
     "aufloesung": {
       "fehlt": true,
       "grund": "Der Status trägt kein Datum"

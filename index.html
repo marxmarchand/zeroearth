@@ -2096,12 +2096,14 @@ const LENSES = {
    Epochen sind Beschreibungen: systemgebunden (geologisch/archäologisch/
    historisch) und raumgebunden (region). Sie ÜBERLAPPEN, weil verschiedene
    Beschreibungssysteme denselben Abschnitt anders schneiden — das ist
-   Befund, kein Fehler. Grenzwerte: Standardwerte, gerundet. */
+   Befund, kein Fehler. Grenzwerte: Standardwerte, gerundet.
+   Basis Holozän: 11 700 a b2k, also t = -11700 (Walker et al. 2009, J. Quat. Sci.
+   24, 3-17, doi:10.1002/jqs.1227; maximaler Zählfehler 99 a, hier nicht geführt). */
 const PERIODS = [
   { id:'pleistozaen', label:'Pleistozän', system:'geologisch', region:'global',
-    t0:-2.588e6-50, t1:-11750 },
+    t0:-2.588e6-50, t1:-11700 },
   { id:'holozaen', label:'Holozän', system:'geologisch', region:'global',
-    t0:-11750, t1:26 },
+    t0:-11700, t1:26 },
   { id:'weichsel', label:'Letzte Kaltzeit (Weichsel)', system:'geologisch', region:'N-Europa',
     t0:-115050, t1:-11750 },
   { id:'palaeolithikum', label:'Paläolithikum', system:'archäologisch', region:'global',

@@ -43,8 +43,8 @@ test('Sintflut: Satz, alle neun Naturen, ehrlicher Status', () => {
 });
 
 test('Stationen tragen keine Zahlen', () => {
-  for (const s of sintflut.stationen) for (const v of Object.values(s))
-    assert.ok(typeof v === 'string' || v === null || (Array.isArray(v) && v.every(x => typeof x === 'string')), JSON.stringify(s));
+  const zahlfrei = (/** @type {any} */ v) => typeof v !== 'number' && (typeof v !== 'object' || v === null || Object.values(v).every(zahlfrei));
+  for (const s of sintflut.stationen) assert.ok(zahlfrei(s), JSON.stringify(s));
 });
 
 /** @type {[string|number, string, (e: any) => void][]} */
@@ -64,7 +64,15 @@ const VERSTOESSE = [
   ['E', 'Station ohne Frage', e => { delete station(e, '0').frage; }],
   ['E', 'quelle nicht angegeben (statt null)', e => { delete station(e, '0').quelle; }],
   ['E', 'Ort verweist auf Unbekanntes', e => { e.orte[0].verweis = 'sintflut:sintflut/atlantis'; }],
-  ['E', 'Zeitfenster ohne Skala', e => { e.zeitfenster = { von: 20, bis: 0 }; }],
+  [16, 'Zeitfenster ohne Bezugssystem', e => { delete e.zeitfenster.bezugssystem; }],
+  [16, 'Zeitfenster ohne Unschärfe', e => { delete e.zeitfenster.unschaerfe; }],
+  ['E', 'Zeitfenster fehlend', e => { e.zeitfenster = { fehlt: true, grund: 'x' }; }],
+  ['E', 'Brüche fehlen als Feld', e => { delete e.brueche; }],
+  [8, 'Brüche fehlend ohne Grund', e => { e.brueche = { fehlt: true }; }],
+  ['E', 'Brüche als leere Liste', e => { e.brueche = []; }],
+  ['E', 'vorgemerkt ohne Lizenz', e => { delete e.stationen[0].vorgemerkt.lizenz; }],
+  ['E', 'vorgemerkt mit unbekannter Art', e => { e.stationen[0].vorgemerkt.arten = ['gerechnet']; }],
+  ['E', 'vorgemerkt neben einer Quelle', e => { e.stationen[0].quelle = 'sintflut'; e.stationen[0].status = 'in_arbeit'; }],
   ['E', 'Satz fehlt', e => { delete e.satz; }],
   [7, 'Auswahl ohne Begründung', e => { delete e.auswahl_begruendung; }],
   [7, 'Auswahlbegründung leer', e => { e.auswahl_begruendung = ' '; }],

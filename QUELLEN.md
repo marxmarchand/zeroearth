@@ -16,6 +16,7 @@ abgeleitet · `modell` — gerechnet · `kuratiert` — von Hand zusammengetrage
 | PaleoMIST 1.0 | Eisdicke, Paläotopographie | `erste_natur/erdsystem` | 1°, 33 Zeitschnitte 0–80 ka | rekonstruktion | frei |
 | Spratt & Lisiecki | Meeresspiegelkurve | `erste_natur/erdsystem` | 1D-Zeitreihe | rekonstruktion | PANGAEA, CC BY |
 | Scotese PALEOMAP | Paläogeographie-Texturen | `erste_natur/erdsystem` | Textur | rekonstruktion | MIT |
+| Berger & Loutre 1991 (NOAA NCEI) | Einstrahlung aus Bahnparametern, vorgemerkt für Station 0 der Sintflut, noch kein Adapter | `nullnatur/solar` | 1-ka-Zeitreihe, 0–5 Ma | modell, berechnet | keine genannt, zu klären |
 | Laskar et al. 2004 | Milanković-Parameter | `nullnatur/solar` | Zeitreihe | modell (Himmelsmechanik) | frei |
 | NOAA SWPC | Sonnenwind | `planetarer_stoffwechsel/extern` | live | beobachtung | gemeinfrei |
 | CelesTrak TLE | Satellitenbahnen | `zweite_natur/konstruierte_wirklichkeit` | live | beobachtung | frei |

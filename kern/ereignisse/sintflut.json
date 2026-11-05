@@ -1,10 +1,15 @@
 {
   "ereignis": "sintflut",
-  "satz": "Die Sintflut zeigt an einem einzigen Ereignis alle Naturverhältnisse zugleich: Die Umlaufbahn der Erde lässt Eis schmelzen, das Meer steigt, Land und Lebensräume verschwinden, und erinnert wird die Flut nur dort, wo sie aufgeschrieben und weitergegeben wurde.",
+  "satz": "Die Sintflut zeigt an einem einzigen Ereignis alle Naturverhältnisse zugleich: Die Umlaufbahn der Erde stößt das Abschmelzen an, Rückkopplungen verstärken es, das Meer steigt, Land und Lebensräume verschwinden, und erinnert wird die Flut nur dort, wo sie aufgeschrieben und weitergegeben wurde.",
   "zeitfenster": {
-    "skala": "ka BP",
+    "bezugssystem": "ka_bp_1950",
     "von": 20,
-    "bis": 0
+    "bis": 0,
+    "unschaerfe": {
+      "fehlt": true,
+      "grund": "PaleoMIST nennt keine Unschärfe der Zeitachse; die 2,5 ka sind die Auflösung, nur eine Untergrenze"
+    },
+    "aufloesung": 2.5
   },
   "orte": [
     {
@@ -39,7 +44,19 @@
       "frage": "Welche Änderung der Einstrahlung (Erdbahn, Milanković) ließ das Eis schmelzen?",
       "quelle": null,
       "status": "fehlt",
-      "begruendung": "Kein Adapter für Bahnparameter oder Einstrahlung. Die NullNatur-Ansicht rechnet Bahnen nur zur Darstellung; als Quelle bräuchte es einen Datensatz (etwa Laskar 2004), keine eigene Rechnung (Regel 12)."
+      "begruendung": "Noch kein Adapter für die Einstrahlung. Vorgemerkt ist Berger & Loutre 1991 bei NOAA: fertig berechnete Einstrahlung aus Bahnparametern, also keine eigene Rechnung (Regel 12).",
+      "vorgemerkt": {
+        "quelle": "Berger & Loutre 1991",
+        "ort": "NOAA NCEI, https://www.ncei.noaa.gov/pub/data/paleo/climate_forcing/orbital_variations/insolation/",
+        "arten": [
+          "modell",
+          "berechnet"
+        ],
+        "lizenz": {
+          "fehlt": true,
+          "grund": "Bei NOAA keine Lizenz genannt, das Readme bittet um Zitierung; vor dem Einbinden zu klären"
+        }
+      }
     },
     {
       "natur": "planetarer_stoffwechsel",
@@ -122,6 +139,10 @@
       "begruendung": "Kein Adapter für Fluttexte. Die Notizen im Sintflut-Adapter nennen nur Literatur (Nunn & Reid 2016; Ryan/Pitman 1997), keine Texte und keine Überlieferungsketten."
     }
   ],
+  "brueche": {
+    "fehlt": true,
+    "grund": "Die Schmelzwasserpulse fallen zwischen die 2500-a-Schritte von PaleoMIST und sind in den Daten nicht sichtbar."
+  },
   "autor": "Max",
-  "stand": "2026-11-01"
+  "stand": "2026-11-05"
 }

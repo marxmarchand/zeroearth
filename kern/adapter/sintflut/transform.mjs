@@ -59,15 +59,18 @@ export function transform(roh, manifest, zusatz = {}) {
   const arten = [roh.woher.art];
   const archivkette = manifest.herkunft.archivkette;
   const quelle = `${roh.woher.quelle} · ${roh.woher.datei} · übernommen von der Dateiebene`;
-  const skala = manifest.zeitsemantik.skala;
+  // Regel 16: jede Zeitangabe trägt Bezugssystem, Unschärfe und, davon getrennt, die Auflösung.
+  const { bezugssystem, unschaerfe } = manifest.zeitsemantik;
+  const aufloesung = manifest.zeitsemantik.aufloesung.wert;
+  const maß = { bezugssystem, unschaerfe, aufloesung };
   const { von, bis, schritte } = manifest.zeitsemantik.abdeckung;
-  const zeitsemantik = { skala, aufloesung: manifest.zeitsemantik.aufloesung.wert, abdeckung: { von, bis }, schritte };
+  const zeitsemantik = { bezugssystem, unschaerfe, aufloesung, abdeckung: { von, bis }, schritte };
 
   const woher = (/** @type {string[]} */ aus, /** @type {string} */ verfahren) =>
     ({ arten: [...arten], quelle, archivkette, abgeleitet_aus: aus, verfahren });
   const punkt = (/** @type {any} */ bezugszeit, /** @type {any} */ wert, /** @type {any} */ w) =>
     ({ bezugszeit, fassungen: [{ wert, wissensstand: WISSENSSTAND, woher: w }] });
-  const zeit = (/** @type {number} */ ka) => ({ skala, wert: ka === 0 ? 0 : ka });
+  const zeit = (/** @type {number} */ ka) => ({ ...maß, wert: ka === 0 ? 0 : ka });
 
   /* ── Felder: die Raster der Quelle, nur als Verweis ──────────────── */
   const feld = (/** @type {string} */ v, /** @type {string} */ name, /** @type {string} */ einheit) => ({
@@ -79,7 +82,7 @@ export function transform(roh, manifest, zusatz = {}) {
     werte: {
       raster: {
         einheit, punkte: [{
-          bezugszeit: { skala, von, bis },
+          bezugszeit: { ...maß, von, bis },
           fassungen: [{ wert: { verweis: `${roh.woher.datei}#${v}` }, wissensstand: WISSENSSTAND,
             woher: { arten: [...arten], quelle, archivkette } }],
         }],
@@ -178,7 +181,7 @@ export function transform(roh, manifest, zusatz = {}) {
         ideal: i.id,
       },
       wissensstand: SETZUNG,
-      bezugszeit: { skala, von: r.ka_bp[imax], bis: r.ka_bp[n] },
+      bezugszeit: { ...maß, von: r.ka_bp[imax], bis: r.ka_bp[n] },
       beleg: [`doi:${eisDaten.woher.doi}`],
     };
   }) : [{
@@ -186,7 +189,7 @@ export function transform(roh, manifest, zusatz = {}) {
     von: eis.id, nach: ozean.id, prozess: prozess.id,
     bilanz: { einheit: 'kg', zufluss: fehlt(OHNE_EIS), abfluss: [fehlt(OHNE_EIS)] },
     woher: { arten: ['kuratiert'], quelle: 'Setzung Max (strukturstand, 2026-09-29)', archivkette: KETTE_SETZUNG },
-    wissensstand: SETZUNG, bezugszeit: { skala, von, bis },
+    wissensstand: SETZUNG, bezugszeit: { ...maß, von, bis },
     beleg: fehlt('Setzung; kein Beleg außer der Setzung selbst (woher.quelle)'),
   }];
 
@@ -220,17 +223,17 @@ export function transform(roh, manifest, zusatz = {}) {
           'relativer Meeresspiegel, gemittelt über alle Zellen des Kastens (Land und Meer)')),
         verlust: {
           einheit: 'km2',
-          punkte: [punkt({ skala, von: t.ka_bp, bis: zeit(h.ka_bp).wert }, o.verlust_km2,
+          punkte: [punkt({ ...maß, von: t.ka_bp, bis: zeit(h.ka_bp).wert }, o.verlust_km2,
             woher([LAND], 'Landfläche am trockensten Stand minus heute'))],
         },
         verlust_anteil: {
           einheit: '1',
-          punkte: [punkt({ skala, von: t.ka_bp, bis: zeit(h.ka_bp).wert }, o.verlust_anteil,
+          punkte: [punkt({ ...maß, von: t.ka_bp, bis: zeit(h.ka_bp).wert }, o.verlust_anteil,
             woher([LAND], '1 − heute / trockenster Stand'))],
         },
         schnellster_schritt: {
           einheit: 'km2',
-          punkte: [punkt({ skala, von: s.von, bis: s.bis }, s.verlust_km2,
+          punkte: [punkt({ ...maß, von: s.von, bis: s.bis }, s.verlust_km2,
             woher([LAND], 'größter Landverlust zwischen zwei Stützstellen'))],
         },
         // Dieselbe Landfläche auf 1°, je Ideal: für den Vergleich der Ideale

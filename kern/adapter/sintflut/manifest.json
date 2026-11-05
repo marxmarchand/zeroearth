@@ -54,7 +54,11 @@
     ]
   },
   "zeitsemantik": {
-    "skala": "ka BP",
+    "bezugssystem": "ka_bp_1950",
+    "unschaerfe": {
+      "fehlt": true,
+      "grund": "PaleoMIST nennt keine Unschärfe der Zeitachse; die 2,5 ka sind die Auflösung, nur eine Untergrenze"
+    },
     "bezugsjahr": {
       "wert": "1950 CE",
       "beleg": "Zeitachse der Quelle: units = 'years since 1950-01-1' (reconstruction_1_degree.nc, geprüft 2026-10-01)"
@@ -140,8 +144,8 @@
     "gesetzt_in": "PaleoMIST 1.0 (Gowan et al. 2021): die Quelle liefert beide Läufe",
     "begruendung": "Beide Eisgeschichten stammen aus derselben Quelle und sind dort gleichrangig; keine wird bevorzugt (Regel 13)",
     "annahmen": {
-      "ozeanflaeche_m2": 361800000000000.0,
-      "unterschied_ab_m_sle": 1.0,
+      "ozeanflaeche_m2": 361800000000000,
+      "unterschied_ab_m_sle": 1,
       "begruendung": "Nur für die lesbare Ausgabe. Meter Meeresspiegeläquivalent mit heutiger Ozeanfläche und den Dichten der Bilanz. Ab 1 m gilt eine Eisdifferenz als Unterschied. Landflächen-Differenzen bis 2 Zellen à 1° heißen Zellkippen: einzelne Randzellen, die bei kleinsten Meeresspiegel-Differenzen zwischen Land und Meer wechseln (Auflösungsgrenze). Im Graphen stehen alle Differenzen ungefiltert in m³ und km².",
       "zellkippen_bis_zellen": 2
     }

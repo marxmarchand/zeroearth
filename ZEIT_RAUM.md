@@ -1,13 +1,15 @@
 # ZEIT_RAUM.md
 ## Referenzspezifikation für Zeit- und Raumkoordinaten in zeroearth.io
 
-**Status:** Festlegung v1.0 · Stand Juni 2026 · §2.4 ergänzt 20.09.2026 (Entwurf, Entscheidung Max)
-**Geltung:** verbindlich für alle Plattform-Versionen ab v0.6
+> **Zeit-Teil überholt** (§§ 0, 1, 3, 6), Stand 05.11.2026. Für die Zeit gelten `docs/strukturstand.md`, Abschnitt Zeit und Regel 16, sowie `kern/schema.mjs`. Der Text bleibt zur Nachvollziehbarkeit stehen. `t` ist nur noch eine interne Rechengröße: gespeichert wird im Maß der Quelle, und `t` wird nie als einzelne Achse angezeigt. Der Raum-Teil (§ 2) gilt weiter.
+
+**Status:** Festlegung v1.0 · Stand Juni 2026 · §2.4 ergänzt 20.09.2026 (Entwurf, Entscheidung Max) · Zeit-Teil überholt, siehe oben
+**Geltung:** nur noch der Raum-Teil
 **Theoretische Grundlage:** Marchand 2026a (ZeroNature/FirstNature), Abschnitt 2.4 & 3.3; Glossar v3 (Einträge `zeit`, `dimtemp`, `masterzeit`, `matrixschnitt`, `beobpos`, `raster`, `rastereingang`)
 
 ---
 
-## 0. Grundsatz
+## 0. Grundsatz (Zeit: überholt)
 
 Die Begriffe und Naturdimensionen überlagern sich — dasselbe Objekt erscheint in
 mehreren Dimensionen unterschiedlich (Boden als Substrat / als Ertragsmesszahl / als
@@ -24,7 +26,7 @@ dimensionsspezifischen Temporalitäten ausgedrückt werden.
 
 ---
 
-## 1. ZEIT
+## 1. ZEIT (überholt)
 
 ### 1.1 Kanonische interne Achse
 
@@ -168,7 +170,7 @@ nicht projizierbar — ist der technische Ausdruck genau dieser Systemgrenze.
 
 ---
 
-## 3. BEOBACHTUNGSPOSITION
+## 3. BEOBACHTUNGSPOSITION (Zeit: überholt)
 
 ### 3.1 Glossar-Definition (`beobpos`)
 
@@ -241,7 +243,7 @@ den Doggerland-Zeitraum als eine selbst abgeleitete Küstenlinie.
 
 ---
 
-## 6. ZUSAMMENFASSUNG (Implementierungs-Checkliste)
+## 6. ZUSAMMENFASSUNG (Implementierungs-Checkliste) (Zeit: überholt)
 
 - [ ] Eine interne Zeitvariable `t` (Jahre seit J2000), alle Anzeigen als Konversion
 - [ ] BP-Konvention `a_BP = -50 - t` (Present = 1950), nicht „vor heute"

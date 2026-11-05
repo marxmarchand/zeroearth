@@ -19,7 +19,7 @@ import {
   KAPITALFORMEN, VORGAENGE, RUECKWIRKUNG, RELATIONSARTEN, VERWORFEN, TAUSCHVORGAENGE, MODI, formwechsel,
   ERHALTUNG, ROLLEN, BELEG_EINTRAGSEBENE, IDEAL_ARTEN, PRUEFARTEN, NAEHERUNG_VERTRITT,
   EREIGNIS_NATUREN, STATION_STATUS, STATION_OHNE_QUELLE, EREIGNIS_PFLICHT, STATION_FELDER,
-  ARCHIVARTEN, HERKUNFTSARTEN, HERKUNFT_RANG, KEIN_ERWARTUNGSTRAEGER, WISSENSSTATUS, GEOMETRIEN, MIT_VERZERRUNG,
+  ARCHIVARTEN, HERKUNFTSARTEN, HERKUNFT_RANG, MODELL_MERKMALE, BEZUGSSYSTEME, KEIN_ERWARTUNGSTRAEGER, WISSENSSTATUS, GEOMETRIEN, MIT_VERZERRUNG,
   istFehlend, MANIFEST_PFLICHT, ZEITSEMANTIK_PFLICHT, REDUKTIONSSCHRITTE, SPANNWEITE,
 } from './schema.mjs';
 
@@ -37,6 +37,7 @@ export const REGELN = /** @type {const} */ ({
   11: 'Reduktion im Manifest, Spannweite bei zusammengefassten Modellen',
   13: 'Mehrere Ideale werden alle gezeigt',
   15: 'Fiktion erkennbar und getrennt von echten Daten',
+  16: 'Zeitangabe mit Bezugssystem und Unschärfe',
   B: 'Bestände und Formen',
   S: 'Struktur',
   M: 'Manifest',
@@ -48,9 +49,27 @@ export const REGELN = /** @type {const} */ ({
 const ORDNUNG = Object.keys(UNTEREBENEN).sort();
 const istZahl = (/** @type {any} */ x) => typeof x === 'number' && Number.isFinite(x);
 const istText = (/** @type {any} */ x) => typeof x === 'string' && x.trim() !== '';
-/** Bezugszeit {skala, wert} oder {skala, von, bis}. */
-const istBezugszeit = (/** @type {any} */ z) => istText(z?.skala)
-  && (istZahl(z.wert) || (istZahl(z.von) && istZahl(z.bis)));
+/**
+ * Regel 16: eine gemachte Zeitangabe. Fehlt die Zeit ganz ({fehlt, grund}), gilt Regel 8.
+ * @param {any} z @param {string} ort @param {(regel: any, ort: string, text: string) => void} F
+ */
+function pruefeZeitangabe(z, ort, F) {
+  if (istFehlend(z)) return;
+  if (!z || typeof z !== 'object') return F(16, ort, 'Zeitangabe ist ein Objekt oder {fehlt, grund}');
+  if ('skala' in z) F(16, ort, 'skala ist ersetzt durch bezugssystem');
+  if (!(z.bezugssystem in BEZUGSSYSTEME)) F(16, ort, `Bezugssystem fehlt oder ist unbekannt: ${z.bezugssystem} (${Object.keys(BEZUGSSYSTEME).join(', ')})`);
+  if (!istZahl(z.wert) && !(istZahl(z.von) && (istZahl(z.bis) || z.bis === 'offen')))
+    F(16, ort, 'Zeitangabe braucht wert oder von und bis');
+  const u = z.unschaerfe;
+  if (u === undefined) F(16, ort, 'ohne Unschärfe; nennt die Quelle keine, heißt das {fehlt, grund}');
+  else if (istFehlend(u)) { if (!istText(u.grund)) F(16, ort, 'Unschärfe fehlend ohne Grund'); }
+  else {
+    if (!istZahl(u?.plusminus) || u.plusminus < 0 || !istText(u?.quelle)) F(16, ort, 'Unschärfe braucht {plusminus, quelle} oder {fehlt, grund}');
+    if (istZahl(z.aufloesung) && u?.plusminus === z.aufloesung) F(16, ort, 'Unschärfe gleich der Auflösung; die Auflösung ist nur eine Untergrenze, nie die Unschärfe');
+  }
+  if (z.aufloesung !== undefined && !istFehlend(z.aufloesung) && !(istZahl(z.aufloesung) && z.aufloesung > 0))
+    F(16, ort, 'Auflösung ist eine positive Zahl oder {fehlt, grund}');
+}
 
 /**
  * Prüft einen Graphen gegen die Regeln.
@@ -103,6 +122,7 @@ export function pruefe(gr) {
       return;
     }
     if (x.interpoliert === true) F(8, pfad, 'interpolierter Wert; nichts wird aufgefüllt');
+    if ('bezugszeit' in x) pruefeZeitangabe(x.bezugszeit, `${pfad}.bezugszeit`, F);
     for (const [k, v] of Object.entries(x)) durchlaufe(v, Array.isArray(x) ? `${pfad}[${k}]` : `${pfad}.${k}`);
   };
   durchlaufe(gr, 'graph');
@@ -144,8 +164,8 @@ export function pruefe(gr) {
     if (!istText(f.name)) F('S', f.id, 'Formation ohne Namen');
     if (typeof f.warenproduktion !== 'boolean' && !istFehlend(f.warenproduktion))
       F('S', f.id, 'warenproduktion muss true, false oder fehlend sein');
-    if (!f.gilt || f.gilt.von === undefined || f.gilt.bis === undefined)
-      F('S', f.id, 'Formation ohne Geltungszeit {von, bis}');
+    if (!f.gilt) F('S', f.id, 'Formation ohne Geltungszeit');
+    else pruefeZeitangabe(f.gilt, `${f.id}.gilt`, F);
   }
 
   /* ── Bestände und Formen ───────────────────────────────────────── */
@@ -223,7 +243,8 @@ export function pruefe(gr) {
       } else {
         if (!formationen.has(e.formation?.id)) F(2, e.id, `Formation unbekannt: ${e.formation?.id}`);
         if (e.formation?.von === undefined || e.formation?.bis === undefined)
-          F(2, e.id, 'Formationsverweis ist zeitgebunden: {id, von, bis}');
+          F(2, e.id, 'Formationsverweis ist zeitgebunden: {id, bezugssystem, von, bis, unschaerfe}');
+        else pruefeZeitangabe(e.formation, `${e.id}.formation`, F);
       }
       if (e.verwertungsqualitaet) {
         const f = istFehlend(e.formation) ? null : formationen.get(e.formation?.id);
@@ -291,13 +312,13 @@ export function pruefe(gr) {
         if (!istZahl(z.schritte)) F('S', ort, 'zeitsemantik ohne Schrittzahl');
         else if (g.punkte.length !== z.schritte)
           F(8, ort, `${g.punkte.length} Punkte bei ${z.schritte} Schritten; Lücken werden als fehlend geführt, nicht weggelassen`);
+        if (!(z.bezugssystem in BEZUGSSYSTEME)) F(16, ort, `zeitsemantik: Bezugssystem fehlt oder ist unbekannt: ${z.bezugssystem}`);
+        if (!('unschaerfe' in z)) F(16, ort, 'zeitsemantik ohne Unschärfe; nennt die Quelle keine, heißt das {fehlt, grund}');
       }
       g.punkte.forEach((/** @type {any} */ p, /** @type {number} */ i) => {
         const po = `${ort}[${i}]`;
         if (e.stapel === '0.1') { if (p?.bezugszeit) F('S', po, '0.1 ist ohne Zeit'); }
         else if (!p?.bezugszeit) F('S', po, 'ohne Bezugszeit');
-        else if (!istFehlend(p.bezugszeit) && !istBezugszeit(p.bezugszeit))
-          F('S', po, 'Bezugszeit braucht {skala, wert} oder {skala, von, bis}');
         pruefeFassungen(p?.fassungen, po);
       });
     }
@@ -345,7 +366,8 @@ export function pruefe(gr) {
     for (const a of arten) if (!HERKUNFTSARTEN.includes(a)) F(6, ort, `Herkunftsart unbekannt: ${a}`);
     if (new Set(arten).size !== arten.length) F(6, ort, 'arten ist eine Menge; doppelte Einträge');
     if (arten.includes('idealisiert') && !arten.includes('modell')) F(6, ort, 'idealisiert ohne modell; das Merkmal gehört zur Idealschicht');
-    if (arten.includes('modell') && !arten.includes('idealisiert')) F(6, ort, 'modell ohne Merkmal idealisiert; Modellergebnisse bilden die Idealschicht');
+    if (arten.includes('berechnet') && !arten.includes('modell')) F(6, ort, 'berechnet ohne modell; das Merkmal gehört zu einem Modellergebnis');
+    if (arten.includes('modell') && !MODELL_MERKMALE.some(m => arten.includes(m))) F(6, ort, 'modell ohne Merkmal idealisiert oder berechnet; Modellergebnisse bilden die Idealschicht');
     if (arten.includes('fiktion') && arten.some((/** @type {any} */ a) => HERKUNFT_RANG.includes(a)) && !w.abgeleitet_aus?.length)
       F(15, ort, 'fiktion neben echter Herkunft nur an abgeleiteten Werten (abgeleitet_aus); sonst verwischt die Grenze');
     if (w.konfidenz !== undefined) {
@@ -529,8 +551,6 @@ export function pruefe(gr) {
     }
     pruefeWissensstand(r.wissensstand, o);
     if (!('bezugszeit' in r)) F(8, o, 'Relation ohne Bezugszeit; unbekannt heißt {fehlt, grund}');
-    else if (!istFehlend(r.bezugszeit) && !istBezugszeit(r.bezugszeit))
-      F('S', o, 'Bezugszeit braucht {skala, wert} oder {skala, von, bis}');
     pruefeBeleg(r.beleg, o);
 
     if (r.art === 'rolle') {
@@ -629,13 +649,16 @@ export function pruefeManifest(m) {
     if (!Array.isArray(m.herkunft.archivkette) || m.herkunft.archivkette[0]?.art !== 'zeroearth')
       F(ort, 'herkunft.archivkette fehlt oder beginnt nicht bei zeroearth');
   }
-  if (m.zeitsemantik && !istFehlend(m.zeitsemantik))
-    for (const k of ZEITSEMANTIK_PFLICHT) if (!(k in m.zeitsemantik)) F(ort, `zeitsemantik.${k} fehlt`);
+  if (m.zeitsemantik && !istFehlend(m.zeitsemantik)) {
+    for (const k of ZEITSEMANTIK_PFLICHT) if (!(k in m.zeitsemantik)) fehler.push({ regel: 16, ort, text: `zeitsemantik.${k} fehlt` });
+    const b = m.zeitsemantik.bezugssystem;
+    if (b !== undefined && !istFehlend(b) && !(b in BEZUGSSYSTEME)) fehler.push({ regel: 16, ort, text: `Bezugssystem unbekannt: ${b}` });
+  }
   for (const g of [m.geometrie].flat()) if (g !== undefined && !istFehlend(g) && !GEOMETRIEN.includes(g)) F(ort, `Geometrie unbekannt: ${g}`);
   if (m.herkunft && !istFehlend(m.herkunft)) {
     const arten = m.herkunft.arten ?? [];
-    if (arten.includes('idealisiert') !== arten.includes('modell'))
-      F(ort, 'herkunft: modell und idealisiert gehören zusammen (Idealschicht)');
+    if (MODELL_MERKMALE.some(k => arten.includes(k)) !== arten.includes('modell'))
+      F(ort, 'herkunft: modell gehört mit idealisiert oder berechnet zusammen (Idealschicht)');
     if (arten.includes('fiktion') && arten.length > 1)
       fehler.push({ regel: 15, ort, text: 'ein Adapter mit fiktion führt im Manifest nur fiktion; echte Eingaben stehen in der Herkunftskette' });
   }
@@ -715,7 +738,14 @@ export function pruefeEreignis(ev, { adapter, graphen = new Map() }) {
   // Regel 7: Orte und Zeitfenster sind eine Setzung
   if ('auswahl_begruendung' in ev && !istText(ev.auswahl_begruendung))
     F(7, ort, 'auswahl_begruendung ist Pflicht: Orte und Zeitfenster sind eine Setzung und werden begründet');
-  if ('zeitfenster' in ev && !istBezugszeit(ev.zeitfenster)) F('E', ort, 'zeitfenster braucht {skala, wert} oder {skala, von, bis}');
+  if ('zeitfenster' in ev) {
+    if (istFehlend(ev.zeitfenster)) F('E', ort, 'zeitfenster ist Pflicht: Es ist die Setzung, die das Ereignis schneidet');
+    else pruefeZeitangabe(ev.zeitfenster, `${ort} · zeitfenster`, F);
+  }
+  if ('brueche' in ev) {
+    if (istFehlend(ev.brueche)) { if (!istText(ev.brueche.grund)) F(8, ort, 'brueche fehlend ohne Grund'); else H(8, ort, `Brüche fehlen: ${ev.brueche.grund}`); }
+    else if (!Array.isArray(ev.brueche) || !ev.brueche.length) F('E', ort, 'brueche ist eine nichtleere Liste oder {fehlt, grund}');
+  }
 
   /** Verweis "adapter-graph-id" oder "eintrag#groesse" im Graphen eines Adapters auflösen. */
   const findet = (/** @type {any} */ g, /** @type {string} */ ref) => {
@@ -755,7 +785,15 @@ export function pruefeEreignis(ev, { adapter, graphen = new Map() }) {
         F(8, so, `ohne Quelle nur als ${STATION_OHNE_QUELLE.join(' oder ')}, nicht "${st.status}"`);
       if (!istText(st.begruendung)) F(8, so, 'ohne Quelle braucht eine Begründung');
       if (st.verweise !== undefined) F('E', so, 'Verweise ohne Quelle');
+      if (st.vorgemerkt !== undefined) {
+        const v = st.vorgemerkt;
+        if (!istText(v?.quelle) || !istText(v?.ort)) F('E', so, 'vorgemerkt braucht quelle und ort');
+        if (!('lizenz' in (v ?? {}))) F('E', so, 'vorgemerkt ohne lizenz; ungeklärt heißt {fehlt, grund}');
+        if (!Array.isArray(v?.arten) || !v.arten.length || !v.arten.every((/** @type {any} */ a) => HERKUNFTSARTEN.includes(a)))
+          F('E', so, 'vorgemerkt braucht arten aus den Herkunftsarten');
+      }
     } else {
+      if (st.vorgemerkt !== undefined) F('E', so, 'vorgemerkt nur an einer Station ohne Quelle');
       if (typeof st.quelle !== 'string') F('E', so, 'quelle ist der Name eines Adapters oder null, keine Daten');
       else if (!adapter.has(st.quelle)) F('E', so, `quelle verweist auf unbekannten Adapter: ${st.quelle}`);
       if (STATION_OHNE_QUELLE.includes(st.status)) F('E', so, `Status "${st.status}", aber mit Quelle ${st.quelle}`);

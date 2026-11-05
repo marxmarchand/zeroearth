@@ -61,7 +61,7 @@ test('Bestand Wasser: Formen Eis und Ozean, Bilanz je Ideal geschlossen, als inn
     assert.ok(b.zufluss > 4e19 && b.zufluss < 4.5e19, `Eisverlust ${b.zufluss} kg`);
     assert.ok(Math.abs(b.zufluss - b.abfluss[0]) <= b.toleranz);
     assert.equal(b.toleranz, manifest.bilanz.toleranz_anteil * b.zufluss);
-    assert.deepEqual(r.bezugszeit, { skala: 'ka BP', von: 20, bis: 0 });
+    assert.deepEqual([r.bezugszeit.bezugssystem, r.bezugszeit.von, r.bezugszeit.bis], ['ka_bp_1950', 20, 0]);
   }
   const { hinweise } = pruefe(graph);
   assert.equal(hinweise.filter(h => h.regel === 5 && /Bilanz geschlossen, innere Stimmigkeit/.test(h.text)).length, 2);

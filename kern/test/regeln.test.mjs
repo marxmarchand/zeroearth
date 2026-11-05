@@ -11,6 +11,8 @@ import { pruefe, pruefeManifest, pruefeHerkunftGegenManifest } from '../pruefe.m
 import { fehlt, anzeige, nichtErhoben, BELEG_EINTRAGSEBENE } from '../schema.mjs';
 
 const PRUEFE = fileURLToPath(new URL('../pruefe.mjs', import.meta.url));
+/** Zeitangabe im Testmaß; die Unschärfe nennt die Testquelle nicht. */
+const Z = (/** @type {any} */ zeit) => ({ bezugssystem: 'a_ce', unschaerfe: fehlt('Test: nicht genannt'), ...zeit });
 const WS = { seit: '2026-09-29', status: 'vorlaeufig' };
 const Q = 'Testquelle';
 const KETTE = [{ archiv: 'zeroearth', art: 'zeroearth' }, { archiv: 'Testarchiv', art: 'gesellschaftlich' }];
@@ -18,7 +20,7 @@ const KETTE = [{ archiv: 'zeroearth', art: 'zeroearth' }, { archiv: 'Testarchiv'
 const W = (/** @type {string[]} */ arten, extra = {}) => ({ arten, quelle: Q, archivkette: KETTE, ...extra });
 const fassung = (/** @type {any} */ wert, /** @type {any} */ woher = W(['beobachtung']), extra = {}) =>
   ({ wert, wissensstand: WS, woher, ...extra });
-const einzel = (/** @type {string} */ einheit, /** @type {any} */ f, bezugszeit = { skala: 'a CE', wert: 2000 }) =>
+const einzel = (/** @type {string} */ einheit, /** @type {any} */ f, bezugszeit = Z({ wert: 2000 })) =>
   ({ einheit, punkte: [{ bezugszeit, fassungen: [f] }] });
 /** Je Aufruf ein frisches Objekt: Tests verändern es. */
 const VERZERRUNG = () => ({ flaeche: 1, ueberhoehung: 1 });
@@ -30,8 +32,8 @@ function gueltig() {
   return {
     schema: 'test',
     formationen: [
-      { id: 't/f-ware', name: 'mit Warenproduktion', warenproduktion: true, gilt: { von: 1900, bis: 'offen' } },
-      { id: 't/f-ohne', name: 'ohne Warenproduktion', warenproduktion: false, gilt: { von: -10000, bis: -8000 } },
+      { id: 't/f-ware', name: 'mit Warenproduktion', warenproduktion: true, gilt: Z({ von: 1900, bis: 'offen' }) },
+      { id: 't/f-ohne', name: 'ohne Warenproduktion', warenproduktion: false, gilt: Z({ von: -10000, bis: -8000 }) },
     ],
     subjektachse: { status: 'leer' },
     auswahl: [{ id: 't/a', was: 'Testausschnitt', gesetzt_in: 'test', begruendung: 'Test' }],
@@ -58,13 +60,13 @@ function gueltig() {
         werte: {
           masse: {
             einheit: 'kg',
-            zeitsemantik: { skala: 'a CE', aufloesung: 1, abdeckung: { von: 2000, bis: 2001 }, schritte: 2 },
+            zeitsemantik: { bezugssystem: 'a_ce', unschaerfe: fehlt('Test: nicht genannt'), aufloesung: 1, abdeckung: { von: 2000, bis: 2001 }, schritte: 2 },
             punkte: [
-              { bezugszeit: { skala: 'a CE', wert: 2000 }, fassungen: [
+              { bezugszeit: Z({ wert: 2000 }), fassungen: [
                 fassung(10),
                 { wert: 11, wissensstand: { seit: '2026-10-01', status: 'revidiert' }, woher: W(['beobachtung']) },
               ] },
-              { bezugszeit: { skala: 'a CE', wert: 2001 }, fassungen: [fassung(fehlt('Messung ausgefallen'))] },
+              { bezugszeit: Z({ wert: 2001 }), fassungen: [fassung(fehlt('Messung ausgefallen'))] },
             ],
           },
         },
@@ -81,16 +83,16 @@ function gueltig() {
       } },
       { id: 't/bevoelkerung', stapel: '1.3', name: 'Bevölkerung Testland', wo: { geometrie: 'flaeche', verzerrung: VERZERRUNG() }, werte: {} },
       { id: 't/rohdaten', stapel: '2.3', name: 'Rohdaten', haengt_an: fehlt('Datenträger unbekannt'),
-        formation: { id: 't/f-ware', von: 2020, bis: 'offen' }, werte: {} },
+        formation: { id: 't/f-ware', ...Z({ von: 2020, bis: 'offen' }) }, werte: {} },
       { id: 't/profil', stapel: '2.3', name: 'Profil', haengt_an: fehlt('Datenträger unbekannt'),
-        formation: { id: 't/f-ware', von: 2020, bis: 'offen' }, werte: {} },
+        formation: { id: 't/f-ware', ...Z({ von: 2020, bis: 'offen' }) }, werte: {} },
       { id: 't/gemeinschaft', stapel: '1.3', name: 'Sprachgemeinschaft', werte: {},
         wo: { geometrie: 'punkt', naeherung: { vertritt: 'flaeche', angabe: 'Punkt statt Sprachgebiet' },
           verzerrung: { flaeche: fehlt('Ausdehnung unbekannt'), ueberhoehung: 1 } } },
       { id: 't/sprache', stapel: '2.2', name: 'Sprache', haengt_an: ['t/gemeinschaft'], verweist_auf: ['t/prognose'],
         formation: fehlt('nicht im Test'), werte: {} },
       { id: 't/behoerde', stapel: '2.2', name: 'Behörde', haengt_an: fehlt('nicht im Test'),
-        formation: { id: 't/f-ware', von: 2020, bis: 'offen' }, werte: {} },
+        formation: { id: 't/f-ware', ...Z({ von: 2020, bis: 'offen' }) }, werte: {} },
       { id: 't/eis', stapel: '1.1', name: 'Eis', wo: fehlt('nicht im Test'), werte: {} },
       { id: 't/ozean', stapel: '1.1', name: 'Ozean', wo: fehlt('nicht im Test'), werte: {} },
       { id: 't/kennwert', stapel: '1.1', name: 'Kennwert', werte: {
@@ -101,14 +103,14 @@ function gueltig() {
           verzerrung: VERZERRUNG(), woher: W(['rekonstruktion'], { abgeleitet_aus: ['t/modell#x'] }) } },
       {
         id: 't/eigentum', stapel: '2.2', name: 'Eigentum', haengt_an: ['t/kohle'],
-        formation: { id: 't/f-ware', von: 1990, bis: 'offen' }, verwertungsqualitaet: { modus: 'potenz' },
+        formation: { id: 't/f-ware', ...Z({ von: 1990, bis: 'offen' }) }, verwertungsqualitaet: { modus: 'potenz' },
         werte: { preis: einzel('EUR', fassung(100, undefined, { gegenwert: { betrag: 100, einheit: 'EUR' }, tausch: 't/r-tausch' })) },
       },
       { id: 't/geld', stapel: '2.2', name: 'Geld', haengt_an: fehlt('nicht im Test'),
-        formation: { id: 't/f-ware', von: 1990, bis: 'offen' }, werte: {} },
+        formation: { id: 't/f-ware', ...Z({ von: 1990, bis: 'offen' }) }, werte: {} },
       {
         id: 't/prognose', stapel: '2.3', name: 'Prognose', haengt_an: fehlt('kein Träger bekannt'),
-        formation: { id: 't/f-ware', von: 2020, bis: 'offen' },
+        formation: { id: 't/f-ware', ...Z({ von: 2020, bis: 'offen' }) },
         werte: {
           p: einzel('1', fassung(0.3, W(['erwartung'], { erwartungstraeger: 'Testfirma' }), { wahrscheinlichkeit: 0.3 })),
           q: einzel('1', fassung(0.6, W(['erwartung', 'rekonstruktion'],
@@ -157,7 +159,7 @@ function gueltig() {
         wissensstand: WS, ...REL() },
       { id: 't/r-konzern', art: 'anhaften', von: 't/geld', nach: 't/eigentum', woher: W(['kuratiert']), wissensstand: WS, ...REL() },
       { id: 't/r-geber', art: 'einschliessen_realisieren', von: fehlt('Geldgeber nicht auflösbar'), nach: 't/eigentum',
-        woher: W(['kuratiert']), wissensstand: WS, ...REL(), bezugszeit: { skala: 'a CE', von: 2020, bis: 2024 } },
+        woher: W(['kuratiert']), wissensstand: WS, ...REL(), bezugszeit: Z({ von: 2020, bis: 2024 }) },
     ],
   };
 }
@@ -277,7 +279,7 @@ const VERSTOESSE = [
   [10, 'Grenze ohne Verzerrung', b => { delete e(b, 't/kueste').wo.verzerrung; }],
   // Relationen: Bezugszeit, Beleg, fehlende Enden, Rolle, Ware
   [8, 'Relation ohne Bezugszeit', b => { delete r(b, 't/r-haftet').bezugszeit; }],
-  ['S', 'Relation-Bezugszeit ohne Skala', b => { r(b, 't/r-geber').bezugszeit = { von: 2020, bis: 2024 }; }],
+  [16, 'Relation-Bezugszeit ohne Bezugssystem', b => { const z = r(b, 't/r-geber').bezugszeit; delete z.bezugssystem; }],
   [8, 'Relation-Bezugszeit fehlend ohne Grund', b => { r(b, 't/r-haftet').bezugszeit = { fehlt: true }; }],
   [6, 'Relation ohne Beleg', b => { delete r(b, 't/r-haftet').beleg; }],
   [6, 'Beleg als leere Liste', b => { r(b, 't/r-haftet').beleg = []; }],
@@ -318,7 +320,7 @@ const VERSTOESSE = [
   [13, 'Ideal unbekannt', b => { e(b, 't/varianten').werte.vb.punkte[0].fassungen[0].woher.ideal = 't/ideal-x'; }],
   [13, 'Beobachtung als Ideal', b => { e(b, 't/varianten').werte.va.punkte[0].fassungen[0].woher.arten = ['beobachtung']; }],
   [13, 'eine Größe mit zwei Idealen', b => {
-    e(b, 't/varianten').werte.va.punkte.push({ bezugszeit: { skala: 'a CE', wert: 2001 },
+    e(b, 't/varianten').werte.va.punkte.push({ bezugszeit: Z({ wert: 2001 }),
       fassungen: [fassung(2, W(['rekonstruktion'], { ideal: 't/ideal-b' }))] });
   }],
   [13, 'Ideal ohne Gruppe', b => { delete b.ideale[0].gruppe; }],
@@ -383,7 +385,7 @@ for (const [regel, name, verletze] of VERSTOESSE) {
 const MANIFEST = {
   id: 'x', quelle: 'q', stapel: ['1.1'], vorgang: 'stoffwechsel',
   herkunft: { arten: ['beobachtung'], archivkette: [{ archiv: 'zeroearth', art: 'zeroearth' }] },
-  zeitsemantik: { aufloesung: 1, abdeckung: {}, verzoegerung: fehlt('unbekannt') }, geometrie: ['punkt'],
+  zeitsemantik: { bezugssystem: 'a_ce', unschaerfe: fehlt('Quelle nennt keine'), aufloesung: 1, abdeckung: {}, verzoegerung: fehlt('unbekannt') }, geometrie: ['punkt'],
   lizenz: 'x', weitergabe: 'frei', auswahl: [],
   reduktion: [
     { schritt: 'vergroebern', angabe: '0.5° -> 2°' },
@@ -543,4 +545,68 @@ test('Regel 13: beide Ideale gezeigt, Hinweis nennt die Gruppe', () => {
   const { fehler, hinweise } = pruefe(gueltig());
   assert.deepEqual(fehler, []);
   assert.ok(hinweise.some(h => h.regel === 13 && /2 Ideal/.test(h.text)));
+});
+
+/* ── Regel 16 ─────────────────────────────────────────────────────── */
+/** Graph, dessen eine Relation die gegebene Bezugszeit trägt. @param {any} z */
+const mitZeit = z => { const b = gueltig(); r(b, 't/r-geber').bezugszeit = z; return b; };
+const regel16 = (/** @type {any} */ b) => pruefe(b).fehler.filter(f => f.regel === 16);
+
+test('Regel 16: Unschärfe der Quelle oder ausdrücklich fehlend, beides gültig', () => {
+  assert.deepEqual(regel16(mitZeit(Z({ von: 2020, bis: 2024 }))), []);
+  assert.deepEqual(regel16(mitZeit({ bezugssystem: 'a_ce', wert: 2020, unschaerfe: { plusminus: 2, quelle: 'Testquelle' } })), []);
+  assert.deepEqual(regel16(mitZeit({ bezugssystem: 'a_ce', von: 2020, bis: 'offen', unschaerfe: fehlt('nicht genannt'), aufloesung: 1 })), []);
+});
+
+test('Regel 16: Verstöße einer gemachten Zeitangabe', () => {
+  /** @type {[string, any][]} */
+  const faelle = [
+    ['ohne Unschärfe', { bezugssystem: 'a_ce', wert: 2020 }],
+    ['ohne Bezugssystem', { wert: 2020, unschaerfe: fehlt('x') }],
+    ['unbekanntes Bezugssystem', { bezugssystem: 'BP', wert: 2020, unschaerfe: fehlt('x') }],
+    ['t ist kein Bezugssystem', { bezugssystem: 't', wert: -11700, unschaerfe: fehlt('x') }],
+    ['alte Skala', { skala: 'a CE', bezugssystem: 'a_ce', wert: 2020, unschaerfe: fehlt('x') }],
+    ['ohne Zeit', { bezugssystem: 'a_ce', unschaerfe: fehlt('x') }],
+    ['Unschärfe ohne Quelle', { bezugssystem: 'a_ce', wert: 2020, unschaerfe: { plusminus: 2 } }],
+    ['Unschärfe als Zahl', { bezugssystem: 'a_ce', wert: 2020, unschaerfe: 2 }],
+    ['Auflösung als Unschärfe', { bezugssystem: 'a_ce', wert: 2020, aufloesung: 2, unschaerfe: { plusminus: 2, quelle: 'Stützstellen' } }],
+    ['Auflösung null oder negativ', { bezugssystem: 'a_ce', wert: 2020, aufloesung: 0, unschaerfe: fehlt('x') }],
+  ];
+  for (const [name, z] of faelle) assert.ok(regel16(mitZeit(z)).length > 0, name);
+});
+
+test('Regel 16 gegen Regel 8: Fehlt die Zeit ganz, gilt fehlt mit Grund', () => {
+  assert.deepEqual(pruefe(mitZeit(fehlt('nicht datiert'))).fehler, []);
+  const ohneGrund = pruefe(mitZeit({ fehlt: true })).fehler;
+  assert.ok(ohneGrund.some(f => f.regel === 8));
+  assert.ok(!ohneGrund.some(f => f.regel === 16));
+});
+
+test('Regel 16 gilt auch für Geltungszeit und Formationsverweis', () => {
+  const a = gueltig();
+  a.formationen[0].gilt = /** @type {any} */ ({ von: 1900, bis: 'offen' });
+  assert.ok(regel16(a).length > 0);
+  const c = gueltig();
+  const mitFormation = /** @type {any} */ (c.eintraege.find((/** @type {any} */ x) => x.formation?.id));
+  delete mitFormation.formation.bezugssystem;
+  assert.ok(regel16(c).length > 0);
+});
+
+test('Regel 16 im Manifest: Bezugssystem und Unschärfe sind Pflicht, Fehlendes mit Grund erlaubt', () => {
+  const z = (/** @type {any} */ neu) => ({ ...MANIFEST, zeitsemantik: { ...MANIFEST.zeitsemantik, ...neu } });
+  assert.deepEqual(pruefeManifest(z({ bezugssystem: fehlt('kein Datum') })).fehler, []);
+  assert.ok(pruefeManifest(z({ bezugssystem: 'BP' })).fehler.some(f => f.regel === 16));
+  const { unschaerfe, ...ohne } = MANIFEST.zeitsemantik;
+  assert.ok(pruefeManifest({ ...MANIFEST, zeitsemantik: ohne }).fehler.some(f => f.regel === 16));
+});
+
+test('Merkmal berechnet: gehört zu modell, getrennt von idealisiert', () => {
+  const mit = (/** @type {string[]} */ arten) => { const b = gueltig(); woherK(b).arten = arten; delete woherK(b).abgeleitet_aus; return pruefe(b).fehler; };
+  assert.deepEqual(mit(['modell', 'berechnet']), []);
+  assert.ok(mit(['berechnet']).some(f => f.regel === 6 && f.text.includes('berechnet')));
+  assert.ok(mit(['modell']).some(f => f.regel === 6));
+  assert.deepEqual(anzeige(['modell', 'berechnet']), { rang: 'modell', merkmale: ['berechnet'] });
+  const h = (/** @type {string[]} */ arten) => pruefeManifest({ ...MANIFEST, herkunft: { ...MANIFEST.herkunft, arten } }).fehler;
+  assert.deepEqual(h(['modell', 'berechnet']), []);
+  assert.ok(h(['berechnet']).length > 0);
 });

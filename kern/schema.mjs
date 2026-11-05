@@ -6,7 +6,7 @@
    Was hier fehlt, ist nicht entschieden. Offene Stellen: kern/BERICHT.md.
    ════════════════════════════════════════════════════════════════════ */
 
-export const SCHEMA_VERSION = '0.8.0';
+export const SCHEMA_VERSION = '0.9.0';
 
 /* ── Stapel ───────────────────────────────────────────────────────────
    Drei Stapel, je drei Unterebenen. Die Reihenfolge codiert die Genese
@@ -138,9 +138,12 @@ export const MODI = /** @type {const} */ ({
    stehen in der Herkunftskette.
    In der Anzeige ersetzen fiktion und erwartung den Rang.
    Das Manifest nennt jede Art, die im Graphen des Adapters vorkommt.     */
-export const HERKUNFTSARTEN = /** @type {const} */ (['beobachtung', 'rekonstruktion', 'modell', 'kuratiert', 'erwartung', 'idealisiert', 'fiktion']);
+export const HERKUNFTSARTEN = /** @type {const} */ (['beobachtung', 'rekonstruktion', 'modell', 'kuratiert', 'erwartung', 'idealisiert', 'berechnet', 'fiktion']);
 export const HERKUNFT_RANG = /** @type {const} */ (['beobachtung', 'rekonstruktion', 'modell']);
-export const HERKUNFT_MERKMALE = /** @type {const} */ (['kuratiert', 'erwartung', 'idealisiert', 'fiktion']);
+export const HERKUNFT_MERKMALE = /** @type {const} */ (['kuratiert', 'erwartung', 'idealisiert', 'berechnet', 'fiktion']);
+/** Ein Modellwert ist idealisiert (Referenz- oder Gleichgewichtszustand) oder berechnet
+    (physikalisch abgeleitet, etwa Einstrahlung aus Bahnparametern). */
+export const MODELL_MERKMALE = /** @type {const} */ (['idealisiert', 'berechnet']);
 
 /** Merkmale, die den Rang in der Anzeige ersetzen. Sind beide beteiligt, steht
     fiktion an der Stelle des Rangs und erwartung bleibt als Merkmal sichtbar. */
@@ -186,8 +189,17 @@ export const KEIN_ERWARTUNGSTRAEGER = /** @type {const} */ (['zeroearth', 'platt
 /* ── Zeit ─────────────────────────────────────────────────────────────
    Bitemporal: Bezugszeit (wann der Wert gilt) und Wissensstand (seit wann
    er so bekannt ist). Revisionen fügen Fassungen hinzu.
-   Die Bezugszeit bleibt in der Skala der Quelle; es gibt keine gemeinsame
-   Achse, auf die umgerechnet würde.                                     */
+   Die Bezugszeit bleibt im Maß der Quelle; es gibt keine gemeinsame Achse,
+   auf die umgerechnet würde. t (Jahre seit J2000) in der Oberfläche ist eine
+   reine Rechengröße: kein Bezugssystem hier und nie als einzelne Achse gezeigt.
+
+   Regel 16. Eine Zeitangabe ist {bezugssystem, wert | von, bis, unschaerfe,
+   aufloesung?}. bis darf 'offen' sein.
+   - bezugssystem: Schlüssel aus BEZUGSSYSTEME.
+   - unschaerfe: {plusminus, quelle} in der Einheit des Bezugssystems, oder
+     {fehlt, grund}, wenn die Quelle keine nennt. Weglassen ist ein Verstoß.
+   - aufloesung: Abstand der Zeitschritte. Nur Untergrenze, nie Unschärfe.
+   Fehlt die Zeit ganz, gilt Regel 8: {fehlt, grund} statt der Zeitangabe.  */
 export const WISSENSSTATUS = /** @type {const} */ (['vorlaeufig', 'revidiert']);
 
 /* ── Geometrie ────────────────────────────────────────────────────────
@@ -216,6 +228,15 @@ export const istFehlend = (/** @type {any} */ x) => !!x && typeof x === 'object'
 export const nichtErhoben = was => fehlt(`${was}: nicht erhoben (fehlender Schlüssel oder leere Liste der Quelle; `
   + 'keine Aussage, dass keine Beziehung besteht)');
 
+/* ── Bezugssysteme (Regel 16) ─────────────────────────────────────────
+   c14: ob es sich um Radiokarbonjahre handelt und ob sie kalibriert sind.  */
+export const C14 = /** @type {const} */ (['kalibriert', 'unkalibriert', 'nicht_radiokarbon']);
+export const BEZUGSSYSTEME = /** @type {const} */ ({
+  ka_bp_1950: { name: 'ka BP', einheit: 'ka', nullpunkt: '1950 CE', kalender: '365_day',
+    c14: fehlt('PaleoMIST nennt die Zeitachse nicht als kalibriert oder unkalibriert') },
+  a_ce: { name: 'a CE', einheit: 'a', nullpunkt: 'Jahr 1 CE', kalender: 'gregorianisch', c14: 'nicht_radiokarbon' },
+});
+
 /* ── Einträge ─────────────────────────────────────────────────────────
    Das Schema kennt keine Eintragsart wie "Firma". Was die Quelle als
    Akteur führt, kann Firma, Behörde, Ministerium oder App sein; das
@@ -234,7 +255,7 @@ export const MANIFEST_PFLICHT = /** @type {const} */ ([
   'id', 'quelle', 'stapel', 'vorgang', 'herkunft', 'zeitsemantik', 'geometrie', 'lizenz', 'weitergabe', 'auswahl',
   'reduktion',
 ]);
-export const ZEITSEMANTIK_PFLICHT = /** @type {const} */ (['aufloesung', 'abdeckung', 'verzoegerung']);
+export const ZEITSEMANTIK_PFLICHT = /** @type {const} */ (['bezugssystem', 'unschaerfe', 'aufloesung', 'abdeckung', 'verzoegerung']);
 
 /* ── Reduktion (Regel 11) ─────────────────────────────────────────────
    Was der Adapter verkleinert, steht als Liste von Schritten im Manifest,
@@ -252,7 +273,11 @@ export const SPANNWEITE = /** @type {const} */ (['min', 'max']);
    Es enthält keine Daten, nur Stationen mit Verweisen auf Adapter. Jede
    Natur kommt als Station vor, auch leer: Was fehlt, bleibt sichtbar
    (Regel 8). Welche Orte und welches Zeitfenster gelten, ist eine
-   Setzung und braucht eine Begründung (Regel 7).                        */
+   Setzung und braucht eine Begründung (Regel 7).
+   brueche: Brüche mit dem erwarteten Takt, eine Liste oder {fehlt, grund}.
+   Der Aufbau eines Listeneintrags ist noch nicht festgelegt.
+   vorgemerkt: an einer Station ohne Quelle die vorgesehene Quelle
+   {quelle, ort, arten, lizenz}. Noch kein Adapter, also keine Daten.     */
 export const EREIGNIS_NATUREN = /** @type {const} */ ([
   '0', 'planetarer_stoffwechsel', '1.1', '1.2', '1.3', 'gesellschaftlicher_stoffwechsel', '2.1', '2.2', '2.3',
 ]);
@@ -260,15 +285,17 @@ export const STATION_STATUS = /** @type {const} */ (['vorhanden', 'in_arbeit', '
 /** Status, die ohne Quelle stehen dürfen (dann mit Begründung). */
 export const STATION_OHNE_QUELLE = /** @type {const} */ (['fehlt', 'bewusst_leer']);
 export const EREIGNIS_PFLICHT = /** @type {const} */ ([
-  'ereignis', 'satz', 'zeitfenster', 'orte', 'auswahl_begruendung', 'stationen', 'autor', 'stand',
+  'ereignis', 'satz', 'zeitfenster', 'orte', 'auswahl_begruendung', 'stationen', 'brueche', 'autor', 'stand',
 ]);
 /** Erlaubte Felder einer Station: Verweise und Text, keine Daten. */
-export const STATION_FELDER = /** @type {const} */ (['natur', 'frage', 'quelle', 'verweise', 'status', 'begruendung']);
+export const STATION_FELDER = /** @type {const} */ (['natur', 'frage', 'quelle', 'verweise', 'status', 'begruendung', 'vorgemerkt']);
 
 /* ── Typen ────────────────────────────────────────────────────────────
    @typedef {{fehlt: true, grund: string}} Fehlend
    @typedef {{seit: string, status: 'vorlaeufig'|'revidiert'}} Wissensstand
-   @typedef {{skala: string, wert?: number, von?: number, bis?: number}} Bezugszeit
+   @typedef {{plusminus: number, quelle: string}} Unschaerfe
+   @typedef {{bezugssystem: keyof typeof BEZUGSSYSTEME, wert?: number, von?: number, bis?: number|'offen',
+              unschaerfe: Unschaerfe|Fehlend, aufloesung?: number|Fehlend}} Bezugszeit
    @typedef {{archiv: string|Fehlend, art: keyof typeof ARCHIVARTEN|Fehlend}} Archivglied
    @typedef {{arten: string[], quelle: string, archivkette: (Archivglied|Fehlend)[],
               abgeleitet_aus?: string[], verfahren?: string, erwartungstraeger?: string, modelle?: string[],
@@ -279,13 +306,13 @@ export const STATION_FELDER = /** @type {const} */ (['natur', 'frage', 'quelle',
    @typedef {{schritt: typeof REDUKTIONSSCHRITTE[number], angabe: string,
               modelle?: string[], mitgefuehrt?: string[]}} Reduktionsschritt
    @typedef {{bezugszeit?: Bezugszeit|Fehlend, fassungen: Fassung[]}} Punkt
-   @typedef {{skala: string, aufloesung: number|Fehlend, abdeckung: {von: number, bis: number}, schritte: number}} Zeitsemantik
+   @typedef {{bezugssystem: keyof typeof BEZUGSSYSTEME, unschaerfe: Unschaerfe|Fehlend, aufloesung: number|Fehlend, abdeckung: {von: number, bis: number}, schritte: number}} Zeitsemantik
    @typedef {{einheit: string, zeitsemantik?: Zeitsemantik, punkte: Punkt[]}} Groesse
    @typedef {{flaeche: number, ueberhoehung: number, [k: string]: any}} Verzerrung
    @typedef {{geometrie: string, gesetzt?: boolean, verzerrung?: Verzerrung, hinweis?: string,
               woher?: Woher, naeherung?: {vertritt: string, angabe: string}, [k: string]: any}} Wo
    @typedef {{id: string, stapel: string, unterebene?: Fehlend, sphaere?: typeof SPHAEREN[number], name: string, wo?: Wo|Fehlend,
-              haengt_an?: string[]|Fehlend, formation?: {id: string, von: number|string, bis: number|string}|Fehlend,
+              haengt_an?: string[]|Fehlend, formation?: ({id: string} & Bezugszeit)|Fehlend,
               auswahl?: string[], verwertungsqualitaet?: {modus: string},
               spur_von?: {bestand: string, form: string}|Fehlend, verweist_auf?: string[],
               werte: Record<string, Groesse|Fehlend>}} Eintrag
@@ -304,13 +331,14 @@ export const STATION_FELDER = /** @type {const} */ (['natur', 'frage', 'quelle',
               bilanzierbar?: boolean, erwartungstraeger?: string, wahrscheinlichkeit?: number,
               gegenwert?: {betrag: number, einheit: string}, tausch?: string,
               woher: Woher, wissensstand: Wissensstand|Fehlend}} Relation
-   @typedef {{id: string, name: string, warenproduktion: boolean|Fehlend, gilt: {von: number|string, bis: number|string}}} Formation
+   @typedef {{id: string, name: string, warenproduktion: boolean|Fehlend, gilt: Bezugszeit}} Formation
    @typedef {{id: string, was: string, gesetzt_in: string, begruendung: string|Fehlend}} Auswahl
    @typedef {{schema: string, adapter?: any, formationen: Formation[], subjektachse: {status: string, grund?: string},
               auswahl: Auswahl[], ideale?: Ideal[], bestaende: Bestand[], eintraege: Eintrag[], prozesse: Prozess[],
               relationen: Relation[]}} Graph
    @typedef {{natur: typeof EREIGNIS_NATUREN[number], frage: string, quelle: string|null, verweise?: string[],
-              status: typeof STATION_STATUS[number], begruendung?: string}} Station
+              status: typeof STATION_STATUS[number], begruendung?: string,
+              vorgemerkt?: {quelle: string, ort: string, arten: string[], lizenz: string|Fehlend}}} Station
    @typedef {{ereignis: string, satz: string, zeitfenster: Bezugszeit, orte: {name: string, verweis?: string}[],
-              auswahl_begruendung: string, stationen: Station[], autor: string, stand: string}} Ereignis
+              auswahl_begruendung: string, stationen: Station[], brueche: any[]|Fehlend, autor: string, stand: string}} Ereignis
 */
