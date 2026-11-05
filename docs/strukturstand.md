@@ -61,7 +61,7 @@ Jeder Zufluss trägt zwei Angaben: die Kette der Grundkräfte und die Richtung *
 
 1.2 heißt **Biosphäre / Lebensnetz** (früher Arbeitstitel „mehr-als-menschliche Gesellschaften“). „Lebensnetz“ im Sinn von Jason W. Moore. Getrennt wird:
 
-- **1.1 Biomasse:** der stoffliche Teil, ein Bestand (Kohlenstoff in Lebewesen). Im Erdsystem neben Atmosphäre, Hydrosphäre, Lithosphäre.
+- **1.1 Biomasse:** der stoffliche Teil, ein Bestand (Kohlenstoff in Lebewesen). Im Erdsystem neben Atmosphäre, Hydrosphäre, Lithosphäre und Kryosphäre.
 - **1.2 Biosphäre / Lebensnetz:** die Beziehungen zwischen Lebewesen: Abstammung, Fressen, Bestäuben, Symbiose.
 
 Die **evolutionären Hauptzweige** (etwa Bakterien, Archaeen, Pflanzen, Pilze, Tiere, Protisten) werden darstellbar: als zusammengeklappter Baum in der Netzansicht (Quelle Open Tree of Life, CC0), mit **Biomasse als Bestand pro Zweig** (Quelle etwa Bar-On et al. 2018, Rekonstruktion mit Spannweite) und **Artenzahl doppelt geführt: beschrieben und geschätzt**. Die Lücke zwischen beiden bleibt sichtbar.

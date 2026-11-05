@@ -82,7 +82,7 @@ Alles ab hier ist ein Vorschlag von Claude und gilt erst nach Abstimmung. Die In
 - **de:** planetarer Stoffwechsel · **en:** Planetary Metabolism
 - **Definition:** Übergang zwischen 0. und 1. Natur, in dem Prozesse laufen. Jeder Zufluss trägt die Kette der Grundkräfte und die Richtung extern oder intern, beides unabhängig voneinander.
 - **Abgrenzung:** kein Stapel. Extern und intern ist eine räumliche Unterscheidung, keine nach Kräften. Keine gesellschaftlich angeeignete Energie.
-- **Offen:** `matrix.mjs` führt „Interne Prozesse“ und „Externe Prozesse“ als eigene Strata; im Strukturstand sind sie ein Merkmal des Zuflusses. Der Kern führt zwei Schlüssel: `planetar` (Übergänge) und `planetarer_stoffwechsel` (Ereignis-Stationen).
+- **Offen:** `matrix.mjs` führt „Interne Prozesse“ und „Externe Prozesse“ als eigene Strata; im Strukturstand sind sie ein Merkmal des Zuflusses. Im Kern ist der Schlüssel `planetarer_stoffwechsel`, eine Bezeichnung statt einer festen Kennung.
 
 ### 1 · 1. Natur
 
@@ -122,7 +122,7 @@ Alles ab hier ist ein Vorschlag von Claude und gilt erst nach Abstimmung. Die In
 - **de:** gesellschaftlicher Stoffwechsel · **en:** Social Metabolism
 - **Definition:** Übergang zwischen 1. und 2. Natur, in dem Prozesse laufen: Arbeit, Produktionsmittel, auch die Erfassung von Daten. Hier entstehen die Produktionsverhältnisse.
 - **Abgrenzung:** kein Stapel. Das Produktionsmittel ist eine Rolle, keine Stoffeigenschaft; Stoffe vor ihrer Aneignung gehören nicht dazu.
-- **Offen:** `matrix.mjs` führt „Materielle“ und „Immaterielle Produktionsmittel“ als Strata, der Strukturstand kennt sie als Rolle. Konkordanz: „means of (re)production“. Zwei Schlüssel im Kern, wie bei Ü0-1.
+- **Offen:** `matrix.mjs` führt „Materielle“ und „Immaterielle Produktionsmittel“ als Strata, der Strukturstand kennt sie als Rolle. Konkordanz: „means of (re)production“. Im Kern ist der Schlüssel `gesellschaftlicher_stoffwechsel`, wie bei Ü0-1 keine feste Kennung.
 
 ### 2.2 · Überbau
 
