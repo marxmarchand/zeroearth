@@ -220,6 +220,8 @@ Erwartungen öffnen die Zeit nach vorn. Ein einzelner Zeitregler über alle Skal
 
 - **Bruch:** Ereignisse sind Brüche mit dem erwarteten Takt (Vulkanausbruch, Schmelzwasserpuls, Erdbeben). Auch Brüche können einen eigenen Rhythmus haben (Plattentektonik: langsame Richtung, unterbrochen von Beben). Der „Normalzustand“, von dem ein Bruch abweicht, ist selbst eine Setzung (Regel 7): Er ist das Ideal, der Bruch die Differenz zur Beobachtung. Ein Bruch kann einen neuen Takt einleiten.
 
+**Die Lücke zwischen 1 a und 21 ka.** In diesem Bereich, in dem fast die ganze menschliche Geschichte liegt, gibt die 0. Natur nur schwache Takte vor: gut belegt der Sonnenfleckenzyklus (rund 11 a) und der Mondknoten (18,6 a), umstritten längere Sonnenzyklen (rund 90, 210, 2300 a, mit Spannweite). In dieser Lücke setzt die 2. Natur eigene Takte: Kalender, Generationen, Abgaben, Wirtschaftszyklen, Wahlperioden. Wo der vorgefundene Takt schwach ist, schafft sich eine Gesellschaft ihren eigenen.
+
 Fossile Energie ist der Punkt, an dem sich Takt und Richtung treffen: Gerichtete Zeit (Jahrmillionen Aufbau) wird verbraucht, um sich vom Takt zu lösen.
 
 **Technische Umsetzung.** Zwei Zeiten pro Wert (Bezugszeit, Wissensstand) sind in Datenbanken gelöst. Offen ist die Verbindung verschiedener Zeitarten: zyklisch, gerichtet, Bruch, unscharfe Datierungen („um 12 000 BP ± 500“), verschiedene Kalender und relative Abfolgen. zeroearth erfindet dafür nichts, sondern stützt sich auf bestehende Standards: OWL-Time (Zeitangaben und Intervalle), PeriodO (benannte Epochen mit Quelle), Allens Intervallrelationen (vorher, während, überlappend). Jede Bezugszeit wird in ihrem eigenen Maß und mit ihrer Unschärfe gespeichert; umgerechnet wird nur für die Anzeige.
@@ -255,7 +257,7 @@ Diese Regeln folgen aus der Struktur und gelten für jede Ansicht.
 3. Ein Gegenwert erscheint nur dort, wo ein Tausch ihn hergestellt hat. Geld ist keine gemeinsame Einheit.
 4. Wahrscheinlichkeiten erscheinen nur mit ihrem Erwartungsträger. Die Plattform rechnet keine eigenen aus.
 5. Stoff- und Energieflüsse werden bilanziert und geprüft; `pruefe.mjs` prüft dann Modell gegen Welt, nicht nur Code gegen Modell. Kapitalflüsse werden nicht als bilanzierbar dargestellt.
-6. Die Herkunft (`woher`) gilt pro Wert und ist eine Menge mit Kette durch Archive. Rangfolge nur beobachtung > rekonstruktion > modell; kuratiert und erwartung sind Merkmale, keine Ränge. Abgeleitete Werte tragen alle beteiligten Arten; angezeigt wird die schwächste aus der Rangfolge plus die Merkmale. Eine Ableitung aus erwartung bleibt erwartung.
+6. Die Herkunft (`woher`) gilt pro Wert und ist eine Menge mit Kette durch Archive. Rangfolge: beobachtung > rekonstruktion > modell. Erwartung und Fiktion ersetzen in der Anzeige den Rang, Fiktion vor Erwartung; kuratiert und idealisiert sind Merkmale daneben. Abgeleitete Werte tragen alle beteiligten Arten; angezeigt wird immer das Unsicherste, was beteiligt ist. Eine Ableitung aus erwartung bleibt erwartung, eine aus fiktion bleibt fiktion.
 7. Jede Auswahl ist eine Setzung und wird als Auswahl gezeigt.
 8. Fehlendes bleibt fehlend: auch ein fehlender Träger, eine fehlende Kommensurabilität, eine leere Subjektachse.
 9. Die Plattform ist selbst ein Objekt der 2. Natur, eine Verdinglichung, und weist sich als solches aus.
@@ -265,7 +267,7 @@ Diese Regeln folgen aus der Struktur und gelten für jede Ansicht.
 13. Passen mehrere Ideale gleich gut zu derselben Beobachtung, werden alle gezeigt. Eine gute Passung beweist keinen Mechanismus.
 14. Die Ansicht für Menschen darf vereinfachen, aber der Ausgabe für Maschinen nie widersprechen. Jede Ansicht führt zu „Daten dahinter“, also zu genau der Datei, die eine Maschine auch bekäme. Unsicherheit wird in Touren verständlich gezeigt, nicht weggelassen.
 15. Fiktion ist eine eigene Herkunftsart (`fiktion`). Sie erscheint immer erkennbar als erfunden und gerät nie in eine Ebene mit echten Daten. Gedankenexperimente dürfen Echtes und Erfundenes mischen, wenn die Grenze sichtbar bleibt.
-16. Jede Zeitangabe nennt ihr Bezugssystem (Nullpunkt, Kalender, bei Radiokarbon kalibriert ja/nein) und ihre Unschärfe; fehlt eines davon, wird der Datensatz abgelehnt. Gleichzeitig ist nur, was sich als Zeitraum mit Unschärfe tatsächlich überlappt.
+16. Wird eine Zeitangabe gemacht, nennt sie ihr Bezugssystem (Nullpunkt, Kalender, bei Radiokarbon kalibriert ja/nein) und ihre Unschärfe; fehlt eines davon, wird der Datensatz abgelehnt. Fehlt die Zeit ganz, gilt Regel 8 (fehlt, mit Begründung). Auflösung (etwa der Abstand der Zeitschritte) und Unschärfe der Quelle werden getrennt geführt; die Auflösung ist nur eine Untergrenze. Gleichzeitig ist nur, was sich als Zeitraum mit Unschärfe tatsächlich überlappt.
 
 ## Ansichten
 
@@ -299,7 +301,7 @@ Vier Kanäle, jeder mit genau einer Aufgabe. Farbe, Form und Umriss folgen den Z
 | Farbe | welche Natur: Violett 0. Natur · Gelb Übergänge · Grün 1. Natur · Rot 2. Natur |
 | Form | was für ein Ding: Dreieck = Institution, Hierarchie · Fünfeck = Bestand, Mittel · Kreis = Prozess |
 | Umriss | gepunktet = Fluss · gestrichelt = Verhältnis · durchgezogen = Ding |
-| Füllung | Herkunft: voll = beobachtet · halb = rekonstruiert · leer = Modell/Ideal · schraffiert = kuratiert · ✱ = Fiktion · grau = fehlt |
+| Füllung | Herkunft: voll = beobachtet · halb = rekonstruiert · leer = Modell/Ideal · ⏵ = Erwartung · ✱ = Fiktion · schraffiert = kuratiert · grau = fehlt. Angezeigt wird immer das Unsicherste (Regel 6). |
 
 Die Formen gelten für Netz- und Flussansicht. Auf Globus und Karte kommt die Geometrie hinzu (Punkt, Linie, Fläche, Raster, Grenze); Farbe und Füllung bedeuten überall dasselbe. Das Zeichensystem gilt für die Seite, nicht für die Texte und Zeichnungen der Theorie.
 
@@ -327,7 +329,7 @@ zeroearth rechnet nicht selbst. Es bindet Ergebnisse großer Modelle und Messrei
 
 ### Ideal, Beobachtung, Differenz
 
-Modellergebnisse bilden die **Idealschicht**: Herkunft `modell`, Merkmal „idealisiert“, eigene Bildsprache (schematisch, nie wie Beobachtung). Messungen und Rekonstruktionen bilden die **Beobachtung**, mit ihren Lücken. Die **Differenz** erscheint nur, wo beides vorliegt; sie ist der eigentliche Forschungsgegenstand. Welcher Zustand als Ideal gilt, ist eine Setzung und steht im Bild (Regel 7): Ein vorindustrieller Referenzzustand ist kein natürlicher Normalzustand.
+Modellergebnisse bilden die **Idealschicht**: Herkunft `modell`, Merkmal „idealisiert“ für Referenz- und Gleichgewichtszustände, „berechnet“ für physikalische Ableitungen wie die Einstrahlung aus Bahnparametern, eigene Bildsprache (schematisch, nie wie Beobachtung). Messungen und Rekonstruktionen bilden die **Beobachtung**, mit ihren Lücken. Die **Differenz** erscheint nur, wo beides vorliegt; sie ist der eigentliche Forschungsgegenstand. Welcher Zustand als Ideal gilt, ist eine Setzung und steht im Bild (Regel 7): Ein vorindustrieller Referenzzustand ist kein natürlicher Normalzustand.
 
 Die 2. Natur tritt dabei nicht als Zahlenparameter auf, sondern als **Regime**, das festlegt, welche Flüsse laufen, etwa Grundwasser als Gemeingut oder als Eigentum mit Entnahmerecht.
 
@@ -353,6 +355,8 @@ Ein Ereignis ist eine Verdichtung aller Naturverhältnisse an einem Geschehen un
 3. **Eine Station pro Natur**, jeweils mit einer Frage: Was löst es aus (0)? Was fließt oder wandelt sich (planetarer Stoffwechsel)? Was verändert sich an Land, Wasser, Leben (1)? Was tun Menschen, was verlieren sie (gesellschaftlicher Stoffwechsel)? Wie wird es gedeutet, geregelt, erinnert (2)?
 4. **Pro Station ein Status:** vorhanden, in Arbeit, fehlt oder bewusst leer, mit Begründung.
 5. **Keine eigenen Daten:** Stationen verweisen nur auf Adapter.
+
+Die Sintflut ist vor allem Takt: Die Transgression ist die reguläre Phase eines Eiszeitzyklus. Ihre Brüche, die Schmelzwasserpulse, fallen zwischen die Zeitschritte der Daten und bleiben als fehlend sichtbar (Regel 8). Tour-Satz: „Die Sintflut zeigt an einem einzigen Ereignis alle Naturverhältnisse zugleich: Die Umlaufbahn der Erde stößt das Abschmelzen an, Rückkopplungen verstärken es, das Meer steigt, Land und Lebensräume verschwinden, und erinnert wird die Flut nur dort, wo sie aufgeschrieben und weitergegeben wurde.“
 
 Reproduzierbar ist das Prinzip erst, wenn mehrere Ereignisse durch dieselbe Schablone gehen. Vorgesehen: Sintflut (erstes Ereignis), Tambora 1815 (Test der Schablone), „Was hängt an einem Haus?“ (Netzansicht, Alltag), Rocky / Project Hail Mary (Gedankenexperiment: gleiche 0. Natur, erfundene 1. und 2. Natur, Regel 15).
 
