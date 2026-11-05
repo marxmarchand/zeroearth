@@ -1,0 +1,105 @@
+{
+  "hinweis": "Takte der Zeitleiste. Jeder Takt mit Periode und Quelle; Spannweite oder {fehlt, grund}. Zählung ohne Takt heißt art 'richtung'. Die Reihenfolge ist die Reihenfolge der Zeilen, von außen nach innen.",
+  "erdalter": {
+    "wert": 4.5,
+    "einheit": "Ga",
+    "quelle": "Auftrag Max, 2026-11-05 (Leiste über 0 a bis 4,5 Mrd. a)",
+    "unschaerfe": {
+      "fehlt": true,
+      "grund": "Ohne Quelle gesetzt; nur Rand der Leiste"
+    }
+  },
+  "takte": [
+    {
+      "id": "galaktisch",
+      "name": "Galaktischer Umlauf",
+      "art": "takt",
+      "natur": "0",
+      "periode": {
+        "wert": 230,
+        "einheit": "Ma"
+      },
+      "spannweite": {
+        "fehlt": true,
+        "grund": "Der Strukturstand nennt rund 230 Ma; eine Spannweite aus der Literatur ist nicht belegt"
+      },
+      "quelle": "docs/strukturstand.md, Abschnitt Zeit (Takt und Richtung)",
+      "setzung": true
+    },
+    {
+      "id": "ma",
+      "name": "Millionen Jahre (gezählt)",
+      "art": "richtung",
+      "natur": "0",
+      "einheit": "Ma",
+      "quelle": "docs/strukturstand.md, Abschnitt Zeit (Takt und Richtung): Richtung wird in Takten gezählt; zwischen galaktischem Umlauf und Milanković gibt die 0. Natur hier keinen belegten Takt vor"
+    },
+    {
+      "id": "milankovic",
+      "name": "Milanković-Zyklus",
+      "art": "takt",
+      "natur": "0",
+      "periode": {
+        "wert": 100,
+        "einheit": "ka"
+      },
+      "unterteilung": [
+        {
+          "wert": 41,
+          "einheit": "ka"
+        },
+        {
+          "wert": 21,
+          "einheit": "ka"
+        }
+      ],
+      "spannweite": {
+        "fehlt": true,
+        "grund": "Der Strukturstand nennt rund 21, 41 und 100 ka; Spannweiten nicht belegt"
+      },
+      "quelle": "docs/strukturstand.md, Abschnitt Zeit (Takt und Richtung)"
+    },
+    {
+      "id": "ka",
+      "name": "Jahrtausende (gezählt)",
+      "art": "richtung",
+      "natur": "0",
+      "einheit": "ka",
+      "quelle": "docs/strukturstand.md, Abschnitt Zeit (Takt und Richtung)"
+    },
+    {
+      "id": "jahr",
+      "name": "Jahr (Erdumlauf)",
+      "art": "takt",
+      "natur": "0",
+      "periode": {
+        "wert": 1,
+        "einheit": "a"
+      },
+      "spannweite": {
+        "fehlt": true,
+        "grund": "Kalenderjahr als Zählmaß; Schwankung hier ohne Belang"
+      },
+      "quelle": "docs/strukturstand.md, Abschnitt Zeit (Takt und Richtung)",
+      "hinweis": "Zwischen 1 a und 21 ka gibt die 0. Natur nur schwache Takte vor; dort zählt die 2. Natur im Kalender (a CE)"
+    }
+  ],
+  "fehlend": [
+    {
+      "id": "exzentrizitaet_405",
+      "name": "Exzentrizität, langer Zyklus",
+      "periode": {
+        "fehlt": true,
+        "grund": "Im Bericht ergänzt, aber nicht belegt; vor dem Einbau braucht er eine Quelle"
+      }
+    },
+    {
+      "id": "kalender",
+      "name": "Kalender (2. Natur)",
+      "periode": {
+        "fehlt": true,
+        "grund": "Eigene Zeile für die Takte der 2. Natur ist offen (kern/PLAN-taktleiste.md)"
+      }
+    }
+  ]
+}

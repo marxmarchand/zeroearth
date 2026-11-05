@@ -43,6 +43,7 @@ export const REGELN = /** @type {const} */ ({
   S: 'Struktur',
   M: 'Manifest',
   E: 'Ereignis',
+  T: 'Takte der Zeitleiste',
 });
 
 /** @typedef {{regel: keyof typeof REGELN, ort: string, text: string}} Meldung */
@@ -859,6 +860,42 @@ function pruefeTourFelder(/** @type {any} */ ev, /** @type {string} */ ort, /** 
   });
 }
 
+/**
+ * Prüft die Takte der Zeitleiste (kern/takte.json): Periode mit Einheit und
+ * Quelle, Spannweite oder {fehlt, grund}; Zählung ohne Takt als art richtung.
+ * @param {any} T
+ * @returns {{fehler: Meldung[], hinweise: Meldung[]}}
+ */
+export function pruefeTakte(T) {
+  /** @type {Meldung[]} */ const fehler = [];
+  /** @type {Meldung[]} */ const hinweise = [];
+  const F = (/** @type {string} */ ort, /** @type {string} */ text) => fehler.push({ regel: 'T', ort, text });
+  const EINHEITEN = ['d', 'a', 'ka', 'Ma', 'Ga'];
+  if (!Array.isArray(T?.takte) || !T.takte.length) { F('takte', 'takte ist eine nichtleere Liste'); return { fehler, hinweise }; }
+  const ids = new Set();
+  for (const t of T.takte) {
+    const ort = `takt ${t?.id ?? '?'}`;
+    if (!istText(t?.id)) F(ort, 'Takt ohne id'); else if (ids.has(t.id)) F(ort, 'id doppelt'); else ids.add(t.id);
+    if (!istText(t?.name)) F(ort, 'Takt ohne Namen');
+    if (!istText(t?.quelle)) F(ort, 'Takt ohne Quelle');
+    if (t?.art === 'takt') {
+      const p = t.periode;
+      if (!(istZahl(p?.wert) && p.wert > 0 && EINHEITEN.includes(p.einheit))) F(ort, `Periode braucht wert > 0 und Einheit (${EINHEITEN.join(', ')})`);
+      if (!('spannweite' in t)) F(ort, 'ohne Spannweite; nennt die Quelle keine, heißt das {fehlt, grund}');
+      else if (istFehlend(t.spannweite)) { if (!istText(t.spannweite.grund)) fehler.push({ regel: 8, ort, text: 'Spannweite fehlend ohne Grund' }); }
+      else if (!(istZahl(t.spannweite?.min) && istZahl(t.spannweite?.max))) F(ort, 'Spannweite braucht min und max');
+    } else if (t?.art === 'richtung') {
+      if (!EINHEITEN.includes(t.einheit)) F(ort, 'Zählung braucht eine Einheit');
+      if ('periode' in t) F(ort, 'Zählung ohne Takt hat keine Periode');
+    } else F(ort, `art unbekannt: ${t?.art} (takt, richtung)`);
+  }
+  for (const f of T.fehlend ?? []) {
+    if (!istFehlend(f?.periode) || !istText(f.periode.grund)) fehler.push({ regel: 8, ort: `takt ${f?.id ?? '?'}`, text: 'fehlender Takt ohne Grund' });
+    else hinweise.push({ regel: 8, ort: `takt ${f.id}`, text: `Takt fehlt: ${f.periode.grund}` });
+  }
+  return { fehler, hinweise };
+}
+
 /* ── Ausgabe ───────────────────────────────────────────────────────── */
 /** @param {{fehler: Meldung[], hinweise: Meldung[]}} erg @param {string} titel */
 export function melde({ fehler, hinweise }, titel) {
@@ -924,6 +961,7 @@ async function main() {
     }
     for (const ev of await ladeEreignisse())
       zaehle(pruefeEreignis(ev.inhalt, { adapter: new Set(graphen.keys()), graphen }), `Ereignis ${ev.datei}`);
+    zaehle(pruefeTakte(JSON.parse(await readFile(join(HIER, 'takte.json'), 'utf8'))), 'Takte (kern/takte.json)');
   }
   process.exit(verstoesse ? 1 : 0);
 }

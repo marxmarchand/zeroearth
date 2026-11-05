@@ -80,6 +80,7 @@
     .tw-bilanz b{text-align:left;}
     .tw-hinweis{display:block;}
     body.tour #mitte{grid-column:1/-1;margin-right:404px;}
+    body.tour #tl{margin-right:404px;}
     body.tour > #cc{right:416px;width:auto;}
     body.tour-grau #cc,body.tour-grau #ss-canvas{filter:grayscale(1) brightness(.5);}
     #netz-fach{position:absolute;top:44px;left:12px;right:416px;bottom:58px;z-index:2;display:none;background:#07090e;border:1px solid var(--border);border-radius:4px;}
@@ -274,8 +275,35 @@
 
     /* Timeline */
     #tl{grid-column:1/-1;grid-row:3;overflow:visible;background:var(--panel);border:1px solid var(--border);
-      border-radius:3px;backdrop-filter:blur(8px);padding:8px 14px;
-      display:flex;align-items:center;gap:12px;}
+      border-radius:3px;backdrop-filter:blur(8px);padding:6px 12px;display:block;}
+    #tl-alt[hidden]{display:none!important;}
+    /* Takt-Leiste: Zeilen je Takt, keine einzelne Achse */
+    .tk-kopf{display:flex;align-items:center;gap:10px;margin-bottom:3px;}
+    .tk-krumen{flex:1;min-width:0;font:8.5px var(--mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .tk-krume{cursor:pointer;}
+    .tk-krume:hover,.tk-krume.an{color:var(--text);}
+    .tk-pfeil{margin:0 5px;color:#39424f;}
+    .tk-wert{font:10px var(--mono);color:var(--accent);white-space:nowrap;}
+    .tk-zeile{display:flex;align-items:center;gap:10px;height:24px;}
+    .tk-name{width:200px;flex-shrink:0;font-size:9.5px;color:#c6cdda;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .tk-name small{display:block;font:7.5px var(--mono);color:var(--muted);}
+    .tk-bahn{flex:1;position:relative;height:20px;background:rgba(255,255,255,.035);border-radius:2px;cursor:pointer;overflow:hidden;}
+    .tk-strich{position:absolute;bottom:0;width:1px;height:4px;background:rgba(255,255,255,.18);}
+    .tk-strich.lang{height:7px;background:rgba(255,255,255,.3);}
+    .tk-zahl{position:absolute;bottom:7px;transform:translateX(-50%);font:7px var(--mono);color:var(--muted);pointer-events:none;}
+    .tk-umlauf{position:absolute;top:0;bottom:0;border-left:1px solid rgba(125,107,208,.45);}
+    .tk-umlauf.an{background:rgba(125,107,208,.22);}
+    .tk-epoche{position:absolute;height:2px;opacity:.5;}
+    .tk-deckung{position:absolute;height:2px;opacity:.85;border-radius:1px;}
+    .tk-punkt{position:absolute;top:7px;width:6px;height:6px;margin-left:-3px;border-radius:50%;border:1.5px solid;background:#0b0e14;}
+    .tk-punkt.an{background:#fff;}
+    .tk-jetzt{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--accent);pointer-events:none;}
+    .tk-uhr{display:flex;gap:2px;}
+    .tk-weiter{font:8.5px var(--mono);color:var(--muted);cursor:pointer;white-space:nowrap;}
+    .tk-weiter:hover{color:var(--text);}
+    .tk-stand{font:8.5px var(--mono);color:#8d97a8;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .tk-warn{color:#e8b04a;}
+    @media (max-width:780px){.tk-name{width:110px;}}
     .tll{font-family:var(--mono);font-size:7.5px;color:var(--muted);letter-spacing:.14em;white-space:nowrap;}
     #tlp{position:absolute;left:0;right:0;top:-13px;height:12px;pointer-events:auto;}
     .tlp-band{position:absolute;height:4px;border-radius:2px;cursor:pointer;opacity:.55;}
@@ -800,6 +828,8 @@
   </div>
 
   <div id="tl">
+    <div id="takt" aria-label="Takt-Leiste"></div>
+    <div id="tl-alt" hidden>
     <div class="tll">MASTERZEIT</div>
     <div class="scb tlck on" id="spd-echtzeit" onclick="ze.simSpeed('echtzeit')" title="Echtzeit">▶</div>
     <div class="scb tlck"    id="spd-raffer" onclick="ze.simSpeed('raffer')" title="Zeitraffer">▶▶</div>
@@ -811,6 +841,7 @@
     <div class="tlt" id="tlt"><div id="tlp" title="ZeitRäume — Epochen sind system- und raumgebundene Beschreibungen; Überlappung ist Befund"></div><div class="tlf" id="tlf"></div><div class="tlth" id="tlth"></div></div>
     <div class="tlv" id="tlv">—</div>
     <div class="tlu" id="tlu"></div>
+    </div>
 </div>
 
 </div><!-- /#ui (Grid-Container, Schließer restauriert) -->
@@ -2298,6 +2329,7 @@ class DM {
     const allowed = ze.natur === 'erde';
     this._showOv(name, this._ovState[name] && allowed);
     ze.ebenenGeaendert?.();
+    setTimeout(() => ze.leiste?.zeichne(), 0);
   }
 
   _showOv(name,on) {
@@ -4115,6 +4147,7 @@ class ZeroEarth {
     this.tektonikLayer = new TektonikLayer(this.cesiumV, 'umrisse');
     this.palaeokuesteLayer = new TektonikLayer(this.cesiumV, 'palaeokueste');
     this.tour = new TourMotor(this);
+    this.leiste = new TaktLeiste(this);
     // Klimazonen (Köppen-Geiger): kategoriales Raster über den FieldLayer
     this.klimaLayer = new FieldLayer(this.cesiumV, 'koeppen', { alpha:0.55,
       colormap: v => {
@@ -4181,6 +4214,7 @@ class ZeroEarth {
       this._grundbildTiefe();
       this.tektonikLayer.update(Tideline.t);
       this.palaeokuesteLayer.update(Tideline.t);
+      this.leiste?.zeichne();
       this._renderMoonPanel();
       if (this.gewaesserLayer.on) this.gewaesserLayer.update();
       this._renderMiniNull();
@@ -4314,6 +4348,7 @@ class ZeroEarth {
     // Modell laden (data/matrix.json), dann S4-Beschriftungen anwenden
     await MODELL.laden();
     this.tour.liste();
+    this.leiste.laden();
     this._gruppiereSchichten();
     this.applyLabels();
     this._applyLicht();
@@ -5380,8 +5415,7 @@ class ZeroEarth {
     } else {
       // tiefe Zeit: Bahnparameter / Ga
       titleEl.textContent = 'NullNatur · Tiefenzeit';
-      const d = Tideline.display(this.activeDimForTime);
-      valEl.textContent = `${d.value} ${d.unit}`;
+      valEl.textContent = takt.text(t);
       subEl.textContent = 'Exzentrizität 100ka';
     }
   }
@@ -5438,6 +5472,14 @@ class SintflutLayer {
         pixelOffset: new Cesium.Cartesian2(0, -6), horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
         verticalOrigin: Cesium.VerticalOrigin.BOTTOM });
     }
+  }
+  /** Für die Takt-Leiste: Stützstellen, Abdeckung, gewählter Schritt. */
+  stuetzstellen() {
+    if (!this.daten) return [];
+    const i = this.aktuellerSchritt();
+    return [{ name: 'Sintflut (PaleoMIST)', einheit: 'ka', farbe: '#8fe89a', werte: this.schritte,
+      abdeckung: { von: Math.max(...this.schritte), bis: Math.min(...this.schritte) },
+      gewaehlt: i === null ? null : this.schritte[i], unschaerfe_fehlt: true, zuT: SintflutLayer.tAus }];
   }
   update(t) {
     if (!this.on || !this.daten) return;
@@ -5545,10 +5587,187 @@ class TektonikLayer {
       : `<span style="color:${TEKTONIK_FARBE[x.k] ?? '#b8f08f'}">■</span> ${tourEsc(x.name)}: ${tourKa(x.ma)} Ma`).join('<br>');
     ze.zeichneLegende?.();
   }
+  /** Für die Takt-Leiste: je Modell bzw. Paläo-DEM Stützstellen und gewählter Schritt. */
+  stuetzstellen() {
+    if (!this.daten) return [];
+    const ma = tektonikMa(Tideline.t), D = this.dreh;
+    const eintrag = (name, farbe, s) => {
+      const i = D?.schrittBei(s, ma);
+      return { name, einheit: 'Ma', farbe, werte: s, abdeckung: { von: Math.max(...s), bis: Math.min(...s) },
+        gewaehlt: i === null || i === undefined ? null : s[i], unschaerfe_fehlt: true, zuT: takt.tMa };
+    };
+    if (this.art === 'umrisse') return Object.entries(this.daten.modelle).map(([k, m]) => eintrag(m.name, TEKTONIK_FARBE[k], m.schritte_ma));
+    return [eintrag('Paläoküsten (PALEOMAP-DEM)', '#b8f08f', this.daten.karten.map(k => k.ma))];
+  }
   /** Zeile für die Legende: welche Quelle bei welchem Schritt. */
   zeit() {
     if (!this.stand.length) return 'keine Linie';
     return this.stand.map(x => x.ma === null ? `${x.k}: kein Schritt` : `${x.k} ${tourKa(x.ma)} Ma`).join(' · ') + ' (Ma BP); Unschärfe fehlt';
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   TAKT-LEISTE (kern/PLAN-taktleiste.md). Keine einzelne Achse: Zeilen
+   aus verschachtelten Takten (data/takte.json), jede mit eigenem Maß.
+   Sichtbar sind die Brotkrumen und die zwei innersten offenen Zeilen.
+   Ein Klick in eine Zeile setzt die Zeit dort und öffnet die nächste
+   Zeile; ein Punkt ist eine Stützstelle einer Quelle. t bleibt intern.
+   ───────────────────────────────────────────────────────────────── */
+const takt = {
+  ma: t => -t / 1e6,                 // Ma BP, „heute laut Modell“
+  ka: t => (-50 - t) / 1000,         // ka BP, Bezugsjahr 1950
+  ce: t => 2000 + t,                 // a CE
+  tMa: ma => -ma * 1e6,
+  tKa: ka => -50 - ka * 1000,
+  tCe: a => a - 2000,
+  zahl: (x, n = 0) => Number(x).toLocaleString('de-DE', { maximumFractionDigits: n }),
+  /** Zeitpunkt im Maß seiner Tiefe; nie als t. */
+  text(t) {
+    const ce = takt.ce(t), ka = takt.ka(t), ma = takt.ma(t);
+    if (ce >= -8000) return `${takt.zahl(ce)} a CE`;
+    if (ma < 1) return `${takt.zahl(ka, 1)} ka BP (1950)`;
+    return `${takt.zahl(ma, ma < 10 ? 2 : 0)} Ma BP`;
+  },
+};
+
+class TaktLeiste {
+  constructor(erde) {
+    this.ze = erde; this.takte = null;
+    this.fokus = { k: 0, m: 0, c: 0, tiefe: 4 };
+    this.el = document.getElementById('takt');
+  }
+  async laden() {
+    try { this.takte = await fetch('data/takte.json').then(r => r.json()); }
+    catch { this.takte = null; }
+    this.folge(Tideline.t);
+  }
+  get periode() { return this.takte?.takte?.find(x => x.id === 'galaktisch')?.periode?.wert ?? 230; }
+  get erdalter() { return (this.takte?.erdalter?.wert ?? 4.5) * 1000; }
+
+  /** Zeilen der aktuellen Fokuskette; jede mit Bereich [alt, jung] in ihrem Maß. */
+  zeilen() {
+    const P = this.periode, f = this.fokus, T = this.takte?.takte ?? [];
+    const name = id => T.find(x => x.id === id)?.name ?? id;
+    return [
+      { stufe: 0, id: 'galaktisch', name: `${name('galaktisch')} (≈ ${P} Ma, Setzung)`, mass: 'Ma', alt: this.erdalter, jung: 0, zuT: takt.tMa, aus: takt.ma },
+      { stufe: 1, id: 'ma', name: `${name('ma')} · Umlauf ${f.k + 1}`, mass: 'Ma', alt: Math.min(this.erdalter, (f.k + 1) * P), jung: f.k * P, zuT: takt.tMa, aus: takt.ma },
+      { stufe: 2, id: 'milankovic', name: `${name('milankovic')} (100 ka) · ${takt.zahl(f.m + 1)}–${takt.zahl(f.m)} Ma`, mass: 'ka', alt: (f.m + 1) * 1000, jung: f.m * 1000, zuT: takt.tKa, aus: takt.ka },
+      { stufe: 3, id: 'ka', name: `${name('ka')} · Zyklus ${takt.zahl(f.c + 100)}–${takt.zahl(f.c)} ka`, mass: 'ka', alt: f.c + 100, jung: f.c, zuT: takt.tKa, aus: takt.ka },
+      { stufe: 4, id: 'jahr', name: `${name('jahr')} · Kalender (a CE)`, mass: 'a CE', alt: 1896, jung: 2030, zuT: takt.tCe, aus: takt.ce, vorwaerts: true },
+    ].slice(0, f.tiefe + 1);
+  }
+
+  /** Fokus aus t: die innerste Zeile, deren Bereich t enthält. */
+  folge(t, { tiefe } = {}) {
+    const ma = Math.max(0, takt.ma(t)), ka = Math.max(0, takt.ka(t)), ce = takt.ce(t);
+    const f = this.fokus;
+    f.k = Math.min(Math.floor(ma / this.periode), Math.floor((this.erdalter - 1e-9) / this.periode));
+    f.m = Math.floor(ma);
+    f.c = Math.floor(ka / 100) * 100;
+    f.tiefe = tiefe ?? (ce >= 1896 ? 4 : ma < 1 ? 3 : 1);
+    if (f.tiefe >= 4 && (f.m !== 0 || f.c !== 0)) f.tiefe = 3;
+    this._sync(); this.zeichne();
+  }
+  /** Tideline.zoom folgt der Tiefe, damit Register und Mini-Fenster stimmen. */
+  _sync() {
+    const id = ['ga', 'ma', 'ka', 'ka', 'jahr'][this.fokus.tiefe];
+    const i = TSCALES.findIndex(x => x.id === id);
+    if (i >= 0 && Tideline.zoom !== i) { Tideline.zoom = i; Tideline.wc = Tideline.t; this.ze._zeitRegister?.(); }
+  }
+  /** Zeile öffnen; tiefer gehend folgt der Fokus der Zeit, soweit sie im äußeren Bereich liegt. */
+  oeffne(stufe) {
+    const f = this.fokus, P = this.periode;
+    const klemme = (v, a, b) => Math.max(a, Math.min(b, v));
+    if (stufe > f.tiefe) {
+      if (stufe >= 2 && f.tiefe < 2) f.m = klemme(Math.floor(Math.max(0, takt.ma(Tideline.t))), f.k * P, Math.ceil(Math.min(this.erdalter, (f.k + 1) * P)) - 1);
+      if (stufe >= 3 && f.tiefe < 3) f.c = klemme(Math.floor(Math.max(0, takt.ka(Tideline.t)) / 100) * 100, f.m * 1000, f.m * 1000 + 900);
+    }
+    f.tiefe = stufe; this._sync(); this.zeichne();
+  }
+
+  /** Klick in eine Zeile: Zeit dort setzen, nächste Zeile öffnen. */
+  klick(stufe, anteil) {
+    const z = this.zeilen()[stufe];
+    const wert = z.vorwaerts ? z.alt + anteil * (z.jung - z.alt) : z.alt - anteil * (z.alt - z.jung);
+    const f = this.fokus;
+    if (stufe === 0) { f.k = Math.min(Math.floor(wert / this.periode), Math.floor((this.erdalter - 1e-9) / this.periode)); f.tiefe = 1; }
+    if (stufe === 1) { f.m = Math.max(0, Math.floor(wert)); f.tiefe = 2; }
+    if (stufe === 2) { f.c = Math.max(0, Math.floor(wert / 100) * 100); f.tiefe = 3; }
+    if (stufe === 3 && f.c === 0 && f.m === 0 && wert < 0.15) { f.tiefe = 4; }
+    Tideline.set(z.zuT(Math.max(stufe === 4 ? -Infinity : 0, wert)));
+    this._sync(); this.zeichne();
+  }
+  waehle(t) { Tideline.set(t); this.zeichne(); }
+
+  /** Stützstellen und Abdeckung der eingeschalteten Ebenen. */
+  quellen() {
+    return [this.ze.sintflutLayer, this.ze.tektonikLayer, this.ze.palaeokuesteLayer]
+      .filter(l => l?.on && l.stuetzstellen).flatMap(l => l.stuetzstellen());
+  }
+
+  zeichne() {
+    if (!this.el) return;
+    const zs = this.zeilen(), sichtbar = zs.slice(-2), q = this.quellen(), t = Tideline.t;
+    const esc = tourEsc;
+    const krumen = zs.map(z => `<span class="tk-krume${z.stufe === this.fokus.tiefe ? ' an' : ''}" onclick="ze.leiste.oeffne(${z.stufe})">${esc(z.name)}</span>`).join('<span class="tk-pfeil">›</span>');
+    const gewaehlt = q.filter(s => s.gewaehlt !== null && s.gewaehlt !== undefined);
+    const gleich = gewaehlt.length > 1
+      ? (gewaehlt.some(s => s.unschaerfe_fehlt) ? '<span class="tk-warn">Gleichzeitigkeit nicht prüfbar: Unschärfe fehlt</span>' : '')
+      : '';
+    const stand = q.map(s => `<span style="color:${s.farbe}">■</span> ${esc(s.name)}: ${s.gewaehlt === null || s.gewaehlt === undefined ? '<i>kein Schritt</i>' : `${takt.zahl(s.gewaehlt, 2)} ${esc(s.einheit)}`}`).join(' · ');
+    const zeile = z => {
+      const breite = z.vorwaerts ? z.jung - z.alt : z.alt - z.jung;
+      const x = w => z.vorwaerts ? (w - z.alt) / breite : (z.alt - w) / breite;
+      const pct = v => `${(Math.max(0, Math.min(1, v)) * 100).toFixed(3)}%`;
+      let inner = '';
+      // Takt-Umläufe bzw. Zählstriche
+      const striche = { 0: this.periode, 1: 10, 2: 100, 3: 10, 4: 10 }[z.stufe];
+      for (let w = Math.ceil(Math.min(z.alt, z.jung) / striche) * striche; w <= Math.max(z.alt, z.jung) + 1e-9; w += striche) {
+        const lang = z.stufe === 1 ? w % 50 === 0 : z.stufe === 4 ? w % 50 === 0 : true;
+        inner += `<div class="tk-strich${lang ? ' lang' : ''}" style="left:${pct(x(w))}"></div>`;
+        if (lang && x(w) > 0.02 && x(w) < 0.98) inner += `<div class="tk-zahl" style="left:${pct(x(w))}">${takt.zahl(z.stufe === 0 ? w / 1000 : w, 1)}${z.stufe === 0 ? ' Ga' : ''}</div>`;
+      }
+      // Epochen (ZeitRäume) als dünne Bänder, wo sie in den Bereich fallen
+      for (const p of PERIODS) {
+        const a = z.aus(p.t0), b = z.aus(p.t1);
+        const l = x(a), r = x(b);
+        if (Math.max(l, r) < 0 || Math.min(l, r) > 1 || Math.abs(r - l) < 0.01) continue;
+        inner += `<div class="tk-epoche" title="${esc(`${p.label} · ${p.system} · ${p.region}`)}" style="left:${pct(Math.min(l, r))};width:${pct(Math.abs(r - l))};background:${PERIOD_COLORS[p.system]};bottom:${PERIOD_LANES[p.system] * 3}px"></div>`;
+      }
+      // Quellen: Abdeckung als Band, Stützstellen als Punkte in passender Zeile
+      q.forEach((s, j) => {
+        const inMass = s.einheit === 'Ma' ? (z.mass === 'Ma' ? v => v : null) : (z.mass === 'ka' ? v => v : z.mass === 'Ma' ? v => v / 1000 : null);
+        if (!inMass) return;
+        const l = x(inMass(s.abdeckung.von)), r = x(inMass(s.abdeckung.bis));
+        if (Math.max(l, r) >= 0 && Math.min(l, r) <= 1)
+          inner += `<div class="tk-deckung" title="${esc(`${s.name}: ${s.abdeckung.von}–${s.abdeckung.bis} ${s.einheit}`)}" style="left:${pct(Math.min(l, r))};width:${pct(Math.max(0.004, Math.abs(r - l)))};top:${2 + j * 3}px;background:${s.farbe}"></div>`;
+        // Punkte nur in der Zeile, deren Maß das der Quelle ist (Ma-Zeile, ka-Zeile); sonst nur die Abdeckung
+        const heimat = s.einheit === 'Ma' ? z.stufe === 1 : z.stufe === 3;
+        const punkte = heimat ? s.werte.map(v => [v, x(inMass(v))]).filter(([, p]) => p >= 0 && p <= 1) : [];
+        if (punkte.length)
+          for (const [v, p] of punkte) inner += `<div class="tk-punkt${v === s.gewaehlt ? ' an' : ''}" title="${esc(`${s.name}: ${takt.zahl(v, 2)} ${s.einheit}`)}" style="left:${pct(p)};border-color:${s.farbe}" onclick="event.stopPropagation();ze.leiste.waehle(${s.zuT(v)})"></div>`;
+      });
+      const jetzt = x(z.aus(t));
+      // auf 0,1 % gerundet: die laufende Uhr soll die Zeile nicht ständig neu aufbauen
+      if (jetzt >= 0 && jetzt <= 1) inner += `<div class="tk-jetzt" style="left:${(Math.round(jetzt * 1000) / 10).toFixed(1)}%"></div>`;
+      const takte = z.stufe === 0 ? Array.from({ length: Math.ceil(this.erdalter / this.periode) }, (_, k) =>
+        `<div class="tk-umlauf${k === this.fokus.k ? ' an' : ''}" style="left:${pct(x(Math.min(this.erdalter, (k + 1) * this.periode)))};width:${pct(x(k * this.periode) - x(Math.min(this.erdalter, (k + 1) * this.periode)))}"></div>`).join('') : '';
+      const weiter = z.stufe === this.fokus.tiefe && z.stufe < 4
+        ? (z.stufe === 3 && !(this.fokus.c === 0 && this.fokus.m === 0) ? '' :
+          `<span class="tk-weiter" onclick="ze.leiste.oeffne(${z.stufe + 1})" title="nächste Zeile öffnen">${tourEsc(['Umlauf', 'Milanković', 'ka', 'Kalender'][z.stufe])} ›</span>`)
+        : '';
+      const uhr = z.stufe === 4 ? `<div class="tk-uhr">${['echtzeit', 'raffer', 'stop'].map(m => `<span class="scb tlck${Tideline.rate === Tideline.RATES[m] ? ' on' : ''}" onclick="ze.simSpeed('${m}');ze.leiste.zeichne()" title="${m}">${{ echtzeit: '▶', raffer: '▶▶', stop: '■' }[m]}</span>`).join('')}</div>` : '';
+      return `<div class="tk-zeile"><div class="tk-name">${esc(z.name)}<small>${esc(z.mass)}${z.stufe === 2 ? ' · 41 und 21 ka nicht eingezeichnet' : ''}</small></div>` +
+        `<div class="tk-bahn" onclick="ze.leiste.klickEvent(event, ${z.stufe})">${takte}${inner}</div>${weiter}${uhr}</div>`;
+    };
+    const html = `<div class="tk-kopf"><div class="tk-krumen">${krumen}</div><div class="tk-wert">${esc(takt.text(t))}</div></div>` +
+      sichtbar.map(zeile).join('') +
+      (q.length ? `<div class="tk-stand">${stand}${gleich ? ' · ' + gleich : ''}</div>` : '');
+    if (html !== this._html) { this.el.innerHTML = html; this._html = html; }
+  }
+  klickEvent(ev, stufe) {
+    const r = ev.currentTarget.getBoundingClientRect();
+    this.klick(stufe, Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width)));
   }
 }
 
@@ -5677,10 +5896,8 @@ class TourMotor {
     const f = ev.zeitfenster;
     if (typeof f?.von === 'number') {
       const ka = this.ka ?? f.von;
-      Tideline.zoom = TSCALES.findIndex(x => x.id === 'ka');
-      Tideline.wc = SintflutLayer.tAus((f.von + f.bis) / 2);
       Tideline.set(SintflutLayer.tAus(ka));
-      ze._zeitRegister();
+      ze.leiste.folge(Tideline.t, { tiefe: 3 });
     }
     // Ebenen: was die Station nennt, an; was die Tour früher einschaltete, aus
     for (const k of this.tourEbenen) if (!z.ebenen.includes(k) && ze.dm._ovState[k]) ze.toggle(k);
@@ -5716,6 +5933,7 @@ class TourMotor {
     if (s === undefined) return;
     this.ka = s;
     Tideline.set(SintflutLayer.tAus(s));
+    this.ze.leiste.folge(Tideline.t, { tiefe: 3 });
     this._werte();
   }
 

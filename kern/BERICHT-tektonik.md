@@ -218,7 +218,7 @@ Ziel ist eine Reihe aus mehreren Quellen, jede in ihrem Zeitraum: Nähte bleiben
 
 Punkte 1 bis 4 aus dem ersten Bericht sind entschieden und gebaut (siehe Stand des Baus). Neu offen:
 
-1. Grundbild in der Tiefe: gebaut als Abdunkeln ab 1 Ma (siehe oben). Offen, ob es stattdessen ganz abgeschaltet werden soll.
+1. Grundbild in der Tiefe: entschieden (Max, 2026-11-05): Abdunkeln ab 1 Ma bleibt.
 2. Kocsis & Scotese als dritte Küstenebene neben der DEM-0-m-Linie?
 3. Lücke 80 ka bis 5 Ma: PRISM4 als einzelne Zeitscheibe prüfen?
 4. GEBCO als „heute“-Ebene: welcher Ausschnitt und welche Vergröberung?

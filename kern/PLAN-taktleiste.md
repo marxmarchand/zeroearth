@@ -1,6 +1,6 @@
 # Plan: Takt-Leiste
 
-Stand: 2026-11-05. Nur Plan, nichts gebaut. Grundlage: Strukturstand, Abschnitt Zeit („keine einzelne Achse“, „verschachtelte Takte“), Regel 16 und die Skizze in `kern/BERICHT-tektonik.md`, Abschnitt 5.
+Stand: 2026-11-05. Gebaut am selben Tag, siehe „Stand des Baus“ am Ende. Grundlage: Strukturstand, Abschnitt Zeit („keine einzelne Achse“, „verschachtelte Takte“), Regel 16 und die Skizze in `kern/BERICHT-tektonik.md`, Abschnitt 5.
 
 ## Was sie ersetzt
 
@@ -49,3 +49,34 @@ Mehrere Zeilen übereinander. Jede Zeile ist ein Takt mit eigenem Maß:
 - **Nicht belegte Zahlen:** Spannweite des galaktischen Umlaufs und der 405-ka-Zyklus brauchen eine Quelle, bevor sie Zeilen werden.
 - **Schwache Takte 1 a bis 21 ka:** Wie die Lücke zwischen 1 a und 21 ka gezeigt wird (Strukturstand: dort setzt die 2. Natur eigene Takte). Vorschlag: eine eigene Zeile „Kalender“, als 2. Natur gekennzeichnet.
 - **Kleine Bildschirme:** Sie zeigen höchstens zwei Zeilen zugleich.
+
+## Stand des Baus (2026-11-05)
+
+**Gebaut**
+
+- **Takte als Daten:** `kern/takte.json` mit `pruefeTakte` (Regel T) und `kern/test/takte.test.mjs`. Die Seite liest die Kopie `data/takte.json`; ein Test hält beide gleich.
+- **Was fehlt, steht mit Grund in `fehlend`:** der 405-ka-Zyklus und die Kalenderzeile der 2. Natur. Die Prüfung meldet beide als Hinweis.
+- **Leiste:** Sie ersetzt die Masterzeit (die alte bleibt verborgen im DOM, weil andere Teile ihre Elemente noch beschreiben).
+  - Zeilen: galaktischer Umlauf (Setzung 230 Ma), Ma gezählt, Milanković 100 ka, ka gezählt, Jahr (a CE).
+  - Sichtbar sind die Brotkrumen und die zwei innersten Zeilen. Ein Klick setzt die Zeit und öffnet die nächste Zeile; „… ›“ öffnet sie ohne Zeitwechsel.
+- **Quellen auf der Leiste:**
+  - Sintflut, Tektonik und Paläoküsten melden `stuetzstellen()`.
+  - Punkte stehen nur in der Zeile ihres Maßes (Ma oder ka), anderswo nur die Abdeckung als Band. Ein Punkt wählt genau diese Stützstelle.
+  - Unten steht je Quelle der gewählte Schritt oder „kein Schritt“. Bei mehreren Quellen erscheint „Gleichzeitigkeit nicht prüfbar: Unschärfe fehlt“ (Regel 16).
+- **Epochen:** Die ZeitRäume (`PERIODS`) liegen als dünne Bänder in den Zeilen, in deren Bereich sie fallen.
+- **Uhr und Mini-Fenster:** Echtzeit, Raffer und Pause sitzen nur in der Jahr-Zeile. Das Mini-Fenster zeigt die Tiefe im Maß der Leiste (statt „-1499998000 CE“).
+- **Touren:** Die Sintflut-Tour öffnet die ka-Zeile, und der Zeitschritt-Regler bewegt den Punkt mit.
+
+**Nicht gebaut**
+
+- 41 und 21 ka sind als Unterteilung genannt, aber nicht eingezeichnet.
+- Die Kalenderzeile der 2. Natur fehlt.
+- `Tideline.zoom` wird aus der Tiefe nachgeführt, damit Register und Hash weiter stimmen; ein eigener Hash-Eintrag für die Tiefe fehlt.
+- Auf schmalen Bildschirmen ist die Leiste nicht geprüft.
+
+
+## Bildschirmfotos
+
+![Umlauf 2 geöffnet, Ma-Zeile mit Tektonik und Paläoküsten](bericht-taktleiste/leiste-ma.jpg)
+![ka-Zeile mit Sintflut-Schritten](bericht-taktleiste/leiste-ka.jpg)
+![Sintflut-Tour, Station 1.1](bericht-taktleiste/leiste-tour.jpg)
