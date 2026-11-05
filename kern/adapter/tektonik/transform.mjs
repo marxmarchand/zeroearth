@@ -83,7 +83,7 @@ export function transform(roh, manifest, zusatz = {}) {
     spur_von: SPUR,
     wo: {
       geometrie: 'grenze',
-      koordinaten: { verweis: Object.fromEntries(Object.keys(roh.geometrien).filter(g => g !== 'cao').map(g => [g, `${datei}#geometrien.${g}`])) },
+      koordinaten: { verweis: Object.fromEntries(Object.keys(roh.geometrien).filter(g => g !== 'cao').map(g => [g, `${datei}#geometrien.${g}.kueste`])) },
       hinweis: `${roh.woher.form}. ${roh.modelle.merdith2021.laengengrad}`,
       // alle beteiligten Arten (Regel 6): Müller 2022 bringt modell mit
       woher: { arten: [...new Set(ideale.flatMap(i => roh.modelle[i.schluessel].arten))], quelle: roh.woher.kette, archivkette,
@@ -97,13 +97,27 @@ export function transform(roh, manifest, zusatz = {}) {
     auswahl: [`${P}/auswahl/schritte`],
     spur_von: SPUR,
     wo: {
-      geometrie: 'grenze', koordinaten: { verweis: `${datei}#geometrien.cao` },
+      geometrie: 'grenze', koordinaten: { verweis: `${datei}#geometrien.cao.kueste` },
       hinweis: `${roh.woher.form}. ${cao.laengengrad} Vor 1 Ga nur Kontinentaldrift mit wenigen Polen, ozeanische Platten synthetisch; kein zweites Ideal.`,
       woher: { arten: [...cao.arten], quelle: roh.woher.kette, archivkette, abgeleitet_aus: ref(`${P}/umrisse/cao2024`, ['lage']), verfahren: roh.woher.verfahren },
       verzerrung: VERZERRUNG,
     },
     werte: { lage: lage('cao2024', undefined) },
   }] : [];
+
+  /* Kontinentpolygone: dieselben Drehungen, gefüllt gezeigt (Standard der Ansicht). */
+  const kontinente = {
+    id: `${P}/kontinente`, stapel: '1.1', name: 'Kontinentpolygone in heutiger Form, gedreht (drei Plattenmodelle; Cao jenseits von 1 Ga)',
+    auswahl: [`${P}/auswahl/schritte`, `${P}/auswahl/ideale`, `${P}/auswahl/kuesten_paleomap`],
+    wo: {
+      geometrie: 'flaeche',
+      koordinaten: { verweis: Object.fromEntries(Object.keys(roh.geometrien).map(g => [g, `${datei}#geometrien.${g}.kontinente`])) },
+      hinweis: `${roh.woher.form}. Kontinentpolygone der Modelle, nicht die Küste der Zeit. ${roh.modelle.merdith2021.laengengrad}`,
+      woher: { arten: [...new Set(ideale.flatMap(i => roh.modelle[i.schluessel].arten))], quelle: roh.woher.kette, archivkette, verfahren: roh.woher.verfahren },
+      verzerrung: VERZERRUNG,
+    },
+    werte: Object.fromEntries(ideale.map(i => [`lage_${i.schluessel}`, lage(i.schluessel, i.id)])),
+  };
 
   const pk = zusatz.palaeokuesten;
   const palaeokueste = {
@@ -147,7 +161,7 @@ export function transform(roh, manifest, zusatz = {}) {
     ],
     ideale: ideale.map(({ schluessel, ...i }) => i),
     bestaende: [wasser],
-    eintraege: [ozean, umrisse, ...umrisseCao, palaeokueste],
+    eintraege: [ozean, kontinente, umrisse, ...umrisseCao, palaeokueste],
     prozesse: [],
     relationen: [],
   };

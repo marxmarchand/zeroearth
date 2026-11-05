@@ -20,22 +20,23 @@ import argparse, datetime, glob, json, os, re
 import numpy as np
 import pygplates, contourpy
 from netCDF4 import Dataset
-from shapely.geometry import LineString, Polygon
-from shapely import simplify, unary_union, make_valid
+from shapely.geometry import LineString
+from shapely import simplify
 
-TOLERANZ = 0.25   # Grad, Douglas-Peucker; unter der Auflösung der Modelle
+TOLERANZ = 0.1    # Grad, Douglas-Peucker für die Polygone der Plattenmodelle
+TOLERANZ_DEM = 0.25   # Grad, für die 0-m-Linien der 1°-Paläo-DEMs
 STELLEN = 1       # Nachkommastellen in Grad für Linien
 SCHRITTE = [0] + list(range(1, 67)) + list(range(70, 251, 5)) + list(range(260, 1001, 10))
 SCHRITTE_CAO = list(range(1025, 1801, 25))   # Cao nur jenseits von 1 Ga
 
 
-def linie(punkte):
-    if len(punkte) < 2:
+def linie(punkte, ring=False, toleranz=TOLERANZ):
+    if len(punkte) < (4 if ring else 2):
         return None
-    s = simplify(LineString(punkte), TOLERANZ, preserve_topology=False)
+    s = simplify(LineString(punkte), toleranz, preserve_topology=True)
     c = [[round(x, STELLEN), round(y, STELLEN)] for x, y in s.coords]
     c = [p for i, p in enumerate(c) if i == 0 or p != c[i - 1]]
-    return c if len(c) > 1 else None
+    return c if len(c) > (3 if ring else 1) else None
 
 
 def zeitgrenze(x):
@@ -47,40 +48,23 @@ def ring(g):
     return pts + pts[:1] if isinstance(g, pygplates.PolygonOnSphere) else pts
 
 
-def kuestenband(features):
-    """Heutige Küste als Band: Rand der Vereinigung aller Polygone. Kanten, die
-    Polygone an Plattengrenzen zerschneiden, liegen innen und fallen weg."""
-    polys = []
-    for f in features:
-        for g in f.get_geometries():
-            if isinstance(g, pygplates.PolygonOnSphere):
-                pts = ring(g)
-                if len(pts) >= 4 and max(x for x, _ in pts) - min(x for x, _ in pts) < 300:   # über die Datumsgrenze gelegte Ringe nicht
-                    polys.append(make_valid(Polygon(pts)))
-    return unary_union(polys).boundary.buffer(0.02)
-
-
-def geometrie(features, band):
-    """Heutige Küstenlinien je Merkmal: Plattennummer, Gültigkeit, Züge. Nur
-    die Teile der Umrisse, die auf der heutigen Küste liegen."""
+def geometrie(features):
+    """Heutige Polygone je Merkmal als geschlossene Ringe: Plattennummer,
+    Gültigkeit, Ringe. Ganze Ringe, nicht an der Küste zerschnitten: Der
+    frühere Filter auf die heutige Küste zerlegte die Linien in Stücke von
+    meist zwei Punkten (kern/BERICHT-tektonik.md, Zerfall der Linien)."""
     aus = []
     for f in features:
         b, e = f.get_valid_time()
-        zuege = []
+        ringe = []
         for g in f.get_geometries():
-            if not isinstance(g, (pygplates.PolygonOnSphere, pygplates.PolylineOnSphere)):
+            if not isinstance(g, pygplates.PolygonOnSphere):
                 continue
-            pts = ring(g)
-            if len(pts) < 2:
-                continue
-            teil = LineString(pts).intersection(band)
-            for t in getattr(teil, 'geoms', [teil]):
-                if t.geom_type == 'LineString' and not t.is_empty:
-                    z = linie(list(t.coords))
-                    if z:
-                        zuege.append(z)
-        if zuege:
-            aus.append({'p': f.get_reconstruction_plate_id(), 'von': zeitgrenze(b), 'bis': zeitgrenze(e), 'l': zuege})
+            z = linie(ring(g), ring=True)
+            if z:
+                ringe.append(z)
+        if ringe:
+            aus.append({'p': f.get_reconstruction_plate_id(), 'von': zeitgrenze(b), 'bis': zeitgrenze(e), 'l': ringe})
     return aus
 
 
@@ -126,14 +110,20 @@ def main():
         partition_method=pygplates.PartitionMethod.split_into_plates)
 
     kueste_c = pygplates.FeatureCollection(cao + 'shapes_coasts.gpmlz')
-    band_m, band_c = kuestenband(kueste_m), kuestenband(kueste_c)
+    kont_m = pygplates.FeatureCollection(merdith + 'Continents/shapes_continents.gpml')
+    kont_c = pygplates.FeatureCollection(cao + 'shapes_continents.gpmlz')
+    kont_pm = pygplates.partition_into_plates(
+        pm + 'PALEOMAP_PlatePolygons__forPgeog_v19o.gpml', rot_pm, kont_m,
+        partition_method=pygplates.PartitionMethod.split_into_plates)
     geo = {
-        'merdith': {'name': 'Küsten Merdith et al. 2021 (shapes_coastlines_Merdith_et_al_v2), nur Kanten auf der heutigen Küste', 'merkmale': geometrie(kueste_m, band_m)},
-        'paleomap': {'name': 'Küsten Merdith et al. 2021, geteilt an den PALEOMAP-Plattenpolygonen v19o_r1c, nur Kanten auf der heutigen Küste',
-                     'merkmale': geometrie(geteilt, band_m)},
-        'cao': {'name': 'Küsten Cao et al. 2024 (shapes_coasts), nur Kanten auf der heutigen Küste', 'merkmale': geometrie(kueste_c, band_c)},
+        'merdith': {'name': 'Merdith et al. 2021: Küstenpolygone (shapes_coastlines_v2) und Kontinentpolygone (shapes_continents)',
+                    'kueste': geometrie(kueste_m), 'kontinente': geometrie(kont_m)},
+        'paleomap': {'name': 'Merdith-Polygone, geteilt an den PALEOMAP-Plattenpolygonen v19o_r1c (Setzung: PALEOMAP bringt keine eigenen mit)',
+                     'kueste': geometrie(geteilt), 'kontinente': geometrie(kont_pm)},
+        'cao': {'name': 'Cao et al. 2024: Küstenpolygone (shapes_coasts) und Kontinentpolygone (shapes_continents)',
+                'kueste': geometrie(kueste_c), 'kontinente': geometrie(kont_c)},
     }
-    platten = {k: sorted({f['p'] for f in g['merkmale']}) for k, g in geo.items()}
+    platten = {k: sorted({f['p'] for f in g['kueste'] + g['kontinente']}) for k, g in geo.items()}
 
     def modell(name, zitat, doi, rahmen, laenge, arten, g, rot, schritte, ideal):
         return {'name': name, 'zitat': zitat, 'doi': doi, 'bezugsrahmen': rahmen, 'laengengrad': laenge,
@@ -148,7 +138,7 @@ def main():
                               'doi:10.5281/zenodo.13636799', 'Mantel, optimiert nach tektonischen Regeln',
                               'Die Länge folgt aus einer Optimierung nach tektonischen Regeln (Modell), nicht aus einer Messung.',
                               ['modell', 'berechnet'], 'merdith', rot_mu, SCHRITTE, True),
-        'paleomap': modell('PALEOMAP v19o_r1c (Scotese)', 'Kocsis, Á. T., Scotese, C. R. (2021), Earth-Science Reviews, doi:10.1016/j.earscirev.2020.103463; Rotationsdatei m06c9h_3id_forPgeog_19o_r1c',
+        'paleomap': modell('PALEOMAP-Rotation v19o_r1c (Scotese)', 'Kocsis, Á. T., Scotese, C. R. (2021), Earth-Science Reviews, doi:10.1016/j.earscirev.2020.103463; Rotationsdatei m06c9h_3id_forPgeog_19o_r1c',
                            'doi:10.5281/zenodo.7994000', 'PALEOMAP (Paläomagnetik, Hotspots)', PMAG, ['rekonstruktion', 'berechnet'], 'paleomap', rot_pm, SCHRITTE, True),
         'cao2024': modell('Cao et al. 2024', 'Cao, X. et al. (2024): Earth\'s tectonic and plate boundary evolution over 1.8 billion years. Geoscience Frontiers 15(6), 101922',
                           'doi:10.5281/zenodo.13628813', 'paläomagnetisch', PMAG, ['rekonstruktion', 'berechnet'], 'cao', rot_c, SCHRITTE_CAO, False),
@@ -157,10 +147,10 @@ def main():
     umrisse = dict(
         erzeugt=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds'),
         hinweis='erzeugt von matrix-scharnier/adapter/tektonik.py',
-        woher=dict(kette='Plattenmodell (Rotationen) -> heutige Küstenumrisse gedreht (pyGPlates 1.0)',
+        woher=dict(kette='Plattenmodell (Rotationen) -> heutige Küsten- und Kontinentpolygone gedreht (pyGPlates 1.0)',
                    lizenz='CC BY 4.0 (alle vier Quellen, Zenodo, geprüft 2026-11-05); von zeroearth bearbeitet: Linien vereinfacht, Drehungen je Schritt berechnet',
                    form='Umriss heutig, nur die Lage ist rekonstruiert',
-                   verfahren=f'Douglas-Peucker {TOLERANZ}°, auf {STELLEN} Nachkommastelle gerundet; Drehung je Platte und Schritt aus pyGPlates get_rotation, ohne Identität für fehlende Platten'),
+                   verfahren=f'Polygone als ganze Ringe, Douglas-Peucker {TOLERANZ}° (Topologie erhalten), auf {STELLEN} Nachkommastelle gerundet; Drehung je Platte und Schritt aus pyGPlates get_rotation, ohne Identität für fehlende Platten'),
         zeit=dict(bezugssystem='ma_bp', unschaerfe=dict(fehlt=True, grund='Die Plattenmodelle nennen keine Unschärfe der Zeit; der Abstand der Schritte ist die Auflösung, nur eine Untergrenze')),
         geometrien=geo, modelle=modelle)
 
@@ -173,18 +163,18 @@ def main():
         z = np.ma.filled(d.variables['z'][:].astype(float), np.nan)
         lat = np.asarray(d.variables[[k for k in d.variables if k.lower().startswith('lat')][0]][:])
         lon = np.asarray(d.variables[[k for k in d.variables if k.lower().startswith('lon')][0]][:])
-        zuege = [linie(l.tolist()) for l in contourpy.contour_generator(lon, lat, z, line_type='Separate').lines(0.0)]
+        zuege = [linie(l.tolist(), toleranz=TOLERANZ_DEM) for l in contourpy.contour_generator(lon, lat, z, line_type='Separate').lines(0.0)]
         stufe = re.sub(r'^Map\d+_PALEOMAP_1deg_|_\d+(?:\.\d+)?Ma\.nc$', '', name).replace('_', ' ')
         karten.append({'ma': float(m.group(1)), 'stufe': stufe, 'datei': name, 'linien': [x for x in zuege if x]})
     karten.sort(key=lambda k: k['ma'])
     kuesten = dict(
         erzeugt=umrisse['erzeugt'], hinweis=umrisse['hinweis'],
         woher=dict(arten=['rekonstruktion', 'kuratiert', 'berechnet'],
-                   kette='PALEOMAP PaleoDEM (Scotese & Wright 2018) -> 0-m-Linie',
+                   kette='PALEOMAP-DEM (Scotese & Wright 2018) -> 0-m-Linie; unabhängig von der PALEOMAP-Rotation',
                    lizenz='CC BY 4.0, Scotese & Wright 2018, doi:10.5281/zenodo.5460860 (License.txt im Archiv); von zeroearth bearbeitet: 0-m-Linien abgeleitet',
                    form='Höhenkarte aus geologischen Belegen erstellt, nicht gemessen',
                    bezugsrahmen='Koordinaten der Paläo-DEMs (PALEOMAP), nicht die der Plattenmodelle',
-                   verfahren=f'Kontur bei 0 m auf 1°, linear zwischen Gitterpunkten; Douglas-Peucker {TOLERANZ}°, {STELLEN} Nachkommastelle'),
+                   verfahren=f'Kontur bei 0 m auf 1°, linear zwischen Gitterpunkten; Douglas-Peucker {TOLERANZ_DEM}°, {STELLEN} Nachkommastelle'),
         zeit=dict(bezugssystem='ma_bp', aufloesung_ma=5,
                   unschaerfe=dict(fehlt=True, grund='Die Paläo-DEMs nennen keine Unschärfe der Zeit; die Alter sind Kartenalter je Stufe')),
         raum=dict(aufloesung_grad=1, unschaerfe=dict(fehlt=True, grund='Die Paläo-DEMs nennen keine Unschärfe der Höhen; 1° ist die Auflösung')),
@@ -197,7 +187,7 @@ def main():
     for k, m in modelle.items():
         for t in ([100, 500, 1000] if k != 'cao2024' else [1100, 1500, 1800]):
             gefunden = 0
-            for f in geo[m['geometrie']]['merkmale']:
+            for f in geo[m['geometrie']]['kueste']:
                 von = float('inf') if f['von'] == 'offen' else f['von']
                 bis = float('-inf') if f['bis'] == 'offen' else f['bis']
                 if not (bis <= t <= von):

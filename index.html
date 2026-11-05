@@ -21,6 +21,15 @@
     *{margin:0;padding:0;box-sizing:border-box;}
     body{background:#000;color:var(--text);font-family:var(--ui);overflow:hidden;height:100vh;}
 
+    #referenz-hinweis{position:fixed;top:88px;left:50%;transform:translateX(-50%);z-index:35;padding:5px 12px;border-radius:3px;
+      background:rgba(120,60,10,.9);border:1px solid #e8a54a;color:#ffe2b8;font:600 11px var(--ui);letter-spacing:.04em;pointer-events:none;}
+    #referenz-hinweis[hidden]{display:none;}
+    .tw-wahl{display:block;font-size:10px;line-height:1.5;color:#2b3020;cursor:pointer;}
+    .tw-wahl input{margin-right:4px;vertical-align:-1px;}
+    .tw-auto{cursor:default;opacity:.8;}
+    .lg-farben{margin-top:3px;font-size:9px;color:#aeb6c4;line-height:1.5;}
+    .lg-farbe{display:inline-block;width:14px;height:8px;margin-right:5px;border-radius:1px;vertical-align:0;}
+    .lg-farbe.linie{height:2px;vertical-align:2px;}
     /* ── Touren: Seite rechts, freier Modus tritt zurück. Grau heißt: keine Daten (Regel 8). ── */
     #tour-start{margin:0 0 9px;position:relative;}
     #tour-start>button{width:100%;padding:8px 10px;background:var(--accent);border:0;border-radius:3px;color:#04101d;
@@ -493,6 +502,7 @@
 </div>
 
 <div id="netz-fach"></div>
+<div id="referenz-hinweis" hidden>REFERENZ: heutige Erde, nicht die der Masterzeit</div>
 <div id="ov"></div>
 
 <div id="ui">
@@ -590,9 +600,10 @@
       <div class="sub-head" data-sub="erdsystem"></div>
       <div class="ob ov-side" id="tb-sintflut" onclick="ze.toggle('sintflut')"><div class="obd"></div>Sintflut: Küsten, Kästen ◐</div>
       <div class="ov-status" id="sintflut-status"></div>
-      <div class="ob ov-side" id="tb-tektonik" onclick="ze.toggle('tektonik')"><div class="obd"></div>Tektonik: Umrisse, drei Modelle ○◐</div>
+      <div class="ob ov-side" id="tb-tektonik" onclick="ze.toggle('tektonik')"><div class="obd"></div>Tektonik: Kontinente (Standard Merdith 2021) ◐</div>
       <div class="ov-status" id="tektonik-status"></div>
-      <div class="ob ov-side" id="tb-palaeokueste" onclick="ze.toggle('palaeokueste')"><div class="obd"></div>Paläoküsten (PALEOMAP-DEM) ◐▨</div>
+      <div class="ov-status" id="tektonik-wahl" style="display:block"></div>
+      <div class="ob ov-side" id="tb-palaeokueste" onclick="ze.toggle('palaeokueste')"><div class="obd"></div>Paläoküsten (PALEOMAP-DEM, 540–0 Ma) ◐▨</div>
       <div class="ov-status" id="palaeokueste-status"></div>
       <div class="ob ov-side" id="tb-erste_natur" onclick="ze.toggle('erste_natur')"><div class="obd"></div>Materialbestände ●</div>
       <div class="ov-status" id="erste_natur-status"></div>
@@ -1606,6 +1617,7 @@ class SolarSystem2D {
 
   /* ── Sonnensystem top-down ──────────────────────────────────────── */
   _drawSolarSystem(ctx, cx, cy, T, scale, innerOnly) {
+    if (!bahnGilt()) { this._bahnFehlt(ctx, cx, cy, scale); return; }
     const planets = Object.keys(KEL);
     const visible = innerOnly
       ? ['merkur','venus','erde','mars']
@@ -1831,7 +1843,18 @@ class SolarSystem2D {
   }
 
   /* ── Erdnahraum: Erde + Mond ───────────────────────────────────── */
+  /** Außerhalb des Gültigkeitsbereichs: nur die Sonne, und der Grund, warum der Rest fehlt. */
+  _bahnFehlt(ctx, cx, cy, scale) {
+    this._drawSun(ctx, cx, cy, (scale || 40) * 0.06);
+    ctx.save(); ctx.fillStyle = '#9aa3b2'; ctx.font = '11px DM Sans, sans-serif'; ctx.textAlign = 'center';
+    const zeilen = ['Planeten und Mond fehlen in dieser Zeit.', 'Bahnmodell (Standish, JPL, Tabelle 1) gilt 1800–2050 CE;',
+      'in der Erdzeit waren Tag kürzer und Mond näher (Gezeitenreibung),', 'die Bahnen anders. Das Modell kennt das nicht.'];
+    zeilen.forEach((z, i) => ctx.fillText(z, cx, cy + 60 + i * 16));
+    ctx.restore();
+  }
+
   _drawErdnahraum(ctx, cx, cy, T) {
+    if (!bahnGilt()) { this._bahnFehlt(ctx, cx, cy, 40); return; }
     const moon=moonEcliptic(T);
     const scale=0.0006; // px/km → Mondorbit ~230px Radius
 
@@ -2165,7 +2188,8 @@ const LEGENDE = {
   grundbild:   { h: 'Natural Earth II (Cesium-Textur)', z: 'ohne Zeitbezug' },
   landumrisse: { h: 'Natural Earth 110 m, gemeinfrei', z: 'ohne Zeitbezug' },
   gradnetz:    { h: 'geometrisch, keine Daten', z: 'ohne Zeitbezug' },
-  sonnensystem:{ h: 'berechnet im Browser (Bahnmodell)', z: 'Masterzeit' },
+  sonnensystem:{ h: 'berechnet im Browser (Bahnmodell Standish, JPL, Tabelle 1)', get z() { return bahnGilt() ? 'Masterzeit (Bahnmodell gilt 1800–2050 CE)' : 'fehlt: Masterzeit außerhalb 1800–2050 CE'; },
+                 get warn() { return bahnGilt() ? undefined : BAHN_FEHLT; } },
   // Marker (data/marker.json)
   ueberbau:    { h: 'data/marker.json (kuratiert, unvollständig)', z: 'Masterzeit', karte: true },
   riss:        { h: 'data/marker.json (kuratiert, unvollständig)', z: 'Masterzeit', karte: true },
@@ -2175,8 +2199,8 @@ const LEGENDE = {
   erste_natur: { h: 'data/marker.json (kuratiert, unvollständig)', z: 'Masterzeit', karte: true },
   pm:          { h: 'data/marker.json (kuratiert, unvollständig)', z: 'Masterzeit', karte: true },
   // Erde, Erdsystem
-  moon:        { h: 'berechnet: gekürzte Näherungsreihe der Mondbahn', z: 'Masterzeit' },
-  tidal:       { h: 'berechnet aus der Mondposition', z: 'Masterzeit' },
+  moon:        { h: 'berechnet: gekürzte Näherungsreihe der Mondbahn (Meeus)', get z() { return bahnGilt() ? 'Masterzeit (Zeitraum 1800–2050 CE gesetzt)' : 'fehlt außerhalb 1800–2050 CE'; }, get warn() { return bahnGilt() ? undefined : BAHN_FEHLT; } },
+  tidal:       { h: 'berechnet aus der Mondposition', get z() { return bahnGilt() ? 'Masterzeit (Zeitraum 1800–2050 CE gesetzt)' : 'fehlt außerhalb 1800–2050 CE'; } },
   magfield:    { h: 'IGRF-Dipol (Näherung)', z: 'ohne Zeitbezug' },
   solarwind:   { h: 'NOAA SWPC (DSCOVR/ACE), live; Pfeile schematisch', z: 'jetzt (live)' },
   sats:        { h: 'CelesTrak (GROUP=active), Fallback data/tle/active.txt; SGP4', z: 'Gegenwart; ausgeblendet, wenn Masterzeit mehr als ±5 a von heute', karte: true },
@@ -2195,13 +2219,16 @@ const LEGENDE = {
   satbild:     { h: 'VIIRS SNPP True Color · NASA GIBS', m: 250 },
   nachtlicht:  { h: 'VIIRS Day/Night Band · NASA GIBS', m: 500 },
   sintflut:    { h: 'PaleoMIST 1.0 -> 0-m-Linie (rekonstruktion, berechnet; CC BY 4.0); Kästen: Setzung',
+                 farben: [{ farbe: '#8fe89a', text: 'grüne Linie: Küste (0-m-Linie) im Fenster', linie: true }, { farbe: '#e8e2c8', text: 'helle gestrichelte Linie: Kasten des Fensters (Setzung)', linie: true }],
                  get z() { const l = ze.sintflutLayer, i = l?.aktuellerSchritt(); return i === null || i === undefined ? 'außerhalb von 20–0 ka BP: keine Linie' : `${tourKa(l.schritte[i])} ka BP (Bezug 1950), Schritt 2,5 ka; Unschärfe fehlt`; },
                  m: 28e3, warn: 'isostatische Deformation enthalten; Sedimentation nicht berücksichtigt' },
-  tektonik:    { h: 'Plattenmodelle -> heutige Küstenumrisse gedreht (pyGPlates): Merdith 2021 ● gelb, Müller 2022 (Mantelbezug, Modell) lila gestrichelt, PALEOMAP v19o türkis gestrichelt, Cao 2024 > 1 Ga rot; CC BY 4.0',
+  tektonik:    { h: 'Plattenmodelle -> heutige Kontinent- und Küstenpolygone gedreht (pyGPlates); Standard Merdith 2021, weitere Ideale zuschaltbar: Müller 2022 (Mantelbezug, Modell), PALEOMAP-Rotation v19o; jenseits 1 Ga Cao 2024; CC BY 4.0',
                  get z() { return ze.tektonikLayer?.zeit() ?? 'keine Linie'; },
-                 warn: 'Umriss heutig, nur die Lage ist rekonstruiert. Im paläomagnetischen Bezug ist die Länge eine Konvention des Modells, keine Messung.' },
-  palaeokueste:{ h: 'PALEOMAP PaleoDEM (Scotese & Wright 2018) -> 0-m-Linie, 1° (rekonstruktion, kuratiert, berechnet; CC BY 4.0)',
+                 get farben() { return ze.tektonikLayer?.farben() ?? []; },
+                 warn: 'Form heutig, nur die Lage ist rekonstruiert. Im paläomagnetischen Bezug ist die Länge eine Konvention des Modells, keine Messung.' },
+  palaeokueste:{ h: 'PALEOMAP-DEM (Scotese & Wright 2018) -> 0-m-Linie, 1° (rekonstruktion, kuratiert, berechnet; CC BY 4.0); nicht die PALEOMAP-Rotation',
                  get z() { return ze.palaeokuesteLayer?.zeit() ?? 'keine Linie'; }, m: 111e3,
+                 get farben() { return ze.palaeokuesteLayer?.farben() ?? []; },
                  warn: 'Höhenkarte aus geologischen Belegen erstellt, nicht gemessen; Koordinaten der Paläo-DEMs, nicht der Plattenmodelle' },
   // Linsen (Rasterebenen)
   coastLayer:     { name: 'Paläotopographie/Küste', h: 'PaleoMIST 1.0 · paleo_topography', z: 'Masterzeit (0–80 ka BP)', m: 111e3 },
@@ -2365,7 +2392,7 @@ class DM {
 
   _moon(on) {
     ['mEnt','mOrb'].forEach(k=>{if(this._ent[k]){this.v.entities.remove(this._ent[k]);this._ent[k]=null;}});
-    if(!on) return;
+    if(!on || !bahnGilt()) return;     // außerhalb 1800–2050 CE fehlt der Mond (Legende nennt den Grund)
     const T=Tideline.toJulianCenturies(), m=moonEcliptic(T);
     const mPos=Cesium.Cartesian3.fromDegrees(m.lonDeg,m.latDeg,m.distKm*1000-RE_m);
     this._ent.mEnt=this.v.entities.add({
@@ -2392,7 +2419,7 @@ class DM {
 
   _tidal(on) {
     if(this._ent.tidal){this.v.entities.remove(this._ent.tidal);this._ent.tidal=null;}
-    if(!on) return;
+    if(!on || !bahnGilt()) return;
     const T=Tideline.toJulianCenturies(), m=moonEcliptic(T);
     const mPos=Cesium.Cartesian3.fromDegrees(m.lonDeg,m.latDeg,m.distKm*1000-RE_m);
     this._ent.tidal=this.v.entities.add({polyline:{
@@ -4875,6 +4902,7 @@ class ZeroEarth {
       `<div class="lg-h">Herkunft: <b>${esc(e.h ?? 'nicht angegeben')}</b></div>` +
       `<div class="lg-z">Zeit: <b>${esc(e.z === 'Masterzeit' ? `Masterzeit (${tlv})` : (e.z ?? 'nicht angegeben'))}</b></div>` +
       (e.warn ? `<div class="lg-warn">${esc(e.warn)}</div>` : '') +
+      ((e.farben ?? []).length ? `<div class="lg-farben">${e.farben.map(f => `<div><span class="lg-farbe${f.linie ? ' linie' : ''}" style="background:${f.farbe}"></span>${esc(f.text)}</div>`).join('')}</div>` : '') +
       (globus && grob(e) ? `<div class="lg-z">${esc(grob(e))}</div>` : '') + '</div>';
     const name = k => document.getElementById('tb-' + k)?.textContent.trim() || k;
     const L = LEGENDE;
@@ -4892,9 +4920,12 @@ class ZeroEarth {
     } else {
       const globus = this.ansicht === 'globus' || this.miniGlobus;
       const raster = [];   // was nur der Globus zeigt
-      raster.push(['Grundbild', this._tief
-        ? { ...L.grundbild, z: `heutiges Bild, ohne Zeitbezug; ab ${GRUNDBILD_TIEFE_MA} Ma grau und abgedunkelt`, warn: 'zeigt die heutige Erde, nicht die der Masterzeit' }
-        : L.grundbild]);
+      const tief = tektonikMa(Tideline.t) >= GRUNDBILD_TIEFE_MA;
+      if (!tief) raster.push(['Grundbild', L.grundbild]);
+      else {
+        raster.push(['Grundbild: neutrale Kugel mit Gradnetz', { h: 'keine Daten; Gradnetz geometrisch (20°)', z: `Tiefenzeit ab ${GRUNDBILD_TIEFE_MA} Ma: heutiges Bild ausgeblendet` }]);
+        if (this.referenzBild) raster.push(['REFERENZ: heutige Erde (zugeschaltet)', { ...L.grundbild, z: 'ohne Zeitbezug; grau, halb durchsichtig', warn: 'zeigt die heutige Erde, nicht die der Masterzeit' }]);
+      }
       if (this.satbild) raster.push([name('satbild'), { ...L.satbild, z: `${this.satbildTag} (fest)` }]);
       if (this.nachtlicht) raster.push([name('nachtlicht'), { ...L.nachtlicht, z: `${this.nachtlichtTag} (fest)` }]);
       for (const [linse, keys] of Object.entries(LENSES)) {
@@ -5128,6 +5159,11 @@ class ZeroEarth {
   _renderMoonPanel() {
     const cv = document.getElementById('moon-canvas');
     if (!cv || !document.getElementById('moon-panel')?.classList.contains('vis')) return;
+    if (!bahnGilt()) {
+      cv.getContext('2d').clearRect(0, 0, 76, 76);
+      for (const id of ['mp-phase', 'mp-dist', 'mp-dec', 'mp-ekl']) { const el = document.getElementById(id); if (el) el.textContent = id === 'mp-phase' ? 'fehlt: Mondreihe gilt 1800–2050 CE (gesetzt)' : '—'; }
+      return;
+    }
     const s = MoonState.at(Tideline.t);
     const x = cv.getContext('2d'), R = 34, cx = 38, cy = 38;
     x.clearRect(0, 0, 76, 76);
@@ -5292,15 +5328,37 @@ class ZeroEarth {
      0,25° der Umrisse); dann werden diese Bilder grau und dunkel, damit sie
      nicht als Bild der Zeit gelesen werden. Abgeschaltet wird nichts: Sie
      bleiben Orientierung im heutigen Gradnetz und stehen so in der Legende. */
+  /* Tiefenzeit (ab GRUNDBILD_TIEFE_MA): neutrale, einfarbige Kugel mit Gradnetz.
+     Das heutige Bild (Grundbild, Satellitenbild, Nachtlichter) ist ausgeblendet
+     und nur als Referenz zuschaltbar, dann grau, halb durchsichtig und oben
+     im Bild als Referenz markiert. Auch der Wassereffekt der Kugel zeigt die
+     heutigen Ozeane und ist in der Tiefe aus. */
   _grundbildTiefe() {
-    const tief = tektonikMa(Tideline.t) >= GRUNDBILD_TIEFE_MA;
+    const tief = tektonikMa(Tideline.t) >= GRUNDBILD_TIEFE_MA, ref = tief && !!this.referenzBild;
+    const g = this.cesiumV?.scene.globe;
+    if (g) {
+      this._grundFarbe ??= g.baseColor.clone();
+      g.baseColor = tief ? Cesium.Color.fromCssColorString('#39414d') : this._grundFarbe;
+      g.showWaterEffect = !tief;
+      g.showGroundAtmosphere = !tief;     // sonst färbt die Atmosphäre die neutrale Kugel blau
+    }
     for (const lay of [this.grundbild, this.satbild, this.nachtlicht]) {
       if (!lay) continue;
-      lay.saturation = tief ? 0 : 1;
-      lay.brightness = tief ? 0.35 : 1;
+      lay.show = !tief || ref;
+      lay.saturation = ref ? 0 : 1; lay.brightness = ref ? 0.6 : 1; lay.alpha = ref ? 0.45 : 1;
     }
-    if (tief !== this._tief) { this._tief = tief; this.zeichneLegende?.(); }
+    if (tief && !this._gradnetz) {
+      this._gradnetz = this.cesiumV.imageryLayers.addImageryProvider(new Cesium.GridImageryProvider({
+        cells: 9, color: Cesium.Color.fromCssColorString('#c8d2e0').withAlpha(0.35), glowColor: Cesium.Color.TRANSPARENT,
+        backgroundColor: Cesium.Color.TRANSPARENT, glowWidth: 0 }));
+    } else if (!tief && this._gradnetz) { this.cesiumV.imageryLayers.remove(this._gradnetz, false); this._gradnetz = null; }
+    if (this._gradnetz) this.cesiumV.imageryLayers.raiseToTop(this._gradnetz);
+    const hin = document.getElementById('referenz-hinweis');
+    if (hin) hin.hidden = !ref || this.natur !== 'erde';
+    const zustand = `${tief}|${ref}`;
+    if (zustand !== this._tief) { this._tief = zustand; this.tektonikLayer?._wahl(); this.zeichneLegende?.(); }
   }
+  schalteReferenz() { this.referenzBild = !this.referenzBild; this._tief = undefined; this._grundbildTiefe(); }
 
   _refreshMatrixLayers() {
     const t = Tideline.t;
@@ -5391,16 +5449,22 @@ class ZeroEarth {
     ctx.strokeStyle='rgba(60,90,160,.4)'; ctx.lineWidth=.5;
     ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.stroke();
 
-    // Erde
-    const ex = cx + Math.cos(ang)*R, ey = cy - Math.sin(ang)*R;
-    ctx.fillStyle='#4488ff'; ctx.beginPath(); ctx.arc(ex,ey,2.5,0,Math.PI*2); ctx.fill();
+    // Erde (nur im Gültigkeitsbereich des Bahnmodells)
+    if (bahnGilt(t)) {
+      const ex = cx + Math.cos(ang)*R, ey = cy - Math.sin(ang)*R;
+      ctx.fillStyle='#4488ff'; ctx.beginPath(); ctx.arc(ex,ey,2.5,0,Math.PI*2); ctx.fill();
+    }
 
     // Info je nach Zeitskala
     const titleEl = document.getElementById('mini-title');
     const valEl   = document.getElementById('mini-val');
     const subEl   = document.getElementById('mini-sub');
 
-    if (Math.abs(aBP) < 5000) {
+    if (!bahnGilt(t)) {
+      titleEl.textContent = 'NullNatur · Bahnmodell';
+      valEl.textContent = takt.text(t);
+      subEl.textContent = 'Bahn fehlt: Modell gilt 1800–2050 CE';
+    } else if (Math.abs(aBP) < 5000) {
       // kurze Skala: Position im Jahr (Jahreszeit)
       const month = ((ang/(Math.PI*2))*12 + 12) % 12;
       const seasons = ['Frühling','Sommer','Herbst','Winter'];
@@ -5511,27 +5575,56 @@ class SintflutLayer {
    · Paläoküsten: 0-m-Linie der PALEOMAP-Paläo-DEMs, 540–0 Ma.
    Nur Stützstellen der Quelle; dazwischen bleibt die Ebene leer.
    ───────────────────────────────────────────────────────────────── */
-const TEKTONIK_FARBE = { merdith2021: '#f2b45a', mueller2022: '#c79cf2', paleomap: '#6fd0ea', cao2024: '#f27f7f' };
-const TEKTONIK_STRICH = { merdith2021: null, mueller2022: 14, paleomap: 6, cao2024: null };
-/** Ma vor heute aus der internen Masterzeit t (Jahre seit J2000). Nur zur Wahl des Schritts. */
+const TEKTONIK_FARBE = { merdith2021: '#e0a656', mueller2022: '#b48ee8', paleomap: '#5fc4e0', cao2024: '#e07a7a' };
+const PALAEOKUESTE_FARBE = '#f2ee9a';
 const tektonikMa = t => Math.max(0, -t / 1e6);
-/** Ab hier (Ma vor heute) wird das heutige Grundbild grau und dunkel; Begründung bei _grundbildTiefe. */
+/** Ab hier (Ma vor heute) gilt die Tiefenzeit: neutrale Kugel statt heutigem Bild. */
 const GRUNDBILD_TIEFE_MA = 1;
+/** Bahnmodell der Planeten: Standish (JPL), Keplersche Elemente, Tabelle 1, gültig 1800–2050 CE.
+    Die Mondreihe (Meeus, gekürzt) nennt keinen Zeitraum; gesetzt wird derselbe (Setzung). */
+const BAHN_GUELTIG = { von: 1800, bis: 2050 };
+const bahnGilt = (t = Tideline.t) => 2000 + t >= BAHN_GUELTIG.von && 2000 + t <= BAHN_GUELTIG.bis;
+const BAHN_FEHLT = 'Bahnmodell gilt 1800–2050 CE (Standish, JPL, Tabelle 1; Mond: gekürzte Meeus-Reihe, Zeitraum gesetzt). '
+  + 'Außerhalb fehlt es: In der Erdzeit waren Tag kürzer und Mond näher (Gezeitenreibung), die Bahnen anders; das Modell kennt das nicht.';
 
+/* ─────────────────────────────────────────────────────────────────
+   TEKTONIK — zwei getrennte Ebenen (nie gemischt):
+   · Umrisse: Kontinentpolygone der Plattenmodelle, gefüllt; Küstenpolygone
+     als Linien nur zuschaltbar. Standard ein Modell (Merdith 2021); Müller
+     2022 und PALEOMAP-Rotation zuschaltbar (Regel 13: alle Ideale verfügbar,
+     in der Legende genannt). Jenseits von 1 Ga Cao 2024 als einziges Modell.
+     Drehungen aus pyGPlates (data/tektonik_umrisse.json), angewendet mit
+     kern/adapter/tektonik/drehen.mjs, das der Kern-Test gegen pyGPlates prüft.
+   · Paläoküsten: 0-m-Linie der PALEOMAP-DEMs (Scotese & Wright), 540–0 Ma;
+     unabhängig von der PALEOMAP-Rotation.
+   Nur Stützstellen der Quelle; dazwischen bleibt die Ebene leer.
+   ───────────────────────────────────────────────────────────────── */
 class TektonikLayer {
-  constructor(v, art) { this.v = v; this.art = art; this.on = false; this.daten = null; this._schluessel = undefined; this.stand = []; }
+  constructor(v, art) {
+    this.v = v; this.art = art; this.on = false; this.daten = null; this._schluessel = undefined; this.stand = [];
+    this.aktiv = new Set(['merdith2021']); this.kuesten = false; this.flaechen = new Map();
+  }
   async laden() {
     this.dreh ??= await import('./kern/adapter/tektonik/drehen.mjs');
     if (!this.daten) this.daten = await fetch(this.art === 'umrisse' ? 'data/tektonik_umrisse.json' : 'data/tektonik_palaeokuesten.json').then(r => r.json());
     return this.daten;
   }
   async show() { this.on = true; await this.laden(); if (!this.on) return; this._schluessel = undefined; this.update(Tideline.t); }
-  hide() {
-    this.on = false; this._schluessel = undefined; this.stand = [];
+  _leeren() {
     if (this.linien) { this.v.scene.primitives.remove(this.linien); this.linien = null; }
-    const st = document.getElementById(`${this.art === 'umrisse' ? 'tektonik' : 'palaeokueste'}-status`); if (st) st.textContent = '';
+    for (const l of this.flaechen.values()) this.v.imageryLayers.remove(l, false);
+    this.flaechen.clear();
   }
-  /** Lange Abschnitte auf der Kugel unterteilen, damit die Sehne nicht unter die Oberfläche taucht (räumlich, nicht zeitlich). */
+  hide() {
+    this.on = false; this._schluessel = undefined; this.stand = []; this._leeren();
+    const st = document.getElementById(`${this.statusId}`); if (st) st.textContent = '';
+    if (this.art === 'umrisse') document.getElementById('tektonik-wahl')?.replaceChildren();
+  }
+  get statusId() { return this.art === 'umrisse' ? 'tektonik-status' : 'palaeokueste-status'; }
+  schalte(k) { this.aktiv.has(k) ? this.aktiv.delete(k) : this.aktiv.add(k); this._schluessel = undefined; this.update(Tideline.t); }
+  schalteKuesten() { this.kuesten = !this.kuesten; this._schluessel = undefined; this.update(Tideline.t); }
+
+  /** Lange Abschnitte unterteilen, damit die Sehne nicht unter die Oberfläche taucht (räumlich, nicht zeitlich). */
   static punkte(zug) {
     const aus = [];
     for (let i = 0; i < zug.length; i++) {
@@ -5546,45 +5639,92 @@ class TektonikLayer {
     }
     return aus;
   }
+  /** Gefüllte Polygone als Bild (gleichabständig). Ringe über die Datumsgrenze werden
+      fortlaufend abgewickelt und dreifach versetzt gezeichnet; ein Ring um einen Pol
+      wird über den Pol geschlossen. */
+  static flaechenbild(ringe, farbe) {
+    const W = 2048, H = 1024, c = document.createElement('canvas'); c.width = W; c.height = H;
+    const x = c.getContext('2d'); x.fillStyle = farbe;
+    const px = lo => (lo + 180) / 360 * W, py = la => (90 - la) / 180 * H;
+    for (const r of ringe) {
+      const u = [r[0].slice()];
+      for (let i = 1; i < r.length; i++) {
+        let lo = r[i][0]; const prev = u[i - 1][0];
+        while (lo - prev > 180) lo -= 360; while (lo - prev < -180) lo += 360;
+        u.push([lo, r[i][1]]);
+      }
+      const umlauf = u.at(-1)[0] - u[0][0];
+      if (Math.abs(umlauf) > 180) {               // umschließt einen Pol
+        const pol = u.reduce((s, p) => s + p[1], 0) > 0 ? 90 : -90;
+        u.push([u.at(-1)[0], pol], [u[0][0], pol]);
+      }
+      for (const off of [-360, 0, 360]) {
+        x.beginPath();
+        u.forEach(([lo, la], i) => (i ? x.lineTo : x.moveTo).call(x, px(lo + off), py(la)));
+        x.closePath(); x.fill();
+      }
+    }
+    return c.toDataURL();
+  }
+  _wahl() {
+    const el = document.getElementById('tektonik-wahl');
+    if (!el || this.art !== 'umrisse' || !this.daten || !this.on) return;
+    const d = this.daten, ma = tektonikMa(Tideline.t);
+    const box = (k, an, text, onclick) => `<label class="tw-wahl"><input type="checkbox" ${an ? 'checked' : ''} onchange="${onclick}"><span style="color:${TEKTONIK_FARBE[k] ?? '#ccc'}">■</span> ${tourEsc(text)}</label>`;
+    el.innerHTML =
+      ['merdith2021', 'mueller2022', 'paleomap'].map(k => box(k, this.aktiv.has(k), `${d.modelle[k].name} · ${d.modelle[k].bezugsrahmen}`, `ze.tektonikLayer.schalte('${k}')`)).join('') +
+      `<div class="tw-wahl tw-auto"><span style="color:${TEKTONIK_FARBE.cao2024}">■</span> ${tourEsc(d.modelle.cao2024.name)}: jenseits von 1 Ga automatisch (einziges Modell)</div>` +
+      `<label class="tw-wahl"><input type="checkbox" ${this.kuesten ? 'checked' : ''} onchange="ze.tektonikLayer.schalteKuesten()"> Küstenpolygone als Linien (heutige Form)</label>` +
+      `<label class="tw-wahl"><input type="checkbox" ${ze.referenzBild ? 'checked' : ''} onchange="ze.schalteReferenz()"> Heutige Erde als Referenz (Tiefenzeit)</label>`;
+  }
   update(t) {
     if (!this.on || !this.daten) return;
     const ma = tektonikMa(t), d = this.daten, D = this.dreh;
-    const wahl = this.art === 'umrisse'
-      ? Object.entries(d.modelle).map(([k, m]) => [k, D.schrittBei(m.schritte_ma, ma)])
-      : [['paleomap_dem', D.schrittBei(d.karten.map(k => k.ma), ma)]];
-    const schluessel = wahl.map(([k, i]) => `${k}:${i}`).join('|');
+    let wahl;
+    if (this.art === 'umrisse') {
+      const zeige = Object.keys(d.modelle).filter(k => k === 'cao2024' || this.aktiv.has(k));
+      wahl = zeige.map(k => [k, D.schrittBei(d.modelle[k].schritte_ma, ma)]);
+    } else wahl = [['paleomap_dem', D.schrittBei(d.karten.map(k => k.ma), ma)]];
+    const schluessel = wahl.map(([k, i]) => `${k}:${i}`).join('|') + `|${this.kuesten}`;
     if (schluessel === this._schluessel) return;
     this._schluessel = schluessel;
-    if (this.linien) this.v.scene.primitives.remove(this.linien);
+    this._leeren();
     this.linien = this.v.scene.primitives.add(new Cesium.PolylineCollection());
     this.stand = [];
+    const mehrere = wahl.filter(([, i]) => i !== null).length > 1;
     for (const [k, i] of wahl) {
       if (i === null) { this.stand.push({ k, ma: null }); continue; }
-      const farbe = Cesium.Color.fromCssColorString(TEKTONIK_FARBE[k] ?? '#b8f08f');
-      const material = TEKTONIK_STRICH[k]
-        ? Cesium.Material.fromType('PolylineDash', { color: farbe, dashLength: TEKTONIK_STRICH[k] })
-        : Cesium.Material.fromType('Color', { color: farbe });
-      let n = 0;
       if (this.art === 'umrisse') {
-        const m = d.modelle[k], s = m.schritte_ma[i], rot = m.rotationen[i];
+        const m = d.modelle[k], s = m.schritte_ma[i], rot = m.rotationen[i], geo = d.geometrien[m.geometrie];
         const platte = new Map(m.platten.map((p, j) => [p, j]));
-        for (const f of d.geometrien[m.geometrie].merkmale) {
-          if (!D.gilt(f, s)) continue;
+        const gedreht = liste => liste.flatMap(f => {
+          if (!D.gilt(f, s)) return [];
           const r = rot[platte.get(f.p)];
-          if (!r) continue;                       // keine Drehung: nicht zeigen, nie an heutiger Lage
-          for (const zug of f.l) { this.linien.add({ width: 1.3, material, positions: TektonikLayer.punkte(zug.map(p => D.drehe(p, r))) }); n++; }
+          return r ? f.l.map(ring => ring.map(p => D.drehe(p, r))) : [];   // keine Drehung: nicht zeigen, nie an heutiger Lage
+        });
+        const flaechen = gedreht(geo.kontinente);
+        const lay = this.v.imageryLayers.addImageryProvider(new Cesium.SingleTileImageryProvider({
+          url: TektonikLayer.flaechenbild(flaechen, TEKTONIK_FARBE[k]), rectangle: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90), tileWidth: 2048, tileHeight: 1024 }));
+        lay.alpha = mehrere ? 0.45 : 0.78;
+        this.flaechen.set(k, lay);
+        let n = 0;
+        if (this.kuesten) {
+          const material = Cesium.Material.fromType('Color', { color: Cesium.Color.fromCssColorString(TEKTONIK_FARBE[k]).brighten(0.35, new Cesium.Color()) });
+          for (const ring of gedreht(geo.kueste)) { this.linien.add({ width: 1.1, material, positions: TektonikLayer.punkte(ring) }); n++; }
         }
-        this.stand.push({ k, ma: s, n, name: m.name });
+        this.stand.push({ k, ma: s, n: flaechen.length, name: m.name });
       } else {
         const karte = d.karten[i];
-        for (const zug of karte.linien) { this.linien.add({ width: 1.4, material, positions: TektonikLayer.punkte(zug) }); n++; }
-        this.stand.push({ k, ma: karte.ma, n, name: karte.stufe });
+        const material = Cesium.Material.fromType('Color', { color: Cesium.Color.fromCssColorString(PALAEOKUESTE_FARBE) });
+        for (const zug of karte.linien) this.linien.add({ width: 1.4, material, positions: TektonikLayer.punkte(zug) });
+        this.stand.push({ k, ma: karte.ma, n: karte.linien.length, name: `PALEOMAP-DEM, ${karte.stufe}` });
       }
     }
-    const st = document.getElementById(`${this.art === 'umrisse' ? 'tektonik' : 'palaeokueste'}-status`);
+    const st = document.getElementById(this.statusId);
     if (st) st.innerHTML = this.stand.map(x => x.ma === null
-      ? `<span class="ds-err">${tourEsc(this.art === 'umrisse' ? d.modelle[x.k].name : 'Paläo-DEM')}: kein Schritt bei ${tourKa(ma)} Ma</span>`
-      : `<span style="color:${TEKTONIK_FARBE[x.k] ?? '#b8f08f'}">■</span> ${tourEsc(x.name)}: ${tourKa(x.ma)} Ma`).join('<br>');
+      ? `<span class="ds-err">${tourEsc(this.art === 'umrisse' ? d.modelle[x.k].name : 'PALEOMAP-DEM')}: ${this.art === 'umrisse' ? `kein Schritt bei ${takt.zahl(ma, 1)} Ma` : 'fehlt, die Paläo-DEMs reichen nur 540–0 Ma'}</span>`
+      : `<span style="color:${this.art === 'umrisse' ? TEKTONIK_FARBE[x.k] : PALAEOKUESTE_FARBE}">■</span> ${tourEsc(x.name)}: ${takt.zahl(x.ma, 1)} Ma`).join('<br>');
+    this._wahl();
     ze.zeichneLegende?.();
   }
   /** Für die Takt-Leiste: je Modell bzw. Paläo-DEM Stützstellen und gewählter Schritt. */
@@ -5596,13 +5736,22 @@ class TektonikLayer {
       return { name, einheit: 'Ma', farbe, werte: s, abdeckung: { von: Math.max(...s), bis: Math.min(...s) },
         gewaehlt: i === null || i === undefined ? null : s[i], unschaerfe_fehlt: true, zuT: takt.tMa };
     };
-    if (this.art === 'umrisse') return Object.entries(this.daten.modelle).map(([k, m]) => eintrag(m.name, TEKTONIK_FARBE[k], m.schritte_ma));
-    return [eintrag('Paläoküsten (PALEOMAP-DEM)', '#b8f08f', this.daten.karten.map(k => k.ma))];
+    if (this.art === 'umrisse') return Object.entries(this.daten.modelle).filter(([k]) => k === 'cao2024' || this.aktiv.has(k))
+      .map(([k, m]) => eintrag(m.name, TEKTONIK_FARBE[k], m.schritte_ma));
+    return [eintrag('PALEOMAP-DEM (Paläoküsten)', PALAEOKUESTE_FARBE, this.daten.karten.map(k => k.ma))];
   }
-  /** Zeile für die Legende: welche Quelle bei welchem Schritt. */
+  /** Farben für die Legende: jede Farbe benannt. */
+  farben() {
+    if (!this.daten) return [];
+    if (this.art !== 'umrisse') return this.stand.some(x => x.ma !== null) ? [{ farbe: PALAEOKUESTE_FARBE, text: 'hellgelbe Linie: 0-m-Linie des PALEOMAP-DEM (Paläoküste der Zeit)', linie: true }] : [];
+    return this.stand.filter(x => x.ma !== null).flatMap(x => [
+      { farbe: TEKTONIK_FARBE[x.k], text: `Fläche: Kontinentpolygone, ${this.daten.modelle[x.k].name}, ${takt.zahl(x.ma, 1)} Ma` },
+      ...(this.kuesten ? [{ farbe: TEKTONIK_FARBE[x.k], text: `Linie (heller): Küstenpolygone in heutiger Form, ${this.daten.modelle[x.k].name}`, linie: true }] : []),
+    ]);
+  }
   zeit() {
     if (!this.stand.length) return 'keine Linie';
-    return this.stand.map(x => x.ma === null ? `${x.k}: kein Schritt` : `${x.k} ${tourKa(x.ma)} Ma`).join(' · ') + ' (Ma BP); Unschärfe fehlt';
+    return this.stand.map(x => x.ma === null ? `${x.k}: kein Schritt` : `${x.k} ${takt.zahl(x.ma, 1)} Ma`).join(' · ') + ' (Ma BP); Unschärfe fehlt';
   }
 }
 

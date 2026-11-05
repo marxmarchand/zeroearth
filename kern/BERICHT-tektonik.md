@@ -176,6 +176,53 @@ Gebaut nach den Entscheidungen: Variante B, Ideale Merdith 2021, Müller 2022 un
 ![540 Ma](bericht-tektonik/ebenen-540ma.jpg)
 ![1500 Ma: nur Cao 2024](bericht-tektonik/ebenen-1500ma.jpg)
 
+## Korrekturen der Tektonik-Ansicht (2026-11-05)
+
+1. **Tiefenzeit-Grundbild.** Ab 1 Ma vor heute ist die Kugel einfarbig grau mit Gradnetz (20°, geometrisch).
+   - Grundbild, Satellitenbild und Nachtlichter sind ausgeblendet, ebenso Wassereffekt und Bodenatmosphäre; beide zeigten sonst die heutigen Ozeane bzw. färbten die Kugel blau.
+   - Das heutige Bild ist nur noch als Referenz zuschaltbar („Heutige Erde als Referenz“): grau, halb durchsichtig, mit orangem Hinweis oben im Bild und eigenem Eintrag „REFERENZ“ in der Legende.
+   - Das ersetzt das Abdunkeln ab 1 Ma aus der vorigen Runde.
+2. **Kontinentpolygone gefüllt.** Gefüllt gezeigt werden die Kontinentpolygone der Modelle (`shapes_continents`, Merdith und Cao; für PALEOMAP an dessen Plattenpolygonen geteilt), als Bild in gleichabständiger Projektion. Ringe um einen Pol werden über den Pol geschlossen. Die gedrehten Küstenpolygone sind nur zuschaltbar.
+   **Warum die Linien zerfielen:**
+   - **Quelle:** Die Küstendatei von Merdith besteht aus 2 937 Polygonen, meist kleinen Stücken (Median 7 Punkte, 1 757 unter 10 Punkten).
+   - **Mein Filter (der Hauptgrund):** Er behielt nur Kanten auf der heutigen Küste und zerschnitt die Ringe in 3 208 Züge mit im Median 2 Punkten.
+   - **Vereinfachung:** 0,25° ohne Topologieschutz machte kleine Ringe zu Strichen.
+   - **Gültigkeitszeiten:** Je tiefer, desto weniger Merkmale gelten (2 136 bei 0 Ma, 518 bei 980 Ma). Das ist kein Fehler, sondern Inhalt der Modelle.
+   - **Datumsgrenze:** spielt bei Variante B keine Rolle (die Seite unterteilt lange Abschnitte selbst).
+   - **Behoben:** Filter entfernt, Polygone als ganze Ringe, Vereinfachung 0,1° mit Topologieschutz. Interne Kanten an Plattengrenzen sind damit wieder sichtbar, wenn man die Küsten zuschaltet; sie gehören zu den Polygonen der Quelle.
+3. **Ein Modell als Standard.** Standard ist Merdith 2021. Müller 2022 und die PALEOMAP-Rotation sind je mit einem Häkchen zuschaltbar; Cao 2024 erscheint jenseits von 1 Ga automatisch als einziges Modell. Keine drei Farben mehr übereinander, außer man schaltet sie zu.
+   - **Abweichung von Regel 13:** Nach Regel 13 werden alle Ideale gezeigt. Hier sind sie verfügbar und in Legende und Ebenenfeld genannt, aber nicht gleichzeitig an. Eine Nebeneinander-Ansicht (zwei Kugeln) ist nicht gebaut.
+4. **Bahnmodell mit Gültigkeitsbereich.** Die Planetenbahnen nutzen Standish (JPL), Keplersche Elemente, Tabelle 1; diese gilt 1800–2050 CE (laut JPL-Seite, abgerufen 2026-11-05). Für die gekürzte Meeus-Mondreihe ist kein Zeitraum belegt; gesetzt wird derselbe.
+   - **Außerhalb:** Planeten, Mond, Gezeitenpfeil und Mondfeld fehlen; das heliozentrische Bild zeigt nur die Sonne und den Grund.
+   - **Grund:** In der Erdzeit waren Tag kürzer und Mond näher (Gezeitenreibung), die Bahnen anders; das Modell kennt das nicht.
+   - **Wo der Grund steht:** in Legende und Mini-Fenster.
+5. **PALEOMAP getrennt.** Die Rotation heißt jetzt „PALEOMAP-Rotation v19o_r1c“ (Lage der Kontinente), das DEM „PALEOMAP-DEM“ (Paläoküsten), mit dem Hinweis, dass beide unabhängig sind. Das DEM reicht nur 540–0 Ma; davor steht „fehlt, die Paläo-DEMs reichen nur 540–0 Ma“.
+6. **Legende benennt jede Farbe.**
+
+   | Farbe | Bedeutung |
+   | --- | --- |
+   | Sandorange | Fläche: Kontinentpolygone Merdith 2021 |
+   | Lila | Müller 2022 |
+   | Türkis | PALEOMAP-Rotation |
+   | Rot | Cao 2024 |
+   | hellere Linie derselben Farbe | Küstenpolygone in heutiger Form (wenn zugeschaltet) |
+   | Hellgelbe Linie | 0-m-Linie des PALEOMAP-DEM |
+   | Grüne Linie / helle gestrichelte Linie | Sintflut-Küste / Fenster-Kasten |
+
+   Die orangen Linien der vorigen Fassung waren die gedrehten Küstenpolygone von Merdith 2021.
+
+**Daten:** `data/tektonik_umrisse.json` 5,9 MB (Küsten- und Kontinentpolygone je Modell, Drehungen je Schritt), `data/tektonik_palaeokuesten.json` 2,1 MB. Neuer Eintrag `tektonik/kontinente` (Fläche) im Graphen.
+
+**Noch offen:**
+- **PALEOMAP-Teilung verliert Polygone:** Die Teilung an den PALEOMAP-Plattenpolygonen behält weniger Polygone als Merdith (1 664 statt 2 041 Küsten-, 266 statt 848 Kontinentmerkmale). Was außerhalb der PALEOMAP-Polygone liegt, fällt weg. Das ist eine Folge meiner Setzung und noch nicht weiter untersucht.
+
+![980 Ma: nur Merdith (Rodinia), neutrale Kugel, Paläo-DEM fehlt](bericht-tektonik/korrektur-980.jpg)
+![250 Ma: Merdith gefüllt, PALEOMAP-DEM-Küste hellgelb](bericht-tektonik/korrektur-250.jpg)
+![66 Ma](bericht-tektonik/korrektur-66.jpg)
+![0 Ma: heutiges Grundbild, Merdith-Kontinente](bericht-tektonik/korrektur-0.jpg)
+![250 Ma, zugeschaltet: Müller 2022, Küstenlinien und Referenzbild](bericht-tektonik/korrektur-250-vergleich.jpg)
+![Sonnensystem bei 250 Ma: Bahnmodell fehlt mit Grund](bericht-tektonik/korrektur-sonnensystem-250.jpg)
+
 ## Zeitgrenzen je Quelle (für eine Küsten- und Höhenreihe über die Erdzeit)
 
 Ziel ist eine Reihe aus mehreren Quellen, jede in ihrem Zeitraum: Nähte bleiben sichtbar, Überlappungen stehen nebeneinander (Regel 13), nichts wird verschmolzen.
@@ -218,7 +265,7 @@ Ziel ist eine Reihe aus mehreren Quellen, jede in ihrem Zeitraum: Nähte bleiben
 
 Punkte 1 bis 4 aus dem ersten Bericht sind entschieden und gebaut (siehe Stand des Baus). Neu offen:
 
-1. Grundbild in der Tiefe: entschieden (Max, 2026-11-05): Abdunkeln ab 1 Ma bleibt.
+1. Grundbild in der Tiefe: neu entschieden (Max, 2026-11-05): neutrale Kugel mit Gradnetz, heutiges Bild nur als Referenz (siehe Korrekturen).
 2. Kocsis & Scotese als dritte Küstenebene neben der DEM-0-m-Linie?
 3. Lücke 80 ka bis 5 Ma: PRISM4 als einzelne Zeitscheibe prüfen?
 4. GEBCO als „heute“-Ebene: welcher Ausschnitt und welche Vergröberung?

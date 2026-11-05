@@ -55,6 +55,25 @@ test('Umrisse und Paläoküsten sind getrennte Einträge mit getrennten Dateien'
   assert.deepEqual([pk.karten[0].ma, pk.karten.at(-1).ma], [0, 540]);
 });
 
+test('Kontinentpolygone je Modell, als geschlossene Ringe; Küsten ganz, nicht zerschnitten', () => {
+  for (const [g, geo] of Object.entries(roh.geometrien)) {
+    const gg = /** @type {any} */ (geo);
+    assert.ok(gg.kontinente.length > 200, `${g}: ${gg.kontinente.length} Kontinentmerkmale`);
+    for (const f of [...gg.kontinente, ...gg.kueste]) for (const r of f.l) {
+      assert.ok(r.length >= 4, `${g}: Ring mit ${r.length} Punkten`);
+      assert.deepEqual(r[0], r.at(-1), `${g}: Ring nicht geschlossen`);
+    }
+  }
+  assert.equal(eintrag('tektonik/kontinente').wo.geometrie, 'flaeche');
+  assert.match(eintrag('tektonik/kontinente').wo.koordinaten.verweis.merdith, /#geometrien\.merdith\.kontinente$/);
+});
+
+test('PALEOMAP: Rotation und Paläo-DEM getrennt benannt, DEM nur bis 540 Ma', () => {
+  assert.match(roh.modelle.paleomap.name, /^PALEOMAP-Rotation/);
+  assert.match(pk.woher.kette, /^PALEOMAP-DEM .*unabhängig von der PALEOMAP-Rotation/);
+  assert.equal(Math.max(...pk.karten.map((/** @type {any} */ k) => k.ma)), 540);
+});
+
 test('Fehlende Drehung steht als null, nie als Identität', () => {
   // Merdith hat keine Drehungen jenseits von 1000 Ma; innerhalb fehlen einzelne Platten
   const m = roh.modelle.merdith2021;
