@@ -165,7 +165,11 @@ Gebaut nach den Entscheidungen: Variante B, Ideale Merdith 2021, Müller 2022 un
 - **Schnittkanten:** Die Küstenpolygone der Modelle sind an Plattengrenzen zerschnitten; ihre Kanten liefen sonst quer über die Kontinente. Behalten werden nur Kanten, die auf dem Rand der heutigen Landmasse liegen (Vereinigung aller Polygone, Band 0,02°).
 - **PALEOMAP ohne Küsten:** Das PALEOMAP-Plattenmodell bringt keine Küsten mit. Ich habe die Merdith-Küsten an den PALEOMAP-Plattenpolygonen geteilt; das ist eine Setzung (`tektonik/auswahl/kuesten_paleomap`).
 - **Herkunft der Umrisse:** Der Eintrag `tektonik/umrisse` trägt alle beteiligten Arten (rekonstruktion, modell, berechnet), weil Müller 2022 Modell ist (Regel 6). Jede Lage je Ideal trägt ihre eigenen Arten.
-- **Grundbild in der Tiefe:** Es bleibt das heutige Natural-Earth-Bild unter den gedrehten Umrissen. Das ist in der Legende als „ohne Zeitbezug“ ausgewiesen, liest sich in der Tiefe aber leicht falsch. Vorschlag: Grundbild in der Tiefe abdunkeln oder abschalten.
+- **Grundbild in der Tiefe:** Das heutige Natural-Earth-Bild lag unter den gedrehten Umrissen und las sich leicht als Bild der Zeit.
+  - Gebaut: Ab 1 Ma vor heute werden Grundbild, Satellitenbild und Nachtlichter grau und auf 35 % Helligkeit gedunkelt; die Legende sagt dann „zeigt die heutige Erde, nicht die der Masterzeit“.
+  - Warum 1 Ma: Platten wandern rund 0,5° je Ma, mehr als die 0,25° der Umrisse.
+  - Abgeschaltet wird nichts: Das Bild bleibt Orientierung im heutigen Gradnetz.
+  - Unter 1 Ma, also auch bei der Sintflut, bleibt es farbig; dort steht weiter „ohne Zeitbezug“.
 
 ![0 Ma](bericht-tektonik/ebenen-0ma.jpg)
 ![200 Ma: drei Modelle nebeneinander, dazu Paläoküste](bericht-tektonik/ebenen-200ma.jpg)
@@ -214,7 +218,7 @@ Ziel ist eine Reihe aus mehreren Quellen, jede in ihrem Zeitraum: Nähte bleiben
 
 Punkte 1 bis 4 aus dem ersten Bericht sind entschieden und gebaut (siehe Stand des Baus). Neu offen:
 
-1. Grundbild in der Tiefe abdunkeln oder abschalten?
+1. Grundbild in der Tiefe: gebaut als Abdunkeln ab 1 Ma (siehe oben). Offen, ob es stattdessen ganz abgeschaltet werden soll.
 2. Kocsis & Scotese als dritte Küstenebene neben der DEM-0-m-Linie?
 3. Lücke 80 ka bis 5 Ma: PRISM4 als einzelne Zeitscheibe prüfen?
 4. GEBCO als „heute“-Ebene: welcher Ausschnitt und welche Vergröberung?

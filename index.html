@@ -2279,7 +2279,11 @@ class DM {
   layers(ids) {
     const L=this.v.imageryLayers;
     while(L.length>0) L.remove(L.get(0));
-    ids.forEach(id=>{const c=LR[id];if(c?.status==='active'&&c.p){try{L.add(Cesium.ImageryLayer.fromProviderAsync(Promise.resolve(c.p())));}catch(e){}}});
+    ids.forEach(id=>{const c=LR[id];if(c?.status==='active'&&c.p){try{
+      L.add(Cesium.ImageryLayer.fromProviderAsync(Promise.resolve(c.p())));
+      if (id === 'natural_earth') ze.grundbild = L.get(L.length - 1);
+    }catch(e){}}});
+    ze._grundbildTiefe?.();
   }
 
   _highlightSL(group, sl) {
@@ -4174,6 +4178,7 @@ class ZeroEarth {
       this.unterbauLayer.update(Tideline.t);
       this.seismikLayer.update(Tideline.t);
       this.sintflutLayer.update(Tideline.t);
+      this._grundbildTiefe();
       this.tektonikLayer.update(Tideline.t);
       this.palaeokuesteLayer.update(Tideline.t);
       this._renderMoonPanel();
@@ -4852,7 +4857,9 @@ class ZeroEarth {
     } else {
       const globus = this.ansicht === 'globus' || this.miniGlobus;
       const raster = [];   // was nur der Globus zeigt
-      raster.push(['Grundbild', L.grundbild]);
+      raster.push(['Grundbild', this._tief
+        ? { ...L.grundbild, z: `heutiges Bild, ohne Zeitbezug; ab ${GRUNDBILD_TIEFE_MA} Ma grau und abgedunkelt`, warn: 'zeigt die heutige Erde, nicht die der Masterzeit' }
+        : L.grundbild]);
       if (this.satbild) raster.push([name('satbild'), { ...L.satbild, z: `${this.satbildTag} (fest)` }]);
       if (this.nachtlicht) raster.push([name('nachtlicht'), { ...L.nachtlicht, z: `${this.nachtlichtTag} (fest)` }]);
       for (const [linse, keys] of Object.entries(LENSES)) {
@@ -4956,6 +4963,7 @@ class ZeroEarth {
       if (st) st.innerHTML = `<span class="ds-err">GIBS nicht erreichbar</span> (${e.message ?? 'Kacheln fehlen'})`;
     });
     this.satbild = this.cesiumV.imageryLayers.addImageryProvider(provider);
+    this._grundbildTiefe();
     this.satbildTag = tag;
     el?.classList.add('on');
     this.ebenenGeaendert();
@@ -4991,6 +4999,7 @@ class ZeroEarth {
       if (st) st.innerHTML = `<span class="ds-err">GIBS nicht erreichbar</span> (${e.message ?? 'Kacheln fehlen'})`;
     });
     this.nachtlicht = this.cesiumV.imageryLayers.addImageryProvider(provider);
+    this._grundbildTiefe();
     this.nachtlicht.dayAlpha = 0;      // am Tag unsichtbar
     this.nachtlicht.nightAlpha = 1;    // auf der Nachtseite voll
     this.nachtlichtTag = tag;
@@ -5242,6 +5251,22 @@ class ZeroEarth {
   }
 
   /* ── Matrixschnitt-Layer neu aufbauen (alle auf dasselbe t) ───── */
+  /* Grundbild in der Tiefe: Natural Earth, Satellitenbild und Nachtlichter
+     zeigen die heutige Erde. Ab GRUNDBILD_TIEFE_MA vor heute liegen Platten
+     und Küsten sichtbar anders (Platten wandern rund 0,5° je Ma, mehr als die
+     0,25° der Umrisse); dann werden diese Bilder grau und dunkel, damit sie
+     nicht als Bild der Zeit gelesen werden. Abgeschaltet wird nichts: Sie
+     bleiben Orientierung im heutigen Gradnetz und stehen so in der Legende. */
+  _grundbildTiefe() {
+    const tief = tektonikMa(Tideline.t) >= GRUNDBILD_TIEFE_MA;
+    for (const lay of [this.grundbild, this.satbild, this.nachtlicht]) {
+      if (!lay) continue;
+      lay.saturation = tief ? 0 : 1;
+      lay.brightness = tief ? 0.35 : 1;
+    }
+    if (tief !== this._tief) { this._tief = tief; this.zeichneLegende?.(); }
+  }
+
   _refreshMatrixLayers() {
     const t = Tideline.t;
     // S4-Konfiguration: Linse → Layer-Instanzen
@@ -5448,6 +5473,8 @@ const TEKTONIK_FARBE = { merdith2021: '#f2b45a', mueller2022: '#c79cf2', paleoma
 const TEKTONIK_STRICH = { merdith2021: null, mueller2022: 14, paleomap: 6, cao2024: null };
 /** Ma vor heute aus der internen Masterzeit t (Jahre seit J2000). Nur zur Wahl des Schritts. */
 const tektonikMa = t => Math.max(0, -t / 1e6);
+/** Ab hier (Ma vor heute) wird das heutige Grundbild grau und dunkel; Begründung bei _grundbildTiefe. */
+const GRUNDBILD_TIEFE_MA = 1;
 
 class TektonikLayer {
   constructor(v, art) { this.v = v; this.art = art; this.on = false; this.daten = null; this._schluessel = undefined; this.stand = []; }
