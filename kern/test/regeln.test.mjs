@@ -7,7 +7,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { pruefe, pruefeManifest } from '../pruefe.mjs';
+import { pruefe, pruefeManifest, pruefeHerkunftGegenManifest } from '../pruefe.mjs';
 import { fehlt, anzeige, nichtErhoben, BELEG_EINTRAGSEBENE } from '../schema.mjs';
 
 const PRUEFE = fileURLToPath(new URL('../pruefe.mjs', import.meta.url));
@@ -184,9 +184,19 @@ test('der gültige Graph besteht auf der Kommandozeile', () => {
 test('Anzeige: schwächste aus der Rangfolge plus Merkmale', () => {
   assert.deepEqual(anzeige(['beobachtung', 'rekonstruktion']), { rang: 'rekonstruktion', merkmale: [] });
   assert.deepEqual(anzeige(['modell', 'beobachtung', 'kuratiert']), { rang: 'modell', merkmale: ['kuratiert'] });
-  assert.deepEqual(anzeige(['erwartung', 'rekonstruktion']), { rang: 'rekonstruktion', merkmale: ['erwartung'] });
   assert.deepEqual(anzeige(['kuratiert']), { rang: null, merkmale: ['kuratiert'] });
   assert.deepEqual(anzeige(['beobachtung', 'modell', 'idealisiert']), { rang: 'modell', merkmale: ['idealisiert'] });
+});
+
+test('Anzeige: fiktion und erwartung ersetzen den Rang', () => {
+  assert.deepEqual(anzeige(['erwartung']), { rang: 'erwartung', merkmale: [] });
+  assert.deepEqual(anzeige(['erwartung', 'rekonstruktion']), { rang: 'erwartung', merkmale: [] });
+  assert.deepEqual(anzeige(['fiktion']), { rang: 'fiktion', merkmale: [] });
+  assert.deepEqual(anzeige(['fiktion', 'beobachtung']), { rang: 'fiktion', merkmale: [] });
+  // Andere Merkmale bleiben daneben sichtbar
+  assert.deepEqual(anzeige(['erwartung', 'modell', 'idealisiert', 'kuratiert']), { rang: 'erwartung', merkmale: ['kuratiert', 'idealisiert'] });
+  // Beide beteiligt: fiktion an der Stelle des Rangs, erwartung bleibt sichtbar
+  assert.deepEqual(anzeige(['fiktion', 'erwartung', 'beobachtung']), { rang: 'fiktion', merkmale: ['erwartung'] });
 });
 
 /** @type {[string|number, string, (b: any) => void][]} */
@@ -420,9 +430,46 @@ test('Sphären: alle fünf in 1.1 gültig, Biomasse eingeschlossen', () => {
   }
 });
 
-test('Regel 15: Fiktion wird immer angezeigt und hat keinen Rang', () => {
-  assert.deepEqual(anzeige(['fiktion']), { rang: null, merkmale: ['fiktion'] });
-  assert.deepEqual(anzeige(['fiktion', 'beobachtung']), { rang: 'beobachtung', merkmale: ['fiktion'] });
+/** Manifest mit diesen Herkunftsarten. @param {string[]} arten */
+const mitArten = arten => ({ ...MANIFEST, herkunft: { ...MANIFEST.herkunft, arten } });
+
+test('Herkunft gegen Manifest: gedeckte Arten sind kein Verstoß', () => {
+  assert.deepEqual(pruefeHerkunftGegenManifest({ eintraege: [{ werte: { x: einzel('1', fassung(1)) } }] }, mitArten(['beobachtung'])).fehler, []);
+});
+
+test('Herkunft gegen Manifest: eine fehlende Art ist ein Verstoß, wo immer sie steht', () => {
+  /** @type {Record<string, any>} */
+  const stellen = {
+    wert: { eintraege: [{ werte: { x: einzel('1', fassung(1, W(['fiktion']))) } }] },
+    ort: { eintraege: [{ wo: { woher: W(['fiktion']) }, werte: {} }] },
+    relation: { relationen: [{ woher: W(['fiktion']) }] },
+    bestand: { bestaende: [{ menge: einzel('1', fassung(1, W(['fiktion']))) }] },
+  };
+  for (const [stelle, graph] of Object.entries(stellen)) {
+    const { fehler } = pruefeHerkunftGegenManifest(graph, mitArten(['beobachtung']));
+    assert.equal(fehler.length, 1, stelle);
+    assert.equal(fehler[0].regel, 'M');
+    assert.ok(fehler[0].text.includes('fiktion'), stelle);
+  }
+});
+
+test('Herkunft gegen Manifest: je Art eine Meldung mit Anzahl', () => {
+  const f = () => fassung(1, W(['kuratiert']));
+  const { fehler } = pruefeHerkunftGegenManifest({ eintraege: [{ werte: { x: einzel('1', f()), y: einzel('1', f()) } }] }, mitArten(['beobachtung']));
+  assert.equal(fehler.length, 1);
+  assert.ok(fehler[0].text.includes('an 2 Wert'), fehler[0].text);
+});
+
+test('Herkunft gegen Manifest: ein Fiktions-Adapter führt nur fiktion an seinen Werten', () => {
+  const graph = (/** @type {string[]} */ arten) => ({ eintraege: [{ werte: { x: einzel('1', fassung(1, W(arten))) } }] });
+  assert.deepEqual(pruefeHerkunftGegenManifest(graph(['fiktion']), mitArten(['fiktion'])).fehler, []);
+  assert.equal(pruefeHerkunftGegenManifest(graph(['fiktion', 'beobachtung']), mitArten(['fiktion'])).fehler.length, 1);
+});
+
+test('Herkunft gegen Manifest: fehlende Herkunft im Manifest wird als nicht vergleichbar gemeldet', () => {
+  const { fehler, hinweise } = pruefeHerkunftGegenManifest({ eintraege: [] }, { ...MANIFEST, herkunft: fehlt('ungeklärt') });
+  assert.deepEqual(fehler, []);
+  assert.ok(hinweise.some(h => h.text.includes('nicht vergleichbar')));
 });
 
 test('Regel 15: Manifest mischt Fiktion nicht mit echter Herkunft', () => {

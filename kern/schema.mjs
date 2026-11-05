@@ -135,16 +135,24 @@ export const MODI = /** @type {const} */ ({
    angezeigt wird. Was aus fiktion abgeleitet wird, bleibt fiktion (wie
    erwartung). Neben einer Art aus der Rangfolge steht sie nur an abgeleiteten
    Werten. Ein solcher Adapter führt im Manifest nur fiktion; echte Eingaben
-   stehen in der Herkunftskette.                                          */
+   stehen in der Herkunftskette.
+   In der Anzeige ersetzen fiktion und erwartung den Rang.
+   Das Manifest nennt jede Art, die im Graphen des Adapters vorkommt.     */
 export const HERKUNFTSARTEN = /** @type {const} */ (['beobachtung', 'rekonstruktion', 'modell', 'kuratiert', 'erwartung', 'idealisiert', 'fiktion']);
 export const HERKUNFT_RANG = /** @type {const} */ (['beobachtung', 'rekonstruktion', 'modell']);
 export const HERKUNFT_MERKMALE = /** @type {const} */ (['kuratiert', 'erwartung', 'idealisiert', 'fiktion']);
 
-/** Was angezeigt wird: die schwächste Art aus der Rangfolge plus die Merkmale. */
+/** Merkmale, die den Rang in der Anzeige ersetzen. Sind beide beteiligt, steht
+    fiktion an der Stelle des Rangs und erwartung bleibt als Merkmal sichtbar. */
+export const HERKUNFT_ERSETZT_RANG = /** @type {const} */ (['fiktion', 'erwartung']);
+
+/** Was angezeigt wird: fiktion oder erwartung, wenn beteiligt, sonst die schwächste
+    Art aus der Rangfolge; daneben die übrigen Merkmale. */
 export function anzeige(/** @type {string[]} */ arten) {
-  const rang = arten.filter(a => /** @type {readonly string[]} */ (HERKUNFT_RANG).includes(a))
+  const schwaechste = arten.filter(a => /** @type {readonly string[]} */ (HERKUNFT_RANG).includes(a))
     .sort((a, b) => HERKUNFT_RANG.indexOf(/** @type {any} */ (b)) - HERKUNFT_RANG.indexOf(/** @type {any} */ (a)))[0] ?? null;
-  const merkmale = HERKUNFT_MERKMALE.filter(m => arten.includes(m));
+  const rang = HERKUNFT_ERSETZT_RANG.find(a => arten.includes(a)) ?? schwaechste;
+  const merkmale = HERKUNFT_MERKMALE.filter(m => arten.includes(m) && m !== rang);
   return { rang, merkmale };
 }
 

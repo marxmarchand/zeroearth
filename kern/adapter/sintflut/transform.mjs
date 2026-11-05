@@ -53,9 +53,10 @@ function gitterfaktor(/** @type {{sued: number, nord: number}} */ bb) {
  * @returns {import('../../schema.mjs').Graph}
  */
 export function transform(roh, manifest, zusatz = {}) {
-  const arten = manifest.herkunft.arten;
-  if (arten.length !== 1 || roh.woher?.art !== arten[0])
-    throw new Error(`Herkunft der Datei (${roh.woher?.art}) weicht vom Manifest ab (${arten})`);
+  // Die Datei nennt eine Art; das Manifest führt alle Arten des Graphen, auch die der Notizen.
+  if (!manifest.herkunft.arten.includes(roh.woher?.art))
+    throw new Error(`Herkunft der Datei (${roh.woher?.art}) fehlt im Manifest (${manifest.herkunft.arten})`);
+  const arten = [roh.woher.art];
   const archivkette = manifest.herkunft.archivkette;
   const quelle = `${roh.woher.quelle} · ${roh.woher.datei} · übernommen von der Dateiebene`;
   const skala = manifest.zeitsemantik.skala;

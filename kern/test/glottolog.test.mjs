@@ -5,7 +5,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { pruefe, pruefeManifest, ladeAdapter, REPO } from '../pruefe.mjs';
+import { pruefe, pruefeManifest, pruefeHerkunftGegenManifest, ladeAdapter, REPO } from '../pruefe.mjs';
 import { transform, kategorie, zusammenfassung, QUELLE_FEHLT } from '../adapter/glottolog/transform.mjs';
 import { istFehlend, MODI } from '../schema.mjs';
 
@@ -16,6 +16,7 @@ const R = new Map(graph.relationen.map(r => [r.id, /** @type {any} */ (r)]));
 
 test('Manifest und Graph bestehen die Prüfung', () => {
   assert.deepEqual(pruefeManifest(manifest).fehler, []);
+  assert.deepEqual(pruefeHerkunftGegenManifest(graph, manifest).fehler, []);
   assert.deepEqual(pruefe(graph).fehler, []);
 });
 

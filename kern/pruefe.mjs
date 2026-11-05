@@ -664,6 +664,39 @@ export function pruefeManifest(m) {
 }
 
 /**
+ * Vergleicht die Herkunft jedes Werts im Graphen mit dem Manifest des Adapters:
+ * Eine Art, die im Manifest fehlt, ist ein Verstoß. Je Art eine Meldung mit
+ * Anzahl und erster Fundstelle, sonst stünde sie bei jedem Wert einzeln.
+ * @param {any} gr Graph
+ * @param {any} m Manifest
+ * @returns {{fehler: Meldung[], hinweise: Meldung[]}}
+ */
+export function pruefeHerkunftGegenManifest(gr, m) {
+  /** @type {Meldung[]} */ const fehler = [];
+  /** @type {Meldung[]} */ const hinweise = [];
+  const ort = `manifest ${m?.id ?? '?'}`;
+  if (!m?.herkunft || istFehlend(m.herkunft)) {
+    hinweise.push({ regel: 'M', ort, text: 'Herkunft im Manifest fehlend; die Herkunft der Werte ist nicht vergleichbar' });
+    return { fehler, hinweise };
+  }
+  const erlaubt = new Set(Array.isArray(m.herkunft.arten) ? m.herkunft.arten : []);
+  /** @type {Map<string, {anzahl: number, erste: string}>} */ const fremd = new Map();
+  const durchlaufe = (/** @type {any} */ x, /** @type {string} */ pfad) => {
+    if (!x || typeof x !== 'object') return;
+    if (x.woher && Array.isArray(x.woher.arten)) for (const a of x.woher.arten) {
+      if (erlaubt.has(a)) continue;
+      const f = fremd.get(a) ?? fremd.set(a, { anzahl: 0, erste: pfad }).get(a);
+      if (f) f.anzahl++;
+    }
+    for (const [k, v] of Object.entries(x)) durchlaufe(v, Array.isArray(x) ? `${pfad}[${k}]` : `${pfad}.${k}`);
+  };
+  durchlaufe(gr, 'graph');
+  for (const [art, { anzahl, erste }] of fremd)
+    fehler.push({ regel: 'M', ort, text: `Herkunftsart ${art} kommt an ${anzahl} Wert(en) vor, fehlt aber im Manifest (zuerst ${erste})` });
+  return { fehler, hinweise };
+}
+
+/**
  * Prüft ein Ereignis: alle Naturen als Station, Stationen nur mit Verweisen,
  * ohne Quelle nur als fehlt/bewusst_leer mit Begründung, Auswahl begründet.
  * @param {any} ev Ereignis
@@ -800,6 +833,7 @@ async function main() {
       const { manifest, graph } = await ladeAdapter(name);
       graphen.set(name, graph);
       zaehle(pruefeManifest(manifest), `Manifest ${name}`);
+      zaehle(pruefeHerkunftGegenManifest(graph, manifest), `Herkunft ${name} gegen Manifest`);
       zaehle(pruefe(graph), `Graph ${name}: ${graph.bestaende.length} Bestände, ${graph.eintraege.length} Einträge, `
         + `${graph.prozesse.length} Prozesse, ${graph.relationen.length} Relationen`);
     }

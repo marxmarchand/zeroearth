@@ -30,7 +30,8 @@
   "vorgang": "stoffwechsel",
   "herkunft": {
     "arten": [
-      "rekonstruktion"
+      "rekonstruktion",
+      "kuratiert"
     ],
     "ebene": "Datei",
     "hinweis": "Die Quelle nennt die Herkunft einmal für die ganze Datei. transform.mjs schreibt sie an jeden Wert und vermerkt, dass sie von der Dateiebene übernommen ist. Die Notizen tragen eine eigene Herkunft (kuratiert, gesellschaftliches Archiv).",
