@@ -235,6 +235,8 @@ export const BEZUGSSYSTEME = /** @type {const} */ ({
   ka_bp_1950: { name: 'ka BP', einheit: 'ka', nullpunkt: '1950 CE', kalender: '365_day',
     c14: fehlt('PaleoMIST nennt die Zeitachse nicht als kalibriert oder unkalibriert') },
   a_ce: { name: 'a CE', einheit: 'a', nullpunkt: 'Jahr 1 CE', kalender: 'gregorianisch', c14: 'nicht_radiokarbon' },
+  ma_bp: { name: 'Ma BP', einheit: 'Ma', nullpunkt: 'heute laut Modell', kalender: fehlt('Die Plattenmodelle und Paläo-DEMs nennen keinen Kalender; Ma vor heute'),
+    c14: 'nicht_radiokarbon' },
 });
 
 /* ── Einträge ─────────────────────────────────────────────────────────

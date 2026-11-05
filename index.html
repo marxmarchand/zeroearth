@@ -562,6 +562,10 @@
       <div class="sub-head" data-sub="erdsystem"></div>
       <div class="ob ov-side" id="tb-sintflut" onclick="ze.toggle('sintflut')"><div class="obd"></div>Sintflut: Küsten, Kästen ◐</div>
       <div class="ov-status" id="sintflut-status"></div>
+      <div class="ob ov-side" id="tb-tektonik" onclick="ze.toggle('tektonik')"><div class="obd"></div>Tektonik: Umrisse, drei Modelle ○◐</div>
+      <div class="ov-status" id="tektonik-status"></div>
+      <div class="ob ov-side" id="tb-palaeokueste" onclick="ze.toggle('palaeokueste')"><div class="obd"></div>Paläoküsten (PALEOMAP-DEM) ◐▨</div>
+      <div class="ov-status" id="palaeokueste-status"></div>
       <div class="ob ov-side" id="tb-erste_natur" onclick="ze.toggle('erste_natur')"><div class="obd"></div>Materialbestände ●</div>
       <div class="ov-status" id="erste_natur-status"></div>
       <div class="ob ov-side" id="tb-wind" onclick="ze.toggle('wind')"><div class="obd"></div>Windströmung (GFS) ≋</div>
@@ -2162,6 +2166,12 @@ const LEGENDE = {
   sintflut:    { h: 'PaleoMIST 1.0 -> 0-m-Linie (rekonstruktion, berechnet; CC BY 4.0); Kästen: Setzung',
                  get z() { const l = ze.sintflutLayer, i = l?.aktuellerSchritt(); return i === null || i === undefined ? 'außerhalb von 20–0 ka BP: keine Linie' : `${tourKa(l.schritte[i])} ka BP (Bezug 1950), Schritt 2,5 ka; Unschärfe fehlt`; },
                  m: 28e3, warn: 'isostatische Deformation enthalten; Sedimentation nicht berücksichtigt' },
+  tektonik:    { h: 'Plattenmodelle -> heutige Küstenumrisse gedreht (pyGPlates): Merdith 2021 ● gelb, Müller 2022 (Mantelbezug, Modell) lila gestrichelt, PALEOMAP v19o türkis gestrichelt, Cao 2024 > 1 Ga rot; CC BY 4.0',
+                 get z() { return ze.tektonikLayer?.zeit() ?? 'keine Linie'; },
+                 warn: 'Umriss heutig, nur die Lage ist rekonstruiert. Im paläomagnetischen Bezug ist die Länge eine Konvention des Modells, keine Messung.' },
+  palaeokueste:{ h: 'PALEOMAP PaleoDEM (Scotese & Wright 2018) -> 0-m-Linie, 1° (rekonstruktion, kuratiert, berechnet; CC BY 4.0)',
+                 get z() { return ze.palaeokuesteLayer?.zeit() ?? 'keine Linie'; }, m: 111e3,
+                 warn: 'Höhenkarte aus geologischen Belegen erstellt, nicht gemessen; Koordinaten der Paläo-DEMs, nicht der Plattenmodelle' },
   // Linsen (Rasterebenen)
   coastLayer:     { name: 'Paläotopographie/Küste', h: 'PaleoMIST 1.0 · paleo_topography', z: 'Masterzeit (0–80 ka BP)', m: 111e3 },
   iceLayer:       { name: 'Eisdicke', h: 'PaleoMIST 1.0 · Eisdicke', z: 'Masterzeit (0–80 ka BP)', m: 111e3 },
@@ -2243,7 +2253,7 @@ const FEIN_M_PRO_PX = 250;
 class DM {
   constructor(v) {
     this.v=v; this.curDim=null; this.curSL=null;
-    this._ent={}; this._ovState={moon:false,magfield:false,tidal:false,solarwind:false,sats:false,ueberbau:false,riss:false,bestaende:false,basis:false,ware:false,erste_natur:false,pm:false,wind:false,stroeme:false,unterbau:false,seismik:false,platten:false,grenzen:false,kataster:false,gewaesser:false,sprachen:false,sintflut:false};
+    this._ent={}; this._ovState={moon:false,magfield:false,tidal:false,solarwind:false,sats:false,ueberbau:false,riss:false,bestaende:false,basis:false,ware:false,erste_natur:false,pm:false,wind:false,stroeme:false,unterbau:false,seismik:false,platten:false,grenzen:false,kataster:false,gewaesser:false,sprachen:false,sintflut:false,tektonik:false,palaeokueste:false};
   }
 
   async flyTo(cam, instant=false) {
@@ -2313,6 +2323,8 @@ class DM {
     if(name==='gezeiten') { on ? ze.gezeitenLayer.show() : ze.gezeitenLayer.hide(); }
     if(name==='sprachen') { on ? ze.sprachenLayer.show() : ze.sprachenLayer.hide(); }
     if(name==='sintflut') { on ? ze.sintflutLayer.show() : ze.sintflutLayer.hide(); }
+    if(name==='tektonik') { on ? ze.tektonikLayer.show() : ze.tektonikLayer.hide(); }
+    if(name==='palaeokueste') { on ? ze.palaeokuesteLayer.show() : ze.palaeokuesteLayer.hide(); }
   }
 
   _moon(on) {
@@ -4096,6 +4108,8 @@ class ZeroEarth {
     this.gezeitenLayer = new GezeitenLayer(this.cesiumV);
     this.sprachenLayer = new SprachenLayer(this.cesiumV);
     this.sintflutLayer = new SintflutLayer(this.cesiumV);
+    this.tektonikLayer = new TektonikLayer(this.cesiumV, 'umrisse');
+    this.palaeokuesteLayer = new TektonikLayer(this.cesiumV, 'palaeokueste');
     this.tour = new TourMotor(this);
     // Klimazonen (Köppen-Geiger): kategoriales Raster über den FieldLayer
     this.klimaLayer = new FieldLayer(this.cesiumV, 'koeppen', { alpha:0.55,
@@ -4160,6 +4174,8 @@ class ZeroEarth {
       this.unterbauLayer.update(Tideline.t);
       this.seismikLayer.update(Tideline.t);
       this.sintflutLayer.update(Tideline.t);
+      this.tektonikLayer.update(Tideline.t);
+      this.palaeokuesteLayer.update(Tideline.t);
       this._renderMoonPanel();
       if (this.gewaesserLayer.on) this.gewaesserLayer.update();
       this._renderMiniNull();
@@ -5415,6 +5431,97 @@ class SintflutLayer {
           positions: Cesium.Cartesian3.fromDegreesArrayHeights(zug.flatMap(([x, y]) => [x, y, 3000])) });
       }
     if (st) st.innerHTML = `<span class="ds-ok">Küste bei ${tourKa(this.schritte[i])} ka BP</span> · Schritt 2,5 ka, nichts interpoliert`;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   TEKTONIK — zwei getrennte Ebenen (Regel 13, nichts verschmolzen):
+   · Umrisse: heutige Küsten, gedreht nach drei Plattenmodellen nebeneinander
+     (Merdith 2021, Müller 2022, PALEOMAP), jenseits von 1 Ga Cao 2024.
+     Die Drehungen hat pyGPlates je Platte und Schritt berechnet
+     (data/tektonik_umrisse.json); hier werden sie nur angewendet,
+     mit demselben Modul, das der Kern-Test gegen pyGPlates prüft.
+   · Paläoküsten: 0-m-Linie der PALEOMAP-Paläo-DEMs, 540–0 Ma.
+   Nur Stützstellen der Quelle; dazwischen bleibt die Ebene leer.
+   ───────────────────────────────────────────────────────────────── */
+const TEKTONIK_FARBE = { merdith2021: '#f2b45a', mueller2022: '#c79cf2', paleomap: '#6fd0ea', cao2024: '#f27f7f' };
+const TEKTONIK_STRICH = { merdith2021: null, mueller2022: 14, paleomap: 6, cao2024: null };
+/** Ma vor heute aus der internen Masterzeit t (Jahre seit J2000). Nur zur Wahl des Schritts. */
+const tektonikMa = t => Math.max(0, -t / 1e6);
+
+class TektonikLayer {
+  constructor(v, art) { this.v = v; this.art = art; this.on = false; this.daten = null; this._schluessel = undefined; this.stand = []; }
+  async laden() {
+    this.dreh ??= await import('./kern/adapter/tektonik/drehen.mjs');
+    if (!this.daten) this.daten = await fetch(this.art === 'umrisse' ? 'data/tektonik_umrisse.json' : 'data/tektonik_palaeokuesten.json').then(r => r.json());
+    return this.daten;
+  }
+  async show() { this.on = true; await this.laden(); if (!this.on) return; this._schluessel = undefined; this.update(Tideline.t); }
+  hide() {
+    this.on = false; this._schluessel = undefined; this.stand = [];
+    if (this.linien) { this.v.scene.primitives.remove(this.linien); this.linien = null; }
+    const st = document.getElementById(`${this.art === 'umrisse' ? 'tektonik' : 'palaeokueste'}-status`); if (st) st.textContent = '';
+  }
+  /** Lange Abschnitte auf der Kugel unterteilen, damit die Sehne nicht unter die Oberfläche taucht (räumlich, nicht zeitlich). */
+  static punkte(zug) {
+    const aus = [];
+    for (let i = 0; i < zug.length; i++) {
+      const [x, y] = zug[i];
+      if (i) {
+        const [x0, y0] = zug[i - 1];
+        let dx = x - x0; if (dx > 180) dx -= 360; if (dx < -180) dx += 360;
+        const n = Math.ceil(Math.max(Math.abs(dx), Math.abs(y - y0)) / 1.5);
+        for (let k = 1; k < n; k++) aus.push(Cesium.Cartesian3.fromDegrees(x0 + dx * k / n, y0 + (y - y0) * k / n, 4000));
+      }
+      aus.push(Cesium.Cartesian3.fromDegrees(x, y, 4000));
+    }
+    return aus;
+  }
+  update(t) {
+    if (!this.on || !this.daten) return;
+    const ma = tektonikMa(t), d = this.daten, D = this.dreh;
+    const wahl = this.art === 'umrisse'
+      ? Object.entries(d.modelle).map(([k, m]) => [k, D.schrittBei(m.schritte_ma, ma)])
+      : [['paleomap_dem', D.schrittBei(d.karten.map(k => k.ma), ma)]];
+    const schluessel = wahl.map(([k, i]) => `${k}:${i}`).join('|');
+    if (schluessel === this._schluessel) return;
+    this._schluessel = schluessel;
+    if (this.linien) this.v.scene.primitives.remove(this.linien);
+    this.linien = this.v.scene.primitives.add(new Cesium.PolylineCollection());
+    this.stand = [];
+    for (const [k, i] of wahl) {
+      if (i === null) { this.stand.push({ k, ma: null }); continue; }
+      const farbe = Cesium.Color.fromCssColorString(TEKTONIK_FARBE[k] ?? '#b8f08f');
+      const material = TEKTONIK_STRICH[k]
+        ? Cesium.Material.fromType('PolylineDash', { color: farbe, dashLength: TEKTONIK_STRICH[k] })
+        : Cesium.Material.fromType('Color', { color: farbe });
+      let n = 0;
+      if (this.art === 'umrisse') {
+        const m = d.modelle[k], s = m.schritte_ma[i], rot = m.rotationen[i];
+        const platte = new Map(m.platten.map((p, j) => [p, j]));
+        for (const f of d.geometrien[m.geometrie].merkmale) {
+          if (!D.gilt(f, s)) continue;
+          const r = rot[platte.get(f.p)];
+          if (!r) continue;                       // keine Drehung: nicht zeigen, nie an heutiger Lage
+          for (const zug of f.l) { this.linien.add({ width: 1.3, material, positions: TektonikLayer.punkte(zug.map(p => D.drehe(p, r))) }); n++; }
+        }
+        this.stand.push({ k, ma: s, n, name: m.name });
+      } else {
+        const karte = d.karten[i];
+        for (const zug of karte.linien) { this.linien.add({ width: 1.4, material, positions: TektonikLayer.punkte(zug) }); n++; }
+        this.stand.push({ k, ma: karte.ma, n, name: karte.stufe });
+      }
+    }
+    const st = document.getElementById(`${this.art === 'umrisse' ? 'tektonik' : 'palaeokueste'}-status`);
+    if (st) st.innerHTML = this.stand.map(x => x.ma === null
+      ? `<span class="ds-err">${tourEsc(this.art === 'umrisse' ? d.modelle[x.k].name : 'Paläo-DEM')}: kein Schritt bei ${tourKa(ma)} Ma</span>`
+      : `<span style="color:${TEKTONIK_FARBE[x.k] ?? '#b8f08f'}">■</span> ${tourEsc(x.name)}: ${tourKa(x.ma)} Ma`).join('<br>');
+    ze.zeichneLegende?.();
+  }
+  /** Zeile für die Legende: welche Quelle bei welchem Schritt. */
+  zeit() {
+    if (!this.stand.length) return 'keine Linie';
+    return this.stand.map(x => x.ma === null ? `${x.k}: kein Schritt` : `${x.k} ${tourKa(x.ma)} Ma`).join(' · ') + ' (Ma BP); Unschärfe fehlt';
   }
 }
 

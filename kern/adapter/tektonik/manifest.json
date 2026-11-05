@@ -1,0 +1,129 @@
+{
+  "id": "tektonik",
+  "eingabe": "data/tektonik_umrisse.json",
+  "quelle": {
+    "name": "Plattenmodelle Merdith et al. 2021, Müller et al. 2022, PALEOMAP v19o_r1c, Cao et al. 2024; PALEOMAP-Paläo-DEMs (Scotese & Wright 2018)",
+    "dateien": [
+      "Merdith_etal_2021_ESR_v1.2.4.zip (Zenodo 13635864)",
+      "Muller_etal_2022_SE_v1.2.4.zip (Zenodo 13636799)",
+      "paleomap_global_plate_model_v19o_r1c.zip (Zenodo 7994000)",
+      "1.8Ga_model_GSF.zip v2.4 (Zenodo 13628813)",
+      "Scotese_Wright_2018_Maps_1-88_1degX1deg_PaleoDEMS_nc.zip (Zenodo 5460860)"
+    ],
+    "abgeleitet_durch": "matrix-scharnier/adapter/tektonik.py (pyGPlates 1.0)",
+    "zitierung": [
+      "Merdith, A. S. et al. (2021): Extending full-plate tectonic models into deep time: Linking the Neoproterozoic and the Phanerozoic. Earth-Science Reviews 214, 103477, doi:10.1016/j.earscirev.2020.103477",
+      "Müller, R. D. et al. (2022): A tectonic-rules-based mantle reference frame since 1 billion years ago. Solid Earth 13, 1127-1159, doi:10.5194/se-13-1127-2022",
+      "Kocsis, Á. T., Scotese, C. R. (2021): Mapping paleocoastlines and continental flooding during the Phanerozoic. Earth-Science Reviews, doi:10.1016/j.earscirev.2020.103463",
+      "Cao, X. et al. (2024): Earth's tectonic and plate boundary evolution over 1.8 billion years. Geoscience Frontiers 15(6), 101922",
+      "Scotese, C. R., Wright, N. M. (2018): PALEOMAP Paleodigital Elevation Models (PaleoDEMS) for the Phanerozoic. doi:10.5281/zenodo.5460860"
+    ]
+  },
+  "stapel": [
+    "1.1"
+  ],
+  "uebergang": "planetarer_stoffwechsel",
+  "vorgang": "stoffwechsel",
+  "herkunft": {
+    "arten": [
+      "rekonstruktion",
+      "berechnet",
+      "modell",
+      "kuratiert"
+    ],
+    "ebene": "Modell und Datei",
+    "hinweis": "Je Modell eine Menge: Merdith, PALEOMAP, Cao rekonstruktion + berechnet; Müller 2022 modell + berechnet (Mantelbezug aus Optimierung); Paläoküsten rekonstruktion + kuratiert + berechnet.",
+    "archivkette": [
+      {
+        "archiv": "zeroearth (data/tektonik_umrisse.json, data/tektonik_palaeokuesten.json)",
+        "art": "zeroearth"
+      },
+      {
+        "archiv": "EarthByte, PALEOMAP (Zenodo)",
+        "art": "gesellschaftlich"
+      },
+      {
+        "fehlt": true,
+        "grund": "Paläomagnetische Messungen und geologische Belege liegen in den Modellen, nicht in den Daten"
+      }
+    ]
+  },
+  "zeitsemantik": {
+    "bezugssystem": "ma_bp",
+    "unschaerfe": {
+      "fehlt": true,
+      "grund": "Die Plattenmodelle nennen keine Unschärfe der Zeit; der Abstand der Schritte ist die Auflösung, nur eine Untergrenze"
+    },
+    "aufloesung": {
+      "wert": "1 Ma (0 bis 66 Ma), 5 Ma (bis 250 Ma), 10 Ma (bis 1000 Ma), 25 Ma (Cao, bis 1800 Ma); Paläo-DEMs 5 Ma",
+      "einheit": "Ma"
+    },
+    "abdeckung": {
+      "von": 1800,
+      "bis": 0,
+      "je_quelle": "Merdith, Müller, PALEOMAP 1000 bis 0 Ma; Cao 1800 bis 1025 Ma; Paläo-DEMs 540 bis 0 Ma"
+    },
+    "verzoegerung": {
+      "fehlt": true,
+      "grund": "Kein Wissensstand angegeben"
+    }
+  },
+  "geometrie": [
+    "grenze"
+  ],
+  "lizenz": {
+    "angabe": "CC BY 4.0",
+    "quelle": "Zenodo-Lizenzfeld je Datensatz (13635864, 13636799, 7994000, 13628813, 5460860); License.txt im Paläo-DEM-Archiv",
+    "geprueft": "2026-11-05",
+    "bearbeitung": "Von zeroearth abgeleitet: Linien vereinfacht, Drehungen je Schritt berechnet, 0-m-Linien der Paläo-DEMs"
+  },
+  "weitergabe": {
+    "im_repo": "data/tektonik_umrisse.json (Geometrie einmal, je Schritt Drehung je Platte), data/tektonik_palaeokuesten.json (0-m-Linien, 109 Karten), kern/test/tektonik_stichprobe.json",
+    "nicht_im_repo": "Rotationsdateien, Plattenpolygone, Topologien und Paläo-DEM-Raster; nur als Verweis"
+  },
+  "auswahl": [
+    "tektonik/auswahl/schritte",
+    "tektonik/auswahl/ideale",
+    "tektonik/auswahl/kuesten_paleomap"
+  ],
+  "reduktion": [
+    {
+      "schritt": "auswaehlen",
+      "angabe": "Nur Küstenumrisse, keine Topologien und keine ozeanischen Platten"
+    },
+    {
+      "schritt": "auswaehlen",
+      "angabe": "Zeitschritte: 0 bis 66 Ma je 1 Ma, bis 250 Ma je 5 Ma, bis 1000 Ma je 10 Ma, Cao 1025 bis 1800 Ma je 25 Ma"
+    },
+    {
+      "schritt": "vergroebern",
+      "angabe": "Linien: Douglas-Peucker 0,25°, auf 0,1° gerundet"
+    },
+    {
+      "schritt": "vergroebern",
+      "angabe": "Paläo-DEM 1° -> 0-m-Linie (Kontur, linear zwischen Gitterpunkten), Douglas-Peucker 0,25°, auf 0,1° gerundet"
+    }
+  ],
+  "zusatz": {
+    "palaeokuesten": "data/tektonik_palaeokuesten.json"
+  },
+  "ideale": {
+    "gruppe": "tektonik/ideale/plattenmodell",
+    "varianten": {
+      "merdith2021": {
+        "name": "Merdith et al. 2021 (paläomagnetischer Bezug)",
+        "variante": "1000_0_rotfile_Merdith_etal.rot"
+      },
+      "mueller2022": {
+        "name": "Müller et al. 2022 (Mantelbezug)",
+        "variante": "optimisation/1000_0_rotfile_MantleOpt.rot"
+      },
+      "paleomap": {
+        "name": "PALEOMAP v19o_r1c (Scotese)",
+        "variante": "m06c9h_3id_forPgeog_19o_r1c.rot"
+      }
+    },
+    "gesetzt_in": "Entscheidung Max, 2026-11-05 (nach kern/BERICHT-tektonik.md)",
+    "begruendung": "Drei Bezugsrahmen für dieselbe Zeit; Müller 2022 übernimmt die relativen Bewegungen von Merdith, setzt aber einen eigenen absoluten Rahmen; PALEOMAP ist ein unabhängiges Modell. Keines wird bevorzugt (Regel 13). Cao 2024 baut bis 1 Ga auf Merdith auf und steht nur jenseits von 1 Ga."
+  }
+}
