@@ -112,10 +112,42 @@ Mit PaleoMIST auf 0,25° kämen 14,5 MB statt 4,2 MB hinzu; dafür reicht die K�
 - Schummerung aus 8-bit-Klassen kann Stufen zeigen. Vorher an einer Karte prüfen, sonst die Schummerung im Adapter vorrechnen und mitliefern.
 - Bei PaleoMIST ist die Isostasie in der Topographie schon enthalten (laut Datei).
 
+## Entschieden: Tektonik folgt mit Relief der PALEOMAP-Rotation (Max, 2026-11-06)
+
+„Wenn möglich, im Idealfall müssen die ja überlappen.“ Geprüft habe ich, wie gut die gedrehten Kontinentpolygone (Merdith-Polygone, je Modell gedreht) mit dem PALEOMAP-DEM überlappen. Gemessen ist die flächengewichtete Überlappung (Schnitt durch Vereinigung) mit dem Kontinentalrand des DEM (Höhe > −1400 m, wie bei Kocsis & Scotese), auf 1°:
+
+| Ma | Merdith 2021 | Müller 2022 | PALEOMAP v19o_r1c | PALEOMAP v3 |
+| --- | --- | --- | --- | --- |
+| 0 | 0,87 | 0,87 | 0,87 | 0,87 |
+| 100 | 0,61 | 0,66 | 0,78 | 0,78 |
+| 200 | 0,64 | 0,60 | 0,81 | 0,82 |
+| 300 | 0,67 | 0,62 | 0,75 | 0,75 |
+| 400 | 0,43 | 0,37 | 0,73 | 0,74 |
+| 500 | 0,29 | 0,14 | 0,56 | 0,56 |
+| 540 | 0,20 | 0,17 | 0,51 | 0,51 |
+
+**Was die Zahlen zeigen**
+
+- Die PALEOMAP-Rotation passt deutlich besser zum PALEOMAP-DEM. Beide stammen aus demselben Rahmen; bei 400 bis 540 Ma ist die Überlappung fast doppelt so groß wie bei Merdith.
+- v19o_r1c und v3 unterscheiden sich kaum. v19o_r1c bleibt, weil sie schon gebaut ist und Kocsis & Scotese sie „for paleogeography“ ausweisen.
+- Auch mit PALEOMAP ist die Deckung nicht vollständig.
+  - Schon bei 0 Ma liegt sie bei 0,87: Kontinentpolygone und die −1400-m-Linie des DEM grenzen den Kontinent verschieden ab.
+  - Mit dem Alter sinkt sie, weil die Polygone ihre heutige Form behalten, das DEM aber die Form der Zeit zeigt.
+  - Der Rest ist also eine Naht zwischen „heutige Form, gedreht“ und „Paläo-Höhenkarte“, kein Fehler. Er bleibt sichtbar.
+
+**Für den Bau**
+
+- **Ist das Relief an,** wird die Tektonik-Ebene standardmäßig auf die PALEOMAP-Rotation umgestellt.
+- **Merdith und Müller** bleiben zuschaltbar. Die Legende sagt dann: „anderer Bezugsrahmen als das Relief, Deckung schlechter (siehe Bericht)“.
+- **Ohne Relief** bleibt Merdith der Standard.
+- **Ein Test im Kern** hält die Überlappung je Stützstelle fest: Sie soll für PALEOMAP nicht unter die gemessenen Werte fallen.
+
+Gemessen mit pyGPlates im Scratchpad (`rahmen.py`), Polygone nach Platte zugeordnet wie in `matrix-scharnier/adapter/tektonik.py`.
+
 ## Zu entscheiden
 
 1. PaleoMIST global auf 0,5° (4,2 MB) oder 0,25° (14,5 MB)?
 2. Eis als eigene Klasse im Relief (Vorschlag ja)?
-3. Soll mit Relief die Tektonik standardmäßig der PALEOMAP-Rotation folgen (ein Rahmen mit dem DEM)?
+3. ~~Soll mit Relief die Tektonik standardmäßig der PALEOMAP-Rotation folgen?~~ Entschieden: ja (siehe oben).
 4. GEBCO laden (rund 7 GB, nur Scratchpad)?
 5. Grenze des Schelfs: −200 m, −1400 m oder beide?
