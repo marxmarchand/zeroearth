@@ -1,6 +1,6 @@
 # Bericht: Relief als gemeinsames Grundbild (Plan)
 
-Stand: 2026-11-05. Nur Plan, nichts gebaut. Gemessen wurde an den lokalen Daten im Scratchpad (PALEOMAP-DEM 1°, PaleoMIST 0,25°); nichts davon liegt im Repo.
+Stand: 2026-11-06. Plan vom 2026-11-05; gebaut am 2026-11-06, siehe „Stand des Baus“ am Ende. Gemessen wurde an den lokalen Daten im Scratchpad (PALEOMAP-DEM 1°, PaleoMIST 0,25°); nichts davon liegt im Repo.
 
 ## 1. Gestaltung
 
@@ -151,3 +151,55 @@ Gemessen mit pyGPlates im Scratchpad (`rahmen.py`), Polygone nach Platte zugeord
 3. ~~Soll mit Relief die Tektonik standardmäßig der PALEOMAP-Rotation folgen?~~ Entschieden: ja (siehe oben).
 4. GEBCO laden (rund 7 GB, nur Scratchpad)?
 5. Grenze des Schelfs: −200 m, −1400 m oder beide?
+
+## Stand des Baus (2026-11-06)
+
+**Entscheidungen**
+
+- **Eis:** eigene Klasse ab 100 m Dicke, „vor allem Gletscher und Packeis“ (Max).
+  - Gletscher und Eisschilde kommen aus `ice_thickness` von PaleoMIST.
+  - Die Schwelle von 100 m ist meine Setzung und steht im Graphen (`relief/auswahl/eis`). Bei 0 ka ergibt sie 14,2 Mio km² Eis, dünneres Eis erscheint als Höhe.
+  - **Packeis (Meereis) führt keine der Quellen.** Es steht als fehlend mit Grund in Daten, Graph und Legende.
+- **PaleoMIST:** auf 0,5° (jeder zweite Gitterpunkt), 4,2 MB. Die Sintflut-Küsten bleiben auf 0,25°.
+- **Schelf:** beide Grenzen nebeneinander, 0 bis −200 m und −200 bis −1400 m.
+- **GEBCO:** nicht geladen. Für heute bleibt das Grundbild Natural Earth; „GEBCO fehlt“ steht mit Grund in Status und Legende.
+
+**Gebaut**
+
+- **`matrix-scharnier/adapter/relief.py`:**
+  - 109 PALEOMAP-Karten (1°) und 33 PaleoMIST-Schritte (0,5°) als 8-bit-Höhenklassen.
+  - Zusammen 5,9 MB PNG in `data/relief/`, dazu `data/relief.json` mit Klassentafel, Setzungen, dem, was fehlt, und den abgeleiteten Größen je Schritt: Landfläche, Schelf 0 bis −200 m, Rand −200 bis −1400 m, mittlere Landhöhe, Höhenstufen, Eisfläche.
+- **Kern:** Adapter `kern/adapter/relief/` (Manifest, Transform) und `kern/test/relief.test.mjs`.
+  - Je Quelle ein Feld mit der Höhe je Schritt (Verweis auf das PNG) und den Größen als Reihen. Die Größen tragen zusätzlich `berechnet`, die Höhe nicht.
+  - Was fehlt, steht als eigener Eintrag mit Grund: heute/GEBCO, die Lücke 80 ka bis 2,5 Ma, vor 540 Ma, Packeis.
+- **Ebene „Relief“, standardmäßig an:**
+  - Die Farben entstehen im Browser: Meer blau nach Tiefe, Land Sand bis Braun, Eis hellgrau, kein Grün.
+  - Schummerung mit Licht aus Nordwest und 20-facher Überhöhung; beides steht in der Legende (Regel 10).
+  - Die 0-m-Linie wird aus demselben Raster gezogen.
+  - Das Bild ist um eine halbe Zelle versetzt, damit die Gitterpunkte Zellmitten sind.
+- **Welche Quelle gilt,** entscheidet die Zeile der Takt-Leiste: Jahr-Zeile heute (Natural Earth), ka-Zeilen PaleoMIST, Ma-Zeilen PALEOMAP. Zwischen 80 ka und 2,5 Ma und vor 540 Ma fehlt das Relief mit Grund; dann gilt die neutrale Kugel mit Gradnetz.
+- **Grau-Modus:** automatisch, sobald eine Feld-Ebene mit Daten an ist (Eisdicke, Temperatur, Paläotemperatur, Klimazonen, Wind nur mit Winddaten). Status und Legende nennen den Grund.
+- **Tektonik:**
+  - Zeigt das Relief das PALEOMAP-DEM, folgt die Tektonik der PALEOMAP-Rotation, solange man nicht selbst gewählt hat.
+  - Bei Relief zeigt sie nur den Rand der Kontinentfläche, damit das Relief sichtbar bleibt.
+  - Merdith und Müller tragen dann in der Legende den Hinweis auf den anderen Bezugsrahmen.
+- **Takt-Leiste:** Sie zeigt die Stützstellen beider Reliefquellen.
+
+**Geprüft** in Chromium bei 20 ka (mit Eis), 20 ka grau, 0 ka (ka-Zeile, PaleoMIST), heute (Jahr-Zeile, Natural Earth), 1 Ma (Lücke), 250 Ma (PALEOMAP mit PALEOMAP-Rotation) und 600 Ma (fehlt).
+
+- **Grau-Modus:** Im Repo liegt keine Feld-Ebene mit Daten. Für das Foto habe ich die Klimazonen-Ebene im Browser als „an“ gesetzt; in der normalen Ansicht wird das Relief derzeit nie grau.
+
+**Noch offen**
+
+- GEBCO für heute (Download rund 7 GB, Freigabe nötig).
+- PRISM4 für die Lücke.
+- Die Schummerung zeigt bei 1° (PALEOMAP) sichtbare Zellen; eine feinere Quelle (PALEOMAP 0,1°, 207 MB roh) wäre zu prüfen.
+
+![20 ka: PaleoMIST mit Eisschilden](bericht-relief/20ka.jpg)
+![20 ka, grau: Feld-Ebene an](bericht-relief/20ka-grau.jpg)
+![0 ka in der ka-Zeile: PaleoMIST](bericht-relief/heute-ka.jpg)
+![Heute in der Jahr-Zeile: Natural Earth, GEBCO fehlt](bericht-relief/heute-jahr.jpg)
+![1 Ma: Lücke, Relief fehlt](bericht-relief/1ma.jpg)
+![250 Ma: PALEOMAP-DEM, Tektonik folgt der PALEOMAP-Rotation](bericht-relief/250ma.jpg)
+![600 Ma: Relief fehlt, neutrale Kugel](bericht-relief/600ma.jpg)
+

@@ -1,0 +1,3516 @@
+{
+ "erzeugt": "2026-11-06T06:25:30+00:00",
+ "hinweis": "erzeugt von matrix-scharnier/adapter/relief.py",
+ "klassen": {
+  "meer": {
+   "von": 0,
+   "bis": 100,
+   "tiefe_max_m": 11000.0,
+   "skala": "Wurzel"
+  },
+  "land": {
+   "von": 101,
+   "bis": 254,
+   "hoehe_max_m": 9000.0,
+   "skala": "Wurzel"
+  },
+  "eis": 255,
+  "null_m": "zwischen Klasse 100 (≤ 0 m) und 101 (> 0 m)"
+ },
+ "setzungen": {
+  "schelf_m": [
+   -200.0,
+   -1400.0
+  ],
+  "stufen_m": [
+   -6000,
+   -4000,
+   -2000,
+   -1400,
+   -200,
+   0,
+   200,
+   1000,
+   2000,
+   4000
+  ],
+  "eis_ab_m": 100.0,
+  "schelf_begruendung": "−200 m: übliche Schelfkante; −1400 m: Kontinentalrand bei Kocsis & Scotese. Beide nebeneinander."
+ },
+ "fehlt": {
+  "gebco": {
+   "fehlt": true,
+   "grund": "GEBCO für heute noch nicht geladen (rund 7 GB, Download nicht freigegeben); heute bleibt das Grundbild Natural Earth"
+  },
+  "luecke": {
+   "fehlt": true,
+   "grund": "Zwischen 80 ka und 2,5 Ma keine geprüfte Quelle: PaleoMIST endet bei 80 ka, das PALEOMAP-DEM hat nach 0 Ma die nächste Karte bei 5 Ma"
+  },
+  "vor_540": {
+   "fehlt": true,
+   "grund": "Vor 540 Ma keine geprüfte Paläo-Höhenkarte"
+  },
+  "packeis": {
+   "fehlt": true,
+   "grund": "Meereis (Packeis) führt keine der Quellen; PaleoMIST nennt nur aufliegendes Eis"
+  }
+ },
+ "quellen": {
+  "paleomap": {
+   "name": "PALEOMAP-DEM (Scotese & Wright 2018)",
+   "einheit": "Ma",
+   "bezugssystem": "ma_bp",
+   "aufloesung_grad": 1.0,
+   "breite": 360,
+   "hoehe": 181,
+   "arten": [
+    "rekonstruktion",
+    "kuratiert"
+   ],
+   "lizenz": "CC BY 4.0, doi:10.5281/zenodo.5460860",
+   "bezugsrahmen": "PALEOMAP",
+   "zeit_unschaerfe": {
+    "fehlt": true,
+    "grund": "Kartenalter je Stufe, ohne Unschärfe"
+   },
+   "schritte": [
+    {
+     "ma": 0.0,
+     "stufe": "Holocene",
+     "datei": "relief/paleomap/000.png",
+     "groessen": {
+      "landflaeche_km2": 140762164,
+      "schelf_0_200_km2": 29364947,
+      "rand_200_1400_km2": 25957475,
+      "mittlere_landhoehe_m": 697,
+      "hypsometrie_anteil": [
+       0.00704,
+       0.36863,
+       0.21923,
+       0.02066,
+       0.05089,
+       0.05757,
+       0.07989,
+       0.13873,
+       0.04034,
+       0.01189,
+       0.00513
+      ]
+     }
+    },
+    {
+     "ma": 5.0,
+     "stufe": "Pliocene",
+     "datei": "relief/paleomap/005.png",
+     "groessen": {
+      "landflaeche_km2": 145106085,
+      "schelf_0_200_km2": 24245292,
+      "rand_200_1400_km2": 25252900,
+      "mittlere_landhoehe_m": 675,
+      "hypsometrie_anteil": [
+       0.00018,
+       0.3572,
+       0.24229,
+       0.01878,
+       0.04951,
+       0.04754,
+       0.07425,
+       0.15291,
+       0.04211,
+       0.01227,
+       0.00294
+      ]
+     }
+    },
+    {
+     "ma": 10.0,
+     "stufe": "middle Late Miocene",
+     "datei": "relief/paleomap/010.png",
+     "groessen": {
+      "landflaeche_km2": 154563733,
+      "schelf_0_200_km2": 19491090,
+      "rand_200_1400_km2": 23654480,
+      "mittlere_landhoehe_m": 653,
+      "hypsometrie_anteil": [
+       0.0001,
+       0.36071,
+       0.2324,
+       0.01916,
+       0.04638,
+       0.03821,
+       0.08686,
+       0.15894,
+       0.04125,
+       0.01267,
+       0.00331
+      ]
+     }
+    },
+    {
+     "ma": 15.0,
+     "stufe": "Middle Miocene",
+     "datei": "relief/paleomap/015.png",
+     "groessen": {
+      "landflaeche_km2": 156659157,
+      "schelf_0_200_km2": 16997809,
+      "rand_200_1400_km2": 22953953,
+      "mittlere_landhoehe_m": 645,
+      "hypsometrie_anteil": [
+       5e-05,
+       0.34649,
+       0.24828,
+       0.01971,
+       0.045,
+       0.03333,
+       0.08156,
+       0.16969,
+       0.04407,
+       0.00867,
+       0.00316
+      ]
+     }
+    },
+    {
+     "ma": 20.0,
+     "stufe": "Early Miocene",
+     "datei": "relief/paleomap/020.png",
+     "groessen": {
+      "landflaeche_km2": 153620677,
+      "schelf_0_200_km2": 24214081,
+      "rand_200_1400_km2": 23438780,
+      "mittlere_landhoehe_m": 684,
+      "hypsometrie_anteil": [
+       0.00021,
+       0.34472,
+       0.24139,
+       0.01906,
+       0.04595,
+       0.04747,
+       0.07442,
+       0.16711,
+       0.04926,
+       0.0062,
+       0.0042
+      ]
+     }
+    },
+    {
+     "ma": 25.0,
+     "stufe": "Late Oligocene",
+     "datei": "relief/paleomap/025.png",
+     "groessen": {
+      "landflaeche_km2": 157129775,
+      "schelf_0_200_km2": 18630636,
+      "rand_200_1400_km2": 23094517,
+      "mittlere_landhoehe_m": 636,
+      "hypsometrie_anteil": [
+       0.0,
+       0.38745,
+       0.20283,
+       0.01984,
+       0.04528,
+       0.03653,
+       0.0786,
+       0.17733,
+       0.04334,
+       0.00582,
+       0.00297
+      ]
+     }
+    },
+    {
+     "ma": 30.0,
+     "stufe": "Early Oligocene",
+     "datei": "relief/paleomap/030.png",
+     "groessen": {
+      "landflaeche_km2": 158980355,
+      "schelf_0_200_km2": 19415894,
+      "rand_200_1400_km2": 24437361,
+      "mittlere_landhoehe_m": 620,
+      "hypsometrie_anteil": [
+       0.00014,
+       0.40636,
+       0.17753,
+       0.01829,
+       0.04791,
+       0.03807,
+       0.09062,
+       0.16753,
+       0.04343,
+       0.0077,
+       0.00242
+      ]
+     }
+    },
+    {
+     "ma": 35.0,
+     "stufe": "Late Eocene",
+     "datei": "relief/paleomap/035.png",
+     "groessen": {
+      "landflaeche_km2": 160419138,
+      "schelf_0_200_km2": 16682838,
+      "rand_200_1400_km2": 26059096,
+      "mittlere_landhoehe_m": 572,
+      "hypsometrie_anteil": [
+       2e-05,
+       0.40438,
+       0.17709,
+       0.02019,
+       0.05109,
+       0.03271,
+       0.07883,
+       0.19447,
+       0.03462,
+       0.00468,
+       0.00192
+      ]
+     }
+    },
+    {
+     "ma": 40.0,
+     "stufe": "late Middle Eocene",
+     "datei": "relief/paleomap/040.png",
+     "groessen": {
+      "landflaeche_km2": 163635364,
+      "schelf_0_200_km2": 19201283,
+      "rand_200_1400_km2": 24294614,
+      "mittlere_landhoehe_m": 549,
+      "hypsometrie_anteil": [
+       7e-05,
+       0.41682,
+       0.15867,
+       0.01834,
+       0.04763,
+       0.03765,
+       0.07869,
+       0.20316,
+       0.03239,
+       0.00466,
+       0.00192
+      ]
+     }
+    },
+    {
+     "ma": 45.0,
+     "stufe": "early Middle Eocene",
+     "datei": "relief/paleomap/045.png",
+     "groessen": {
+      "landflaeche_km2": 151248373,
+      "schelf_0_200_km2": 25276801,
+      "rand_200_1400_km2": 27871766,
+      "mittlere_landhoehe_m": 505,
+      "hypsometrie_anteil": [
+       0.0,
+       0.41763,
+       0.16049,
+       0.02114,
+       0.05465,
+       0.04956,
+       0.07444,
+       0.18908,
+       0.02999,
+       0.00303,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 50.0,
+     "stufe": "Early Eocene",
+     "datei": "relief/paleomap/050.png",
+     "groessen": {
+      "landflaeche_km2": 134102011,
+      "schelf_0_200_km2": 41890621,
+      "rand_200_1400_km2": 31598868,
+      "mittlere_landhoehe_m": 534,
+      "hypsometrie_anteil": [
+       0.00092,
+       0.43964,
+       0.13681,
+       0.01563,
+       0.06195,
+       0.08213,
+       0.06079,
+       0.16738,
+       0.03104,
+       0.00368,
+       3e-05
+      ]
+     }
+    },
+    {
+     "ma": 55.0,
+     "stufe": "Paleocene Eocene Boundary",
+     "datei": "relief/paleomap/055.png",
+     "groessen": {
+      "landflaeche_km2": 140365384,
+      "schelf_0_200_km2": 32194061,
+      "rand_200_1400_km2": 31109383,
+      "mittlere_landhoehe_m": 479,
+      "hypsometrie_anteil": [
+       0.0,
+       0.42126,
+       0.15888,
+       0.02055,
+       0.06099,
+       0.06312,
+       0.07657,
+       0.17138,
+       0.02515,
+       0.00211,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 60.0,
+     "stufe": "Paleocene",
+     "datei": "relief/paleomap/060.png",
+     "groessen": {
+      "landflaeche_km2": 142377906,
+      "schelf_0_200_km2": 33289632,
+      "rand_200_1400_km2": 28607425,
+      "mittlere_landhoehe_m": 472,
+      "hypsometrie_anteil": [
+       0.0,
+       0.42422,
+       0.15634,
+       0.01893,
+       0.05609,
+       0.06527,
+       0.08044,
+       0.17205,
+       0.02448,
+       0.00217,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 65.0,
+     "stufe": "KT Boundary",
+     "datei": "relief/paleomap/065.png",
+     "groessen": {
+      "landflaeche_km2": 144423580,
+      "schelf_0_200_km2": 29762150,
+      "rand_200_1400_km2": 29715697,
+      "mittlere_landhoehe_m": 448,
+      "hypsometrie_anteil": [
+       0.0,
+       0.42128,
+       0.15892,
+       0.02002,
+       0.05826,
+       0.05835,
+       0.08654,
+       0.17101,
+       0.02373,
+       0.00187,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 70.0,
+     "stufe": "Late Cretaceous",
+     "datei": "relief/paleomap/070.png",
+     "groessen": {
+      "landflaeche_km2": 146395452,
+      "schelf_0_200_km2": 33837803,
+      "rand_200_1400_km2": 27952626,
+      "mittlere_landhoehe_m": 447,
+      "hypsometrie_anteil": [
+       0.00011,
+       0.4258,
+       0.14877,
+       0.01715,
+       0.0548,
+       0.06634,
+       0.09876,
+       0.1599,
+       0.02527,
+       0.003,
+       9e-05
+      ]
+     }
+    },
+    {
+     "ma": 75.0,
+     "stufe": "Late Cretaceous",
+     "datei": "relief/paleomap/075.png",
+     "groessen": {
+      "landflaeche_km2": 123440870,
+      "schelf_0_200_km2": 40017184,
+      "rand_200_1400_km2": 38600274,
+      "mittlere_landhoehe_m": 457,
+      "hypsometrie_anteil": [
+       0.0,
+       0.44368,
+       0.14196,
+       0.0182,
+       0.07568,
+       0.07846,
+       0.07754,
+       0.14242,
+       0.0197,
+       0.00236,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 80.0,
+     "stufe": "Late Cretaceous",
+     "datei": "relief/paleomap/080.png",
+     "groessen": {
+      "landflaeche_km2": 112249045,
+      "schelf_0_200_km2": 35958260,
+      "rand_200_1400_km2": 56014065,
+      "mittlere_landhoehe_m": 494,
+      "hypsometrie_anteil": [
+       2e-05,
+       0.47114,
+       0.11409,
+       0.01434,
+       0.10982,
+       0.0705,
+       0.07501,
+       0.11525,
+       0.02653,
+       0.00326,
+       3e-05
+      ]
+     }
+    },
+    {
+     "ma": 85.0,
+     "stufe": "Late Cretaceous",
+     "datei": "relief/paleomap/085.png",
+     "groessen": {
+      "landflaeche_km2": 117068210,
+      "schelf_0_200_km2": 31008053,
+      "rand_200_1400_km2": 52157853,
+      "mittlere_landhoehe_m": 477,
+      "hypsometrie_anteil": [
+       0.0,
+       0.4607,
+       0.12664,
+       0.02008,
+       0.10226,
+       0.06079,
+       0.07102,
+       0.13496,
+       0.0217,
+       0.00185,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 90.0,
+     "stufe": "Mid-Cretaceous",
+     "datei": "relief/paleomap/090.png",
+     "groessen": {
+      "landflaeche_km2": 124542981,
+      "schelf_0_200_km2": 31989437,
+      "rand_200_1400_km2": 43789970,
+      "mittlere_landhoehe_m": 502,
+      "hypsometrie_anteil": [
+       0.0,
+       0.47521,
+       0.11548,
+       0.01656,
+       0.08585,
+       0.06272,
+       0.07061,
+       0.1444,
+       0.02752,
+       0.00166,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 95.0,
+     "stufe": "Mid-Cretaceous",
+     "datei": "relief/paleomap/095.png",
+     "groessen": {
+      "landflaeche_km2": 131694811,
+      "schelf_0_200_km2": 28086905,
+      "rand_200_1400_km2": 41176986,
+      "mittlere_landhoehe_m": 526,
+      "hypsometrie_anteil": [
+       0.0,
+       0.48681,
+       0.10235,
+       0.01684,
+       0.08073,
+       0.05507,
+       0.06817,
+       0.15443,
+       0.03102,
+       0.00458,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 100.0,
+     "stufe": "Early Cretaceous",
+     "datei": "relief/paleomap/100.png",
+     "groessen": {
+      "landflaeche_km2": 136972086,
+      "schelf_0_200_km2": 31990890,
+      "rand_200_1400_km2": 35621064,
+      "mittlere_landhoehe_m": 591,
+      "hypsometrie_anteil": [
+       0.0005,
+       0.49428,
+       0.09197,
+       0.01215,
+       0.06984,
+       0.06272,
+       0.06644,
+       0.15442,
+       0.03811,
+       0.00952,
+       6e-05
+      ]
+     }
+    },
+    {
+     "ma": 105.0,
+     "stufe": "Early Cretaceous",
+     "datei": "relief/paleomap/105.png",
+     "groessen": {
+      "landflaeche_km2": 138850993,
+      "schelf_0_200_km2": 31177209,
+      "rand_200_1400_km2": 32401748,
+      "mittlere_landhoehe_m": 518,
+      "hypsometrie_anteil": [
+       0.0,
+       0.49801,
+       0.08828,
+       0.01683,
+       0.06353,
+       0.06113,
+       0.071,
+       0.16704,
+       0.02926,
+       0.00493,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 110.0,
+     "stufe": "Early Cretaceous",
+     "datei": "relief/paleomap/110.png",
+     "groessen": {
+      "landflaeche_km2": 139900354,
+      "schelf_0_200_km2": 31698559,
+      "rand_200_1400_km2": 31967402,
+      "mittlere_landhoehe_m": 487,
+      "hypsometrie_anteil": [
+       0.0,
+       0.51298,
+       0.07072,
+       0.01718,
+       0.06268,
+       0.06215,
+       0.07441,
+       0.17218,
+       0.02507,
+       0.00263,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 115.0,
+     "stufe": "Early Cretaceous",
+     "datei": "relief/paleomap/115.png",
+     "groessen": {
+      "landflaeche_km2": 137974166,
+      "schelf_0_200_km2": 33288540,
+      "rand_200_1400_km2": 33640257,
+      "mittlere_landhoehe_m": 466,
+      "hypsometrie_anteil": [
+       0.0,
+       0.52334,
+       0.06234,
+       0.01258,
+       0.06596,
+       0.06527,
+       0.07423,
+       0.17222,
+       0.0223,
+       0.00176,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 120.0,
+     "stufe": "Early Cretaceous",
+     "datei": "relief/paleomap/120.png",
+     "groessen": {
+      "landflaeche_km2": 131864542,
+      "schelf_0_200_km2": 46717552,
+      "rand_200_1400_km2": 28440129,
+      "mittlere_landhoehe_m": 489,
+      "hypsometrie_anteil": [
+       0.0,
+       0.53895,
+       0.04628,
+       0.00888,
+       0.05576,
+       0.09159,
+       0.0675,
+       0.16492,
+       0.02365,
+       0.00244,
+       2e-05
+      ]
+     }
+    },
+    {
+     "ma": 125.0,
+     "stufe": "Early Cretaceous",
+     "datei": "relief/paleomap/125.png",
+     "groessen": {
+      "landflaeche_km2": 139145525,
+      "schelf_0_200_km2": 38328682,
+      "rand_200_1400_km2": 26379608,
+      "mittlere_landhoehe_m": 449,
+      "hypsometrie_anteil": [
+       0.0,
+       0.52828,
+       0.06082,
+       0.01122,
+       0.05172,
+       0.07515,
+       0.07578,
+       0.17622,
+       0.01902,
+       0.00179,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 130.0,
+     "stufe": "Early Cretaceous",
+     "datei": "relief/paleomap/130.png",
+     "groessen": {
+      "landflaeche_km2": 149663895,
+      "schelf_0_200_km2": 33348816,
+      "rand_200_1400_km2": 19998099,
+      "mittlere_landhoehe_m": 438,
+      "hypsometrie_anteil": [
+       0.0,
+       0.53769,
+       0.05559,
+       0.00869,
+       0.03921,
+       0.06538,
+       0.08421,
+       0.18801,
+       0.01959,
+       0.00162,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 135.0,
+     "stufe": "Early Cretaceous",
+     "datei": "relief/paleomap/135.png",
+     "groessen": {
+      "landflaeche_km2": 155389688,
+      "schelf_0_200_km2": 28071633,
+      "rand_200_1400_km2": 20775963,
+      "mittlere_landhoehe_m": 444,
+      "hypsometrie_anteil": [
+       0.0,
+       0.54333,
+       0.04681,
+       0.00943,
+       0.04073,
+       0.05504,
+       0.08668,
+       0.19437,
+       0.02223,
+       0.00138,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 140.0,
+     "stufe": "Early Cretaceous",
+     "datei": "relief/paleomap/140.png",
+     "groessen": {
+      "landflaeche_km2": 156382400,
+      "schelf_0_200_km2": 31963333,
+      "rand_200_1400_km2": 17903254,
+      "mittlere_landhoehe_m": 487,
+      "hypsometrie_anteil": [
+       0.0,
+       0.55955,
+       0.02795,
+       0.00812,
+       0.0351,
+       0.06267,
+       0.08692,
+       0.18496,
+       0.03233,
+       0.0024,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 145.0,
+     "stufe": "Jurassic Cretaceous Boundary",
+     "datei": "relief/paleomap/145.png",
+     "groessen": {
+      "landflaeche_km2": 158186099,
+      "schelf_0_200_km2": 26507292,
+      "rand_200_1400_km2": 16526879,
+      "mittlere_landhoehe_m": 459,
+      "hypsometrie_anteil": [
+       0.0,
+       0.5536,
+       0.0431,
+       0.00879,
+       0.0324,
+       0.05197,
+       0.0967,
+       0.18231,
+       0.02901,
+       0.00212,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 150.0,
+     "stufe": "Late Jurassic",
+     "datei": "relief/paleomap/150.png",
+     "groessen": {
+      "landflaeche_km2": 156354689,
+      "schelf_0_200_km2": 29426332,
+      "rand_200_1400_km2": 17504785,
+      "mittlere_landhoehe_m": 467,
+      "hypsometrie_anteil": [
+       0.0,
+       0.56854,
+       0.02668,
+       0.00622,
+       0.03432,
+       0.05769,
+       0.09677,
+       0.17658,
+       0.03042,
+       0.00277,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 155.0,
+     "stufe": "Late Jurassic",
+     "datei": "relief/paleomap/155.png",
+     "groessen": {
+      "landflaeche_km2": 151405583,
+      "schelf_0_200_km2": 31074353,
+      "rand_200_1400_km2": 17924815,
+      "mittlere_landhoehe_m": 431,
+      "hypsometrie_anteil": [
+       0.0,
+       0.56406,
+       0.03235,
+       0.01068,
+       0.03514,
+       0.06092,
+       0.10787,
+       0.16274,
+       0.02416,
+       0.00207,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 160.0,
+     "stufe": "Late Jurassic",
+     "datei": "relief/paleomap/160.png",
+     "groessen": {
+      "landflaeche_km2": 131651305,
+      "schelf_0_200_km2": 54281817,
+      "rand_200_1400_km2": 16071431,
+      "mittlere_landhoehe_m": 476,
+      "hypsometrie_anteil": [
+       0.0,
+       0.00053,
+       0.59913,
+       0.00429,
+       0.03151,
+       0.10643,
+       0.08225,
+       0.14728,
+       0.02609,
+       0.0025,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 165.0,
+     "stufe": "Middle Jurassic",
+     "datei": "relief/paleomap/165.png",
+     "groessen": {
+      "landflaeche_km2": 140481683,
+      "schelf_0_200_km2": 40338775,
+      "rand_200_1400_km2": 20059739,
+      "mittlere_landhoehe_m": 446,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.59645,
+       0.0097,
+       0.03933,
+       0.07909,
+       0.08604,
+       0.16574,
+       0.02222,
+       0.00143,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 170.0,
+     "stufe": "Middle Jurassic",
+     "datei": "relief/paleomap/170.png",
+     "groessen": {
+      "landflaeche_km2": 145142678,
+      "schelf_0_200_km2": 37507087,
+      "rand_200_1400_km2": 18561899,
+      "mittlere_landhoehe_m": 456,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.59463,
+       0.01087,
+       0.03639,
+       0.07354,
+       0.08599,
+       0.17329,
+       0.02436,
+       0.00093,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 175.0,
+     "stufe": "Middle Jurassic",
+     "datei": "relief/paleomap/175.png",
+     "groessen": {
+      "landflaeche_km2": 152044083,
+      "schelf_0_200_km2": 33187035,
+      "rand_200_1400_km2": 17451697,
+      "mittlere_landhoehe_m": 476,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.59729,
+       0.00533,
+       0.03422,
+       0.06507,
+       0.07957,
+       0.18907,
+       0.02824,
+       0.00121,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 180.0,
+     "stufe": "Early Jurassic",
+     "datei": "relief/paleomap/180.png",
+     "groessen": {
+      "landflaeche_km2": 175682838,
+      "schelf_0_200_km2": 16176493,
+      "rand_200_1400_km2": 10202461,
+      "mittlere_landhoehe_m": 470,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.60188,
+       0.00196,
+       0.02,
+       0.03172,
+       0.11038,
+       0.19522,
+       0.03617,
+       0.00268,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 185.0,
+     "stufe": "Early Jurassic",
+     "datei": "relief/paleomap/185.png",
+     "groessen": {
+      "landflaeche_km2": 168214570,
+      "schelf_0_200_km2": 16103831,
+      "rand_200_1400_km2": 16740854,
+      "mittlere_landhoehe_m": 451,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.60136,
+       0.00444,
+       0.03282,
+       0.03157,
+       0.10361,
+       0.19583,
+       0.02888,
+       0.00148,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 190.0,
+     "stufe": "Early Jurassic",
+     "datei": "relief/paleomap/190.png",
+     "groessen": {
+      "landflaeche_km2": 161071111,
+      "schelf_0_200_km2": 23413549,
+      "rand_200_1400_km2": 12099643,
+      "mittlere_landhoehe_m": 445,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.59754,
+       0.01704,
+       0.02372,
+       0.0459,
+       0.10105,
+       0.18812,
+       0.02516,
+       0.00146,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 195.0,
+     "stufe": "Early Jurassic",
+     "datei": "relief/paleomap/195.png",
+     "groessen": {
+      "landflaeche_km2": 165381275,
+      "schelf_0_200_km2": 19334493,
+      "rand_200_1400_km2": 13095061,
+      "mittlere_landhoehe_m": 448,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.60434,
+       0.00783,
+       0.02567,
+       0.03791,
+       0.09872,
+       0.19837,
+       0.02555,
+       0.00161,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 200.0,
+     "stufe": "Late Triassic",
+     "datei": "relief/paleomap/200.png",
+     "groessen": {
+      "landflaeche_km2": 180570413,
+      "schelf_0_200_km2": 10545478,
+      "rand_200_1400_km2": 7110371,
+      "mittlere_landhoehe_m": 443,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.60954,
+       0.00181,
+       0.01394,
+       0.02068,
+       0.11806,
+       0.20353,
+       0.02925,
+       0.00319,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 205.0,
+     "stufe": "Map43.5 PALEOMAP 1deg Late Triassic",
+     "datei": "relief/paleomap/205.png",
+     "groessen": {
+      "landflaeche_km2": 176658052,
+      "schelf_0_200_km2": 11977305,
+      "rand_200_1400_km2": 10542629,
+      "mittlere_landhoehe_m": 428,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.60673,
+       0.00276,
+       0.02067,
+       0.02348,
+       0.11344,
+       0.20608,
+       0.02511,
+       0.00173,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 210.0,
+     "stufe": "Late Triassic",
+     "datei": "relief/paleomap/210.png",
+     "groessen": {
+      "landflaeche_km2": 172823843,
+      "schelf_0_200_km2": 16564971,
+      "rand_200_1400_km2": 7952478,
+      "mittlere_landhoehe_m": 417,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.60101,
+       0.01209,
+       0.01559,
+       0.03248,
+       0.11613,
+       0.20043,
+       0.02068,
+       0.00159,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 215.0,
+     "stufe": "Map44.5 PALEOMAP 1deg Late Triassic",
+     "datei": "relief/paleomap/215.png",
+     "groessen": {
+      "landflaeche_km2": 170492822,
+      "schelf_0_200_km2": 21318451,
+      "rand_200_1400_km2": 8211004,
+      "mittlere_landhoehe_m": 405,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.6064,
+       0.00144,
+       0.0161,
+       0.0418,
+       0.12632,
+       0.18504,
+       0.02116,
+       0.00174,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 220.0,
+     "stufe": "Late Triassic",
+     "datei": "relief/paleomap/220.png",
+     "groessen": {
+      "landflaeche_km2": 142845248,
+      "schelf_0_200_km2": 54136888,
+      "rand_200_1400_km2": 3645978,
+      "mittlere_landhoehe_m": 464,
+      "hypsometrie_anteil": [
+       0.0,
+       2e-05,
+       0.60562,
+       0.00101,
+       0.00715,
+       0.10614,
+       0.08248,
+       0.17064,
+       0.02454,
+       0.0024,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 225.0,
+     "stufe": "Map45.5 PALEOMAP 1deg Late Triassic",
+     "datei": "relief/paleomap/225.png",
+     "groessen": {
+      "landflaeche_km2": 146610620,
+      "schelf_0_200_km2": 43173543,
+      "rand_200_1400_km2": 12388504,
+      "mittlere_landhoehe_m": 452,
+      "hypsometrie_anteil": [
+       0.0,
+       2e-05,
+       0.60179,
+       0.00181,
+       0.02429,
+       0.08465,
+       0.08231,
+       0.1805,
+       0.02283,
+       0.0018,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 230.0,
+     "stufe": "Late Triassic",
+     "datei": "relief/paleomap/230.png",
+     "groessen": {
+      "landflaeche_km2": 150753958,
+      "schelf_0_200_km2": 39618065,
+      "rand_200_1400_km2": 5576769,
+      "mittlere_landhoehe_m": 449,
+      "hypsometrie_anteil": [
+       0.0,
+       2e-05,
+       0.59348,
+       0.02233,
+       0.01093,
+       0.07768,
+       0.08436,
+       0.18843,
+       0.02147,
+       0.00131,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 235.0,
+     "stufe": "Map46.5 PALEOMAP 1deg Late Triassic",
+     "datei": "relief/paleomap/235.png",
+     "groessen": {
+      "landflaeche_km2": 151291051,
+      "schelf_0_200_km2": 39934709,
+      "rand_200_1400_km2": 6360339,
+      "mittlere_landhoehe_m": 458,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.60984,
+       0.00277,
+       0.01247,
+       0.0783,
+       0.08353,
+       0.18786,
+       0.02377,
+       0.00147,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 240.0,
+     "stufe": "Middle Triassic",
+     "datei": "relief/paleomap/240.png",
+     "groessen": {
+      "landflaeche_km2": 186255833,
+      "schelf_0_200_km2": 6464672,
+      "rand_200_1400_km2": 4031564,
+      "mittlere_landhoehe_m": 388,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.61221,
+       0.00203,
+       0.0079,
+       0.01267,
+       0.15116,
+       0.18506,
+       0.02697,
+       0.00198,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 245.0,
+     "stufe": "Middle Triassic",
+     "datei": "relief/paleomap/245.png",
+     "groessen": {
+      "landflaeche_km2": 149866562,
+      "schelf_0_200_km2": 36072952,
+      "rand_200_1400_km2": 12163332,
+      "mittlere_landhoehe_m": 428,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.6087,
+       0.0029,
+       0.02385,
+       0.07072,
+       0.08606,
+       0.18906,
+       0.01787,
+       0.00083,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 250.0,
+     "stufe": "Permo-Triassic Boundary",
+     "datei": "relief/paleomap/250.png",
+     "groessen": {
+      "landflaeche_km2": 146389907,
+      "schelf_0_200_km2": 40111270,
+      "rand_200_1400_km2": 6355030,
+      "mittlere_landhoehe_m": 398,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.59836,
+       0.02352,
+       0.01246,
+       0.07864,
+       0.08754,
+       0.18713,
+       0.01194,
+       0.00041,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 255.0,
+     "stufe": "LatePermian",
+     "datei": "relief/paleomap/255.png",
+     "groessen": {
+      "landflaeche_km2": 137222091,
+      "schelf_0_200_km2": 50838046,
+      "rand_200_1400_km2": 10058676,
+      "mittlere_landhoehe_m": 386,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.60849,
+       0.00308,
+       0.01972,
+       0.09967,
+       0.08244,
+       0.17614,
+       0.01038,
+       8e-05,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 260.0,
+     "stufe": "Middle Permian",
+     "datei": "relief/paleomap/260.png",
+     "groessen": {
+      "landflaeche_km2": 127281186,
+      "schelf_0_200_km2": 66305233,
+      "rand_200_1400_km2": 7242860,
+      "mittlere_landhoehe_m": 388,
+      "hypsometrie_anteil": [
+       0.0,
+       2e-05,
+       0.60373,
+       0.00249,
+       0.0142,
+       0.13,
+       0.07619,
+       0.16188,
+       0.01143,
+       5e-05,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 265.0,
+     "stufe": "Map51.5 PALEOMAP 1deg Middle Permian",
+     "datei": "relief/paleomap/265.png",
+     "groessen": {
+      "landflaeche_km2": 129053885,
+      "schelf_0_200_km2": 50343359,
+      "rand_200_1400_km2": 20071562,
+      "mittlere_landhoehe_m": 412,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.60524,
+       0.00368,
+       0.03935,
+       0.0987,
+       0.06712,
+       0.1731,
+       0.01276,
+       4e-05,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 270.0,
+     "stufe": "Middle Permian",
+     "datei": "relief/paleomap/270.png",
+     "groessen": {
+      "landflaeche_km2": 129377209,
+      "schelf_0_200_km2": 46306727,
+      "rand_200_1400_km2": 18279627,
+      "mittlere_landhoehe_m": 449,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.60507,
+       0.01464,
+       0.03584,
+       0.09079,
+       0.07091,
+       0.15669,
+       0.0259,
+       0.00016,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 275.0,
+     "stufe": "Early Permian",
+     "datei": "relief/paleomap/275.png",
+     "groessen": {
+      "landflaeche_km2": 125530879,
+      "schelf_0_200_km2": 49695643,
+      "rand_200_1400_km2": 19411693,
+      "mittlere_landhoehe_m": 504,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.61399,
+       0.0044,
+       0.03806,
+       0.09743,
+       0.07665,
+       0.13476,
+       0.03256,
+       0.00216,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 280.0,
+     "stufe": "Early Permian",
+     "datei": "relief/paleomap/280.png",
+     "groessen": {
+      "landflaeche_km2": 121844275,
+      "schelf_0_200_km2": 53236453,
+      "rand_200_1400_km2": 19382785,
+      "mittlere_landhoehe_m": 576,
+      "hypsometrie_anteil": [
+       0.0,
+       2e-05,
+       0.6154,
+       0.00331,
+       0.038,
+       0.10438,
+       0.07275,
+       0.12623,
+       0.02844,
+       0.01147,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 285.0,
+     "stufe": "Map54.5 PALEOMAP 1deg Early Permian",
+     "datei": "relief/paleomap/285.png",
+     "groessen": {
+      "landflaeche_km2": 119483748,
+      "schelf_0_200_km2": 37153547,
+      "rand_200_1400_km2": 37025657,
+      "mittlere_landhoehe_m": 550,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.61536,
+       0.00494,
+       0.07259,
+       0.07284,
+       0.07088,
+       0.12525,
+       0.03004,
+       0.00808,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 290.0,
+     "stufe": "Early Permian",
+     "datei": "relief/paleomap/290.png",
+     "groessen": {
+      "landflaeche_km2": 118921229,
+      "schelf_0_200_km2": 34426493,
+      "rand_200_1400_km2": 36358088,
+      "mittlere_landhoehe_m": 525,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.61246,
+       0.0156,
+       0.07128,
+       0.0675,
+       0.07383,
+       0.12385,
+       0.02999,
+       0.00547,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 295.0,
+     "stufe": "Early Permian",
+     "datei": "relief/paleomap/295.png",
+     "groessen": {
+      "landflaeche_km2": 115187035,
+      "schelf_0_200_km2": 37058982,
+      "rand_200_1400_km2": 35796828,
+      "mittlere_landhoehe_m": 516,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.61922,
+       0.0121,
+       0.07018,
+       0.07266,
+       0.07371,
+       0.11893,
+       0.02843,
+       0.00476,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 300.0,
+     "stufe": "Late Pennsylvanian",
+     "datei": "relief/paleomap/300.png",
+     "groessen": {
+      "landflaeche_km2": 110422753,
+      "schelf_0_200_km2": 42602580,
+      "rand_200_1400_km2": 32973566,
+      "mittlere_landhoehe_m": 523,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.62375,
+       0.01158,
+       0.06465,
+       0.08353,
+       0.07294,
+       0.11026,
+       0.02829,
+       0.00495,
+       5e-05
+      ]
+     }
+    },
+    {
+     "ma": 305.0,
+     "stufe": "Late Pennsylvanian",
+     "datei": "relief/paleomap/305.png",
+     "groessen": {
+      "landflaeche_km2": 113816213,
+      "schelf_0_200_km2": 40371059,
+      "rand_200_1400_km2": 34204483,
+      "mittlere_landhoehe_m": 533,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.61934,
+       0.0113,
+       0.06706,
+       0.07915,
+       0.05874,
+       0.12973,
+       0.03031,
+       0.00437,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 310.0,
+     "stufe": "Middle Pennsylvanian",
+     "datei": "relief/paleomap/310.png",
+     "groessen": {
+      "landflaeche_km2": 117787109,
+      "schelf_0_200_km2": 40808453,
+      "rand_200_1400_km2": 32255260,
+      "mittlere_landhoehe_m": 543,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.61764,
+       0.00818,
+       0.06324,
+       0.08001,
+       0.06809,
+       0.12673,
+       0.03226,
+       0.00386,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 315.0,
+     "stufe": "Map59.5 PALEOMAP 1deg EarlyMiddleCarboniferous",
+     "datei": "relief/paleomap/315.png",
+     "groessen": {
+      "landflaeche_km2": 120909084,
+      "schelf_0_200_km2": 43602017,
+      "rand_200_1400_km2": 28335752,
+      "mittlere_landhoehe_m": 563,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.61769,
+       0.00421,
+       0.05556,
+       0.08549,
+       0.07492,
+       0.12258,
+       0.03427,
+       0.00529,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 320.0,
+     "stufe": "Early Pennsylvanian",
+     "datei": "relief/paleomap/320.png",
+     "groessen": {
+      "landflaeche_km2": 124152553,
+      "schelf_0_200_km2": 62103367,
+      "rand_200_1400_km2": 7280422,
+      "mittlere_landhoehe_m": 586,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.61722,
+       0.00333,
+       0.01427,
+       0.12176,
+       0.0823,
+       0.11582,
+       0.03604,
+       0.00925,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 325.0,
+     "stufe": "Late Mississippian",
+     "datei": "relief/paleomap/325.png",
+     "groessen": {
+      "landflaeche_km2": 122537686,
+      "schelf_0_200_km2": 47587685,
+      "rand_200_1400_km2": 23461949,
+      "mittlere_landhoehe_m": 556,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.61607,
+       0.00438,
+       0.046,
+       0.0933,
+       0.07412,
+       0.12635,
+       0.03445,
+       0.00534,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 330.0,
+     "stufe": "Late Mississippian",
+     "datei": "relief/paleomap/330.png",
+     "groessen": {
+      "landflaeche_km2": 116568888,
+      "schelf_0_200_km2": 50201254,
+      "rand_200_1400_km2": 22168323,
+      "mittlere_landhoehe_m": 562,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.6153,
+       0.01427,
+       0.04346,
+       0.09842,
+       0.05537,
+       0.13663,
+       0.03199,
+       0.00455,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 335.0,
+     "stufe": "Map62.5 PALEOMAP 1deg Middle Mississippian",
+     "datei": "relief/paleomap/335.png",
+     "groessen": {
+      "landflaeche_km2": 112437061,
+      "schelf_0_200_km2": 52829635,
+      "rand_200_1400_km2": 22128696,
+      "mittlere_landhoehe_m": 556,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.6246,
+       0.00799,
+       0.04339,
+       0.10358,
+       0.05229,
+       0.13492,
+       0.02737,
+       0.00587,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 340.0,
+     "stufe": "Middle Mississippian",
+     "datei": "relief/paleomap/340.png",
+     "groessen": {
+      "landflaeche_km2": 108391466,
+      "schelf_0_200_km2": 56162017,
+      "rand_200_1400_km2": 22113465,
+      "mittlere_landhoehe_m": 565,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.62657,
+       0.00745,
+       0.04336,
+       0.11011,
+       0.03297,
+       0.1489,
+       0.02284,
+       0.00781,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 345.0,
+     "stufe": "Map63.5 PALEOMAP 1deg Middle Mississippian",
+     "datei": "relief/paleomap/345.png",
+     "groessen": {
+      "landflaeche_km2": 107020306,
+      "schelf_0_200_km2": 51624460,
+      "rand_200_1400_km2": 28422976,
+      "mittlere_landhoehe_m": 531,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.62383,
+       0.0094,
+       0.05573,
+       0.10122,
+       0.04973,
+       0.13126,
+       0.02448,
+       0.00435,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 350.0,
+     "stufe": "Early Mississippian",
+     "datei": "relief/paleomap/350.png",
+     "groessen": {
+      "landflaeche_km2": 104470332,
+      "schelf_0_200_km2": 54069230,
+      "rand_200_1400_km2": 26858038,
+      "mittlere_landhoehe_m": 497,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.62277,
+       0.01374,
+       0.05266,
+       0.10601,
+       0.06185,
+       0.11722,
+       0.02242,
+       0.00333,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 355.0,
+     "stufe": "Map64.5 PALEOMAP 1deg Early Mississippian",
+     "datei": "relief/paleomap/355.png",
+     "groessen": {
+      "landflaeche_km2": 96772412,
+      "schelf_0_200_km2": 63745476,
+      "rand_200_1400_km2": 25044154,
+      "mittlere_landhoehe_m": 502,
+      "hypsometrie_anteil": [
+       0.0,
+       2e-05,
+       0.6252,
+       0.01097,
+       0.0491,
+       0.12498,
+       0.05666,
+       0.10825,
+       0.022,
+       0.00282,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 360.0,
+     "stufe": "Devono-Carboniferous Boundary",
+     "datei": "relief/paleomap/360.png",
+     "groessen": {
+      "landflaeche_km2": 92184105,
+      "schelf_0_200_km2": 70992289,
+      "rand_200_1400_km2": 21879430,
+      "mittlere_landhoehe_m": 503,
+      "hypsometrie_anteil": [
+       0.0,
+       0.00025,
+       0.62544,
+       0.01148,
+       0.0429,
+       0.13919,
+       0.06626,
+       0.08835,
+       0.02288,
+       0.00325,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 365.0,
+     "stufe": "Map65.5 PALEOMAP 1deg Late Devonian",
+     "datei": "relief/paleomap/365.png",
+     "groessen": {
+      "landflaeche_km2": 88827437,
+      "schelf_0_200_km2": 53902047,
+      "rand_200_1400_km2": 41448503,
+      "mittlere_landhoehe_m": 486,
+      "hypsometrie_anteil": [
+       0.0,
+       5e-05,
+       0.6269,
+       0.01195,
+       0.08126,
+       0.10568,
+       0.05876,
+       0.09216,
+       0.02041,
+       0.00282,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 370.0,
+     "stufe": "Late Devonian",
+     "datei": "relief/paleomap/370.png",
+     "groessen": {
+      "landflaeche_km2": 84677982,
+      "schelf_0_200_km2": 49606638,
+      "rand_200_1400_km2": 45760426,
+      "mittlere_landhoehe_m": 486,
+      "hypsometrie_anteil": [
+       0.0,
+       1e-05,
+       0.62737,
+       0.01962,
+       0.08972,
+       0.09726,
+       0.05204,
+       0.09212,
+       0.01849,
+       0.00337,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 375.0,
+     "stufe": "Map66.5 PALEOMAP 1deg Late Devonian",
+     "datei": "relief/paleomap/375.png",
+     "groessen": {
+      "landflaeche_km2": 80912624,
+      "schelf_0_200_km2": 51242652,
+      "rand_200_1400_km2": 48481458,
+      "mittlere_landhoehe_m": 483,
+      "hypsometrie_anteil": [
+       0.0,
+       4e-05,
+       0.63783,
+       0.00798,
+       0.09505,
+       0.10047,
+       0.051,
+       0.08743,
+       0.01522,
+       0.00498,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 380.0,
+     "stufe": "Late Devonian",
+     "datei": "relief/paleomap/380.png",
+     "groessen": {
+      "landflaeche_km2": 76332469,
+      "schelf_0_200_km2": 57464648,
+      "rand_200_1400_km2": 45145320,
+      "mittlere_landhoehe_m": 507,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0003,
+       0.6403,
+       0.00857,
+       0.08851,
+       0.11267,
+       0.03953,
+       0.09049,
+       0.01195,
+       0.00769,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 385.2,
+     "stufe": "Map67.5 PALEOMAP 1deg Middle Devonian",
+     "datei": "relief/paleomap/385.png",
+     "groessen": {
+      "landflaeche_km2": 77432178,
+      "schelf_0_200_km2": 42906113,
+      "rand_200_1400_km2": 57185266,
+      "mittlere_landhoehe_m": 489,
+      "hypsometrie_anteil": [
+       0.0,
+       0.00012,
+       0.64305,
+       0.00877,
+       0.11212,
+       0.08412,
+       0.04609,
+       0.08669,
+       0.01389,
+       0.00514,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 390.5,
+     "stufe": "Middle Devonian",
+     "datei": "relief/paleomap/390.png",
+     "groessen": {
+      "landflaeche_km2": 81904160,
+      "schelf_0_200_km2": 36884779,
+      "rand_200_1400_km2": 55290356,
+      "mittlere_landhoehe_m": 469,
+      "hypsometrie_anteil": [
+       0.0,
+       0.00013,
+       0.64625,
+       0.01232,
+       0.1084,
+       0.07232,
+       0.05505,
+       0.08628,
+       0.01498,
+       0.00426,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 395.0,
+     "stufe": "Early Devonian",
+     "datei": "relief/paleomap/395.png",
+     "groessen": {
+      "landflaeche_km2": 82594163,
+      "schelf_0_200_km2": 35481945,
+      "rand_200_1400_km2": 55235009,
+      "mittlere_landhoehe_m": 488,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.65122,
+       0.00899,
+       0.10829,
+       0.06957,
+       0.05462,
+       0.08713,
+       0.01467,
+       0.00552,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 400.0,
+     "stufe": "Early Devonian",
+     "datei": "relief/paleomap/400.png",
+     "groessen": {
+      "landflaeche_km2": 81256028,
+      "schelf_0_200_km2": 35443109,
+      "rand_200_1400_km2": 55791911,
+      "mittlere_landhoehe_m": 534,
+      "hypsometrie_anteil": [
+       0.0,
+       0.00019,
+       0.65486,
+       0.00676,
+       0.10939,
+       0.06949,
+       0.03895,
+       0.09853,
+       0.01332,
+       0.00848,
+       3e-05
+      ]
+     }
+    },
+    {
+     "ma": 405.0,
+     "stufe": "Map70.5 PALEOMAP 1deg Early Devonian",
+     "datei": "relief/paleomap/405.png",
+     "groessen": {
+      "landflaeche_km2": 81552287,
+      "schelf_0_200_km2": 34764823,
+      "rand_200_1400_km2": 56601567,
+      "mittlere_landhoehe_m": 466,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.65292,
+       0.00805,
+       0.11097,
+       0.06816,
+       0.04882,
+       0.09218,
+       0.01392,
+       0.00497,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 410.0,
+     "stufe": "Early Devonian",
+     "datei": "relief/paleomap/410.png",
+     "groessen": {
+      "landflaeche_km2": 81953109,
+      "schelf_0_200_km2": 39239724,
+      "rand_200_1400_km2": 53413124,
+      "mittlere_landhoehe_m": 412,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.64806,
+       0.00961,
+       0.10472,
+       0.07693,
+       0.05825,
+       0.08678,
+       0.01291,
+       0.00274,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 415.0,
+     "stufe": "Early Devonian",
+     "datei": "relief/paleomap/415.png",
+     "groessen": {
+      "landflaeche_km2": 79209107,
+      "schelf_0_200_km2": 50151939,
+      "rand_200_1400_km2": 48820620,
+      "mittlere_landhoehe_m": 375,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.6455,
+       0.00516,
+       0.09572,
+       0.09833,
+       0.06279,
+       0.07972,
+       0.01058,
+       0.00221,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 420.0,
+     "stufe": "Late Silurian",
+     "datei": "relief/paleomap/420.png",
+     "groessen": {
+      "landflaeche_km2": 77354154,
+      "schelf_0_200_km2": 69283242,
+      "rand_200_1400_km2": 33328257,
+      "mittlere_landhoehe_m": 355,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.64345,
+       0.00371,
+       0.06534,
+       0.13584,
+       0.06054,
+       0.07863,
+       0.01018,
+       0.0023,
+       2e-05
+      ]
+     }
+    },
+    {
+     "ma": 425.0,
+     "stufe": "Late Silurian",
+     "datei": "relief/paleomap/425.png",
+     "groessen": {
+      "landflaeche_km2": 74531439,
+      "schelf_0_200_km2": 53745737,
+      "rand_200_1400_km2": 47821719,
+      "mittlere_landhoehe_m": 337,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.64496,
+       0.00978,
+       0.09376,
+       0.10537,
+       0.05578,
+       0.08377,
+       0.00592,
+       0.00065,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 430.0,
+     "stufe": "Middle Silurian",
+     "datei": "relief/paleomap/430.png",
+     "groessen": {
+      "landflaeche_km2": 72813264,
+      "schelf_0_200_km2": 59169328,
+      "rand_200_1400_km2": 43327016,
+      "mittlere_landhoehe_m": 371,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.65023,
+       0.00606,
+       0.08495,
+       0.11601,
+       0.04382,
+       0.08819,
+       0.00975,
+       0.00098,
+       2e-05
+      ]
+     }
+    },
+    {
+     "ma": 435.0,
+     "stufe": "Map75.5 PALEOMAP 1deg Early Silurian",
+     "datei": "relief/paleomap/435.png",
+     "groessen": {
+      "landflaeche_km2": 86609140,
+      "schelf_0_200_km2": 51101459,
+      "rand_200_1400_km2": 37382254,
+      "mittlere_landhoehe_m": 368,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.64645,
+       0.01026,
+       0.07329,
+       0.10019,
+       0.0585,
+       0.09996,
+       0.01037,
+       0.00098,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 440.0,
+     "stufe": "Early Silurian",
+     "datei": "relief/paleomap/440.png",
+     "groessen": {
+      "landflaeche_km2": 93223602,
+      "schelf_0_200_km2": 54720396,
+      "rand_200_1400_km2": 28053327,
+      "mittlere_landhoehe_m": 454,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.64546,
+       0.00948,
+       0.055,
+       0.10729,
+       0.03057,
+       0.13589,
+       0.01084,
+       0.00543,
+       4e-05
+      ]
+     }
+    },
+    {
+     "ma": 445.0,
+     "stufe": "Late Ordovician",
+     "datei": "relief/paleomap/445.png",
+     "groessen": {
+      "landflaeche_km2": 90686166,
+      "schelf_0_200_km2": 43111706,
+      "rand_200_1400_km2": 41440213,
+      "mittlere_landhoehe_m": 430,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.64652,
+       0.00991,
+       0.08125,
+       0.08453,
+       0.04387,
+       0.11827,
+       0.01191,
+       0.00376,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 450.0,
+     "stufe": "Late Ordovician",
+     "datei": "relief/paleomap/450.png",
+     "groessen": {
+      "landflaeche_km2": 87201395,
+      "schelf_0_200_km2": 43579740,
+      "rand_200_1400_km2": 42916207,
+      "mittlere_landhoehe_m": 411,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.64875,
+       0.0107,
+       0.08414,
+       0.08544,
+       0.05078,
+       0.10489,
+       0.01347,
+       0.00183,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 455.0,
+     "stufe": "Late Ordovician",
+     "datei": "relief/paleomap/455.png",
+     "groessen": {
+      "landflaeche_km2": 86218339,
+      "schelf_0_200_km2": 44421202,
+      "rand_200_1400_km2": 43293368,
+      "mittlere_landhoehe_m": 392,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.65273,
+       0.00625,
+       0.08488,
+       0.08709,
+       0.05434,
+       0.10019,
+       0.01343,
+       0.00108,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 460.0,
+     "stufe": "Middle Ordovician",
+     "datei": "relief/paleomap/460.png",
+     "groessen": {
+      "landflaeche_km2": 85283663,
+      "schelf_0_200_km2": 46154861,
+      "rand_200_1400_km2": 42079992,
+      "mittlere_landhoehe_m": 381,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.65398,
+       0.00582,
+       0.0825,
+       0.09049,
+       0.05332,
+       0.09999,
+       0.01279,
+       0.00106,
+       5e-05
+      ]
+     }
+    },
+    {
+     "ma": 465.0,
+     "stufe": "Map80.5 PALEOMAP 1deg Middle Ordovician",
+     "datei": "relief/paleomap/465.png",
+     "groessen": {
+      "landflaeche_km2": 84202967,
+      "schelf_0_200_km2": 43889231,
+      "rand_200_1400_km2": 45247459,
+      "mittlere_landhoehe_m": 381,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.65298,
+       0.00717,
+       0.08871,
+       0.08605,
+       0.05246,
+       0.09862,
+       0.01351,
+       0.0005,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 470.0,
+     "stufe": "Early Ordovician",
+     "datei": "relief/paleomap/470.png",
+     "groessen": {
+      "landflaeche_km2": 82472554,
+      "schelf_0_200_km2": 48438058,
+      "rand_200_1400_km2": 41794828,
+      "mittlere_landhoehe_m": 390,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.64884,
+       0.01256,
+       0.08194,
+       0.09497,
+       0.05243,
+       0.09623,
+       0.01274,
+       0.0003,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 475.0,
+     "stufe": "Map81.5 PALEOMAP 1deg Early Ordovician",
+     "datei": "relief/paleomap/475.png",
+     "groessen": {
+      "landflaeche_km2": 81820965,
+      "schelf_0_200_km2": 52999399,
+      "rand_200_1400_km2": 41152158,
+      "mittlere_landhoehe_m": 399,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0001,
+       0.64858,
+       0.00631,
+       0.08068,
+       0.10391,
+       0.0538,
+       0.09327,
+       0.01249,
+       0.00086,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 480.0,
+     "stufe": "Early Ordovician",
+     "datei": "relief/paleomap/480.png",
+     "groessen": {
+      "landflaeche_km2": 82776077,
+      "schelf_0_200_km2": 58137292,
+      "rand_200_1400_km2": 35671339,
+      "mittlere_landhoehe_m": 404,
+      "hypsometrie_anteil": [
+       0.0,
+       0.00163,
+       0.64692,
+       0.00524,
+       0.06994,
+       0.11398,
+       0.04884,
+       0.09936,
+       0.01325,
+       0.00084,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 485.0,
+     "stufe": "Map82.5 PALEOMAP 1deg Cambro-Ordovician Boundary",
+     "datei": "relief/paleomap/485.png",
+     "groessen": {
+      "landflaeche_km2": 83496848,
+      "schelf_0_200_km2": 48211202,
+      "rand_200_1400_km2": 42814524,
+      "mittlere_landhoehe_m": 414,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.65167,
+       0.00616,
+       0.08394,
+       0.09452,
+       0.04708,
+       0.10152,
+       0.01396,
+       0.00114,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 490.0,
+     "stufe": "Late Cambrian",
+     "datei": "relief/paleomap/490.png",
+     "groessen": {
+      "landflaeche_km2": 85393009,
+      "schelf_0_200_km2": 47792115,
+      "rand_200_1400_km2": 38007205,
+      "mittlere_landhoehe_m": 428,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.65132,
+       0.01304,
+       0.07452,
+       0.0937,
+       0.0428,
+       0.10846,
+       0.01428,
+       0.00188,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 495.0,
+     "stufe": "Map83.5 PALEOMAP 1deg Late Cambrian",
+     "datei": "relief/paleomap/495.png",
+     "groessen": {
+      "landflaeche_km2": 85904481,
+      "schelf_0_200_km2": 51199513,
+      "rand_200_1400_km2": 33286948,
+      "mittlere_landhoehe_m": 453,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.65644,
+       0.00949,
+       0.06526,
+       0.10038,
+       0.03637,
+       0.11486,
+       0.01392,
+       0.00327,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 500.0,
+     "stufe": "late Middle Cambrian",
+     "datei": "relief/paleomap/500.png",
+     "groessen": {
+      "landflaeche_km2": 86650817,
+      "schelf_0_200_km2": 55443970,
+      "rand_200_1400_km2": 27031039,
+      "mittlere_landhoehe_m": 483,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.65932,
+       0.00909,
+       0.053,
+       0.1087,
+       0.0245,
+       0.12666,
+       0.01302,
+       0.00569,
+       1e-05
+      ]
+     }
+    },
+    {
+     "ma": 505.0,
+     "stufe": "Map84.1 PALEOMAP 1deg late Middle Cambrian",
+     "datei": "relief/paleomap/505.png",
+     "groessen": {
+      "landflaeche_km2": 84673809,
+      "schelf_0_200_km2": 44470473,
+      "rand_200_1400_km2": 38900569,
+      "mittlere_landhoehe_m": 442,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.66069,
+       0.00984,
+       0.07627,
+       0.08719,
+       0.03774,
+       0.1115,
+       0.01318,
+       0.00359,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 510.0,
+     "stufe": "Map84.2 PALEOMAP 1deg early Middle Cambrian",
+     "datei": "relief/paleomap/510.png",
+     "groessen": {
+      "landflaeche_km2": 84096625,
+      "schelf_0_200_km2": 42367167,
+      "rand_200_1400_km2": 38154866,
+      "mittlere_landhoehe_m": 402,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.663,
+       0.01425,
+       0.07481,
+       0.08307,
+       0.05648,
+       0.09294,
+       0.01422,
+       0.00124,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 515.0,
+     "stufe": "early Middle Cambrian",
+     "datei": "relief/paleomap/515.png",
+     "groessen": {
+      "landflaeche_km2": 81223431,
+      "schelf_0_200_km2": 46193103,
+      "rand_200_1400_km2": 38245715,
+      "mittlere_landhoehe_m": 387,
+      "hypsometrie_anteil": [
+       0.0,
+       0.0,
+       0.66921,
+       0.00599,
+       0.07498,
+       0.09057,
+       0.0586,
+       0.08588,
+       0.01469,
+       8e-05,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 520.0,
+     "stufe": "Early Middle Cambrian boundary",
+     "datei": "relief/paleomap/520.png",
+     "groessen": {
+      "landflaeche_km2": 78898372,
+      "schelf_0_200_km2": 49545435,
+      "rand_200_1400_km2": 37758452,
+      "mittlere_landhoehe_m": 387,
+      "hypsometrie_anteil": [
+       0.0,
+       6e-05,
+       0.66928,
+       0.0048,
+       0.07403,
+       0.09714,
+       0.05162,
+       0.08863,
+       0.01442,
+       2e-05,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 525.0,
+     "stufe": "Map86.5 PALEOMAP 1deg Early Cambrian",
+     "datei": "relief/paleomap/525.png",
+     "groessen": {
+      "landflaeche_km2": 82194635,
+      "schelf_0_200_km2": 46447171,
+      "rand_200_1400_km2": 38373147,
+      "mittlere_landhoehe_m": 411,
+      "hypsometrie_anteil": [
+       0.0,
+       6e-05,
+       0.66728,
+       0.00521,
+       0.07523,
+       0.09106,
+       0.05097,
+       0.09414,
+       0.01602,
+       2e-05,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 530.0,
+     "stufe": "Early Cambrian",
+     "datei": "relief/paleomap/530.png",
+     "groessen": {
+      "landflaeche_km2": 86821376,
+      "schelf_0_200_km2": 46746624,
+      "rand_200_1400_km2": 34389912,
+      "mittlere_landhoehe_m": 435,
+      "hypsometrie_anteil": [
+       0.0,
+       0.00013,
+       0.66107,
+       0.00949,
+       0.06743,
+       0.09165,
+       0.05252,
+       0.09907,
+       0.01794,
+       0.00069,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 535.0,
+     "stufe": "Map87.5 PALEOMAP 1deg Early Cambrian",
+     "datei": "relief/paleomap/535.png",
+     "groessen": {
+      "landflaeche_km2": 91570557,
+      "schelf_0_200_km2": 47179892,
+      "rand_200_1400_km2": 33006445,
+      "mittlere_landhoehe_m": 462,
+      "hypsometrie_anteil": [
+       0.0,
+       0.00018,
+       0.65798,
+       0.00509,
+       0.06471,
+       0.0925,
+       0.05715,
+       0.09938,
+       0.02125,
+       0.00174,
+       0.0
+      ]
+     }
+    },
+    {
+     "ma": 540.0,
+     "stufe": "Cambrian Precambrian boundary",
+     "datei": "relief/paleomap/540.png",
+     "groessen": {
+      "landflaeche_km2": 93369206,
+      "schelf_0_200_km2": 53206563,
+      "rand_200_1400_km2": 26444651,
+      "mittlere_landhoehe_m": 509,
+      "hypsometrie_anteil": [
+       0.0,
+       0.00039,
+       0.65667,
+       0.00372,
+       0.05185,
+       0.10432,
+       0.03574,
+       0.12052,
+       0.02369,
+       0.00301,
+       0.0001
+      ]
+     }
+    }
+   ],
+   "eis": {
+    "fehlt": true,
+    "grund": "Das PALEOMAP-DEM führt kein Eis"
+   }
+  },
+  "paleomist": {
+   "name": "PaleoMIST 1.0 (Gowan et al. 2021)",
+   "einheit": "ka",
+   "bezugssystem": "ka_bp_1950",
+   "aufloesung_grad": 0.5,
+   "breite": 720,
+   "hoehe": 361,
+   "arten": [
+    "rekonstruktion"
+   ],
+   "lizenz": "CC BY 4.0, doi:10.1594/PANGAEA.905800",
+   "bezugsrahmen": "heutige Koordinaten",
+   "zeit_unschaerfe": {
+    "fehlt": true,
+    "grund": "PaleoMIST nennt keine Unschärfe der Zeitachse; 2,5 ka sind die Auflösung"
+   },
+   "schritte": [
+    {
+     "ka": 0.0,
+     "datei": "relief/paleomist/000.png",
+     "groessen": {
+      "landflaeche_km2": 146522939,
+      "schelf_0_200_km2": 26674007,
+      "rand_200_1400_km2": 22913700,
+      "mittlere_landhoehe_m": 803,
+      "hypsometrie_anteil": [
+       0.00742,
+       0.36809,
+       0.21934,
+       0.02067,
+       0.04492,
+       0.0523,
+       0.07868,
+       0.13336,
+       0.04364,
+       0.02647,
+       0.00511
+      ],
+      "eisflaeche_km2": 14201046
+     }
+    },
+    {
+     "ka": 2.5,
+     "datei": "relief/paleomist/025.png",
+     "groessen": {
+      "landflaeche_km2": 146454483,
+      "schelf_0_200_km2": 26829747,
+      "rand_200_1400_km2": 22833936,
+      "mittlere_landhoehe_m": 805,
+      "hypsometrie_anteil": [
+       0.00741,
+       0.36791,
+       0.21946,
+       0.02072,
+       0.04477,
+       0.0526,
+       0.07885,
+       0.13271,
+       0.04391,
+       0.02656,
+       0.0051
+      ],
+      "eisflaeche_km2": 14473166
+     }
+    },
+    {
+     "ka": 5.0,
+     "datei": "relief/paleomist/050.png",
+     "groessen": {
+      "landflaeche_km2": 147715528,
+      "schelf_0_200_km2": 26043978,
+      "rand_200_1400_km2": 22486335,
+      "mittlere_landhoehe_m": 805,
+      "hypsometrie_anteil": [
+       0.00724,
+       0.36723,
+       0.22007,
+       0.02071,
+       0.04409,
+       0.05106,
+       0.07972,
+       0.13361,
+       0.04441,
+       0.02673,
+       0.00514
+      ],
+      "eisflaeche_km2": 15114630
+     }
+    },
+    {
+     "ka": 7.5,
+     "datei": "relief/paleomist/075.png",
+     "groessen": {
+      "landflaeche_km2": 148677128,
+      "schelf_0_200_km2": 24946721,
+      "rand_200_1400_km2": 22717174,
+      "mittlere_landhoehe_m": 808,
+      "hypsometrie_anteil": [
+       0.00709,
+       0.36652,
+       0.22064,
+       0.0208,
+       0.04454,
+       0.04891,
+       0.07903,
+       0.13543,
+       0.04494,
+       0.02695,
+       0.00514
+      ],
+      "eisflaeche_km2": 16987280
+     }
+    },
+    {
+     "ka": 10.0,
+     "datei": "relief/paleomist/100.png",
+     "groessen": {
+      "landflaeche_km2": 155184102,
+      "schelf_0_200_km2": 20328231,
+      "rand_200_1400_km2": 21169793,
+      "mittlere_landhoehe_m": 833,
+      "hypsometrie_anteil": [
+       0.00643,
+       0.36252,
+       0.22444,
+       0.021,
+       0.0415,
+       0.03985,
+       0.079,
+       0.13931,
+       0.05182,
+       0.0289,
+       0.00522
+      ],
+      "eisflaeche_km2": 22354737
+     }
+    },
+    {
+     "ka": 12.5,
+     "datei": "relief/paleomist/125.png",
+     "groessen": {
+      "landflaeche_km2": 161973180,
+      "schelf_0_200_km2": 15149531,
+      "rand_200_1400_km2": 19948512,
+      "mittlere_landhoehe_m": 875,
+      "hypsometrie_anteil": [
+       0.00557,
+       0.35755,
+       0.22922,
+       0.02129,
+       0.03911,
+       0.0297,
+       0.07921,
+       0.14328,
+       0.05453,
+       0.03505,
+       0.00548
+      ],
+      "eisflaeche_km2": 27542074
+     }
+    },
+    {
+     "ka": 15.0,
+     "datei": "relief/paleomist/150.png",
+     "groessen": {
+      "landflaeche_km2": 168308993,
+      "schelf_0_200_km2": 10483963,
+      "rand_200_1400_km2": 18699276,
+      "mittlere_landhoehe_m": 918,
+      "hypsometrie_anteil": [
+       0.00486,
+       0.35249,
+       0.23398,
+       0.02147,
+       0.03666,
+       0.02055,
+       0.07838,
+       0.1477,
+       0.05603,
+       0.04223,
+       0.00564
+      ],
+      "eisflaeche_km2": 32865651
+     }
+    },
+    {
+     "ka": 17.5,
+     "datei": "relief/paleomist/175.png",
+     "groessen": {
+      "landflaeche_km2": 173421663,
+      "schelf_0_200_km2": 7292235,
+      "rand_200_1400_km2": 17215705,
+      "mittlere_landhoehe_m": 968,
+      "hypsometrie_anteil": [
+       0.00436,
+       0.3468,
+       0.23916,
+       0.02162,
+       0.03375,
+       0.0143,
+       0.07324,
+       0.15337,
+       0.06024,
+       0.0473,
+       0.00584
+      ],
+      "eisflaeche_km2": 38373741
+     }
+    },
+    {
+     "ka": 20.0,
+     "datei": "relief/paleomist/200.png",
+     "groessen": {
+      "landflaeche_km2": 175468910,
+      "schelf_0_200_km2": 6127243,
+      "rand_200_1400_km2": 16470731,
+      "mittlere_landhoehe_m": 983,
+      "hypsometrie_anteil": [
+       0.0042,
+       0.34489,
+       0.24088,
+       0.02171,
+       0.03229,
+       0.01201,
+       0.07165,
+       0.15542,
+       0.062,
+       0.04906,
+       0.00588
+      ],
+      "eisflaeche_km2": 40474411
+     }
+    },
+    {
+     "ka": 22.5,
+     "datei": "relief/paleomist/225.png",
+     "groessen": {
+      "landflaeche_km2": 175187382,
+      "schelf_0_200_km2": 6243809,
+      "rand_200_1400_km2": 16526768,
+      "mittlere_landhoehe_m": 974,
+      "hypsometrie_anteil": [
+       0.00429,
+       0.34605,
+       0.23986,
+       0.0217,
+       0.0324,
+       0.01224,
+       0.07283,
+       0.15526,
+       0.06129,
+       0.04822,
+       0.00587
+      ],
+      "eisflaeche_km2": 39572593
+     }
+    },
+    {
+     "ka": 25.0,
+     "datei": "relief/paleomist/250.png",
+     "groessen": {
+      "landflaeche_km2": 173234432,
+      "schelf_0_200_km2": 7524128,
+      "rand_200_1400_km2": 16996855,
+      "mittlere_landhoehe_m": 948,
+      "hypsometrie_anteil": [
+       0.00454,
+       0.34913,
+       0.23717,
+       0.02145,
+       0.03332,
+       0.01475,
+       0.07643,
+       0.15209,
+       0.06006,
+       0.04517,
+       0.00589
+      ],
+      "eisflaeche_km2": 36952587
+     }
+    },
+    {
+     "ka": 27.5,
+     "datei": "relief/paleomist/275.png",
+     "groessen": {
+      "landflaeche_km2": 169865363,
+      "schelf_0_200_km2": 10074129,
+      "rand_200_1400_km2": 17477477,
+      "mittlere_landhoehe_m": 918,
+      "hypsometrie_anteil": [
+       0.00487,
+       0.35301,
+       0.23369,
+       0.02139,
+       0.03427,
+       0.01975,
+       0.07933,
+       0.14893,
+       0.05718,
+       0.04178,
+       0.00581
+      ],
+      "eisflaeche_km2": 33231628
+     }
+    },
+    {
+     "ka": 30.0,
+     "datei": "relief/paleomist/300.png",
+     "groessen": {
+      "landflaeche_km2": 165425796,
+      "schelf_0_200_km2": 13445664,
+      "rand_200_1400_km2": 18223588,
+      "mittlere_landhoehe_m": 888,
+      "hypsometrie_anteil": [
+       0.00536,
+       0.35672,
+       0.23018,
+       0.02133,
+       0.03573,
+       0.02636,
+       0.08062,
+       0.14597,
+       0.05396,
+       0.03804,
+       0.00575
+      ],
+      "eisflaeche_km2": 28815725
+     }
+    },
+    {
+     "ka": 32.5,
+     "datei": "relief/paleomist/325.png",
+     "groessen": {
+      "landflaeche_km2": 162688538,
+      "schelf_0_200_km2": 15484089,
+      "rand_200_1400_km2": 18772462,
+      "mittlere_landhoehe_m": 875,
+      "hypsometrie_anteil": [
+       0.00566,
+       0.35859,
+       0.22842,
+       0.02122,
+       0.0368,
+       0.03036,
+       0.08069,
+       0.14357,
+       0.05322,
+       0.03591,
+       0.00557
+      ],
+      "eisflaeche_km2": 26151572
+     }
+    },
+    {
+     "ka": 35.0,
+     "datei": "relief/paleomist/350.png",
+     "groessen": {
+      "landflaeche_km2": 160273746,
+      "schelf_0_200_km2": 16936803,
+      "rand_200_1400_km2": 19623687,
+      "mittlere_landhoehe_m": 866,
+      "hypsometrie_anteil": [
+       0.00593,
+       0.36015,
+       0.22688,
+       0.02113,
+       0.03847,
+       0.03321,
+       0.08042,
+       0.14123,
+       0.05289,
+       0.03427,
+       0.00542
+      ],
+      "eisflaeche_km2": 24380903
+     }
+    },
+    {
+     "ka": 37.5,
+     "datei": "relief/paleomist/375.png",
+     "groessen": {
+      "landflaeche_km2": 158620826,
+      "schelf_0_200_km2": 17793766,
+      "rand_200_1400_km2": 20337169,
+      "mittlere_landhoehe_m": 861,
+      "hypsometrie_anteil": [
+       0.00612,
+       0.36101,
+       0.22605,
+       0.02107,
+       0.03987,
+       0.03489,
+       0.07979,
+       0.14017,
+       0.05239,
+       0.03322,
+       0.00541
+      ],
+      "eisflaeche_km2": 23329823
+     }
+    },
+    {
+     "ka": 40.0,
+     "datei": "relief/paleomist/400.png",
+     "groessen": {
+      "landflaeche_km2": 155636107,
+      "schelf_0_200_km2": 19911780,
+      "rand_200_1400_km2": 21067105,
+      "mittlere_landhoehe_m": 846,
+      "hypsometrie_anteil": [
+       0.00643,
+       0.36289,
+       0.22425,
+       0.02096,
+       0.0413,
+       0.03904,
+       0.07876,
+       0.13945,
+       0.05082,
+       0.03077,
+       0.00533
+      ],
+      "eisflaeche_km2": 21324329
+     }
+    },
+    {
+     "ka": 42.5,
+     "datei": "relief/paleomist/425.png",
+     "groessen": {
+      "landflaeche_km2": 154212235,
+      "schelf_0_200_km2": 20858549,
+      "rand_200_1400_km2": 21493888,
+      "mittlere_landhoehe_m": 843,
+      "hypsometrie_anteil": [
+       0.00651,
+       0.36355,
+       0.22361,
+       0.02096,
+       0.04214,
+       0.04089,
+       0.07822,
+       0.13843,
+       0.05,
+       0.03039,
+       0.0053
+      ],
+      "eisflaeche_km2": 20674840
+     }
+    },
+    {
+     "ka": 45.0,
+     "datei": "relief/paleomist/450.png",
+     "groessen": {
+      "landflaeche_km2": 157660120,
+      "schelf_0_200_km2": 17876440,
+      "rand_200_1400_km2": 21223311,
+      "mittlere_landhoehe_m": 864,
+      "hypsometrie_anteil": [
+       0.00613,
+       0.36109,
+       0.22596,
+       0.02106,
+       0.04161,
+       0.03505,
+       0.0781,
+       0.13989,
+       0.05285,
+       0.0329,
+       0.00536
+      ],
+      "eisflaeche_km2": 23494637
+     }
+    },
+    {
+     "ka": 47.5,
+     "datei": "relief/paleomist/475.png",
+     "groessen": {
+      "landflaeche_km2": 157704015,
+      "schelf_0_200_km2": 17583150,
+      "rand_200_1400_km2": 21519437,
+      "mittlere_landhoehe_m": 874,
+      "hypsometrie_anteil": [
+       0.00602,
+       0.36044,
+       0.22658,
+       0.02111,
+       0.04219,
+       0.03447,
+       0.07784,
+       0.13926,
+       0.05207,
+       0.03466,
+       0.00536
+      ],
+      "eisflaeche_km2": 23082003
+     }
+    },
+    {
+     "ka": 50.0,
+     "datei": "relief/paleomist/500.png",
+     "groessen": {
+      "landflaeche_km2": 156638357,
+      "schelf_0_200_km2": 18108676,
+      "rand_200_1400_km2": 22011652,
+      "mittlere_landhoehe_m": 866,
+      "hypsometrie_anteil": [
+       0.00619,
+       0.3612,
+       0.22584,
+       0.02102,
+       0.04315,
+       0.0355,
+       0.07717,
+       0.13949,
+       0.05217,
+       0.03294,
+       0.00533
+      ],
+      "eisflaeche_km2": 22820183
+     }
+    },
+    {
+     "ka": 52.5,
+     "datei": "relief/paleomist/525.png",
+     "groessen": {
+      "landflaeche_km2": 159386006,
+      "schelf_0_200_km2": 15913620,
+      "rand_200_1400_km2": 21610357,
+      "mittlere_landhoehe_m": 879,
+      "hypsometrie_anteil": [
+       0.00586,
+       0.35941,
+       0.22757,
+       0.02111,
+       0.04237,
+       0.0312,
+       0.07691,
+       0.14208,
+       0.05284,
+       0.03531,
+       0.00535
+      ],
+      "eisflaeche_km2": 25546539
+     }
+    },
+    {
+     "ka": 55.0,
+     "datei": "relief/paleomist/550.png",
+     "groessen": {
+      "landflaeche_km2": 162197018,
+      "schelf_0_200_km2": 13514161,
+      "rand_200_1400_km2": 21332766,
+      "mittlere_landhoehe_m": 897,
+      "hypsometrie_anteil": [
+       0.0055,
+       0.35727,
+       0.22968,
+       0.02124,
+       0.04182,
+       0.0265,
+       0.07565,
+       0.14459,
+       0.05489,
+       0.03746,
+       0.0054
+      ],
+      "eisflaeche_km2": 28221658
+     }
+    },
+    {
+     "ka": 57.5,
+     "datei": "relief/paleomist/575.png",
+     "groessen": {
+      "landflaeche_km2": 165742692,
+      "schelf_0_200_km2": 11680469,
+      "rand_200_1400_km2": 19770330,
+      "mittlere_landhoehe_m": 905,
+      "hypsometrie_anteil": [
+       0.00521,
+       0.35535,
+       0.23147,
+       0.02136,
+       0.03876,
+       0.0229,
+       0.07616,
+       0.14661,
+       0.05867,
+       0.03805,
+       0.00545
+      ],
+      "eisflaeche_km2": 30790169
+     }
+    },
+    {
+     "ka": 60.0,
+     "datei": "relief/paleomist/600.png",
+     "groessen": {
+      "landflaeche_km2": 168709163,
+      "schelf_0_200_km2": 9732206,
+      "rand_200_1400_km2": 18944306,
+      "mittlere_landhoehe_m": 927,
+      "hypsometrie_anteil": [
+       0.00488,
+       0.35299,
+       0.23375,
+       0.0214,
+       0.03714,
+       0.01908,
+       0.07564,
+       0.14905,
+       0.05871,
+       0.04187,
+       0.00549
+      ],
+      "eisflaeche_km2": 32704541
+     }
+    },
+    {
+     "ka": 62.5,
+     "datei": "relief/paleomist/625.png",
+     "groessen": {
+      "landflaeche_km2": 167031384,
+      "schelf_0_200_km2": 11001324,
+      "rand_200_1400_km2": 19169579,
+      "mittlere_landhoehe_m": 914,
+      "hypsometrie_anteil": [
+       0.0051,
+       0.35477,
+       0.23217,
+       0.02134,
+       0.03758,
+       0.02157,
+       0.07679,
+       0.14763,
+       0.05711,
+       0.04047,
+       0.00547
+      ],
+      "eisflaeche_km2": 30855450
+     }
+    },
+    {
+     "ka": 65.0,
+     "datei": "relief/paleomist/650.png",
+     "groessen": {
+      "landflaeche_km2": 162980419,
+      "schelf_0_200_km2": 14169157,
+      "rand_200_1400_km2": 19738382,
+      "mittlere_landhoehe_m": 879,
+      "hypsometrie_anteil": [
+       0.00567,
+       0.35862,
+       0.22854,
+       0.02116,
+       0.0387,
+       0.02778,
+       0.07825,
+       0.14471,
+       0.05628,
+       0.03488,
+       0.00541
+      ],
+      "eisflaeche_km2": 27401161
+     }
+    },
+    {
+     "ka": 67.5,
+     "datei": "relief/paleomist/675.png",
+     "groessen": {
+      "landflaeche_km2": 159624293,
+      "schelf_0_200_km2": 16788165,
+      "rand_200_1400_km2": 20272032,
+      "mittlere_landhoehe_m": 860,
+      "hypsometrie_anteil": [
+       0.00613,
+       0.36118,
+       0.22601,
+       0.02107,
+       0.03974,
+       0.03291,
+       0.07769,
+       0.14371,
+       0.05415,
+       0.03203,
+       0.00537
+      ],
+      "eisflaeche_km2": 24497083
+     }
+    },
+    {
+     "ka": 70.0,
+     "datei": "relief/paleomist/700.png",
+     "groessen": {
+      "landflaeche_km2": 156225110,
+      "schelf_0_200_km2": 19222753,
+      "rand_200_1400_km2": 21034545,
+      "mittlere_landhoehe_m": 845,
+      "hypsometrie_anteil": [
+       0.00649,
+       0.36336,
+       0.22399,
+       0.02095,
+       0.04124,
+       0.03769,
+       0.07703,
+       0.14228,
+       0.05131,
+       0.03038,
+       0.00529
+      ],
+      "eisflaeche_km2": 21998382
+     }
+    },
+    {
+     "ka": 72.5,
+     "datei": "relief/paleomist/725.png",
+     "groessen": {
+      "landflaeche_km2": 154030615,
+      "schelf_0_200_km2": 21081490,
+      "rand_200_1400_km2": 21244752,
+      "mittlere_landhoehe_m": 834,
+      "hypsometrie_anteil": [
+       0.0067,
+       0.36483,
+       0.22262,
+       0.02089,
+       0.04165,
+       0.04133,
+       0.07767,
+       0.14036,
+       0.04937,
+       0.02933,
+       0.00526
+      ],
+      "eisflaeche_km2": 19854830
+     }
+    },
+    {
+     "ka": 75.0,
+     "datei": "relief/paleomist/750.png",
+     "groessen": {
+      "landflaeche_km2": 152236079,
+      "schelf_0_200_km2": 22684082,
+      "rand_200_1400_km2": 21345819,
+      "mittlere_landhoehe_m": 822,
+      "hypsometrie_anteil": [
+       0.00696,
+       0.36606,
+       0.22136,
+       0.02082,
+       0.04185,
+       0.04447,
+       0.07809,
+       0.13951,
+       0.04703,
+       0.0286,
+       0.00523
+      ],
+      "eisflaeche_km2": 17938742
+     }
+    },
+    {
+     "ka": 77.5,
+     "datei": "relief/paleomist/775.png",
+     "groessen": {
+      "landflaeche_km2": 151292164,
+      "schelf_0_200_km2": 23488712,
+      "rand_200_1400_km2": 21421124,
+      "mittlere_landhoehe_m": 813,
+      "hypsometrie_anteil": [
+       0.00712,
+       0.36694,
+       0.22056,
+       0.02073,
+       0.042,
+       0.04605,
+       0.07789,
+       0.13994,
+       0.04581,
+       0.02776,
+       0.00522
+      ],
+      "eisflaeche_km2": 16604822
+     }
+    },
+    {
+     "ka": 80.0,
+     "datei": "relief/paleomist/800.png",
+     "groessen": {
+      "landflaeche_km2": 151431808,
+      "schelf_0_200_km2": 23371061,
+      "rand_200_1400_km2": 21424176,
+      "mittlere_landhoehe_m": 816,
+      "hypsometrie_anteil": [
+       0.00708,
+       0.36672,
+       0.22077,
+       0.02073,
+       0.042,
+       0.04582,
+       0.07795,
+       0.13975,
+       0.04588,
+       0.02809,
+       0.00521
+      ],
+      "eisflaeche_km2": 16723599
+     }
+    }
+   ],
+   "eis": {
+    "ab_dicke_m": 100.0,
+    "aus": "ice_thickness derselben Datei",
+    "begruendung": "Gletscher und Eisschilde ab 100 m Dicke (Setzung); dünneres Eis erscheint als Höhe"
+   }
+  }
+ }
+}
