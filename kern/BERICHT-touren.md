@@ -99,3 +99,7 @@ Im Terminator-Licht liegt die Nachtseite weiter dunkel, das ist gewollt. Die Tou
   - Bei 0 ka ist der Landanteil klein und die Küste lang, darum wiegt das Halbieren der Küstenzellen schwerer.
 - **Einordnung:** Beides sind zwei Lesarten desselben Rasters, kein Fehler. Bei 20 ka ist der Kasten fast ganz Land; die Linie besteht nur aus drei kurzen Stücken am Nordrand.
 
+
+## Nachtrag 2026-11-06: Küste global
+
+Die Sintflut-Tour zeigt die Küste jetzt global aus `data/kuesten.json`: Grenze Land/Meer entlang der PaleoMIST-Zellkanten, 0,25°, alle 33 Schritte 80–0 ka, ganze Ringe, nichts interpoliert. Die Schritte werden einzeln nachgeladen. Die sechs Kästen bleiben als Fokus der Tour. Die frühere Datei `data/sintflut_kuesten.json` (Konturen je Kasten, linear zwischen Gitterpunkten) ist ersetzt. Relief und Küste kommen jetzt aus demselben Raster und fallen zusammen (siehe `kern/BERICHT-relief.md`, Nachtrag 2026-11-06).

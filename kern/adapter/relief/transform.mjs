@@ -9,7 +9,7 @@ const WISSENSSTAND = fehlt('Die Quellen nennen nicht, seit wann die Werte so bek
 const VERZERRUNG = { flaeche: 1, ueberhoehung: 1, gitter: { min: 0, max: 1, bezug: 'Zellfläche relativ zur Äquatorzelle; gleichabständiges Gitter' } };
 
 /** @param {any} roh data/relief.json @param {any} manifest */
-export function transform(roh, manifest) {
+export function transform(roh, manifest, zusatz = {}) {
   const archivkette = manifest.herkunft.archivkette;
   const eintraege = Object.entries(roh.quellen).map(([k, q]) => {
     const qq = /** @type {any} */ (q);
@@ -37,7 +37,7 @@ export function transform(roh, manifest) {
       eisflaeche: qq.eis?.fehlt ? fehlt(qq.eis.grund) : reihe('eisflaeche_km2', 'km2', `Summe der Zellflächen mit Eisdicke ab ${qq.eis.ab_dicke_m} m`),
     });
     return {
-      id: `${P}/${k}`, stapel: '1.1', name: `Relief: ${qq.name}`, auswahl: [`${P}/auswahl/schelf`, ...(k === 'paleomist' ? [`${P}/auswahl/eis`, `${P}/auswahl/paleomist_05`] : [])],
+      id: `${P}/${k}`, stapel: '1.1', name: `Relief: ${qq.name}`, auswahl: [`${P}/auswahl/schelf`, ...(k === 'paleomist' ? [`${P}/auswahl/eis`, `${P}/auswahl/paleomist_025`] : [])],
       wo: { geometrie: 'feld', raster: `${qq.aufloesung_grad}°`, ausdehnung: 'global', bezugsrahmen: qq.bezugsrahmen, verzerrung: VERZERRUNG,
         ...(qq.herkunft_anteile ? { herkunft_anteile: qq.herkunft_anteile } : {}) },
       werte,
@@ -47,6 +47,17 @@ export function transform(roh, manifest) {
     id: `${P}/fehlt/${k}`, stapel: '1.1', name: `Relief fehlt: ${k}`,
     wo: fehlt(/** @type {any} */ (f).grund), werte: { hoehe: fehlt(/** @type {any} */ (f).grund) },
   }));
+  /* Küste PaleoMIST: Grenze Land/Meer entlang der Zellkanten, dieselbe Grenze wie das Relief */
+  const k = zusatz.kuesten;
+  const wasser = { id: `${P}/wasser`, name: 'Wasser', erhaltung: 'erhalten', menge: fehlt('Das Relief nennt keine Wassermenge'),
+    formen: [{ id: 'ozean', name: 'Ozean', eintrag: `${P}/ozean` }] };
+  const kueste = k ? [
+    { id: `${P}/ozean`, stapel: '1.1', name: 'Ozean (Zellen ≤ 0 m)', wo: fehlt('Keine eigene Ozeangeometrie; seine Grenze ist die Küste'), werte: {} },
+    { id: `${P}/paleomist/kueste`, stapel: '1.1', name: 'Küste PaleoMIST, global, 80–0 ka', spur_von: { bestand: `${P}/wasser`, form: 'ozean' },
+      wo: { geometrie: 'grenze', koordinaten: { verweis: manifest.zusatz.kuesten, schritte_ka: k.ka_bp, aufloesung_grad: k.raum.aufloesung_grad, unschaerfe: k.raum.unschaerfe },
+        hinweis: k.woher.grenzen.join('; '), woher: { arten: k.woher.arten, quelle: k.woher.kette, archivkette, abgeleitet_aus: [`${P}/paleomist#hoehe`], verfahren: k.woher.verfahren },
+        verzerrung: VERZERRUNG }, werte: {} },
+  ] : [];
   return {
     schema: SCHEMA_VERSION,
     adapter: { id: manifest.id, eingabe: manifest.eingabe, erzeugt: roh.erzeugt },
@@ -55,8 +66,8 @@ export function transform(roh, manifest) {
     auswahl: [
       { id: `${P}/auswahl/schelf`, was: 'Schelf bis −200 m und Kontinentalrand bis −1400 m, beide', gesetzt_in: 'kern/BERICHT-relief.md', begruendung: roh.setzungen.schelf_begruendung },
       { id: `${P}/auswahl/eis`, was: `Eis als eigene Klasse ab ${roh.setzungen.eis_ab_m} m Dicke`, gesetzt_in: 'Entscheidung Max, 2026-11-06', begruendung: 'Gletscher und Eisschilde erkennbar machen; dünneres Eis erscheint als Höhe. Packeis führt keine Quelle.' },
-      { id: `${P}/auswahl/paleomist_05`, was: 'PaleoMIST auf 0,5° (jeder zweite Gitterpunkt)', gesetzt_in: 'kern/BERICHT-relief.md', begruendung: 'Größe: 33 Schritte rund 4 MB statt rund 15 MB; die Sintflut-Küsten liegen weiter auf 0,25° vor' },
+      { id: `${P}/auswahl/paleomist_025`, was: 'PaleoMIST in voller Auflösung 0,25°', gesetzt_in: 'Auftrag Max, 2026-11-06 (Relief und Küste sollen zusammenfallen)', begruendung: 'Mit 0,5° wich die Reliefkante von der Küste ab; 33 Schritte rund 21 MB, je Schritt einzeln geladen' },
     ],
-    bestaende: [], eintraege: [...eintraege, ...fehlend], prozesse: [], relationen: [],
+    bestaende: kueste.length ? [wasser] : [], eintraege: [...eintraege, ...kueste, ...fehlend], prozesse: [], relationen: [],
   };
 }

@@ -281,3 +281,35 @@ Die Landfläche schließt Eisoberflächen ein; GEBCO führt kein Eis als Klasse 
 ![Sintflut-Station Eis → Ozean bei 20 ka: Eisdicke Referenz, a1 als Rand, Relief grau](bericht-relief/eis-20.jpg)
 ![dieselbe Station nach Klick auf 10 ka in der Takt-Leiste](bericht-relief/eis-10.jpg)
 
+
+## Nachtrag 2026-11-06: Doggerland-Kante, Striche auf dem Eis, Küste global, PALEOMAP 0,1° lokal
+
+**Doggerland: Kante und Küste waren dieselbe Quelle, also ein Fehler.** Beide kamen aus PaleoMIST `paleo_topography`. Das Relief war aber auf 0,5° ausgedünnt (jeder zweite Punkt), die Küste auf 0,25° als Kontur gezogen; deshalb lagen sie auseinander.
+- **Behoben:** Das Relief trägt PaleoMIST jetzt in voller Auflösung, 0,25° (1440 × 721, 33 Schritte, zusammen 21 MB). Die Küste ist die Grenze Land/Meer entlang derselben Zellkanten (`matrix-scharnier/adapter/kuesten.py`).
+- **Geprüft:** Bei 10 ka liegt die grüne Linie genau auf der Treppenkante des Reliefs.
+- Für das Relief zeichnet die Seite bei PaleoMIST keine eigene Rasterlinie mehr, sondern diese Ringe; es gibt nur noch eine Linie.
+
+**Schwarze Striche auf dem Eisschild: ein Fehler der Schummerung.**
+- **Ursache:** Eiszellen trugen im Bild die Klasse 255 und bekamen für die Schummerung die Höhe 0 m. Wo Eis neben Land oder anderem Eis mit echter Höhe lag, entstand ein künstlicher Steilhang, also ein dunkler Strich. Bei 20 ka liegen außerdem 1 071 Eiszellen unter 0 m (eingedrücktes Bett, Schelfeis).
+- **Behoben:** Das Bild hat jetzt zwei Kanäle. Rot ist die Höhenklasse, auch unter Eis die Oberfläche; Grün = 255 heißt Eis ab 100 m Dicke. Die Schummerung sieht die wahre Eisoberfläche, das Eis bleibt deckend weiß.
+- **Geprüft:** Bei 20 ka über Skandinavien ohne Striche. Die Schummerung zeigt die 0,25°-Zellen der Eisoberfläche.
+
+**Küste global** (`data/kuesten.json`, `data/kuesten/paleomist/NNN.json`):
+- **Umfang:** PaleoMIST 0,25°, alle 33 Schritte 80–0 ka. Ganze Ringe im Uhrzeigersinn um Land; am Sattel biegt der Ring rechts ab, diagonal berührende Landzellen bleiben getrennt.
+- **Keine Interpolation:** weder im Raum noch in der Zeit; nur Ecken mit Richtungswechsel.
+- **Geprüft:** Ringfläche gleich Zahl der Landzellen je Schritt; die Antarktis ist ein einziger Umlauf-Ring.
+- **Größe:** Ringe bei 0, 10, 20 und 80 ka: 1 057, 1 243, 899, 1 156; zusammen 4,7 MB, rund 135 KB je Schritt. Die Seite lädt jeden Schritt einzeln nach.
+- **Kästen:** Die sechs Sintflut-Kästen bleiben als Fokus der Tour (gestrichelt). Die alte Datei `data/sintflut_kuesten.json` und `paleomist_kuesten.py` sind entfernt.
+- **Kern:** `kueste.wo.koordinaten` verweist auf `data/kuesten.json`, Ausschnitt „global; der Kasten ist der Fokus der Tour“. Das Relief nennt die Küste `relief/paleomist/kueste` als Spur von `relief/wasser`.
+
+**PALEOMAP 0,1°, nur lokal** (Entscheidung von Max):
+- **Ableitung:** `matrix-scharnier/adapter/relief_fein.py` liest `~/ZeroEarth/rohdaten/paleomap_dem` und schreibt nach `data/lokal/`. Der Ordner ist gitignored, also nicht im Repo und nicht online.
+- **Größe:** 109 Karten mit 3600 × 1801 Punkten, zusammen 107 MB PNG.
+- **Anzeige:** Liegt `data/lokal/relief_paleomap_01.json`, steht im Relief-Status bei PALEOMAP ein Schalter „0,1° (nur lokal)“ bzw. „1° (wie online)“. Online fehlt die Datei, der Schalter erscheint dann nicht.
+- **Geprüft:** bei 200 Ma umgeschaltet in rund 1,5 s, ohne Fehler; Legende und Herkunft nennen 0,1°.
+- **Einschränkung:** Die dunkle 0-m-Linie wird bei 0,1° auf 0,3° ausgedünnt, sonst wären es Hunderttausende Stücke. Ihre Kante weicht bis 0,2° von der Reliefkante ab; die Legende sagt das.
+
+![10 ka, Doggerland: Reliefkante und grüne Küste deckungsgleich](bericht-relief/doggerland-10.jpg)
+![20 ka, Skandinavien: Eis mit Schummerung der Oberfläche, ohne Striche](bericht-relief/eis-20-kante.jpg)
+![200 Ma, PALEOMAP 1° wie online](bericht-relief/paleomap-1-200ma.jpg)
+![200 Ma, PALEOMAP 0,1° lokal](bericht-relief/paleomap-01-200ma.jpg)

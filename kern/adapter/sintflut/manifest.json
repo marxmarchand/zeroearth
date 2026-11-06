@@ -26,8 +26,8 @@
       "variablen": [
         "paleo_topography"
       ],
-      "abgeleitet_durch": "matrix-scharnier/adapter/paleomist_kuesten.py",
-      "kette": "PaleoMIST -> 0-m-Linie"
+      "abgeleitet_durch": "matrix-scharnier/adapter/kuesten.py",
+      "kette": "PaleoMIST -> Grenze Land/Meer (0 m) entlang der Zellkanten, global"
     }
   },
   "stapel": [
@@ -98,7 +98,7 @@
     "bearbeitung": "Von zeroearth abgeleitet: Summen, Mittel und Küstenlinien. Raster nicht enthalten."
   },
   "weitergabe": {
-    "im_repo": "data/sintflut.json: Flächensummen und Mittelwerte je Kasten; data/paleomist_eis.json: globale Eis- und Ozeanvolumen und Landflächen je Kasten auf 1°, je Ideal; data/sintflut_kuesten.json: 0-m-Linien je Kasten, 9 Zeitschritte (20 bis 0 ka)",
+    "im_repo": "data/sintflut.json: Flächensummen und Mittelwerte je Kasten; data/paleomist_eis.json: globale Eis- und Ozeanvolumen und Landflächen je Kasten auf 1°, je Ideal; data/kuesten.json und data/kuesten/paleomist/*.json: Küste global, 33 Schritte 80–0 ka, ganze Ringe",
     "nicht_im_repo": "Raster reconstruction_0.25_degree.nc und die 1°-Dateien (Referenz, a1); nur als Verweis geführt"
   },
   "auswahl": [
@@ -136,17 +136,13 @@
       "angabe": "1°-Gitter -> Landfläche je Kasten (km², paleo_topography > 0), je Ideal"
     },
     {
-      "schritt": "auswaehlen",
-      "angabe": "Küstenlinien nur im Zeitfenster des Ereignisses: 20 bis 0 ka, 9 von 33 Schritten"
-    },
-    {
       "schritt": "vergroebern",
-      "angabe": "0.25°-Gitter -> 0-m-Linie von paleo_topography je Kasten (Kontur, linear zwischen Gitterpunkten; zwischen den Zeitschritten nichts interpoliert; auf 0,01° gerundet); Auflösung bleibt 0,25°, Unschärfe fehlt"
+      "angabe": "0.25°-Gitter -> Grenze Land/Meer entlang der Zellkanten, global, alle 33 Schritte, ganze Ringe; ohne Interpolation in Raum und Zeit"
     }
   ],
   "zusatz": {
     "eis": "data/paleomist_eis.json",
-    "kuesten": "data/sintflut_kuesten.json"
+    "kuesten": "data/kuesten.json"
   },
   "ideale": {
     "gruppe": "sintflut/ideale/eisgeschichte",

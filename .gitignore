@@ -13,3 +13,6 @@ data/*.nc
 *.pem
 *.key
 .env
+
+# lokale, feinere Ableitungen (z. B. PALEOMAP 0,1°), nie ins Repository
+data/lokal/

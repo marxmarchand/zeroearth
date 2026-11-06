@@ -8,10 +8,11 @@ geschummert wird erst im Browser; so gibt es den Grau-Modus ohne zweiten Satz.
 
   Klasse 0..100   Meer, 0 bis −11 000 m, Wurzelskala (fein nahe 0 m)
   Klasse 101..254 Land, 0 bis 9 000 m, Wurzelskala
-  Klasse 255      Eis (nur PaleoMIST): Eisdicke ab EIS_AB_M, Setzung
+  Eis (nur PaleoMIST): eigener Kanal (Grün = 255), Eisdicke ab EIS_AB_M, Setzung;
+                  die Höhe zeigt auch unter Eis die Oberfläche
 
 Quellen: PALEOMAP-DEM (Scotese & Wright 2018), 1°, 540–0 Ma; PaleoMIST 1.0,
-0,25° auf 0,5° ausgewählt (jeder zweite Gitterpunkt), 80–0 ka; GEBCO (lokal
+0,25° mit Eis-Kanal, 80–0 ka; GEBCO (lokal
 ~/ZeroEarth/rohdaten/gebco, Fassung 2025),
 15″ auf 0,1° gemittelt (24 × 24 Zellen), heute, mit Herkunft je Zelle aus dem
 Typ-Gitter (TID). PALEOMAP und PaleoMIST: Zeilen von Nord nach Süd, Spalten
@@ -173,24 +174,29 @@ def main():
         'zeit_unschaerfe': {'fehlt': True, 'grund': 'Kartenalter je Stufe, ohne Unschärfe'},
         'schritte': eintraege, 'eis': {'fehlt': True, 'grund': 'Das PALEOMAP-DEM führt kein Eis'}}
 
-    # PaleoMIST, 0,25° -> 0,5° (jeder zweite Gitterpunkt)
+    # PaleoMIST, 0,25°, zwei Kanäle: Rot = Höhenklasse (auch unter Eis die Oberfläche),
+    # Grün = 255 für Eis ab EIS_AB_M. So stimmen Reliefkante und Küste (kuesten.py) überein,
+    # und die Schummerung sieht die wahre Höhe der Eisoberfläche.
     d = Dataset(a.paleomist)
     zeit = np.asarray(d.variables['time'][:], float)
     eintraege = []
     for i, t in enumerate(zeit):
-        z = np.ma.filled(d.variables['paleo_topography'][i].astype(float), np.nan)[::-1, :-1][::2, ::2]
-        it = np.ma.filled(d.variables['ice_thickness'][i].astype(float), 0.0)[::-1, :-1][::2, ::2]
-        la = np.asarray(d.variables['lat'][:], float)[::-1][::2]
-        fl = zellflaechen(la, 0.5, z.shape[1])
+        z = np.ma.filled(d.variables['paleo_topography'][i].astype(float), np.nan)[::-1, :-1]
+        it = np.ma.filled(d.variables['ice_thickness'][i].astype(float), 0.0)[::-1, :-1]
+        la = np.asarray(d.variables['lat'][:], float)[::-1]
+        fl = zellflaechen(la, 0.25, z.shape[1])
         eis = it >= EIS_AB_M
         ka = abs(round(-t / 1000, 1))
         datei = f'relief/paleomist/{int(round(ka * 10)):03d}.png'   # Dateiname in 0,1 ka
-        bytes_ += png(klassen(z, eis), os.path.join(a.ziel, datei))
+        rgb = np.zeros(z.shape + (3,), np.uint8)
+        rgb[..., 0] = klassen(z); rgb[..., 1] = np.where(eis, 255, 0)
+        Image.fromarray(rgb).save(os.path.join(a.ziel, datei), 'PNG', optimize=True)
+        bytes_ += os.path.getsize(os.path.join(a.ziel, datei))
         eintraege.append({'ka': ka, 'datei': datei, 'groessen': groessen(z, fl, eis)})
     eintraege.sort(key=lambda e: e['ka'])
     quellen['paleomist'] = {
         'name': 'PaleoMIST 1.0 (Gowan et al. 2021)', 'einheit': 'ka', 'bezugssystem': 'ka_bp_1950',
-        'aufloesung_grad': 0.5, 'breite': 720, 'hoehe': 361, 'arten': ['rekonstruktion'],
+        'aufloesung_grad': 0.25, 'breite': 1440, 'hoehe': 721, 'kanaele': 'rot_hoehe_gruen_eis', 'arten': ['rekonstruktion'],
         'lizenz': 'CC BY 4.0, doi:10.1594/PANGAEA.905800', 'bezugsrahmen': 'heutige Koordinaten',
         'zeit_unschaerfe': {'fehlt': True, 'grund': 'PaleoMIST nennt keine Unschärfe der Zeitachse; 2,5 ka sind die Auflösung'},
         'schritte': eintraege,

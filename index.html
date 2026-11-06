@@ -2227,8 +2227,8 @@ const LEGENDE = {
   gezeiten:    { h: 'SWOT River Tides (Zenodo 15223861, CC BY 4.0) über gezeiten.py', z: 'SWOT seit 2023; außerhalb leer', karte: true },
   satbild:     { h: 'VIIRS SNPP True Color · NASA GIBS', m: 250 },
   nachtlicht:  { h: 'VIIRS Day/Night Band · NASA GIBS', m: 500 },
-  sintflut:    { h: 'PaleoMIST 1.0 -> 0-m-Linie (rekonstruktion, berechnet; CC BY 4.0); Kästen: Setzung',
-                 farben: [{ farbe: '#8fe89a', text: 'grüne Linie: Küste (0-m-Linie) im Fenster', linie: true }, { farbe: '#e8e2c8', text: 'helle gestrichelte Linie: Kasten des Fensters (Setzung)', linie: true }],
+  sintflut:    { h: 'PaleoMIST 1.0 -> Grenze Land/Meer entlang der Zellkanten, global (rekonstruktion, berechnet; CC BY 4.0); Kästen: Setzung',
+                 farben: [{ farbe: '#8fe89a', text: 'grüne Linie: Küste PaleoMIST global (Zellkanten 0,25°), Quelle und Schritt wie das Relief in der ka-Zeile', linie: true }, { farbe: '#e8e2c8', text: 'helle gestrichelte Linie: Kasten des Fensters (Fokus der Tour, Setzung)', linie: true }],
                  get z() { const l = ze.sintflutLayer, i = l?.aktuellerSchritt(); return i === null || i === undefined ? 'außerhalb von 20–0 ka BP: keine Linie' : `${tourKa(l.schritte[i])} ka BP (Bezug 1950), Schritt 2,5 ka; Unschärfe fehlt`; },
                  m: 28e3, warn: 'isostatische Deformation enthalten; Sedimentation nicht berücksichtigt' },
   tektonik:    { h: 'Plattenmodelle -> heutige Kontinent- und Küstenpolygone gedreht (pyGPlates); Standard Merdith 2021, weitere Ideale zuschaltbar: Müller 2022 (Mantelbezug, Modell), PALEOMAP-Rotation v19o (Merdith-Polygone je ganz der PALEOMAP-Platte mit größter Überlappung zugeordnet; Setzung); jenseits 1 Ga Cao 2024; CC BY 4.0',
@@ -4887,7 +4887,7 @@ class ZeroEarth {
       const raster = [];   // was nur der Globus zeigt
       const tief = tektonikMa(Tideline.t) >= GRUNDBILD_TIEFE_MA, rl = this.reliefLayer;
       if (rl?.on && rl.stand?.quelle) {
-        const q = rl.daten.quellen[rl.stand.quelle], e = rl.stand.schritt;
+        const e = rl.stand.schritt, q = rl.fein?.schritte.includes(e) ? rl.fein : rl.daten.quellen[rl.stand.quelle];
         raster.push([`Relief: ${q.name}`, { h: `${q.name} (${q.arten.join(', ')}; ${q.lizenz}); Höhen in 256 Klassen, ${q.aufloesung_grad}°`,
           z: `${e.jahr ? `Stand ${e.jahr}` : `${takt.zahl(e.ma ?? e.ka, 1)} ${q.einheit}`}${e.stufe ? ` (${e.stufe})` : ''}; Unschärfe fehlt`,
           warn: `Schummerung ${RELIEF_UEBERHOEHUNG}-fach überhöht, Licht aus Nordwest; Farben ohne Vegetation` + (rl.stand.grau.length ? `; grau, weil ${rl.stand.grau.join(', ')} an ist` : ''),
@@ -5467,13 +5467,37 @@ class ZeroEarth {
 
 /* ─────────────────────────────────────────────────────────────────
    SINTFLUT-EBENE — Küsten und Kästen der sechs Fenster. Die Linien
-   stehen je Zeitschritt in data/sintflut_kuesten.json; zwischen den
+   kommen aus der globalen PaleoMIST-Küste (data/kuesten/); zwischen den
    Schritten wird nichts interpoliert. Außerhalb von 20–0 ka bleibt
    die Küste leer und die Kästen stehen allein (Regel 8).
    ───────────────────────────────────────────────────────────────── */
+/* Küste PaleoMIST global (data/kuesten.json, data/kuesten/paleomist/*.json): ganze Ringe
+   entlang der Zellkanten, dieselbe Grenze wie das Relief. Je Schritt einzeln nachgeladen. */
+const KUESTE_FARBE = '#8fe89a';
+const Kueste = {
+  index: null, ringe: new Map(),
+  async laden() { this.index ??= await fetch('data/kuesten.json').then(r => r.json()); return this.index; },
+  async schritt(ka) {
+    const idx = await this.laden(), e = idx.schritte.find(x => Math.abs(x.ka - ka) < 1e-6);
+    if (!e) return null;
+    if (!this.ringe.has(e.datei)) this.ringe.set(e.datei, fetch(`data/${e.datei}`).then(r => r.json()).then(j => j.ringe));
+    return this.ringe.get(e.datei);
+  },
+  /** Ringe in eine PolylineCollection; Ecken -> Länge/Breite, Sprung über die Datumsgrenze unterteilt. */
+  zeichne(coll, ringe, breite = 1.5) {
+    const mat = Cesium.Material.fromType('Color', { color: Cesium.Color.fromCssColorString(KUESTE_FARBE) });
+    for (const r of ringe) {
+      const pts = [];
+      for (let i = 0; i < r.length; i += 2) pts.push([-180.125 + r[i] * 0.25, Math.max(-90, Math.min(90, 90.125 - r[i + 1] * 0.25))]);
+      coll.add({ width: breite, material: mat, positions: TektonikLayer.punkte(pts) });
+    }
+  },
+};
+
 class SintflutLayer {
   constructor(v) { this.v = v; this.on = false; this.daten = null; this._schritt = undefined; }
-  get schritte() { return this.daten?.ka_bp ?? []; }
+  /** Schritte im Zeitfenster der Sintflut (20–0 ka, Setzung des Ereignisses); die Küste selbst ist global 80–0 ka. */
+  get schritte() { return (Kueste.index?.ka_bp ?? []).filter(k => k <= 20); }
   /** Masterzeit t (Jahre seit J2000) in ka BP, Bezugsjahr 1950. */
   static kaAus(t) { return (-50 - t) / 1000; }
   static tAus(ka) { return -50 - ka * 1000; }
@@ -5483,7 +5507,7 @@ class SintflutLayer {
     return i < 0 ? null : i;
   }
   async laden() {
-    if (!this.daten) this.daten = await fetch('data/sintflut_kuesten.json').then(r => r.json());
+    if (!this.daten) { this.daten = await fetch('data/sintflut.json').then(r => r.json()); await Kueste.laden(); }
     return this.daten;
   }
   async show() {
@@ -5521,27 +5545,28 @@ class SintflutLayer {
   stuetzstellen() {
     if (!this.daten) return [];
     const i = this.aktuellerSchritt();
-    return [{ name: 'Sintflut (PaleoMIST)', einheit: 'ka', farbe: '#8fe89a', werte: this.schritte,
+    return [{ name: 'Sintflut (PaleoMIST)', einheit: 'ka', farbe: KUESTE_FARBE, werte: this.schritte,
       abdeckung: { von: Math.max(...this.schritte), bis: Math.min(...this.schritte) },
       gewaehlt: i === null ? null : this.schritte[i], unschaerfe_fehlt: true, zuT: SintflutLayer.tAus }];
   }
-  update(t) {
+  async update(t) {
     if (!this.on || !this.daten) return;
     const i = this.aktuellerSchritt(t);
-    if (i === this._schritt) return;
-    this._schritt = i;
+    // Zeichnet das Relief schon die PaleoMIST-Küste, nicht doppelt
+    const durchRelief = ze.reliefLayer?.zeigt === 'paleomist';
+    const schluessel = `${i}|${durchRelief}`;
+    if (schluessel === this._schritt) return;
+    this._schritt = schluessel;
     if (this.linien) { this.v.scene.primitives.remove(this.linien); this.linien = null; }
     const st = document.getElementById('sintflut-status');
-    if (i === null) { if (st) st.innerHTML = '<span class="ds-err">Masterzeit außerhalb von 20–0 ka BP: keine Küstenlinie</span>'; return; }
-    this.linien = this.v.scene.primitives.add(new Cesium.PolylineCollection());
-    const farbe = Cesium.Material.fromType('Color', { color: Cesium.Color.fromCssColorString('#8fe89a') });
-    for (const o of Object.values(this.daten.orte))
-      for (const zug of o.linien[i]) {
-        if (zug.length < 2) continue;
-        this.linien.add({ width: 1.6, material: farbe,
-          positions: Cesium.Cartesian3.fromDegreesArrayHeights(zug.flatMap(([x, y]) => [x, y, 3000])) });
-      }
-    if (st) st.innerHTML = `<span class="ds-ok">Küste bei ${tourKa(this.schritte[i])} ka BP</span> · Schritt 2,5 ka, nichts interpoliert`;
+    if (i === null) { if (st) st.innerHTML = '<span class="ds-err">Masterzeit außerhalb von 20–0 ka BP: keine Küste in diesem Fenster</span>'; return; }
+    if (!durchRelief) {
+      const ringe = await Kueste.schritt(this.schritte[i]);
+      if (schluessel !== this._schritt || !this.on) return;
+      this.linien = this.v.scene.primitives.add(new Cesium.PolylineCollection());
+      Kueste.zeichne(this.linien, ringe ?? []);
+    }
+    if (st) st.innerHTML = `<span class="ds-ok">Küste bei ${tourKa(this.schritte[i])} ka BP</span> · global, Zellkanten 0,25°, nichts interpoliert${durchRelief ? ' (gezeichnet vom Relief)' : ''}`;
   }
 }
 
@@ -5863,7 +5888,16 @@ const reliefVerlauf = (stufen, x) => {
 
 class ReliefLayer {
   constructor(v) { this.v = v; this.on = false; this.daten = null; this.bilder = new Map(); this.zeigt = null; this._schluessel = undefined; }
-  async laden() { if (!this.daten) this.daten = await fetch('data/relief.json').then(r => r.json()); return this.daten; }
+  async laden() {
+    if (!this.daten) {
+      this.daten = await fetch('data/relief.json').then(r => r.json());
+      // PALEOMAP 0,1° nur, wenn lokal abgeleitet (relief_fein.py, data/lokal/ ist gitignored); online fehlt die Datei
+      this.fein = await fetch('data/lokal/relief_paleomap_01.json').then(r => r.ok ? r.json() : null).catch(() => null);
+    }
+    return this.daten;
+  }
+  /** Schalter 0,1° (lokal) für PALEOMAP; nur sichtbar, wenn die lokale Ableitung liegt. */
+  feinUmschalten() { this.feinAn = !this.feinAn; this._schluessel = undefined; this.update(Tideline.t); }
   async show() { this.on = true; await this.laden(); if (!this.on) return; this._schluessel = undefined; this.update(Tideline.t); }
   hide() { this.on = false; this.zeigt = null; this._schluessel = undefined; this._leeren(); ze._grundbildTiefe?.(); this._status(''); }
   _leeren() {
@@ -5899,16 +5933,16 @@ class ReliefLayer {
     const img = new Image(); img.src = `data/${datei}`; await img.decode();   // Pfade in relief.json gelten ab data/
     const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
     const x = c.getContext('2d'); x.drawImage(img, 0, 0);
-    const d = x.getImageData(0, 0, c.width, c.height).data, k = new Uint8Array(c.width * c.height);
-    for (let i = 0; i < k.length; i++) k[i] = d[i * 4];
-    const e = { W: c.width, H: c.height, k }; this.bilder.set(datei, e); return e;
+    const d = x.getImageData(0, 0, c.width, c.height).data, k = new Uint8Array(c.width * c.height), eis = new Uint8Array(c.width * c.height);
+    for (let i = 0; i < k.length; i++) { k[i] = d[i * 4]; eis[i] = d[i * 4] !== d[i * 4 + 1] && d[i * 4 + 1] === 255 ? 1 : 0; }   // Grün 255 = Eis (nur zweikanalige Bilder)
+    const e = { W: c.width, H: c.height, k, eis }; this.bilder.set(datei, e); return e;
   }
-  static hoehe(c) { return c <= 100 ? -11000 * (c / 100) ** 2 : c === 255 ? null : 9000 * ((c - 101) / 153) ** 2; }
+  static hoehe(c) { return c <= 100 ? -11000 * (c / 100) ** 2 : 9000 * ((Math.min(c, 254) - 101) / 153) ** 2; }
   /** Färben und schummern; dann um eine halbe Zelle versetzt auf ein doppelt so feines Bild (Zellmitten). */
-  static bild({ W, H, k }, res, grau, gitter = 'punkte') {
+  static bild({ W, H, k, eis }, res, grau, gitter = 'punkte') {
     const src = document.createElement('canvas'); src.width = W; src.height = H;
     const sx = src.getContext('2d'), img = sx.createImageData(W, H), d = img.data;
-    const z = Float32Array.from(k, c => ReliefLayer.hoehe(c) ?? 0);
+    const z = Float32Array.from(k, c => ReliefLayer.hoehe(c));
     const az = 315 * Math.PI / 180, alt = 45 * Math.PI / 180;
     for (let r = 0; r < H; r++) {
       const lat = 90 - r * res, dx = Math.max(1, 111e3 * res * Math.cos(lat * Math.PI / 180)), dy = 111e3 * res;
@@ -5917,10 +5951,12 @@ class ReliefLayer {
         const zl = z[r * W + (c + W - 1) % W], zr = z[r * W + (c + 1) % W], zo = z[Math.max(0, r - 1) * W + c], zu = z[Math.min(H - 1, r + 1) * W + c];
         const gx = (zr - zl) / (2 * dx) * RELIEF_UEBERHOEHUNG, gy = (zo - zu) / (2 * dy) * RELIEF_UEBERHOEHUNG;
         const steig = Math.atan(Math.hypot(gx, gy)), richt = Math.atan2(gy, -gx);
-        const hs = kl === 255 ? 0.85 : Math.max(0, Math.cos(alt) * Math.cos(steig) + Math.sin(alt) * Math.sin(steig) * Math.cos(az - richt)) / Math.cos(alt) * 0.75 + 0.25;
-        let farbe = kl === 255 ? RELIEF_FARBEN.eis : kl <= 100 ? reliefVerlauf(RELIEF_FARBEN.meer, kl / 100) : reliefVerlauf(RELIEF_FARBEN.land, (kl - 101) / 153);
-        if (grau) { const l = kl <= 100 ? 60 + 40 * (1 - kl / 100) : kl === 255 ? 200 : 130; farbe = [l, l, l]; }
-        const f = kl <= 100 ? 0.92 + 0.08 * hs : hs;
+        const istEis = eis?.[i] === 1;
+        const hs = Math.max(0, Math.cos(alt) * Math.cos(steig) + Math.sin(alt) * Math.sin(steig) * Math.cos(az - richt)) / Math.cos(alt) * 0.75 + 0.25;
+        // Gletscher und Eisschilde: deckend weiß, mit Schummerung der Eisoberfläche
+        let farbe = istEis ? RELIEF_FARBEN.eis : kl <= 100 ? reliefVerlauf(RELIEF_FARBEN.meer, kl / 100) : reliefVerlauf(RELIEF_FARBEN.land, (kl - 101) / 153);
+        if (grau) { const l = istEis ? 205 : kl <= 100 ? 60 + 40 * (1 - kl / 100) : 130; farbe = [l, l, l]; }
+        const f = kl <= 100 && !istEis ? 0.92 + 0.08 * hs : hs;
         d[i * 4] = Math.min(255, farbe[0] * f); d[i * 4 + 1] = Math.min(255, farbe[1] * f); d[i * 4 + 2] = Math.min(255, farbe[2] * f); d[i * 4 + 3] = 255;
       }
     }
@@ -5952,7 +5988,8 @@ class ReliefLayer {
   async update(t) {
     if (!this.on || !this.daten) return;
     const w = this.wahl(t), grau = ReliefLayer.feldEbenen();
-    const schluessel = `${w.quelle}:${w.i}:${grau.join(',')}`;
+    const fein = w.quelle === 'paleomap' && this.feinAn && this.fein ? this.fein.schritte.find(x => x.ma === this.daten.quellen.paleomap.schritte[w.i]?.ma) : null;
+    const schluessel = `${w.quelle}:${w.i}:${grau.join(',')}:${fein ? 'fein' : ''}`;
     if (schluessel === this._schluessel) return;
     this._schluessel = schluessel;
     if (!w.quelle || w.i === null || w.i === undefined) {
@@ -5960,7 +5997,7 @@ class ReliefLayer {
       this._status(`<span class="ds-err">Relief fehlt: ${tourEsc(w.grund ?? 'kein Schritt')}</span>`);
       this.stand = { quelle: null, grund: w.grund }; ze.zeichneLegende?.(); ze.leiste?.zeichne(); return;
     }
-    const q = this.daten.quellen[w.quelle], e = q.schritte[w.i];
+    const q = fein ? this.fein : this.daten.quellen[w.quelle], e = fein ?? q.schritte[w.i];
     const gitter = q.gitter ?? 'punkte';
     let kl;
     try { kl = await this._klassen(e.datei); }
@@ -5973,13 +6010,22 @@ class ReliefLayer {
     this.v.imageryLayers.lowerToBottom(this.layer);
     if (ze.grundbild) this.v.imageryLayers.lowerToBottom(ze.grundbild);
     this.linie = this.v.scene.primitives.add(new Cesium.PolylineCollection());
-    const mat = Cesium.Material.fromType('Color', { color: Cesium.Color.fromCssColorString('#20160d').withAlpha(0.55) });
-    for (const s of ReliefLayer.nullLinie(kl, q.aufloesung_grad, gitter)) this.linie.add({ width: 1, material: mat, positions: Cesium.Cartesian3.fromDegreesArrayHeights(s.flatMap(([lo, la]) => [lo, la, 2500])) });
+    if (w.quelle === 'paleomist') {
+      // Küste PaleoMIST: die abgeleiteten Ringe (data/kuesten/), dieselbe Grenze wie dieses Relief
+      const ringe = await Kueste.schritt(e.ka);
+      if (schluessel !== this._schluessel || !this.on) return;
+      Kueste.zeichne(this.linie, ringe ?? []);
+    } else {
+      const mat = Cesium.Material.fromType('Color', { color: Cesium.Color.fromCssColorString('#20160d').withAlpha(0.55) });
+      for (const s of ReliefLayer.nullLinie(kl, q.aufloesung_grad, gitter)) this.linie.add({ width: 1, material: mat, positions: Cesium.Cartesian3.fromDegreesArrayHeights(s.flatMap(([lo, la]) => [lo, la, 2500])) });
+    }
+    ze.sintflutLayer?.on && ze.sintflutLayer.update(Tideline.t);
     this.zeigt = w.quelle;
     this.stand = { quelle: w.quelle, schritt: e, grau };
     const wert = e.ma ?? e.ka ?? e.jahr, einheit = q.einheit;
     this._status(`<span class="ds-ok">${tourEsc(q.name)}: ${takt.zahl(wert, 1)} ${einheit}${e.stufe ? ` (${tourEsc(e.stufe)})` : ''}</span>`
-      + (grau.length ? ` · grau, weil ${tourEsc(grau.join(', '))} an` : ''));
+      + (grau.length ? ` · grau, weil ${tourEsc(grau.join(', '))} an` : '')
+      + (w.quelle === 'paleomap' && this.fein ? ` · <a href="#" onclick="ze.reliefLayer.feinUmschalten();return false">${fein ? '1° (wie online)' : '0,1° (nur lokal)'}</a>` : ''));
     ze._grundbildTiefe?.(); ze.tektonikLayer?._schluessel !== undefined && ze.tektonikLayer.on && (ze.tektonikLayer._schluessel = undefined, ze.tektonikLayer.update(Tideline.t));
     ze.zeichneLegende?.(); ze.leiste?.zeichne();
   }
@@ -5997,7 +6043,7 @@ class ReliefLayer {
     if (!this.stand?.quelle) return [];
     if (this.stand.grau?.length) return [
       { farbe: 'linear-gradient(90deg,rgb(60,60,60),rgb(200,200,200))', text: `grau, weil ${this.stand.grau.join(', ')} an ist: Meer dunkel, Land mittel, Eis hell, Schummerung bleibt` },
-      { farbe: '#20160d', text: 'dunkle Linie: 0-m-Linie aus demselben Raster', linie: true }];
+      { farbe: '#20160d', text: 'dunkle Linie: 0-m-Linie aus demselben Raster' + (this.fein?.schritte.includes(this.stand.schritt) ? ', für die Linie auf 0,3° ausgedünnt (Kante weicht bis 0,2° ab)' : ''), linie: true }];
     const aus = [
       { farbe: 'linear-gradient(90deg,rgb(169,203,224),rgb(14,38,72))', text: 'Meer: hell flach bis dunkel tief (0 bis −11 000 m)' },
       { farbe: 'linear-gradient(90deg,rgb(232,216,172),rgb(96,70,52))', text: 'Land: Sand bis Braun nach Höhe (0 bis 9 000 m); ohne Grün, keine Vegetation behauptet' },
@@ -6009,7 +6055,9 @@ class ReliefLayer {
       vorgefertigtes_gitter: 'vorgefertigtes Gitter', unbekannt: 'unbekannt', steuerpunkte: 'Steuerpunkte' };
     if (an) aus.push({ farbe: 'transparent', text: 'Herkunft nach Fläche (GEBCO-Typgitter): ' + Object.entries(an).filter(([, v]) => v.anteil >= 0.0005)
       .sort((a, b) => b[1].anteil - a[1].anteil).map(([g, v]) => `${GRUPPE[g] ?? g} ${takt.zahl(v.anteil * 100, 1)} %`).join(', ') });
-    aus.push({ farbe: '#20160d', text: 'dunkle Linie: 0-m-Linie aus demselben Raster', linie: true });
+    aus.push(this.stand.quelle === 'paleomist'
+      ? { farbe: KUESTE_FARBE, text: 'grüne Linie: Küste PaleoMIST (Zellkanten 0,25°, data/kuesten/), dieselbe Grenze wie das Relief', linie: true }
+      : { farbe: '#20160d', text: 'dunkle Linie: 0-m-Linie aus demselben Raster' + (this.fein?.schritte.includes(this.stand.schritt) ? ', für die Linie auf 0,3° ausgedünnt (Kante weicht bis 0,2° ab)' : ''), linie: true });
     return aus;
   }
 }
@@ -6121,7 +6169,7 @@ const EBENEN_HERKUNFT = {
   gezeiten:    { arten: ['beobachtung'], datei: 'data/gezeiten.json', text: 'SWOT' },
   wind:        { arten: ['modell'], datei: 'data/manifest.json', text: 'GFS (Vorhersage, Modell)' },
   sprachen:    { arten: ['kuratiert'], datei: 'data/glottolog.json', text: 'Glottolog' },
-  sintflut:    { arten: ['rekonstruktion', 'berechnet'], datei: 'data/sintflut_kuesten.json' },
+  sintflut:    { arten: ['rekonstruktion', 'berechnet'], datei: 'data/kuesten.json' },
   tektonik:    { arten: ['rekonstruktion', 'berechnet'], datei: 'data/tektonik_umrisse.json', text: 'Standard Merdith 2021; Müller 2022 zuschaltbar ist Modell (○)' },
   palaeokueste:{ arten: ['rekonstruktion', 'kuratiert', 'berechnet'], datei: 'data/tektonik_palaeokuesten.json' },
   eis:         { arten: ['rekonstruktion'], datei: 'data/eis.json', text: 'PaleoMIST, Referenz und a1' },
@@ -6667,7 +6715,7 @@ class TourMotor {
         <input type="range" min="0" max="${schritte.length - 1}" step="1" value="${Math.max(0, schritte.indexOf(this.ka))}" oninput="ze.tour.setzeSchritt(this.value)">
         <small>Nur die Schritte der Quelle, nichts dazwischen. Unschärfe fehlt; ${tourKa(ev.zeitfenster.aufloesung)} ka ist die Auflösung, nur eine Untergrenze.</small></div>` : ''}
       <div id="tour-werte">${this._werteHtml(st)}</div>
-      ${regler ? `<p class="tour-leise">Küste: ${tourEsc(lage.daten.woher.grenzen[0])}. Der Kasten ist eine Setzung (Regel 7); das Grundbild zeigt das Relief der Quelle zum Zeitschritt (siehe Legende).</p>` : ''}
+      ${regler ? `<p class="tour-leise">Küste: ${tourEsc(Kueste.index?.woher.grenzen[0] ?? '')}. Der Kasten ist eine Setzung (Regel 7); das Grundbild zeigt das Relief der Quelle zum Zeitschritt (siehe Legende).</p>` : ''}
       ${this._daten(st)}`;
   }
 

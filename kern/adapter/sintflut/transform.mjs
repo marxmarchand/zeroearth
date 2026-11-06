@@ -245,11 +245,12 @@ export function transform(roh, manifest, zusatz = {}) {
       spur_von: { bestand: wasser.id, form: 'ozean' },
       wo: {
         geometrie: 'grenze',
-        koordinaten: zusatz.kuesten?.orte?.[k]
-          ? { verweis: `${manifest.zusatz.kuesten}#orte.${k}.linien`, schritte_ka: zusatz.kuesten.ka_bp, aufloesung_grad: zusatz.kuesten.raum.aufloesung_grad, unschaerfe: zusatz.kuesten.raum.unschaerfe }
-          : fehlt('Ohne data/sintflut_kuesten.json keine Küstengeometrie, nur Flächensummen je Kasten'),
+        koordinaten: zusatz.kuesten
+          ? { verweis: manifest.zusatz.kuesten, ausschnitt: 'global; der Kasten ist der Fokus der Tour', schritte_ka: zusatz.kuesten.ka_bp,
+              aufloesung_grad: zusatz.kuesten.raum.aufloesung_grad, unschaerfe: zusatz.kuesten.raum.unschaerfe }
+          : fehlt('Ohne data/kuesten.json keine Küstengeometrie, nur Flächensummen je Kasten'),
         hinweis: HINWEIS_GRENZE,
-        woher: { ...woher([TOPO], 'Küste als 0-m-Linie von paleo_topography; abgeleitet, nie gemessen'),
+        woher: { ...woher([TOPO], 'Küste als Grenze Land/Meer (0 m) entlang der Zellkanten von paleo_topography; abgeleitet, nie gemessen'),
           ...(zusatz.kuesten ? { arten: zusatz.kuesten.woher.arten, kette: zusatz.kuesten.woher.kette } : {}) },
         verzerrung,
       },

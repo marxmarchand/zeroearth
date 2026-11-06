@@ -1,0 +1,270 @@
+{
+ "erzeugt": "2026-11-06T08:37:45+00:00",
+ "hinweis": "erzeugt von matrix-scharnier/adapter/kuesten.py",
+ "woher": {
+  "arten": [
+   "rekonstruktion",
+   "berechnet"
+  ],
+  "kette": "PaleoMIST 1.0 (paleo_topography) -> Grenze Land/Meer (0 m) entlang der Zellkanten",
+  "datei": "reconstruction_0.25_degree.nc",
+  "lizenz": "CC BY 4.0, Gowan 2019, doi:10.1594/PANGAEA.905800; von zeroearth bearbeitet: Grenze der Zellen abgeleitet",
+  "verfahren": "Zellen mit Höhe > 0 sind Land (auch Eis); Kanten zwischen Land und Meer zu ganzen Ringen verbunden, Sattel rechts abbiegend; keine Interpolation",
+  "grenzen": [
+   "paleo_topography enthält isostatische Deformation (laut Datei); Sedimentation nicht berücksichtigt",
+   "Becken unter 0 m im Landesinneren gelten als Meer, dieselbe Grenze wie die Landflächen"
+  ]
+ },
+ "zeit": {
+  "bezugssystem": "ka_bp_1950",
+  "aufloesung_ka": 2.5,
+  "unschaerfe": {
+   "fehlt": true,
+   "grund": "PaleoMIST nennt keine Unschärfe der Zeitachse; die 2,5 ka sind die Auflösung"
+  }
+ },
+ "raum": {
+  "aufloesung_grad": 0.25,
+  "ecke_laenge": "−180,125 + x · 0,25",
+  "ecke_breite": "90,125 − y · 0,25, begrenzt auf ±90",
+  "unschaerfe": {
+   "fehlt": true,
+   "grund": "PaleoMIST nennt keine Unschärfe der Topographie; 0,25° sind die Auflösung"
+  }
+ },
+ "ka_bp": [
+  0.0,
+  2.5,
+  5.0,
+  7.5,
+  10.0,
+  12.5,
+  15.0,
+  17.5,
+  20.0,
+  22.5,
+  25.0,
+  27.5,
+  30.0,
+  32.5,
+  35.0,
+  37.5,
+  40.0,
+  42.5,
+  45.0,
+  47.5,
+  50.0,
+  52.5,
+  55.0,
+  57.5,
+  60.0,
+  62.5,
+  65.0,
+  67.5,
+  70.0,
+  72.5,
+  75.0,
+  77.5,
+  80.0
+ ],
+ "schritte": [
+  {
+   "ka": 0.0,
+   "datei": "kuesten/paleomist/000.json",
+   "ringe": 1057,
+   "ecken": 20369
+  },
+  {
+   "ka": 2.5,
+   "datei": "kuesten/paleomist/025.json",
+   "ringe": 1031,
+   "ecken": 20061
+  },
+  {
+   "ka": 5.0,
+   "datei": "kuesten/paleomist/050.json",
+   "ringe": 1133,
+   "ecken": 20221
+  },
+  {
+   "ka": 7.5,
+   "datei": "kuesten/paleomist/075.json",
+   "ringe": 1175,
+   "ecken": 20049
+  },
+  {
+   "ka": 10.0,
+   "datei": "kuesten/paleomist/100.json",
+   "ringe": 1243,
+   "ecken": 19525
+  },
+  {
+   "ka": 12.5,
+   "datei": "kuesten/paleomist/125.json",
+   "ringe": 1170,
+   "ecken": 17754
+  },
+  {
+   "ka": 15.0,
+   "datei": "kuesten/paleomist/150.json",
+   "ringe": 1122,
+   "ecken": 16724
+  },
+  {
+   "ka": 17.5,
+   "datei": "kuesten/paleomist/175.json",
+   "ringe": 943,
+   "ecken": 14727
+  },
+  {
+   "ka": 20.0,
+   "datei": "kuesten/paleomist/200.json",
+   "ringe": 899,
+   "ecken": 14199
+  },
+  {
+   "ka": 22.5,
+   "datei": "kuesten/paleomist/225.json",
+   "ringe": 925,
+   "ecken": 14381
+  },
+  {
+   "ka": 25.0,
+   "datei": "kuesten/paleomist/250.json",
+   "ringe": 940,
+   "ecken": 14936
+  },
+  {
+   "ka": 27.5,
+   "datei": "kuesten/paleomist/275.json",
+   "ringe": 1052,
+   "ecken": 16130
+  },
+  {
+   "ka": 30.0,
+   "datei": "kuesten/paleomist/300.json",
+   "ringe": 1129,
+   "ecken": 17171
+  },
+  {
+   "ka": 32.5,
+   "datei": "kuesten/paleomist/325.json",
+   "ringe": 1173,
+   "ecken": 17899
+  },
+  {
+   "ka": 35.0,
+   "datei": "kuesten/paleomist/350.json",
+   "ringe": 1180,
+   "ecken": 18316
+  },
+  {
+   "ka": 37.5,
+   "datei": "kuesten/paleomist/375.json",
+   "ringe": 1155,
+   "ecken": 18379
+  },
+  {
+   "ka": 40.0,
+   "datei": "kuesten/paleomist/400.json",
+   "ringe": 1186,
+   "ecken": 18986
+  },
+  {
+   "ka": 42.5,
+   "datei": "kuesten/paleomist/425.json",
+   "ringe": 1207,
+   "ecken": 19271
+  },
+  {
+   "ka": 45.0,
+   "datei": "kuesten/paleomist/450.json",
+   "ringe": 1151,
+   "ecken": 18359
+  },
+  {
+   "ka": 47.5,
+   "datei": "kuesten/paleomist/475.json",
+   "ringe": 1186,
+   "ecken": 18692
+  },
+  {
+   "ka": 50.0,
+   "datei": "kuesten/paleomist/500.json",
+   "ringe": 1213,
+   "ecken": 18979
+  },
+  {
+   "ka": 52.5,
+   "datei": "kuesten/paleomist/525.json",
+   "ringe": 1110,
+   "ecken": 18006
+  },
+  {
+   "ka": 55.0,
+   "datei": "kuesten/paleomist/550.json",
+   "ringe": 1145,
+   "ecken": 17567
+  },
+  {
+   "ka": 57.5,
+   "datei": "kuesten/paleomist/575.json",
+   "ringe": 1082,
+   "ecken": 16576
+  },
+  {
+   "ka": 60.0,
+   "datei": "kuesten/paleomist/600.json",
+   "ringe": 1060,
+   "ecken": 16128
+  },
+  {
+   "ka": 62.5,
+   "datei": "kuesten/paleomist/625.json",
+   "ringe": 1069,
+   "ecken": 16463
+  },
+  {
+   "ka": 65.0,
+   "datei": "kuesten/paleomist/650.json",
+   "ringe": 1138,
+   "ecken": 17380
+  },
+  {
+   "ka": 67.5,
+   "datei": "kuesten/paleomist/675.json",
+   "ringe": 1138,
+   "ecken": 18038
+  },
+  {
+   "ka": 70.0,
+   "datei": "kuesten/paleomist/700.json",
+   "ringe": 1165,
+   "ecken": 18409
+  },
+  {
+   "ka": 72.5,
+   "datei": "kuesten/paleomist/725.json",
+   "ringe": 1158,
+   "ecken": 18748
+  },
+  {
+   "ka": 75.0,
+   "datei": "kuesten/paleomist/750.json",
+   "ringe": 1151,
+   "ecken": 18937
+  },
+  {
+   "ka": 77.5,
+   "datei": "kuesten/paleomist/775.json",
+   "ringe": 1136,
+   "ecken": 19088
+  },
+  {
+   "ka": 80.0,
+   "datei": "kuesten/paleomist/800.json",
+   "ringe": 1156,
+   "ecken": 19254
+  }
+ ]
+}

@@ -79,13 +79,13 @@
     "bearbeitung": "Von zeroearth abgeleitet: Höhen in 256 Klassen, PaleoMIST auf 0,5° ausgewählt, Eis als Klasse, Flächengrößen"
   },
   "weitergabe": {
-    "im_repo": "data/relief.json (Klassentafel, Schritte, Größen), data/relief/paleomap/*.png (109, 1°), data/relief/paleomist/*.png (33, 0,5°), data/relief/gebco/2025.png (0,1°)",
+    "im_repo": "data/relief.json (Klassentafel, Schritte, Größen), data/relief/paleomap/*.png (109, 1°), data/relief/paleomist/*.png (33, 0,25°, Rot Höhe, Grün Eis), data/relief/gebco/2025.png (0,1°); Küste PaleoMIST global: data/kuesten.json",
     "nicht_im_repo": "Raster der Quellen (GEBCO 15″ rund 7,5 GB, lokal in ~/ZeroEarth/rohdaten/gebco)"
   },
   "auswahl": [
     "relief/auswahl/schelf",
     "relief/auswahl/eis",
-    "relief/auswahl/paleomist_05"
+    "relief/auswahl/paleomist_025"
   ],
   "reduktion": [
     {
@@ -94,11 +94,7 @@
     },
     {
       "schritt": "auswaehlen",
-      "angabe": "PaleoMIST: jeder zweite Gitterpunkt (0,25° -> 0,5°)"
-    },
-    {
-      "schritt": "auswaehlen",
-      "angabe": "Eis: Zellen mit ice_thickness ab 100 m als eigene Klasse"
+      "angabe": "Eis: Zellen mit ice_thickness ab 100 m in eigenem Kanal (Grün); Höhe zeigt auch unter Eis die Oberfläche"
     },
     {
       "schritt": "vergroebern",
@@ -115,5 +111,8 @@
         "GEBCO_2025 TID"
       ]
     }
-  ]
+  ],
+  "zusatz": {
+    "kuesten": "data/kuesten.json"
+  }
 }

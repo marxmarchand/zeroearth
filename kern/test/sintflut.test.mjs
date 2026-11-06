@@ -120,29 +120,26 @@ test('Küstenlinie: Spur der Form Ozean, abgeleitet, mit Pflichthinweis, ohne er
   assert.match(k.wo.hinweis, /^paleo_topography enthält isostatische Deformation \(laut Datei\)/);
   assert.deepEqual(k.wo.woher.abgeleitet_aus, ['sintflut/feld/paleo_topography#raster']);
   assert.deepEqual(k.wo.woher.arten, ['rekonstruktion', 'berechnet']);
-  assert.equal(k.wo.woher.kette, 'PaleoMIST 1.0 (paleo_topography) -> 0-m-Linie');
-  assert.equal(k.wo.koordinaten.verweis, 'data/sintflut_kuesten.json#orte.doggerland.linien');
+  assert.equal(k.wo.woher.kette, 'PaleoMIST 1.0 (paleo_topography) -> Grenze Land/Meer (0 m) entlang der Zellkanten');
+  assert.equal(k.wo.koordinaten.verweis, 'data/kuesten.json');
   assert.equal(k.wo.koordinaten.aufloesung_grad, 0.25);
   assert.ok(istFehlend(k.wo.koordinaten.unschaerfe));
   // ohne die Datei bleibt die Küste fehlend
   assert.ok(istFehlend(transform(roh, manifest).eintraege.find(e => e.id === 'sintflut/doggerland/kueste')?.wo?.koordinaten));
 });
 
-test('Küstenlinien: 9 Schritte im Zeitfenster, in der Fensterbox, ohne Raster, Lizenz genannt', async () => {
-  const k = JSON.parse(await readFile(`${REPO}/data/sintflut_kuesten.json`, 'utf8'));
-  assert.deepEqual(k.ka_bp, [20, 17.5, 15, 12.5, 10, 7.5, 5, 2.5, 0]);
-  assert.deepEqual(Object.keys(k.orte), Object.keys(roh.orte));
+test('Küste global: 33 Schritte 0–80 ka, ganze Ringe, Herkunft und Lizenz genannt', async () => {
+  const k = JSON.parse(await readFile(`${REPO}/data/kuesten.json`, 'utf8'));
+  assert.equal(k.schritte.length, 33);
+  assert.deepEqual([k.ka_bp[0], k.ka_bp.at(-1)], [0, 80]);
   assert.deepEqual(k.woher.arten, ['rekonstruktion', 'berechnet']);
   assert.match(k.woher.lizenz, /CC BY 4\.0/);
-  assert.equal(manifest.lizenz.angabe, 'CC BY 4.0');
-  for (const [schluessel, o] of Object.entries(k.orte)) {
-    const b = roh.orte[schluessel].bbox;
-    assert.equal(o.linien.length, 9);
-    for (const schritt of o.linien) {
-      assert.ok(schritt.length > 0, schluessel);
-      for (const zug of schritt) for (const [x, y] of zug)
-        assert.ok(x >= b.west && x <= b.ost && y >= b.sued && y <= b.nord, `${schluessel} ${x},${y}`);
-    }
+  assert.match(k.woher.verfahren, /keine Interpolation/);
+  for (const ka of [0, 20, 80]) {
+    const s = k.schritte.find((/** @type {any} */ e) => e.ka === ka);
+    const r = JSON.parse(await readFile(`${REPO}/data/${s.datei}`, 'utf8')).ringe;
+    assert.ok(r.length > 500, `${ka} ka: ${r.length} Ringe`);
+    for (const ring of r) assert.deepEqual(ring.slice(0, 2), ring.slice(-2), 'Ring geschlossen');
   }
 });
 
