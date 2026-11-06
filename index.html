@@ -600,7 +600,7 @@
       <div class="ob ov-side" id="tb-unterbau" onclick="ze.toggle('unterbau')"><div class="obd"></div>Biosphäre / Lebensnetz <span class="hz" data-hz="unterbau"></span></div>
       <div class="ov-status" id="unterbau-status"></div>
       <div class="sub-head" data-sub="erdsystem"></div>
-      <div class="ob ov-side on" id="tb-relief" onclick="ze.toggle('relief')"><div class="obd"></div>Relief (Grundbild: PALEOMAP-DEM, PaleoMIST) <span class="hz" data-hz="relief"></span></div>
+      <div class="ob ov-side on" id="tb-relief" onclick="ze.toggle('relief')"><div class="obd"></div>Relief (Grundbild: PALEOMAP-DEM, PaleoMIST, GEBCO) <span class="hz" data-hz="relief"></span></div>
       <div class="ov-status" id="relief-status"></div>
       <div class="ob ov-side" id="tb-sintflut" onclick="ze.toggle('sintflut')"><div class="obd"></div>Sintflut: Küsten, Kästen <span class="hz" data-hz="sintflut"></span></div>
       <div class="ov-status" id="sintflut-status"></div>
@@ -4877,7 +4877,7 @@ class ZeroEarth {
       if (rl?.on && rl.stand?.quelle) {
         const q = rl.daten.quellen[rl.stand.quelle], e = rl.stand.schritt;
         raster.push([`Relief: ${q.name}`, { h: `${q.name} (${q.arten.join(', ')}; ${q.lizenz}); Höhen in 256 Klassen, ${q.aufloesung_grad}°`,
-          z: `${takt.zahl(e.ma ?? e.ka, 1)} ${q.einheit}${e.stufe ? ` (${e.stufe})` : ''}; Unschärfe fehlt`,
+          z: `${e.jahr ? `Stand ${e.jahr}` : `${takt.zahl(e.ma ?? e.ka, 1)} ${q.einheit}`}${e.stufe ? ` (${e.stufe})` : ''}; Unschärfe fehlt`,
           warn: `Schummerung ${RELIEF_UEBERHOEHUNG}-fach überhöht, Licht aus Nordwest; Farben ohne Vegetation` + (rl.stand.grau.length ? `; grau, weil ${rl.stand.grau.join(', ')} an ist` : ''),
           farben: rl.farben(), m: q.aufloesung_grad * 111e3 }]);
         if (this.referenzBild) raster.push(['REFERENZ: heutige Erde (zugeschaltet)', { ...L.grundbild, z: 'ohne Zeitbezug; grau, halb durchsichtig', warn: 'zeigt die heutige Erde, nicht die der Masterzeit' }]);
@@ -5859,7 +5859,8 @@ class ReliefLayer {
   /** Welche Quelle und welcher Schritt zur Zeit t gilt, oder warum keine. */
   wahl(t = Tideline.t) {
     const d = this.daten; if (!d) return { quelle: null, grund: 'lädt' };
-    if (ze.leiste?.fokus?.tiefe === 4) return { quelle: null, grund: d.fehlt.gebco.grund, heute: true };
+    if (ze.leiste?.fokus?.tiefe === 4)
+      return d.quellen.gebco ? { quelle: 'gebco', i: 0 } : { quelle: null, grund: d.fehlt.gebco?.grund ?? 'GEBCO fehlt', heute: true };
     const ka = takt.ka(t), ma = takt.ma(t);
     const D = ze.tektonikLayer?.dreh;
     const kaS = d.quellen.paleomist.schritte.map(e => e.ka), maS = d.quellen.paleomap.schritte.map(e => e.ma);
@@ -5888,7 +5889,7 @@ class ReliefLayer {
   }
   static hoehe(c) { return c <= 100 ? -11000 * (c / 100) ** 2 : c === 255 ? null : 9000 * ((c - 101) / 153) ** 2; }
   /** Färben und schummern; dann um eine halbe Zelle versetzt auf ein doppelt so feines Bild (Zellmitten). */
-  static bild({ W, H, k }, res, grau) {
+  static bild({ W, H, k }, res, grau, gitter = 'punkte') {
     const src = document.createElement('canvas'); src.width = W; src.height = H;
     const sx = src.getContext('2d'), img = sx.createImageData(W, H), d = img.data;
     const z = Float32Array.from(k, c => ReliefLayer.hoehe(c) ?? 0);
@@ -5908,16 +5909,24 @@ class ReliefLayer {
       }
     }
     sx.putImageData(img, 0, 0);
+    if (gitter === 'zellen') return src.toDataURL();   // Zellen füllen das Rechteck lückenlos (GEBCO)
     const c = document.createElement('canvas'); c.width = 2 * W; c.height = 2 * (H - 1);
     const x = c.getContext('2d'); x.imageSmoothingEnabled = false;
     for (const off of [-1, 2 * W - 1]) x.drawImage(src, 0, 0, W, H, off, -1, 2 * W, 2 * H);
     return c.toDataURL();
   }
   /** 0-m-Linie aus demselben Raster: Kanten zwischen Land (Klasse > 100, auch Eis) und Meer. */
-  static nullLinie({ W, H, k }, res) {
+  static nullLinie({ W, H, k }, res, gitter = 'punkte') {
+    // feine Raster (GEBCO 0,1°) für die Linie ausdünnen, sonst werden es Hunderttausende Stücke
+    const s = Math.max(1, Math.ceil(W / 1440)), Ws = Math.floor(W / s), Hs = Math.floor(H / s), rs = res * s;
+    const k2 = s === 1 ? k : Uint8Array.from({ length: Ws * Hs }, (_, i) => k[((i / Ws) | 0) * s * W + (i % Ws) * s]);
+    const versatz = gitter === 'zellen' ? rs / 2 : 0;
+    return ReliefLayer._linie(Ws, Hs, k2, rs, versatz);
+  }
+  static _linie(W, H, k, res, versatz) {
     const land = i => k[i] > 100, seg = [];
     for (let r = 0; r < H; r++) for (let c = 0; c < W; c++) {
-      const i = r * W + c, lo = -180 + c * res, la = 90 - r * res;
+      const i = r * W + c, lo = -180 + c * res + versatz, la = 90 - r * res - versatz;
       const re = r * W + (c + 1) % W;
       if (land(i) !== land(re)) seg.push([[lo + res / 2, la + res / 2], [lo + res / 2, la - res / 2]]);
       if (r < H - 1 && land(i) !== land(i + W)) seg.push([[lo - res / 2, la - res / 2], [lo + res / 2, la - res / 2]]);
@@ -5936,22 +5945,23 @@ class ReliefLayer {
       this.stand = { quelle: null, grund: w.grund }; ze.zeichneLegende?.(); ze.leiste?.zeichne(); return;
     }
     const q = this.daten.quellen[w.quelle], e = q.schritte[w.i];
+    const gitter = q.gitter ?? 'punkte';
     let kl;
     try { kl = await this._klassen(e.datei); }
     catch (err) { this._status(`<span class="ds-err">Relief nicht lesbar: ${tourEsc(e.datei)}</span>`); console.error('Relief', err); return; }
     if (schluessel !== this._schluessel || !this.on) return;
     this._leeren();
     this.layer = this.v.imageryLayers.addImageryProvider(new Cesium.SingleTileImageryProvider({
-      url: ReliefLayer.bild(kl, q.aufloesung_grad, grau.length > 0), rectangle: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90),
-      tileWidth: 2 * kl.W, tileHeight: 2 * (kl.H - 1) }));
+      url: ReliefLayer.bild(kl, q.aufloesung_grad, grau.length > 0, gitter), rectangle: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90),
+      tileWidth: gitter === 'zellen' ? kl.W : 2 * kl.W, tileHeight: gitter === 'zellen' ? kl.H : 2 * (kl.H - 1) }));
     this.v.imageryLayers.lowerToBottom(this.layer);
     if (ze.grundbild) this.v.imageryLayers.lowerToBottom(ze.grundbild);
     this.linie = this.v.scene.primitives.add(new Cesium.PolylineCollection());
     const mat = Cesium.Material.fromType('Color', { color: Cesium.Color.fromCssColorString('#20160d').withAlpha(0.55) });
-    for (const s of ReliefLayer.nullLinie(kl, q.aufloesung_grad)) this.linie.add({ width: 1, material: mat, positions: Cesium.Cartesian3.fromDegreesArrayHeights(s.flatMap(([lo, la]) => [lo, la, 2500])) });
+    for (const s of ReliefLayer.nullLinie(kl, q.aufloesung_grad, gitter)) this.linie.add({ width: 1, material: mat, positions: Cesium.Cartesian3.fromDegreesArrayHeights(s.flatMap(([lo, la]) => [lo, la, 2500])) });
     this.zeigt = w.quelle;
     this.stand = { quelle: w.quelle, schritt: e, grau };
-    const wert = e.ma ?? e.ka, einheit = q.einheit;
+    const wert = e.ma ?? e.ka ?? e.jahr, einheit = q.einheit;
     this._status(`<span class="ds-ok">${tourEsc(q.name)}: ${takt.zahl(wert, 1)} ${einheit}${e.stufe ? ` (${tourEsc(e.stufe)})` : ''}</span>`
       + (grau.length ? ` · grau, weil ${tourEsc(grau.join(', '))} an` : ''));
     ze._grundbildTiefe?.(); ze.tektonikLayer?._schluessel !== undefined && ze.tektonikLayer.on && (ze.tektonikLayer._schluessel = undefined, ze.tektonikLayer.update(Tideline.t));
@@ -5977,6 +5987,12 @@ class ReliefLayer {
       { farbe: 'linear-gradient(90deg,rgb(232,216,172),rgb(96,70,52))', text: 'Land: Sand bis Braun nach Höhe (0 bis 9 000 m); ohne Grün, keine Vegetation behauptet' },
     ];
     if (this.stand.quelle === 'paleomist') aus.push({ farbe: 'rgb(236,240,245)', text: 'Eis (Gletscher, Eisschilde) ab 100 m Dicke; Packeis fehlt in allen Quellen' });
+    const an = this.daten.quellen[this.stand.quelle].herkunft_anteile;
+    const GRUPPE = { land: 'Land', gemessen: 'gemessen', aus_schwere_vorhergesagt: 'aus Schwere vorhergesagt', interpoliert: 'interpoliert',
+      aus_karten_digitalisiert: 'aus Karten', gemischt_schwere_gestuetzt: 'gemischt, schweregestützt', aus_eisberg_geschaetzt: 'aus Eisbergen geschätzt',
+      vorgefertigtes_gitter: 'vorgefertigtes Gitter', unbekannt: 'unbekannt', steuerpunkte: 'Steuerpunkte' };
+    if (an) aus.push({ farbe: 'transparent', text: 'Herkunft nach Fläche (GEBCO-Typgitter): ' + Object.entries(an).filter(([, v]) => v.anteil >= 0.0005)
+      .sort((a, b) => b[1].anteil - a[1].anteil).map(([g, v]) => `${GRUPPE[g] ?? g} ${takt.zahl(v.anteil * 100, 1)} %`).join(', ') });
     aus.push({ farbe: '#20160d', text: 'dunkle Linie: 0-m-Linie aus demselben Raster', linie: true });
     return aus;
   }
@@ -6008,7 +6024,7 @@ const EBENEN_HERKUNFT = {
   sintflut:    { arten: ['rekonstruktion', 'berechnet'], datei: 'data/sintflut_kuesten.json' },
   tektonik:    { arten: ['rekonstruktion', 'berechnet'], datei: 'data/tektonik_umrisse.json', text: 'Standard Merdith 2021; Müller 2022 zuschaltbar ist Modell (○)' },
   palaeokueste:{ arten: ['rekonstruktion', 'kuratiert', 'berechnet'], datei: 'data/tektonik_palaeokuesten.json' },
-  relief:      { arten: ['rekonstruktion', 'kuratiert'], datei: 'data/relief.json', text: 'PALEOMAP-DEM (rekonstruktion, kuratiert), PaleoMIST (rekonstruktion)' },
+  relief:      { arten: ['rekonstruktion', 'kuratiert', 'beobachtung', 'modell', 'berechnet'], datei: 'data/relief.json', text: 'PALEOMAP-DEM (rekonstruktion, kuratiert), PaleoMIST (rekonstruktion), GEBCO (beobachtung, modell, berechnet, kuratiert); angezeigt das Unsicherste (Regel 6)' },
   nachtlicht:  { arten: ['beobachtung'], text: 'NASA GIBS, live' },
   satbild:     { arten: ['beobachtung'], text: 'NASA GIBS, live' },
   seismik:     { arten: ['beobachtung'], text: 'USGS, live' },

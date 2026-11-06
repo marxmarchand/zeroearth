@@ -162,7 +162,7 @@ Gemessen mit pyGPlates im Scratchpad (`rahmen.py`), Polygone nach Platte zugeord
   - **Packeis (Meereis) führt keine der Quellen.** Es steht als fehlend mit Grund in Daten, Graph und Legende.
 - **PaleoMIST:** auf 0,5° (jeder zweite Gitterpunkt), 4,2 MB. Die Sintflut-Küsten bleiben auf 0,25°.
 - **Schelf:** beide Grenzen nebeneinander, 0 bis −200 m und −200 bis −1400 m.
-- **GEBCO:** nicht geladen. Für heute bleibt das Grundbild Natural Earth; „GEBCO fehlt“ steht mit Grund in Status und Legende.
+- **GEBCO:** am 2026-11-06 geladen (siehe GEBCO unten).
 
 **Gebaut**
 
@@ -191,7 +191,6 @@ Gemessen mit pyGPlates im Scratchpad (`rahmen.py`), Polygone nach Platte zugeord
 
 **Noch offen**
 
-- GEBCO für heute (Download rund 7 GB, Freigabe nötig).
 - PRISM4 für die Lücke.
 - Die Schummerung zeigt bei 1° (PALEOMAP) sichtbare Zellen; eine feinere Quelle (PALEOMAP 0,1°, 207 MB roh) wäre zu prüfen.
 
@@ -202,4 +201,46 @@ Gemessen mit pyGPlates im Scratchpad (`rahmen.py`), Polygone nach Platte zugeord
 ![1 Ma: Lücke, Relief fehlt](bericht-relief/1ma.jpg)
 ![250 Ma: PALEOMAP-DEM, Tektonik folgt der PALEOMAP-Rotation](bericht-relief/250ma.jpg)
 ![600 Ma: Relief fehlt, neutrale Kugel](bericht-relief/600ma.jpg)
+
+## GEBCO für heute (2026-11-06)
+
+**Fassung:** Geladen ist GEBCO_2026 (veröffentlicht April 2026), nicht 2025; die Downloadseite bietet nur noch die neue Fassung an. Im Scratchpad liegen 7,5 GB Höhen und 3,7 GB Typ-Gitter (TID), entpackt aus 4,3 GB und 99 MB; nichts davon im Repo.
+
+**Lizenz:** gemeinfrei mit Bedingungen (Quelle nennen, keine amtliche Billigung vortäuschen, nicht zur Navigation). Zitat: GEBCO Compilation Group (2026) GEBCO 2026 Grid, doi:10.5285/4f68d5c7-45eb-f999-e063-7086abc036fa.
+
+**Ableitung:** 15″ (86 400 × 43 200 Zellen) auf 0,1° gemittelt, also 24 × 24 Zellen je Bildpunkt, 3600 × 1800. Ein Klassen-PNG mit 1,9 MB; die Zellen füllen das Rechteck lückenlos.
+
+**Herkunft je Zelle** aus dem Typ-Gitter, Codes laut GEBCO-Dokumentation 2026 (Tabelle 2), als Flächenanteile der Erdoberfläche:
+
+| Gruppe (TID-Codes) | Anteil | Herkunftsart |
+| --- | --- | --- |
+| aus Schwere vorhergesagt (40, 45) | 40,3 % | modell, berechnet |
+| Land (0) | 26,3 % | beobachtung |
+| gemessen (10–17, 47, 48) | 22,1 % | beobachtung |
+| interpoliert (41) | 6,8 % | modell |
+| vorgefertigtes Gitter (70) | 3,5 % | fehlt (keine Messart genannt) |
+| gemischt, schweregestützt (44) | 1,0 % | modell |
+| aus Karten (42, 43) | 0,1 % | kuratiert |
+| Steuerpunkte, unbekannt, aus Eisbergen (72, 71, 46) | unter 0,1 % | fehlt bzw. modell |
+
+- **Ein Befund:** Gut 40 % der Erdoberfläche (mehr als die Hälfte des Meeresbodens) sind in GEBCO nicht gemessen, sondern aus Satelliten-Schwere vorhergesagt.
+- **Herkunftszeichen:** Die Ebene trägt deshalb ○ (das Unsicherste, Regel 6). Die Legende nennt die Anteile.
+
+**Größen** (GEBCO, 0,1°):
+
+| Größe | Wert |
+| --- | --- |
+| Landfläche | 148,4 Mio km² |
+| Schelf 0 bis −200 m | 25,8 Mio km² |
+| Rand −200 bis −1400 m | 21,6 Mio km² |
+| mittlere Landhöhe | 794 m |
+
+Die Landfläche schließt Eisoberflächen ein; GEBCO führt kein Eis als Klasse (fehlt mit Grund).
+
+**In der Ansicht** gilt GEBCO in der Jahr-Zeile der Takt-Leiste; das heutige Natural-Earth-Bild ist dann aus. Färben dauert im Browser rund 0,1 s.
+
+**Grenze:** Die 0-m-Linie wird für GEBCO aus einem auf 0,3° ausgedünnten Raster gezogen, sonst wären es Hunderttausende Stücke. Sie ist dadurch gestuft.
+
+![Heute, GEBCO_2026](bericht-relief/heute-gebco.jpg)
+![Heute, GEBCO_2026, Nordatlantik](bericht-relief/heute-gebco-nah.jpg)
 

@@ -1,5 +1,5 @@
 {
- "erzeugt": "2026-11-06T06:25:30+00:00",
+ "erzeugt": "2026-11-06T07:30:59+00:00",
  "hinweis": "erzeugt von matrix-scharnier/adapter/relief.py",
  "klassen": {
   "meer": {
@@ -38,10 +38,6 @@
   "schelf_begruendung": "−200 m: übliche Schelfkante; −1400 m: Kontinentalrand bei Kocsis & Scotese. Beide nebeneinander."
  },
  "fehlt": {
-  "gebco": {
-   "fehlt": true,
-   "grund": "GEBCO für heute noch nicht geladen (rund 7 GB, Download nicht freigegeben); heute bleibt das Grundbild Natural Earth"
-  },
   "luecke": {
    "fehlt": true,
    "grund": "Zwischen 80 ka und 2,5 Ma keine geprüfte Quelle: PaleoMIST endet bei 80 ka, das PALEOMAP-DEM hat nach 0 Ma die nächste Karte bei 5 Ma"
@@ -3511,6 +3507,153 @@
     "aus": "ice_thickness derselben Datei",
     "begruendung": "Gletscher und Eisschilde ab 100 m Dicke (Setzung); dünneres Eis erscheint als Höhe"
    }
+  },
+  "gebco": {
+   "name": "GEBCO_2026 (GEBCO Compilation Group 2026)",
+   "einheit": "a CE",
+   "bezugssystem": "a_ce",
+   "aufloesung_grad": 0.1,
+   "breite": 3600,
+   "hoehe": 1800,
+   "gitter": "zellen",
+   "arten": [
+    "beobachtung",
+    "modell",
+    "berechnet",
+    "kuratiert"
+   ],
+   "lizenz": "gemeinfrei (GEBCO-Nutzungsbedingungen); doi:10.5285/4f68d5c7-45eb-f999-e063-7086abc036fa",
+   "bezugsrahmen": "heutige Koordinaten",
+   "eis": {
+    "fehlt": true,
+    "grund": "GEBCO zeigt die Eisoberfläche als Höhe, ohne Eisdicke"
+   },
+   "zeit_unschaerfe": {
+    "fehlt": true,
+    "grund": "Zusammenstellung aus Messungen verschiedener Jahre; GEBCO nennt keine Bezugszeit je Zelle"
+   },
+   "herkunft_anteile": {
+    "land": {
+     "anteil": 0.26274,
+     "art": "beobachtung",
+     "codes": [
+      0
+     ]
+    },
+    "gemessen": {
+     "anteil": 0.22051,
+     "art": "beobachtung",
+     "codes": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      47,
+      48
+     ]
+    },
+    "aus_schwere_vorhergesagt": {
+     "anteil": 0.40308,
+     "art": "modell",
+     "codes": [
+      40,
+      45
+     ]
+    },
+    "interpoliert": {
+     "anteil": 0.06787,
+     "art": "modell",
+     "codes": [
+      41
+     ]
+    },
+    "aus_karten_digitalisiert": {
+     "anteil": 0.00059,
+     "art": "kuratiert",
+     "codes": [
+      42,
+      43
+     ]
+    },
+    "gemischt_schwere_gestuetzt": {
+     "anteil": 0.01006,
+     "art": "modell",
+     "codes": [
+      44
+     ]
+    },
+    "aus_eisberg_geschaetzt": {
+     "anteil": 0.0,
+     "art": "modell",
+     "codes": [
+      46
+     ]
+    },
+    "vorgefertigtes_gitter": {
+     "anteil": 0.03512,
+     "art": {
+      "fehlt": true,
+      "grund": "Das Typ-Gitter nennt keine Messart (vorgefertigtes Gitter, unbekannt oder Steuerpunkte)"
+     },
+     "codes": [
+      70
+     ]
+    },
+    "unbekannt": {
+     "anteil": 0.0,
+     "art": {
+      "fehlt": true,
+      "grund": "Das Typ-Gitter nennt keine Messart (vorgefertigtes Gitter, unbekannt oder Steuerpunkte)"
+     },
+     "codes": [
+      71
+     ]
+    },
+    "steuerpunkte": {
+     "anteil": 1e-05,
+     "art": {
+      "fehlt": true,
+      "grund": "Das Typ-Gitter nennt keine Messart (vorgefertigtes Gitter, unbekannt oder Steuerpunkte)"
+     },
+     "codes": [
+      72
+     ]
+    }
+   },
+   "tid": {
+    "flag_values": "[ 0 10 11 12 13 14 15 16 17 40 41 42 43 44 45 46 47 48 70 71 72]",
+    "flag_meanings": "Land Singlebeam Multibeam Seismic Isolated_sounding ENC_sounding Lidar Optical Combined predicted_altimetry interpolated contour_charts contour_ENC bathymetric_sounding predicted_airborne iceberg_groundinggrounded_Argo_float_derived pre-generated_grid unknown steering_point"
+   },
+   "schritte": [
+    {
+     "jahr": 2026,
+     "datei": "relief/gebco/2026.png",
+     "groessen": {
+      "landflaeche_km2": 148391275,
+      "schelf_0_200_km2": 25824737,
+      "rand_200_1400_km2": 21593966,
+      "mittlere_landhoehe_m": 794,
+      "hypsometrie_anteil": [
+       0.00665,
+       0.37057,
+       0.21869,
+       0.0202,
+       0.04234,
+       0.05063,
+       0.08103,
+       0.13488,
+       0.04373,
+       0.02619,
+       0.00509
+      ]
+     }
+    }
+   ],
+   "reduktion": "Mittel über 24 × 24 Zellen à 15″ (0,1°)"
   }
  }
 }

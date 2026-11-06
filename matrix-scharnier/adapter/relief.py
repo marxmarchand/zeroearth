@@ -11,12 +11,14 @@ geschummert wird erst im Browser; so gibt es den Grau-Modus ohne zweiten Satz.
   Klasse 255      Eis (nur PaleoMIST): Eisdicke ab EIS_AB_M, Setzung
 
 Quellen: PALEOMAP-DEM (Scotese & Wright 2018), 1°, 540–0 Ma; PaleoMIST 1.0,
-0,25° auf 0,5° ausgewählt (jeder zweite Gitterpunkt), 80–0 ka. GEBCO fehlt noch
-(Download nicht freigegeben). Zeilen von Nord nach Süd; Spalten −180 bis 179
-(die doppelte Spalte 180 entfällt); Gitterpunkte sind Zellmitten.
+0,25° auf 0,5° ausgewählt (jeder zweite Gitterpunkt), 80–0 ka; GEBCO_2026,
+15″ auf 0,1° gemittelt (24 × 24 Zellen), heute, mit Herkunft je Zelle aus dem
+Typ-Gitter (TID). PALEOMAP und PaleoMIST: Zeilen von Nord nach Süd, Spalten
+−180 bis 179 (die doppelte Spalte 180 entfällt), Gitterpunkte sind Zellmitten
+(gitter 'punkte'). GEBCO: Zellen, die das Rechteck lückenlos füllen (gitter 'zellen').
 
   python3 relief.py --paleomap <Ordner mit *_Ma.nc> --paleomist <reconstruction_0.25_degree.nc> \
-          [--ziel ../../data]
+          [--gebco GEBCO_2026.nc --gebco-tid GEBCO_2026_TID.nc] [--ziel ../../data]
 """
 import argparse, datetime, glob, json, os, re
 import numpy as np
@@ -64,6 +66,66 @@ def groessen(z, flaeche, eis=None):
     return g
 
 
+# TID-Codes (GEBCO-Dokumentation; im Typ-Gitter als flag_values/flag_meanings, wo vorhanden)
+TID_ART = {   # GEBCO-Dokumentation 2026, Abschnitt 3.0, Tabelle 2
+    0: ('land', 'beobachtung'),                                  # Land (SRTM15+, BedMachine u. a.)
+    **{c: ('gemessen', 'beobachtung') for c in (10, 11, 12, 13, 14, 15, 16, 17, 47, 48)},
+    40: ('aus_schwere_vorhergesagt', 'modell'), 45: ('aus_schwere_vorhergesagt', 'modell'),
+    41: ('interpoliert', 'modell'), 44: ('gemischt_schwere_gestuetzt', 'modell'),
+    46: ('aus_eisberg_geschaetzt', 'modell'),
+    42: ('aus_karten_digitalisiert', 'kuratiert'), 43: ('aus_karten_digitalisiert', 'kuratiert'),
+    70: ('vorgefertigtes_gitter', None), 71: ('unbekannt', None), 72: ('steuerpunkte', None),
+}
+
+
+def gebco(pfad, tid_pfad, ziel):
+    B = 24
+    d = Dataset(pfad)
+    var = [v for v in d.variables if d.variables[v].ndim == 2][0]
+    E = d.variables[var]
+    H0, W0 = E.shape
+    H, W = H0 // B, W0 // B
+    z = np.zeros((H, W), np.float32)
+    for r in range(H):
+        z[r] = np.asarray(E[r * B:(r + 1) * B, :], np.float32).reshape(B, W, B).mean(axis=(0, 2))
+    z = z[::-1]                                             # Nord oben
+    res = 360.0 / W
+    lat = 90 - (np.arange(H) + 0.5) * res
+    fl = zellflaechen(lat, res, W)
+    anteile, bedeutung = None, None
+    if tid_pfad:
+        t = Dataset(tid_pfad)
+        tv = t.variables[[v for v in t.variables if t.variables[v].ndim == 2][0]]
+        bedeutung = {k: str(getattr(tv, k)) for k in ('flag_values', 'flag_meanings') if hasattr(tv, k)}
+        zaehl = {}
+        for r in range(H):
+            blk = np.asarray(tv[r * B:(r + 1) * B, :])
+            werte, n = np.unique(blk, return_counts=True)
+            # Flächenanteil: Zellfläche dieser Zeile (nach Umdrehen: Zeile H-1-r) je 15″-Zelle
+            for w_, n_ in zip(werte, n):
+                zaehl[int(w_)] = zaehl.get(int(w_), 0) + n_ * fl[H - 1 - r, 0] / (B * B)
+        gesamt = sum(zaehl.values())
+        anteile = {}
+        for code, f in sorted(zaehl.items()):
+            gruppe, art = TID_ART.get(code, ('unbekannt', None))
+            e = anteile.setdefault(gruppe, {'anteil': 0.0, 'codes': [], 'art': art if art else
+                {'fehlt': True, 'grund': 'Das Typ-Gitter nennt keine Messart (vorgefertigtes Gitter, unbekannt oder Steuerpunkte)'}})
+            e['anteil'] = round(e['anteil'] + f / gesamt, 5); e['codes'].append(code)
+    datei = 'relief/gebco/2026.png'
+    os.makedirs(os.path.join(ziel, 'relief', 'gebco'), exist_ok=True)
+    png(klassen(z), os.path.join(ziel, datei))
+    arten = ['beobachtung', 'modell', 'berechnet', 'kuratiert']   # gemessen; vorhergesagt/interpoliert (berechnet); aus Karten (kuratiert)
+    return {
+        'name': 'GEBCO_2026 (GEBCO Compilation Group 2026)', 'einheit': 'a CE', 'bezugssystem': 'a_ce',
+        'aufloesung_grad': round(res, 4), 'breite': W, 'hoehe': H, 'gitter': 'zellen', 'arten': arten,
+        'lizenz': 'gemeinfrei (GEBCO-Nutzungsbedingungen); doi:10.5285/4f68d5c7-45eb-f999-e063-7086abc036fa',
+        'bezugsrahmen': 'heutige Koordinaten', 'eis': {'fehlt': True, 'grund': 'GEBCO zeigt die Eisoberfläche als Höhe, ohne Eisdicke'},
+        'zeit_unschaerfe': {'fehlt': True, 'grund': 'Zusammenstellung aus Messungen verschiedener Jahre; GEBCO nennt keine Bezugszeit je Zelle'},
+        'herkunft_anteile': anteile, 'tid': bedeutung,
+        'schritte': [{'jahr': 2026, 'datei': datei, 'groessen': groessen(z, fl)}],
+        'reduktion': 'Mittel über 24 × 24 Zellen à 15″ (0,1°)'}
+
+
 def png(k, pfad):
     Image.fromarray(k).save(pfad, 'PNG', optimize=True)
     return os.path.getsize(pfad)
@@ -73,6 +135,8 @@ def main():
     a = argparse.ArgumentParser()
     a.add_argument('--paleomap', required=True)
     a.add_argument('--paleomist', required=True)
+    a.add_argument('--gebco')
+    a.add_argument('--gebco-tid')
     a.add_argument('--ziel', default='../../data')
     a = a.parse_args()
     ordner = os.path.join(a.ziel, 'relief')
@@ -128,6 +192,12 @@ def main():
         'eis': {'ab_dicke_m': EIS_AB_M, 'aus': 'ice_thickness derselben Datei',
                 'begruendung': 'Gletscher und Eisschilde ab 100 m Dicke (Setzung); dünneres Eis erscheint als Höhe'}}
 
+    # GEBCO_2026, 15″ -> 0,1° (Mittel über 24 × 24 Zellen), heute; Herkunft je Zelle aus dem TID
+    gebco_fehlt = {'fehlt': True, 'grund': 'GEBCO für heute nicht geladen; heute bleibt das Grundbild Natural Earth'}
+    if a.gebco:
+        quellen['gebco'] = gebco(a.gebco, a.gebco_tid, a.ziel)
+        gebco_fehlt = None
+
     datei = dict(
         erzeugt=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds'),
         hinweis='erzeugt von matrix-scharnier/adapter/relief.py',
@@ -137,7 +207,7 @@ def main():
         setzungen=dict(schelf_m=list(SCHELF), stufen_m=STUFEN, eis_ab_m=EIS_AB_M,
                        schelf_begruendung='−200 m: übliche Schelfkante; −1400 m: Kontinentalrand bei Kocsis & Scotese. Beide nebeneinander.'),
         fehlt=dict(
-            gebco={'fehlt': True, 'grund': 'GEBCO für heute noch nicht geladen (rund 7 GB, Download nicht freigegeben); heute bleibt das Grundbild Natural Earth'},
+            **({'gebco': gebco_fehlt} if gebco_fehlt else {}),
             luecke={'fehlt': True, 'grund': 'Zwischen 80 ka und 2,5 Ma keine geprüfte Quelle: PaleoMIST endet bei 80 ka, das PALEOMAP-DEM hat nach 0 Ma die nächste Karte bei 5 Ma'},
             vor_540={'fehlt': True, 'grund': 'Vor 540 Ma keine geprüfte Paläo-Höhenkarte'},
             packeis={'fehlt': True, 'grund': 'Meereis (Packeis) führt keine der Quellen; PaleoMIST nennt nur aufliegendes Eis'}),

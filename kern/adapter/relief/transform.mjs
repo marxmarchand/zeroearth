@@ -13,13 +13,14 @@ export function transform(roh, manifest) {
   const archivkette = manifest.herkunft.archivkette;
   const eintraege = Object.entries(roh.quellen).map(([k, q]) => {
     const qq = /** @type {any} */ (q);
-    const s = qq.schritte, wert = (/** @type {any} */ e) => e.ma ?? e.ka;
+    const s = qq.schritte, wert = (/** @type {any} */ e) => e.ma ?? e.ka ?? e.jahr;
     const aufl = (/** @type {number} */ i) => Math.abs(wert(s[Math.min(i + 1, s.length - 1)]) - wert(s[Math.max(i - 1, 0)])) / (i === 0 || i === s.length - 1 ? 1 : 2);
-    const zeit = (/** @type {number} */ i) => ({ bezugssystem: qq.bezugssystem, unschaerfe: qq.zeit_unschaerfe, aufloesung: aufl(i), wert: wert(s[i]) });
+    const zeit = (/** @type {number} */ i) => ({ bezugssystem: qq.bezugssystem, unschaerfe: qq.zeit_unschaerfe,
+      aufloesung: s.length > 1 ? aufl(i) : fehlt('ein einziger Stand, keine Schrittweite'), wert: wert(s[i]) });
     const zs = { bezugssystem: qq.bezugssystem, unschaerfe: qq.zeit_unschaerfe, aufloesung: fehlt('je Schritt angegeben'),
       abdeckung: { von: wert(s.at(-1)), bis: wert(s[0]) }, schritte: s.length };
     const woher = (/** @type {string[]} */ dazu, /** @type {string} */ verfahren) =>
-      ({ arten: [...qq.arten, ...dazu], quelle: `${qq.name}; ${qq.lizenz}`, archivkette, verfahren });
+      ({ arten: [...new Set([...qq.arten, ...dazu])], quelle: `${qq.name}; ${qq.lizenz}`, archivkette, verfahren });
     const reihe = (/** @type {string} */ g, /** @type {string} */ einheit, /** @type {string} */ verfahren) => ({
       einheit, zeitsemantik: zs,
       punkte: s.map((/** @type {any} */ e, /** @type {number} */ i) => ({ bezugszeit: zeit(i),
@@ -37,7 +38,8 @@ export function transform(roh, manifest) {
     });
     return {
       id: `${P}/${k}`, stapel: '1.1', name: `Relief: ${qq.name}`, auswahl: [`${P}/auswahl/schelf`, ...(k === 'paleomist' ? [`${P}/auswahl/eis`, `${P}/auswahl/paleomist_05`] : [])],
-      wo: { geometrie: 'feld', raster: `${qq.aufloesung_grad}°`, ausdehnung: 'global', bezugsrahmen: qq.bezugsrahmen, verzerrung: VERZERRUNG },
+      wo: { geometrie: 'feld', raster: `${qq.aufloesung_grad}°`, ausdehnung: 'global', bezugsrahmen: qq.bezugsrahmen, verzerrung: VERZERRUNG,
+        ...(qq.herkunft_anteile ? { herkunft_anteile: qq.herkunft_anteile } : {}) },
       werte,
     };
   });

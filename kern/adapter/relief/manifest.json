@@ -2,15 +2,17 @@
   "id": "relief",
   "eingabe": "data/relief.json",
   "quelle": {
-    "name": "PALEOMAP-DEM (Scotese & Wright 2018); PaleoMIST 1.0 (Gowan et al. 2021)",
+    "name": "PALEOMAP-DEM (Scotese & Wright 2018); PaleoMIST 1.0 (Gowan et al. 2021); GEBCO_2026 (GEBCO Compilation Group 2026)",
     "dateien": [
       "Scotese_Wright_2018_Maps_1-88_1degX1deg_PaleoDEMS_nc.zip (Zenodo 5460860)",
-      "reconstruction_0.25_degree.nc (PANGAEA, doi:10.1594/PANGAEA.905800)"
+      "reconstruction_0.25_degree.nc (PANGAEA, doi:10.1594/PANGAEA.905800)",
+      "GEBCO_2026.zip und gebco_2026_tid.zip (CEDA/BODC, doi:10.5285/4f68d5c7-45eb-f999-e063-7086abc036fa)"
     ],
     "abgeleitet_durch": "matrix-scharnier/adapter/relief.py",
     "zitierung": [
       "Scotese, C. R., Wright, N. M. (2018): PALEOMAP Paleodigital Elevation Models (PaleoDEMS) for the Phanerozoic. doi:10.5281/zenodo.5460860",
-      "Gowan, E. J. et al. (2021): A new global ice sheet reconstruction for the past 80 000 years. Nature Communications 12, 1199"
+      "Gowan, E. J. et al. (2021): A new global ice sheet reconstruction for the past 80 000 years. Nature Communications 12, 1199",
+      "GEBCO Compilation Group (2026): GEBCO_2026 Grid. doi:10.5285/4f68d5c7-45eb-f999-e063-7086abc036fa"
     ]
   },
   "stapel": [
@@ -21,10 +23,12 @@
     "arten": [
       "rekonstruktion",
       "kuratiert",
-      "berechnet"
+      "berechnet",
+      "beobachtung",
+      "modell"
     ],
     "ebene": "Datei",
-    "hinweis": "PALEOMAP-DEM: rekonstruktion, kuratiert; PaleoMIST: rekonstruktion; abgeleitete Größen tragen zusätzlich berechnet.",
+    "hinweis": "PALEOMAP-DEM: rekonstruktion, kuratiert; PaleoMIST: rekonstruktion; abgeleitete Größen tragen zusätzlich berechnet. GEBCO: beobachtung (gemessen), modell und berechnet (aus Schwere vorhergesagt, interpoliert), kuratiert (aus Karten); Anteile je Zelle aus dem Typ-Gitter.",
     "archivkette": [
       {
         "archiv": "zeroearth (data/relief.json, data/relief/)",
@@ -44,7 +48,8 @@
     "bezugssystem": "ma_bp",
     "je_quelle": {
       "paleomap": "ma_bp",
-      "paleomist": "ka_bp_1950"
+      "paleomist": "ka_bp_1950",
+      "gebco": "a_ce"
     },
     "unschaerfe": {
       "fehlt": true,
@@ -57,7 +62,7 @@
     "abdeckung": {
       "von": 540,
       "bis": 0,
-      "je_quelle": "PALEOMAP 540–0 Ma; PaleoMIST 80–0 ka; Lücke 80 ka bis 2,5 Ma; vor 540 Ma fehlt; heute (GEBCO) fehlt"
+      "je_quelle": "PALEOMAP 540–0 Ma; PaleoMIST 80–0 ka; Lücke 80 ka bis 2,5 Ma; vor 540 Ma fehlt; heute GEBCO_2026"
     },
     "verzoegerung": {
       "fehlt": true,
@@ -68,14 +73,14 @@
     "feld"
   ],
   "lizenz": {
-    "angabe": "CC BY 4.0",
-    "quelle": "Zenodo 5460860 (License.txt), PANGAEA 905800",
+    "angabe": "CC BY 4.0 (PALEOMAP, PaleoMIST); gemeinfrei mit Bedingungen (GEBCO)",
+    "quelle": "Zenodo 5460860 (License.txt), PANGAEA 905800; GEBCO-Nutzungsbedingungen (gebco.net)",
     "geprueft": "2026-11-06",
     "bearbeitung": "Von zeroearth abgeleitet: Höhen in 256 Klassen, PaleoMIST auf 0,5° ausgewählt, Eis als Klasse, Flächengrößen"
   },
   "weitergabe": {
-    "im_repo": "data/relief.json (Klassentafel, Schritte, Größen), data/relief/paleomap/*.png (109, 1°), data/relief/paleomist/*.png (33, 0,5°)",
-    "nicht_im_repo": "Raster der Quellen; GEBCO nicht geladen"
+    "im_repo": "data/relief.json (Klassentafel, Schritte, Größen), data/relief/paleomap/*.png (109, 1°), data/relief/paleomist/*.png (33, 0,5°), data/relief/gebco/2026.png (0,1°)",
+    "nicht_im_repo": "Raster der Quellen (GEBCO 15″ rund 7,5 GB, nur im Scratchpad verarbeitet)"
   },
   "auswahl": [
     "relief/auswahl/schelf",
@@ -98,6 +103,17 @@
     {
       "schritt": "vergroebern",
       "angabe": "Flächen je Schritt: Land, Schelf 0 bis −200 m, Rand −200 bis −1400 m, Eis, mittlere Landhöhe, Höhenstufen"
+    },
+    {
+      "schritt": "vergroebern",
+      "angabe": "GEBCO 15″ -> 0,1°: Mittel über 24 × 24 Zellen"
+    },
+    {
+      "schritt": "zusammenfassen",
+      "angabe": "GEBCO-Typgitter: Flächenanteile je Herkunftsgruppe (gemessen, vorhergesagt, interpoliert, aus Karten, Land, unbekannt)",
+      "modelle": [
+        "GEBCO_2026 TID"
+      ]
     }
   ]
 }
