@@ -109,6 +109,26 @@
       display:none; /* nur in NullNatur sichtbar */
       background:#000;
     }
+    #pl-ansicht{position:fixed;inset:0;z-index:2000;background:#000;}
+    #pl-gl{position:absolute;inset:0;}
+    #pl-hinweis{position:absolute;left:14px;bottom:12px;font:9px var(--mono);color:rgba(217,176,74,.85);pointer-events:none;}
+    #pl-feld{position:absolute;right:14px;top:60px;width:min(380px,calc(100vw - 28px));max-height:calc(100vh - 90px);overflow:auto;padding:10px 12px;
+      background:rgba(8,12,20,.88);border:1px solid rgba(255,255,255,.12);border-radius:4px;font:11px/1.45 var(--ui);color:#dfe4ec;}
+    .pl-kopf{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+    .pl-kopf b{font:600 16px var(--ui);}
+    .pl-kopf button{background:rgba(255,255,255,.06);color:#e6e9ef;border:1px solid rgba(255,255,255,.18);border-radius:3px;padding:4px 8px;font:500 11px var(--ui);cursor:pointer;}
+    .pl-werte{width:100%;border-collapse:collapse;}
+    .pl-werte th{text-align:left;font-weight:500;color:#9aa6b8;padding:4px 6px 4px 0;vertical-align:top;white-space:nowrap;}
+    .pl-werte td{padding:4px 0;vertical-align:top;}
+    .pl-werte small,.pl-fuss small,.pl-sw small{display:block;color:#8590a2;font-size:9.5px;}
+    .pl-erde{color:#9fc4ff;white-space:nowrap;padding-left:8px!important;font:10px var(--mono);}
+    .pl-hz{color:#e8d48a;cursor:help;}
+    #pl-feld a{color:#9fc4ff;}
+    .pl-fehlt{color:#9a8f8f;}
+    .pl-fuss{margin-top:8px;border-top:1px solid rgba(255,255,255,.1);padding-top:6px;font-size:10px;color:#aab3c2;display:grid;gap:5px;}
+    .pl-zeichen{font:9px var(--mono);color:#8590a2;}
+    .pl-sw{border:1px solid rgba(217,163,90,.4);border-radius:3px;padding:6px 8px;display:grid;gap:4px;color:#e9dcc8;}
+    .pl-sw-art{font:10px var(--mono);color:#d9a35a;}
     #cc {
       position:absolute;inset:0;z-index:1;
       /* Wird per JS gesteuert — starts visible für CesiumJS-Init */
@@ -489,6 +509,7 @@
 
 <!-- Rendering Layer 1: 2D Solar System (NullNatur) -->
 <canvas id="ss-canvas"></canvas>
+<div id="pl-ansicht" hidden><div id="pl-gl"></div><div id="pl-hinweis">nicht maßstäblich (Setzung) · Ziehen dreht, Mausrad zoomt · Esc zurück</div><div id="pl-feld"></div></div>
 
 <!-- Rendering Layer 2: CesiumJS (Planetarer Stoffwechsel → Zweite Natur) -->
 <div id="cc"></div>
@@ -1520,6 +1541,16 @@ class SolarSystem2D {
 
     this._resize();
     window.addEventListener('resize', ()=>this._resize());
+    // Planeten und Titan anklickbar (kern/BERICHT-planeten.md)
+    this.treffer = [];
+    this.canvas.addEventListener('click', e => {
+      const h = this.treffer.find(t => Math.hypot(t.x - e.clientX, t.y - e.clientY) <= t.r);
+      if (h) ze.planetenAnsicht.oeffne(h.id, h.x, h.y);
+    });
+    this.canvas.addEventListener('mousemove', e => {
+      this.canvas.style.cursor = this.treffer.some(t => Math.hypot(t.x - e.clientX, t.y - e.clientY) <= t.r) ? 'pointer' : '';
+    });
+    window.addEventListener('keydown', e => { if (e.key === 'Escape') ze.planetenAnsicht?.schliesse(); });
   }
 
   _resize() {
@@ -1628,6 +1659,7 @@ class SolarSystem2D {
 
   /* ── Sonnensystem top-down ──────────────────────────────────────── */
   _drawSolarSystem(ctx, cx, cy, T, scale, innerOnly) {
+    this.treffer = [];
     if (!bahnGilt()) { this._bahnFehlt(ctx, cx, cy, scale); return; }
     const planets = Object.keys(KEL);
     const visible = innerOnly
@@ -1738,6 +1770,15 @@ class SolarSystem2D {
       ctx.restore();
     }
 
+    // Nachbarsterne (0.2): vorbereitet, noch ohne Sterne (data/nachbarsterne.json)
+    if(!innerOnly) {
+      if (this.nachbarn === undefined) { this.nachbarn = null; fetch('data/nachbarsterne.json').then(r => r.json()).then(d => { this.nachbarn = d; }).catch(() => {}); }
+      const n = this.nachbarn;
+      ctx.save(); ctx.fillStyle = 'rgba(160,160,170,0.7)'; ctx.font = '9px JetBrains Mono,monospace'; ctx.textAlign = 'center';
+      ctx.fillText(n?.sterne?.fehlt ? `Nachbarsterne (0.2) fehlt: ${n.sterne.grund} · vorbereitet für Gaia DR3 und NASA Exoplanet Archive` : 'Nachbarsterne: lädt', this.canvas.width / 2, 64);
+      ctx.restore();
+    }
+
     // Solar Apex Pfeil (universell)
     if(!innerOnly && this.opt.apex) {
       const apLen=scale*12;
@@ -1784,6 +1825,15 @@ class SolarSystem2D {
       ctx.font=isEarth?'bold 10px JetBrains Mono,monospace':'8px JetBrains Mono,monospace';
       ctx.fillText(pLabels[id]||id,px+r+4,py+3);
       ctx.restore();
+      this.treffer.push({ id, x: px, y: py, r: Math.max(10, r + 6) });
+      // Titan bei Saturn: Lage um Saturn schematisch (Phase nicht gerechnet), Abstand nicht maßstäblich
+      if (id === 'saturn') {
+        const tx = px + 14, ty = py - 10;
+        ctx.save(); ctx.strokeStyle = 'rgba(217,163,90,.35)'; ctx.lineWidth = .6; ctx.beginPath(); ctx.arc(px, py, Math.hypot(14, 10), 0, Math.PI * 2); ctx.stroke();
+        ctx.fillStyle = '#d9a35a'; ctx.beginPath(); ctx.arc(tx, ty, 2.2, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(217,163,90,.85)'; ctx.font = '8px JetBrains Mono,monospace'; ctx.fillText('Titan (Lage schematisch)', tx + 5, ty - 3); ctx.restore();
+        this.treffer.push({ id: 'titan', x: tx, y: ty, r: 9 });
+      }
 
       // Trail-Punkte merken
       if(!innerOnly) {
@@ -2327,7 +2377,7 @@ const FEIN_M_PRO_PX = 250;
 class DM {
   constructor(v) {
     this.v=v; this.curDim=null; this.curSL=null;
-    this._ent={}; this._ovState={moon:false,magfield:false,tidal:false,solarwind:false,sats:false,ueberbau:false,riss:false,bestaende:false,basis:false,ware:false,erste_natur:false,pm:false,wind:false,stroeme:false,unterbau:false,seismik:false,platten:false,grenzen:false,kataster:false,gewaesser:false,sprachen:false,sintflut:false,tektonik:false,palaeokueste:false,relief:true,eis:false};
+    this._ent={}; this._ovState={moon:false,magfield:false,tidal:false,solarwind:false,sats:false,ueberbau:false,riss:false,bestaende:false,basis:false,ware:false,erste_natur:false,pm:false,wind:false,stroeme:false,unterbau:false,seismik:false,platten:false,grenzen:false,kataster:false,gewaesser:false,sprachen:false,sintflut:false,tektonik:false,palaeokueste:false,relief:true,eis:false,meereis:false};
   }
 
   async flyTo(cam, instant=false) {
@@ -4081,6 +4131,7 @@ class ZeroEarth {
 
     // 2D Solar System Canvas
     this.ss = new SolarSystem2D(document.getElementById('ss-canvas'));
+    this.planetenAnsicht = new PlanetenAnsicht();
 
     // Dimension Manager
     this.dm = new DM(this.cesiumV);
@@ -6317,6 +6368,154 @@ class MeereisLayer {
     aus.push({ farbe: 'transparent', text: `Landmasken verschieden: GLOMAP ${D.quellen.glomap.landmaske}, TraCE ${D.quellen.trace.landmaske}; nichts beschnitten, Meereis kann vor oder über der PaleoMIST-Küste enden` });
     aus.push({ farbe: 'transparent', text: `MARGO 2009 fehlt: ${D.fehlt.margo.grund}` });
     return aus;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   PLANETENANSICHT (kern/BERICHT-planeten.md): Klick auf einen Körper
+   der Sonnensystemansicht, Hinflug, Kugel mit Oberfläche und Hülle
+   (three.js r149), Feld mit Werten je Körper und Herkunft je Wert
+   (data/planeten.json). Hülle, Farben ohne Karte und Größen sind
+   Setzungen; „nicht maßstäblich (Setzung)“ steht im Bild.
+   ───────────────────────────────────────────────────────────────── */
+const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js';
+class PlanetenAnsicht {
+  constructor() { this.daten = null; this.offen = null; this.huelleAn = true; this._three = null; }
+  async laden() { if (!this.daten) this.daten = await fetch('data/planeten.json').then(r => r.json()); return this.daten; }
+  _threeLaden() {
+    if (window.THREE) return Promise.resolve();
+    return this._three ??= new Promise((ok, nein) => {
+      const s = document.createElement('script'); s.src = THREE_URL; s.onload = ok; s.onerror = () => nein(new Error('three.js nicht ladbar')); document.head.appendChild(s);
+    });
+  }
+  koerper(id) { return this.daten?.koerper.find(k => k.id === id); }
+  /** Vom Klick in der 2D-Ansicht: erst einzoomen (2D), dann die Kugel. */
+  async oeffne(id, px, py) {
+    if (id === 'erde') { ze.zeigeNatur('erde'); return; }
+    await this.laden();
+    const cv = document.getElementById('ss-canvas');
+    cv.style.transformOrigin = `${px}px ${py}px`; cv.style.transition = 'transform .9s ease-in, opacity .9s ease-in';
+    cv.style.transform = 'scale(7)'; cv.style.opacity = '0';
+    try { await this._threeLaden(); } catch (e) { this._fehler(e.message); return; }
+    await new Promise(r => setTimeout(r, 650));
+    this._baue(id);
+  }
+  schliesse() {
+    if (!this.offen) return;
+    cancelAnimationFrame(this.offen.lauf); this.offen.renderer.dispose();
+    document.getElementById('pl-ansicht').hidden = true; document.getElementById('pl-gl').innerHTML = '';
+    const cv = document.getElementById('ss-canvas'); cv.style.transition = 'transform .5s ease-out, opacity .5s ease-out';
+    cv.style.transform = ''; cv.style.opacity = '';
+    this.offen = null;
+  }
+  _fehler(t) {
+    const cv = document.getElementById('ss-canvas'); cv.style.transform = ''; cv.style.opacity = '';
+    alert(`Planetenansicht fehlt: ${t}`);
+  }
+  _baue(id) {
+    const T = window.THREE, D = this.daten, k = this.koerper(id), box = document.getElementById('pl-gl');
+    document.getElementById('pl-ansicht').hidden = false; box.innerHTML = '';
+    const W = box.clientWidth, H = box.clientHeight;
+    const renderer = new T.WebGLRenderer({ antialias: true, alpha: false }); renderer.setPixelRatio(Math.min(2, devicePixelRatio)); renderer.setSize(W, H);
+    renderer.setClearColor(0x000000); box.appendChild(renderer.domElement);
+    const szene = new T.Scene(), kamera = new T.PerspectiveCamera(35, W / H, 0.01, 500);
+    const licht = new T.DirectionalLight(0xffffff, 1.25); licht.position.set(-5, 2, 4); szene.add(licht); szene.add(new T.AmbientLight(0xffffff, 0.12));
+    const gruppe = new T.Group(); szene.add(gruppe);
+    const tx = k.textur;
+    const mat = new T.MeshStandardMaterial({ color: tx.fehlt ? new T.Color(tx.farbe ?? '#888') : 0xffffff, roughness: 1, metalness: 0 });
+    if (!tx.fehlt) new T.TextureLoader().load(`data/${tx.datei}`, t => { t.encoding = T.sRGBEncoding; mat.map = t; mat.needsUpdate = true; });
+    gruppe.add(new T.Mesh(new T.SphereGeometry(1, 128, 64), mat));
+    // Hülle: 5 Skalenhöhen, 5-fach überhöht (Setzung), Rand dichter (Fresnel)
+    let huelle = null;
+    if (k.huelle) {
+      const d = D.darstellung, dicke = d.huelle_skalenhoehen * d.huelle_ueberhoehung * k.huelle.skalenhoehe_km / k.radius_km;
+      const farbe = new T.Color(k.huelle.farbe);
+      huelle = new T.Mesh(new T.SphereGeometry(1 + dicke, 96, 48), new T.ShaderMaterial({
+        transparent: true, depthWrite: false, side: T.FrontSide, blending: T.NormalBlending,
+        uniforms: { farbe: { value: farbe }, deckend: { value: k.huelle.deckend ? 1 : 0 } },
+        vertexShader: 'varying vec3 n; varying vec3 v; void main(){ vec4 p = modelViewMatrix*vec4(position,1.); n = normalize(normalMatrix*normal); v = normalize(-p.xyz); gl_Position = projectionMatrix*p; }',
+        fragmentShader: 'uniform vec3 farbe; uniform float deckend; varying vec3 n; varying vec3 v; void main(){ float f = 1.-max(dot(n,v),0.); float a = deckend > .5 ? .93 : pow(f, 2.2)*.9; gl_FragColor = vec4(farbe, a); }' }));
+      gruppe.add(huelle); huelle.visible = this.huelleAn;
+    }
+    if (k.ringe) {
+      const innen = Math.min(...k.ringe.teile.map(t => t.innen_km)) / k.radius_km, aussen = Math.max(...k.ringe.teile.map(t => t.aussen_km)) / k.radius_km;
+      const c = document.createElement('canvas'); c.width = 512; c.height = 1; const x = c.getContext('2d');
+      const deck = { C: 0.25, B: 0.85, A: 0.6 };                      // aus den optischen Tiefen (Fact Sheet), Setzung der Deckkraft
+      for (const t of k.ringe.teile) { const a = (t.innen_km / k.radius_km - innen) / (aussen - innen) * 512, b = (t.aussen_km / k.radius_km - innen) / (aussen - innen) * 512;
+        x.fillStyle = `rgba(222,206,170,${deck[t.name]})`; x.fillRect(a, 0, b - a, 1); }
+      const tex = new T.CanvasTexture(c), geo = new T.RingGeometry(innen, aussen, 192, 1);
+      const pos = geo.attributes.position, uv = geo.attributes.uv;
+      for (let i = 0; i < pos.count; i++) { const r = Math.hypot(pos.getX(i), pos.getY(i)); uv.setXY(i, (r - innen) / (aussen - innen), 0.5); }
+      const ring = new T.Mesh(geo, new T.MeshBasicMaterial({ map: tex, transparent: true, side: T.DoubleSide, depthWrite: false }));
+      ring.rotation.x = Math.PI / 2; gruppe.add(ring);
+    }
+    gruppe.rotation.z = (id === 'saturn' ? 26.7 : id === 'uranus' ? 97.8 : id === 'neptun' ? 28.3 : id === 'mars' ? 25.2 : 0) * Math.PI / 180;
+    // Hinflug: von weit draußen auf drei Radien
+    let dickeH = k.huelle ? D.darstellung.huelle_skalenhoehen * D.darstellung.huelle_ueberhoehung * k.huelle.skalenhoehe_km / k.radius_km : 0;
+    let ziel = (k.ringe ? 5.6 : 4.2) * (1 + dickeH), abstand = 60, t0 = performance.now(), dreh = { x: 0.25, y: 0 }, zieht = null;
+    const el = renderer.domElement;
+    el.addEventListener('pointerdown', e => { zieht = { x: e.clientX, y: e.clientY }; el.setPointerCapture(e.pointerId); });
+    el.addEventListener('pointermove', e => { if (!zieht) return; dreh.y += (e.clientX - zieht.x) * 0.006; dreh.x += (e.clientY - zieht.y) * 0.004; dreh.x = Math.max(-1.3, Math.min(1.3, dreh.x)); zieht = { x: e.clientX, y: e.clientY }; });
+    el.addEventListener('pointerup', () => { zieht = null; });
+    el.addEventListener('wheel', e => { e.preventDefault(); ziel = Math.max(1.6, Math.min(30, ziel * (e.deltaY > 0 ? 1.1 : 0.9))); }, { passive: false });
+    const lauf = () => {
+      const s = Math.min(1, (performance.now() - t0) / 1600), e = 1 - Math.pow(1 - s, 3);
+      abstand = s < 1 ? 60 + (ziel - 60) * e : abstand + (ziel - abstand) * 0.15;
+      if (!zieht) dreh.y += 0.0012;
+      gruppe.children[0].rotation.y = dreh.y; if (huelle) huelle.rotation.y = dreh.y;
+      kamera.position.set(0, Math.sin(dreh.x) * abstand, Math.cos(dreh.x) * abstand); kamera.lookAt(0, 0, 0);
+      renderer.render(szene, kamera);
+      this.offen.lauf = requestAnimationFrame(lauf);
+    };
+    this.offen = { id, renderer, huelle, lauf: 0 };
+    lauf();
+    this._feld(k);
+  }
+  huelleUmschalten() { this.huelleAn = !this.huelleAn; if (this.offen?.huelle) this.offen.huelle.visible = this.huelleAn; this._feld(this.koerper(this.offen.id)); }
+  static zahl(x, st = 3) { if (x === null || x === undefined) return '–'; const a = Math.abs(x); return a !== 0 && (a < 1e-3 || a >= 1e6) ? x.toExponential(1).replace('.', ',') : takt.zahl(x, a < 1 ? st : a < 100 ? 2 : 1); }
+  async _feld(k) {
+    const { anzeige } = await import('./kern/schema.mjs');
+    const D = this.daten, E = D.erde, z = PlanetenAnsicht.zahl;
+    const zeichen = arten => { if (!arten) return ''; const { rang, merkmale } = anzeige(arten); return (ZEICHEN_RANG[rang] ?? '') + (merkmale.includes('kuratiert') ? '▨' : '') + (merkmale.includes('berechnet') ? '∑' : ''); };
+    const herkunft = w => `<span class="pl-hz" title="${tourEsc(`${w.arten.join(', ')} · ${w.quelle}${w.hinweis ? ` · ${w.hinweis}` : ''}${w.verfahren ? ` · ${w.verfahren}` : ''}`)}">${zeichen(w.arten)}</span>`;
+    const zeile = (name, w, fmt, vergleich) => {
+      if (!w) return '';
+      if (w.fehlt) return `<tr><th>${name}</th><td colspan="2" class="pl-fehlt">fehlt: ${tourEsc(w.grund)}</td></tr>`;
+      return `<tr><th>${name}</th><td>${fmt(w)} ${herkunft(w)}${w.bezug ? `<small>${tourEsc(w.bezug)}</small>` : ''}${w.zusatz ? `<small>${tourEsc(w.zusatz.bezug)} ${herkunft(w.zusatz)}</small>` : ''}</td><td class="pl-erde">${vergleich ?? ''}</td></tr>`;
+    };
+    const fak = (x, e) => `× ${z(x / e)} Erde`;
+    const zus = k.zusammensetzung.liste.map(s => s.fehlt ? `${tourEsc(s.stoff)}: <span class="pl-fehlt">fehlt (${tourEsc(s.grund)})</span>`
+      : `${tourEsc(s.stoff)}${s.anteil !== null ? ` ${z(s.anteil)} ${s.einheit}` : ''}${s.arten ? ` ${herkunft({ ...s, quelle: s.quelle })}` : ''}`).join(' · ');
+    const tx = k.textur;
+    document.getElementById('pl-feld').innerHTML = `
+      <div class="pl-kopf"><b>${tourEsc(k.name)}</b><button onclick="ze.planetenAnsicht.schliesse()">← Sonnensystem</button></div>
+      <table class="pl-werte">
+        ${zeile('Druck', k.druck, w => w.anzeige ?? (w.wert < 0.1 ? `${z(w.wert * 1000)} mbar` : `${z(w.wert)} bar`), k.druck.fehlt ? '' : fak(k.druck.wert, E.druck_bar))}
+        ${zeile('Temperatur', k.temperatur, w => `${z(w.wert)} K (${(w.wert - 273.15 < 0 ? '−' : '') + takt.zahl(Math.abs(Math.round(w.wert - 273.15)), 0)} °C)`, k.temperatur.fehlt ? '' : `${k.temperatur.wert - E.temperatur_K >= 0 ? '+' : '−'}${z(Math.abs(k.temperatur.wert - E.temperatur_K))} K zur Erde`)}
+        ${zeile('Schwerkraft', k.schwerkraft, w => `${z(w.wert)} m/s²`, fak(k.schwerkraft.wert, E.schwerkraft))}
+        ${zeile('Tageslänge', k.tag, w => w.wert > 72 ? `${z(w.wert)} h (${z(w.wert / 24)} d)` : `${z(w.wert)} h`, fak(k.tag.wert, E.tag_h))}
+        <tr><th>Atmosphäre</th><td colspan="2">${zus}<small>${tourEsc(k.zusammensetzung.bezug)}</small></td></tr>
+      </table>
+      <div class="pl-fuss">
+        <div>Vergleich zur Erde: berechnet für die Anzeige aus den Werten darüber (Erde ${z(E.druck_bar)} bar, ${E.temperatur_K} K, ${E.schwerkraft} m/s², ${E.tag_h} h).</div>
+        <div>Oberfläche: ${tx.fehlt ? `<span class="pl-fehlt">fehlt: ${tourEsc(tx.grund)}</span>${tx.farbe_setzung ? `; Kugel einfarbig, ${tourEsc(tx.farbe_setzung)}` : ''}` : `${tourEsc(tx.quelle)} ${herkunft({ arten: tx.arten, quelle: tx.quelle, hinweis: tx.hinweis })}; ${tourEsc(tx.lizenz)}. ${tourEsc(tx.hinweis ?? '')}`}</div>
+        ${k.huelle ? `<div>Hülle: ${D.darstellung.huelle_skalenhoehen} Skalenhöhen (${z(k.huelle.skalenhoehe_km)} km ${herkunft(k.huelle.skalenhoehe)}), ${D.darstellung.huelle_ueberhoehung}-fach überhöht; Farbe Setzung.${k.huelle.deckend ? ` ${tourEsc(k.huelle.deckend_grund)}. <a href="#" onclick="event.preventDefault();ze.planetenAnsicht.huelleUmschalten()">${this.huelleAn ? 'Hülle aus (Boden zeigen)' : 'Hülle an'}</a>` : ''}</div>` : '<div>Keine Hülle: Exosphäre, praktisch Vakuum.</div>'}
+        ${k.ringe ? `<div>Ringe C, B, A nach Radien des Fact Sheet ${herkunft(k.ringe)}; Deckkraft aus der optischen Tiefe gesetzt (Setzung).</div>` : ''}
+        ${k.id === 'titan' ? '<div id="pl-titan"></div>' : ''}
+        <div>Werte: ${tourEsc(D.quelle.name)}, ${tourEsc(D.quelle.stand)}, abgerufen ${D.quelle.abgerufen}; ${tourEsc(D.quelle.lizenz)}. ${tourEsc(D.herkunft_regel)}.</div>
+        <div class="pl-zeichen">● beobachtet · ▨ kuratiert · ○ Modell · ∑ berechnet</div>
+      </div>`;
+    if (k.id === 'titan') this._titan();
+  }
+  async _titan() {
+    const { anzeige } = await import('./kern/schema.mjs');
+    const s = this.koerper('titan').stoffwechsel, el = document.getElementById('pl-titan'); if (!el || !s) return;
+    const zeichen = arten => { const { rang, merkmale } = anzeige(arten); return (ZEICHEN_RANG[rang] ?? '') + (merkmale.includes('berechnet') ? '∑' : ''); };
+    const pfeil = { bestand: '▭', fluss: '⇄', abbau: '↗ hinaus', nachschub: '↘ hinein' };
+    el.innerHTML = `<div class="pl-sw"><b>${tourEsc(s.titel)}</b>
+      ${s.bausteine.map(b => `<div class="pl-sw-${b.art}${b.fehlt ? ' pl-fehlt' : ''}"><span class="pl-sw-art">${pfeil[b.art]}</span> ${tourEsc(b.name)}${b.wert ? `: ${tourEsc(b.wert)}` : ''}
+        ${b.fehlt ? `<small>fehlt: ${tourEsc(b.grund)}</small>` : `<span class="pl-hz" title="${tourEsc(`${b.arten.join(', ')} · ${b.quelle}${b.hinweis ? ` · ${b.hinweis}` : ''}`)}">${zeichen(b.arten)}</span><small>${tourEsc(b.quelle)}</small>`}</div>`).join('')}
+      <small class="pl-fehlt">Kern: fehlt, ${tourEsc(s.kern.grund)}</small></div>`;
   }
 }
 

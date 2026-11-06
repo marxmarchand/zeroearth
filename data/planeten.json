@@ -1,0 +1,981 @@
+{
+ "erzeugt": "2026-11-06T15:36:07+00:00",
+ "hinweis": "erzeugt von matrix-scharnier/adapter/planeten.py",
+ "quelle": {
+  "name": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams)",
+  "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/",
+  "stand": "Übersicht 2025-03-18; Saturnmonde 2025-07-22; Ringe 2022-04-19",
+  "abgerufen": "2026-11-06",
+  "lizenz": "Arbeit der US-Regierung, gemeinfrei"
+ },
+ "herkunft_regel": "kuratiert mit „Messquelle nicht genannt“, wo das Fact Sheet die Messung nicht nennt; beobachtung nur mit belegter Sonde je Wert (Entscheidung von Max, 2026-11-06)",
+ "zeit": {
+  "bezugssystem": "a_ce",
+  "wert": "heute (Messzeitraum der Sonden)",
+  "unschaerfe": {
+   "fehlt": true,
+   "grund": "Die Quellen nennen keinen gemeinsamen Zeitpunkt; Werte gelten als heutiger Zustand"
+  }
+ },
+ "erde": {
+  "druck_bar": 1.014,
+  "temperatur_K": 288,
+  "schwerkraft": 9.8,
+  "tag_h": 24.0
+ },
+ "darstellung": {
+  "huelle_skalenhoehen": 5,
+  "huelle_ueberhoehung": 5,
+  "setzung": "Hülle = 5 Skalenhöhen, 5-fach überhöht; Farben der Hüllen und der einfarbigen Kugeln sind Setzungen; Größen und Abstände nicht maßstäblich"
+ },
+ "koerper": [
+  {
+   "id": "merkur",
+   "name": "Merkur",
+   "radius_km": 2439.5,
+   "stapel_ort": "0.3",
+   "druck": {
+    "wert": 5e-15,
+    "einheit": "bar",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), mercuryfact",
+    "hinweis": "Messquelle nicht genannt",
+    "vergleich": "kleiner als",
+    "bezug": "Exosphäre, praktisch Vakuum",
+    "anzeige": "< 5·10⁻¹⁵ bar"
+   },
+   "temperatur": {
+    "wert": 440,
+    "einheit": "K",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), mercuryfact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "Mittel über Tag- und Nachtseite; sonnenseitig 590–725 K"
+   },
+   "schwerkraft": {
+    "wert": 3.7,
+    "einheit": "m/s²",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), Übersicht",
+    "hinweis": "Messquelle nicht genannt"
+   },
+   "tag": {
+    "wert": 4222.6,
+    "einheit": "h",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), Übersicht",
+    "hinweis": "Messquelle nicht genannt"
+   },
+   "zusammensetzung": {
+    "liste": [
+     {
+      "stoff": "Na, Mg, O, H, K, Ca (Säulendichten)",
+      "anteil": null,
+      "einheit": "Exosphäre"
+     }
+    ],
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), mercuryfact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "Exosphäre, als Säulendichten angegeben, nicht als Volumenanteil"
+   },
+   "textur": {
+    "datei": "planeten/merkur.jpg",
+    "roh": "merkur_messenger_2048.jpg",
+    "quelle": "USGS Astrogeology WMS, Ebene MESSENGER (MESSENGER Global Mosaic May 2016)",
+    "lizenz": "USGS, gemeinfrei",
+    "arten": [
+     "beobachtung"
+    ],
+    "hinweis": "Graustufen, keine wahren Farben",
+    "groesse_byte": 461947,
+    "pixel": [
+     2048,
+     1024
+    ],
+    "abbildung": "Länge −180 … 180 (links … rechts), Breite 90 … −90; Längenkonvention der Quelle"
+   },
+   "huelle": null
+  },
+  {
+   "id": "venus",
+   "name": "Venus",
+   "radius_km": 6052.0,
+   "druck": {
+    "wert": 92,
+    "einheit": "bar",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), Übersicht; venusfact",
+    "hinweis": "Messquelle nicht genannt"
+   },
+   "temperatur": {
+    "wert": 737,
+    "einheit": "K",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), venusfact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "Mittel am Boden"
+   },
+   "schwerkraft": {
+    "wert": 8.9,
+    "einheit": "m/s²",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), Übersicht",
+    "hinweis": "Messquelle nicht genannt"
+   },
+   "tag": {
+    "wert": 2802.0,
+    "einheit": "h",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), Übersicht",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "Sonnentag; die Drehung ist rückläufig (−5 832,5 h)"
+   },
+   "zusammensetzung": {
+    "liste": [
+     {
+      "stoff": "CO₂",
+      "anteil": 96.5,
+      "einheit": "%"
+     },
+     {
+      "stoff": "N₂",
+      "anteil": 3.5,
+      "einheit": "%"
+     },
+     {
+      "stoff": "SO₂",
+      "anteil": 150,
+      "einheit": "ppm"
+     },
+     {
+      "stoff": "Ar",
+      "anteil": 70,
+      "einheit": "ppm"
+     },
+     {
+      "stoff": "H₂O",
+      "anteil": 20,
+      "einheit": "ppm"
+     }
+    ],
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), venusfact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "nahe am Boden, Volumenanteile"
+   },
+   "textur": {
+    "datei": "planeten/venus.jpg",
+    "roh": "venus_magellan_2048.jpg",
+    "quelle": "USGS Astrogeology WMS, Ebene MAGELLAN (Magellan-Radarmosaik)",
+    "lizenz": "USGS, gemeinfrei",
+    "arten": [
+     "beobachtung"
+    ],
+    "hinweis": "Radar: Helligkeit = Rauheit des Bodens, keine Farbe; rötlich-dunkel = keine Radardaten",
+    "luecke_anteil": 0.1453,
+    "groesse_byte": 326701,
+    "pixel": [
+     2048,
+     1024
+    ],
+    "abbildung": "Länge −180 … 180 (links … rechts), Breite 90 … −90; Längenkonvention der Quelle"
+   },
+   "huelle": {
+    "skalenhoehe_km": 15.9,
+    "skalenhoehe": {
+     "wert": 15.9,
+     "einheit": "km",
+     "arten": [
+      "kuratiert"
+     ],
+     "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), venusfact",
+     "hinweis": "Messquelle nicht genannt"
+    },
+    "farbe": "#e8d9a8",
+    "deckend": true,
+    "deckend_grund": "Geschlossene Wolkendecke aus Schwefelsäure; der Boden ist nur im Radar sichtbar"
+   }
+  },
+  {
+   "id": "erde",
+   "name": "Erde",
+   "radius_km": 6378.0,
+   "druck": {
+    "wert": 1.014,
+    "einheit": "bar",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), earthfact",
+    "hinweis": "Messquelle nicht genannt"
+   },
+   "temperatur": {
+    "wert": 288,
+    "einheit": "K",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), earthfact",
+    "hinweis": "Messquelle nicht genannt"
+   },
+   "schwerkraft": {
+    "wert": 9.8,
+    "einheit": "m/s²",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), Übersicht",
+    "hinweis": "Messquelle nicht genannt"
+   },
+   "tag": {
+    "wert": 24.0,
+    "einheit": "h",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), Übersicht",
+    "hinweis": "Messquelle nicht genannt"
+   },
+   "zusammensetzung": {
+    "liste": [
+     {
+      "stoff": "N₂",
+      "anteil": 78.08,
+      "einheit": "%"
+     },
+     {
+      "stoff": "O₂",
+      "anteil": 20.95,
+      "einheit": "%"
+     },
+     {
+      "stoff": "Ar",
+      "anteil": 9340,
+      "einheit": "ppm"
+     },
+     {
+      "stoff": "CO₂",
+      "anteil": 420,
+      "einheit": "ppm"
+     }
+    ],
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), earthfact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "trockene Luft, Volumenanteile; Wasser stark veränderlich, um 1 %"
+   },
+   "textur": {
+    "fehlt": true,
+    "grund": "Die Erde hat ihre eigene Ansicht (Globus); ein Klick führt dorthin"
+   },
+   "huelle": {
+    "skalenhoehe_km": 8.5,
+    "skalenhoehe": {
+     "wert": 8.5,
+     "einheit": "km",
+     "arten": [
+      "kuratiert"
+     ],
+     "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), earthfact",
+     "hinweis": "Messquelle nicht genannt"
+    },
+    "farbe": "#7fb2ff",
+    "deckend": false
+   }
+  },
+  {
+   "id": "mars",
+   "name": "Mars",
+   "radius_km": 3396.0,
+   "druck": {
+    "wert": 0.00636,
+    "einheit": "bar",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), marsfact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "mittlerer Radius; im Jahresgang 4,0–8,7 mb",
+    "zusatz": {
+     "wert": [
+      0.0069,
+      0.009
+     ],
+     "einheit": "bar",
+     "arten": [
+      "beobachtung"
+     ],
+     "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), marsfact: Viking-1-Landeplatz",
+     "bezug": "6,9–9 mb am Landeplatz von Viking 1"
+    }
+   },
+   "temperatur": {
+    "wert": 214,
+    "einheit": "K",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), marsfact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "Mittel; Tagesgang am Viking-1-Landeplatz 184–242 K"
+   },
+   "schwerkraft": {
+    "wert": 3.73,
+    "einheit": "m/s²",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), marsfact",
+    "hinweis": "Messquelle nicht genannt"
+   },
+   "tag": {
+    "wert": 24.6597,
+    "einheit": "h",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), marsfact",
+    "hinweis": "Messquelle nicht genannt"
+   },
+   "zusammensetzung": {
+    "liste": [
+     {
+      "stoff": "CO₂",
+      "anteil": 95.1,
+      "einheit": "%"
+     },
+     {
+      "stoff": "N₂",
+      "anteil": 2.59,
+      "einheit": "%"
+     },
+     {
+      "stoff": "Ar",
+      "anteil": 1.94,
+      "einheit": "%"
+     },
+     {
+      "stoff": "O₂",
+      "anteil": 0.16,
+      "einheit": "%"
+     },
+     {
+      "stoff": "CO",
+      "anteil": 0.06,
+      "einheit": "%"
+     }
+    ],
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), marsfact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "Volumenanteile"
+   },
+   "textur": {
+    "datei": "planeten/mars.jpg",
+    "roh": "mars_viking_mdim21_color_2048.jpg",
+    "quelle": "USGS Astrogeology WMS, Ebene MDIM21_color (Viking MDIM 2.1, eingefärbt)",
+    "lizenz": "USGS, gemeinfrei",
+    "arten": [
+     "beobachtung",
+     "kuratiert"
+    ],
+    "hinweis": "Farbe nachträglich aus Viking-Farbbildern übertragen",
+    "groesse_byte": 441278,
+    "pixel": [
+     2048,
+     1024
+    ],
+    "abbildung": "Länge −180 … 180 (links … rechts), Breite 90 … −90; Längenkonvention der Quelle"
+   },
+   "huelle": {
+    "skalenhoehe_km": 11.0,
+    "skalenhoehe": {
+     "wert": 11.0,
+     "einheit": "km",
+     "arten": [
+      "kuratiert"
+     ],
+     "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), marsfact",
+     "hinweis": "Messquelle nicht genannt"
+    },
+    "farbe": "#e3a08a",
+    "deckend": false
+   }
+  },
+  {
+   "id": "jupiter",
+   "name": "Jupiter",
+   "radius_km": 71492.0,
+   "druck": {
+    "fehlt": true,
+    "grund": "Kein fester Boden; das Fact Sheet nennt „>>1000 bar“ tief in der Atmosphäre, Lage unbekannt. Bezug der übrigen Werte: 1-bar-Niveau"
+   },
+   "temperatur": {
+    "wert": 165,
+    "einheit": "K",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), jupiterfact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "beim 1-bar-Niveau"
+   },
+   "schwerkraft": {
+    "wert": 23.1,
+    "einheit": "m/s²",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), Übersicht",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "beim 1-bar-Niveau, Äquator"
+   },
+   "tag": {
+    "wert": 9.9,
+    "einheit": "h",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), Übersicht",
+    "hinweis": "Messquelle nicht genannt"
+   },
+   "zusammensetzung": {
+    "liste": [
+     {
+      "stoff": "H₂",
+      "anteil": 89.8,
+      "einheit": "%"
+     },
+     {
+      "stoff": "He",
+      "anteil": 10.2,
+      "einheit": "%"
+     },
+     {
+      "stoff": "CH₄",
+      "anteil": 3000,
+      "einheit": "ppm"
+     },
+     {
+      "stoff": "NH₃",
+      "anteil": 260,
+      "einheit": "ppm"
+     }
+    ],
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), jupiterfact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "Volumenanteile; Unschärfe H₂ und He je ±2,0 %"
+   },
+   "textur": {
+    "datei": "planeten/jupiter.jpg",
+    "roh": "PIA07782.jpg",
+    "quelle": "NASA Photojournal PIA07782 (Cassini, Vorbeiflug Dezember 2000)",
+    "lizenz": "NASA, gemeinfrei; Credit NASA/JPL/Space Science Institute",
+    "arten": [
+     "beobachtung"
+    ],
+    "hinweis": "Die Wolken sind ein Moment (Dezember 2000), kein Dauerzustand",
+    "groesse_byte": 256872,
+    "pixel": [
+     2048,
+     1024
+    ],
+    "abbildung": "Länge −180 … 180 (links … rechts), Breite 90 … −90; Längenkonvention der Quelle"
+   },
+   "huelle": {
+    "skalenhoehe_km": 27,
+    "skalenhoehe": {
+     "wert": 27,
+     "einheit": "km",
+     "arten": [
+      "kuratiert"
+     ],
+     "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), jupiterfact",
+     "hinweis": "Messquelle nicht genannt"
+    },
+    "farbe": "#e8d4b8",
+    "deckend": false
+   }
+  },
+  {
+   "id": "saturn",
+   "name": "Saturn",
+   "radius_km": 60268.0,
+   "druck": {
+    "fehlt": true,
+    "grund": "Kein fester Boden; Lage und Druck der „Oberfläche“ unbekannt (Fact Sheet). Bezug: 1-bar-Niveau"
+   },
+   "temperatur": {
+    "wert": 134,
+    "einheit": "K",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), saturnfact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "beim 1-bar-Niveau"
+   },
+   "schwerkraft": {
+    "wert": 9.0,
+    "einheit": "m/s²",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), Übersicht",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "beim 1-bar-Niveau, Äquator"
+   },
+   "tag": {
+    "wert": 10.7,
+    "einheit": "h",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), Übersicht",
+    "hinweis": "Messquelle nicht genannt"
+   },
+   "zusammensetzung": {
+    "liste": [
+     {
+      "stoff": "H₂",
+      "anteil": 96.3,
+      "einheit": "%"
+     },
+     {
+      "stoff": "He",
+      "anteil": 3.25,
+      "einheit": "%"
+     },
+     {
+      "stoff": "CH₄",
+      "anteil": 4500,
+      "einheit": "ppm"
+     },
+     {
+      "stoff": "NH₃",
+      "anteil": 125,
+      "einheit": "ppm"
+     }
+    ],
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), saturnfact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "Volumenanteile; Unschärfe H₂ und He je ±2,4 %"
+   },
+   "textur": {
+    "fehlt": true,
+    "grund": "Keine globale Karte geprüft",
+    "farbe": "#d8c79a",
+    "farbe_setzung": "mittlere Farbe nach Cassini-Bildern, Setzung, nicht gemessen"
+   },
+   "ringe": {
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), satringfact (Stand 2022-04-19)",
+    "arten": [
+     "kuratiert"
+    ],
+    "hinweis": "Messquelle nicht genannt",
+    "teile": [
+     {
+      "name": "C",
+      "innen_km": 74658,
+      "aussen_km": 91975,
+      "optische_tiefe": "0,05–0,35"
+     },
+     {
+      "name": "B",
+      "innen_km": 91975,
+      "aussen_km": 117507,
+      "optische_tiefe": "0,4–2,5"
+     },
+     {
+      "name": "A",
+      "innen_km": 122340,
+      "aussen_km": 136780,
+      "optische_tiefe": "0,4–1,0"
+     }
+    ]
+   },
+   "huelle": {
+    "skalenhoehe_km": 59.5,
+    "skalenhoehe": {
+     "wert": 59.5,
+     "einheit": "km",
+     "arten": [
+      "kuratiert"
+     ],
+     "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), saturnfact",
+     "hinweis": "Messquelle nicht genannt"
+    },
+    "farbe": "#eadcb0",
+    "deckend": false
+   }
+  },
+  {
+   "id": "uranus",
+   "name": "Uranus",
+   "radius_km": 25559.0,
+   "druck": {
+    "fehlt": true,
+    "grund": "Kein fester Boden; Lage und Druck unbekannt (Fact Sheet). Bezug: 1-bar-Niveau"
+   },
+   "temperatur": {
+    "wert": 76,
+    "einheit": "K",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), uranusfact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "beim 1-bar-Niveau"
+   },
+   "schwerkraft": {
+    "wert": 8.7,
+    "einheit": "m/s²",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), Übersicht",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "beim 1-bar-Niveau, Äquator"
+   },
+   "tag": {
+    "wert": 17.2,
+    "einheit": "h",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), Übersicht",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "Drehung rückläufig"
+   },
+   "zusammensetzung": {
+    "liste": [
+     {
+      "stoff": "H₂",
+      "anteil": 82.5,
+      "einheit": "%"
+     },
+     {
+      "stoff": "He",
+      "anteil": 15.2,
+      "einheit": "%"
+     },
+     {
+      "stoff": "CH₄",
+      "anteil": 2.3,
+      "einheit": "%"
+     }
+    ],
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), uranusfact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "Volumenanteile; Unschärfe H₂ und He je ±3,3 %"
+   },
+   "textur": {
+    "fehlt": true,
+    "grund": "Keine globale Karte (nur Voyager-2-Vorbeiflug 1986)",
+    "farbe": "#a8d8df",
+    "farbe_setzung": "mittlere Farbe nach Voyager-2-Bildern, Setzung, nicht gemessen"
+   },
+   "huelle": {
+    "skalenhoehe_km": 27.7,
+    "skalenhoehe": {
+     "wert": 27.7,
+     "einheit": "km",
+     "arten": [
+      "kuratiert"
+     ],
+     "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), uranusfact",
+     "hinweis": "Messquelle nicht genannt"
+    },
+    "farbe": "#c4eef2",
+    "deckend": false
+   }
+  },
+  {
+   "id": "neptun",
+   "name": "Neptun",
+   "radius_km": 24764.0,
+   "druck": {
+    "fehlt": true,
+    "grund": "Kein fester Boden; Lage und Druck unbekannt (Fact Sheet). Bezug: 1-bar-Niveau"
+   },
+   "temperatur": {
+    "wert": 72,
+    "einheit": "K",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), neptunefact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "beim 1-bar-Niveau"
+   },
+   "schwerkraft": {
+    "wert": 11.0,
+    "einheit": "m/s²",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), Übersicht",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "beim 1-bar-Niveau, Äquator"
+   },
+   "tag": {
+    "wert": 16.1,
+    "einheit": "h",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), Übersicht",
+    "hinweis": "Messquelle nicht genannt"
+   },
+   "zusammensetzung": {
+    "liste": [
+     {
+      "stoff": "H₂",
+      "anteil": 80.0,
+      "einheit": "%"
+     },
+     {
+      "stoff": "He",
+      "anteil": 19.0,
+      "einheit": "%"
+     },
+     {
+      "stoff": "CH₄",
+      "anteil": 1.5,
+      "einheit": "%"
+     }
+    ],
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), neptunefact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "Volumenanteile; Unschärfe H₂ und He je ±3,2 %, CH₄ ±0,5 %"
+   },
+   "textur": {
+    "fehlt": true,
+    "grund": "Keine globale Karte (nur Voyager-2-Vorbeiflug 1989)",
+    "farbe": "#5b80d4",
+    "farbe_setzung": "mittlere Farbe nach Voyager-2-Bildern, Setzung, nicht gemessen"
+   },
+   "huelle": {
+    "skalenhoehe_km": 19.7,
+    "skalenhoehe": {
+     "wert": 19.7,
+     "einheit": "km",
+     "arten": [
+      "kuratiert"
+     ],
+     "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), neptunefact",
+     "hinweis": "Messquelle nicht genannt",
+     "bezug": "Fact Sheet: 19,1–20,3 km; Mitte gezeichnet"
+    },
+    "farbe": "#8fb0ff",
+    "deckend": false
+   }
+  },
+  {
+   "id": "titan",
+   "name": "Titan",
+   "radius_km": 2575,
+   "mond_von": "saturn",
+   "bahn": {
+    "a_km": 1221870,
+    "umlauf_d": 15.945421,
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), saturniansatfact (Stand 2025-07-22)"
+   },
+   "druck": {
+    "wert": 1.467,
+    "einheit": "bar",
+    "arten": [
+     "beobachtung"
+    ],
+    "quelle": "Huygens HASI, Fulchignoni et al. 2005, Nature 438, 785–791",
+    "unschaerfe": "±1 hPa",
+    "bezug": "am Landeplatz, 14.01.2005"
+   },
+   "temperatur": {
+    "wert": 93.65,
+    "einheit": "K",
+    "arten": [
+     "beobachtung"
+    ],
+    "quelle": "Huygens HASI, Fulchignoni et al. 2005, Nature 438, 785–791",
+    "unschaerfe": "±0,25 K",
+    "bezug": "am Landeplatz, 14.01.2005"
+   },
+   "schwerkraft": {
+    "wert": 1.354,
+    "einheit": "m/s²",
+    "arten": [
+     "kuratiert",
+     "modell",
+     "berechnet"
+    ],
+    "verfahren": "G·M/r² mit M = 1 345,5·10²⁰ kg und r = 2 575 km (NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), saturniansatfact)",
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), saturniansatfact; Newton",
+    "hinweis": "M und r: Messquelle nicht genannt"
+   },
+   "tag": {
+    "wert": 382.7,
+    "einheit": "h",
+    "arten": [
+     "kuratiert"
+    ],
+    "quelle": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams), saturniansatfact",
+    "hinweis": "Messquelle nicht genannt",
+    "bezug": "gebunden: Drehung = Umlauf um Saturn (15,945 d); der Sonnentag weicht davon um rund 0,05 % ab, nicht berücksichtigt"
+   },
+   "zusammensetzung": {
+    "liste": [
+     {
+      "stoff": "CH₄",
+      "anteil": 5.65,
+      "einheit": "%",
+      "arten": [
+       "beobachtung"
+      ],
+      "unschaerfe": "±0,18 %",
+      "quelle": "Huygens GCMS, Niemann et al. 2010, JGR 115, E12006 (ersetzt die Werte von 2005)",
+      "bezug": "nahe am Boden (6,7 km bis Boden)"
+     },
+     {
+      "stoff": "N₂",
+      "anteil": null,
+      "einheit": "%",
+      "fehlt": true,
+      "grund": "Hauptbestandteil; Niemann et al. 2010 nennt einen Wert, der Volltext ist nicht geprüft. Kein Rest zu 100 % gerechnet"
+     }
+    ],
+    "arten": [
+     "beobachtung"
+    ],
+    "quelle": "Huygens GCMS (Niemann et al. 2010)",
+    "bezug": "nahe am Boden"
+   },
+   "textur": {
+    "datei": "planeten/titan.jpg",
+    "roh": "titan_cassini_iss_2048.jpg",
+    "quelle": "USGS Astrogeology WMS, Ebene CASSINI (Cassini ISS, 938 nm, PIA19658, bis Vorbeiflug T100)",
+    "lizenz": "USGS, gemeinfrei",
+    "arten": [
+     "beobachtung"
+    ],
+    "hinweis": "Nahes Infrarot (938 nm), grau; im sichtbaren Licht verdeckt der Dunst den Boden. Lücke von 3–5 % in nördlichen mittleren Breiten",
+    "groesse_byte": 250213,
+    "pixel": [
+     2048,
+     1024
+    ],
+    "abbildung": "Länge −180 … 180 (links … rechts), Breite 90 … −90; Längenkonvention der Quelle"
+   },
+   "huelle": {
+    "skalenhoehe_km": 20.5,
+    "skalenhoehe": {
+     "wert": 20.5,
+     "einheit": "km",
+     "arten": [
+      "beobachtung",
+      "modell",
+      "berechnet"
+     ],
+     "verfahren": "k·T/(m·g) mit T = 93,65 K (Huygens), m = 28 u (N₂, Setzung), g berechnet; am Boden",
+     "quelle": "Fulchignoni et al. 2005 (T); Gasgesetz"
+    },
+    "farbe": "#d9a35a",
+    "deckend": true,
+    "deckend_grund": "Orangefarbener Dunst aus organischen Teilchen (Tholine) verdeckt den Boden im sichtbaren Licht"
+   },
+   "stoffwechsel": {
+    "titel": "Methankreislauf: planetarer Stoffwechsel ohne Leben",
+    "kern": {
+     "fehlt": true,
+     "grund": "Im Kern noch nicht als Prozess geführt: Das Schema setzt den planetaren Stoffwechsel zwischen 0. und 1. Natur; auf Titan gibt es keine 1. Natur. Entscheidung offen"
+    },
+    "bausteine": [
+     {
+      "art": "bestand",
+      "name": "Methan in der Atmosphäre",
+      "wert": "5,65 % nahe am Boden",
+      "arten": [
+       "beobachtung"
+      ],
+      "quelle": "Huygens GCMS, Niemann et al. 2010, JGR 115"
+     },
+     {
+      "art": "bestand",
+      "name": "Seen und Meere aus flüssigen Kohlenwasserstoffen (Nordpolregion)",
+      "wert": null,
+      "arten": [
+       "beobachtung"
+      ],
+      "quelle": "Cassini-Radar, Stofan et al. 2007, Nature 445, 61–64",
+      "hinweis": "teils gefüllte, teils trockene Senken: aktiver Flüssigkeitskreislauf"
+     },
+     {
+      "art": "fluss",
+      "name": "Verdunstung, Wolken, Regen",
+      "wert": null,
+      "arten": [
+       "beobachtung"
+      ],
+      "quelle": "Turtle et al. 2011, Science 331, 1414–1417 („evidence of April showers“: Oberflächenänderung nach Niederschlag)",
+      "hinweis": "nur Titel und Zitat geprüft"
+     },
+     {
+      "art": "abbau",
+      "name": "Photolyse in der oberen Atmosphäre: Methan zu Ethan und schwereren Stoffen, nicht umkehrbar",
+      "wert": "Bestand wäre in einigen zehn Ma aufgebraucht",
+      "arten": [
+       "modell",
+       "berechnet"
+      ],
+      "quelle": "Photochemie nach Yung, Allen & Pinto 1984, ApJS; Zeitraum wie zitiert in Tobie et al. 2006, Nature 440, 61–64",
+      "hinweis": "Zahl aus Abstract und Zitaten, Originalwert nicht geprüft"
+     },
+     {
+      "art": "nachschub",
+      "name": "Woher das Methan nachkommt",
+      "wert": null,
+      "fehlt": true,
+      "grund": "offen; Hypothese: episodische Ausgasung aus Klathraten im Eispanzer (Tobie et al. 2006, Modell), nicht beobachtet"
+     }
+    ]
+   }
+  }
+ ]
+}

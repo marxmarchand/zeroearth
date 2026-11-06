@@ -1,0 +1,22 @@
+{
+ "hinweis": "Vorbereitet für den Zoom zu den Nachbarsternen (0.2, interstellarer Raum); noch ohne Sterne. Siehe kern/BERICHT-planeten.md, Abschnitt 7",
+ "sterne": {
+  "fehlt": true,
+  "grund": "Noch nicht abgeleitet; Quellen geprüft, Ableitung offen"
+ },
+ "felder_je_stern": ["name", "ra_grad", "dec_grad", "parallaxe_mas", "parallaxe_unschaerfe_mas", "abstand_lj (berechnet)", "spektraltyp", "quelle", "arten"],
+ "quellen": [
+  {
+   "name": "Gaia DR3 (ESA/Gaia/DPAC)",
+   "lizenz": "CC BY-NC 3.0 IGO (nur nicht-kommerziell; laut cosmos.esa.int/web/gaia-users/license, geprüft 2026-11-06)",
+   "entscheidung": "wird genutzt; zeroearth bleibt nicht-kommerziell (Max, 2026-11-06)",
+   "luecke": "sehr helle Sterne fehlen oder sind unsicher (etwa Sirius, Alpha Centauri A/B); Ergänzung Hipparcos (van Leeuwen 2007), Lizenz offen"
+  },
+  {
+   "name": "NASA Exoplanet Archive (Caltech/IPAC)",
+   "lizenz": "keine förmliche Lizenz genannt; Danksagung und Zitat Christiansen et al. 2025 (PSJ) verlangt",
+   "inhalt": "Sterne mit bestätigten Planeten und deren Planeten; umstrittene Planeten mit Status"
+  }
+ ],
+ "erster_eintrag": "40 Eridani A (Teil D, Rocky-Gerüst)"
+}

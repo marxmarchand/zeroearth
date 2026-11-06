@@ -1,0 +1,97 @@
+{
+  "id": "planeten",
+  "eingabe": "data/planeten.json",
+  "quelle": {
+    "name": "NASA Planetary Fact Sheet (NSSDCA, D. R. Williams); Huygens HASI (Fulchignoni et al. 2005) und GCMS (Niemann et al. 2010); Texturen USGS Astrogeology und NASA Photojournal",
+    "dateien": [
+      "planetfact (Übersicht), mercuryfact, venusfact, earthfact, marsfact, jupiterfact, saturnfact, uranusfact, neptunefact, saturniansatfact, satringfact",
+      "merkur_messenger_2048.jpg, venus_magellan_2048.jpg, mars_viking_mdim21_color_2048.jpg, titan_cassini_iss_2048.jpg (USGS WMS), PIA07782.jpg (NASA)"
+    ],
+    "abgeleitet_durch": "matrix-scharnier/adapter/planeten.py",
+    "pangaea": {
+      "fehlt": true,
+      "grund": "Keine PANGAEA-Quelle; Fact Sheet unter https://nssdc.gsfc.nasa.gov/planetary/factsheet/"
+    }
+  },
+  "stapel": [
+    "0.3"
+  ],
+  "vorgang": {
+    "fehlt": true,
+    "grund": "Zustandswerte der Körper, kein Vorgang; Titans Methankreislauf steht als eigener Stoffwechsel"
+  },
+  "herkunft": {
+    "arten": [
+      "kuratiert",
+      "beobachtung",
+      "modell",
+      "berechnet"
+    ],
+    "ebene": "Wert",
+    "hinweis": "Fact-Sheet-Werte: kuratiert, Messquelle nicht genannt (Entscheidung von Max, 2026-11-06). Viking-1-Landeplatz und Huygens: beobachtung. Titans Schwerkraft und Skalenhöhe: aus Formeln abgeleitet, modell + berechnet.",
+    "archivkette": [
+      {
+        "archiv": "zeroearth (data/planeten.json, data/planeten/)",
+        "art": "zeroearth"
+      },
+      {
+        "archiv": "NASA NSSDCA Planetary Fact Sheet; USGS Astrogeology; NASA Photojournal",
+        "art": "gesellschaftlich"
+      },
+      {
+        "archiv": "Sondenmessungen (Mariner, Venera, Pioneer, Viking, Voyager, Galileo, Cassini-Huygens, MESSENGER, Magellan)",
+        "art": {
+          "fehlt": true,
+          "grund": "Welche Sonde je Wert gemessen hat, nennt das Fact Sheet meist nicht"
+        }
+      }
+    ]
+  },
+  "zeitsemantik": {
+    "bezugssystem": "a_ce",
+    "unschaerfe": {
+      "fehlt": true,
+      "grund": "Die Quellen nennen keinen gemeinsamen Zeitpunkt; die Werte gelten als heutiger Zustand"
+    },
+    "aufloesung": {
+      "fehlt": true,
+      "grund": "Ein Zustand, keine Zeitreihe"
+    },
+    "abdeckung": {
+      "von": 1962,
+      "bis": 2025,
+      "schritte": 1
+    },
+    "verzoegerung": {
+      "fehlt": true,
+      "grund": "Kein Wissensstand angegeben"
+    }
+  },
+  "geometrie": [
+    "punkt"
+  ],
+  "lizenz": {
+    "angabe": "gemeinfrei (Arbeiten der US-Regierung: NASA, USGS); Credit NASA/JPL/Space Science Institute für PIA07782",
+    "quelle": "NASA NSSDCA; USGS Astrogeology; NASA Photojournal",
+    "geprueft": "2026-11-06",
+    "bearbeitung": "Werte abgeschrieben; Texturen auf 2048 × 1024 gebracht, Venus-Datenlücken eingefärbt"
+  },
+  "weitergabe": {
+    "im_repo": "data/planeten.json, data/planeten/*.jpg (5 Texturen, zusammen 1,7 MB)",
+    "nicht_im_repo": "Rohe Texturen (~/ZeroEarth/rohdaten/planeten)"
+  },
+  "auswahl": [
+    "planeten/auswahl/koerper",
+    "planeten/auswahl/texturen"
+  ],
+  "reduktion": [
+    {
+      "schritt": "auswaehlen",
+      "angabe": "Druck, Temperatur, Schwerkraft, Tageslänge, Hauptbestandteile der Atmosphäre, Skalenhöhe je Körper"
+    },
+    {
+      "schritt": "vergroebern",
+      "angabe": "Texturen auf 2048 × 1024 (rund 0,18° je Bildpunkt)"
+    }
+  ]
+}
