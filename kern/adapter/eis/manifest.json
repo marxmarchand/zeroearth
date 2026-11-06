@@ -1,0 +1,108 @@
+{
+  "id": "eis",
+  "eingabe": "data/eis.json",
+  "quelle": {
+    "name": "PaleoMIST 1.0 (Gowan et al. 2021), ice_thickness, Referenz und a1",
+    "dateien": [
+      "reconstruction_0.25_degree.nc",
+      "reconstruction_a1_0.25_degree.nc"
+    ],
+    "abgeleitet_durch": "matrix-scharnier/adapter/eis.py",
+    "pangaea": "doi:10.1594/PANGAEA.905800 (Gowan 2019; Gowan et al. 2021, doi:10.1038/s41467-021-21469-w)"
+  },
+  "stapel": [
+    "1.1"
+  ],
+  "vorgang": "stoffwechsel",
+  "herkunft": {
+    "arten": [
+      "rekonstruktion",
+      "berechnet"
+    ],
+    "ebene": "Datei",
+    "hinweis": "Eisdicke: rekonstruktion; Eisvolumen und Eisfläche je Schritt: rekonstruktion + berechnet.",
+    "archivkette": [
+      {
+        "archiv": "zeroearth (data/eis.json, data/eis/)",
+        "art": "zeroearth"
+      },
+      {
+        "archiv": "PaleoMIST 1.0 (PANGAEA)",
+        "art": {
+          "fehlt": true,
+          "grund": "Archivart von PaleoMIST nicht festgelegt"
+        }
+      },
+      {
+        "fehlt": true,
+        "grund": "Welche natürlichen Archive PaleoMIST zugrunde liegen, nennen die Daten nicht"
+      }
+    ]
+  },
+  "zeitsemantik": {
+    "bezugssystem": "ka_bp_1950",
+    "unschaerfe": {
+      "fehlt": true,
+      "grund": "PaleoMIST nennt keine Unschärfe der Zeitachse; die 2,5 ka sind die Auflösung"
+    },
+    "aufloesung": {
+      "wert": 2.5,
+      "einheit": "ka"
+    },
+    "abdeckung": {
+      "von": 80,
+      "bis": 0,
+      "schritte": 33
+    },
+    "verzoegerung": {
+      "fehlt": true,
+      "grund": "Kein Wissensstand angegeben"
+    }
+  },
+  "geometrie": [
+    "feld"
+  ],
+  "lizenz": {
+    "angabe": "CC BY 4.0",
+    "quelle": "PANGAEA, doi:10.1594/PANGAEA.905800",
+    "geprueft": "2026-10-01",
+    "bearbeitung": "Eisdicke in 256 Klassen, auf 0,5° ausgewählt; Volumen und Fläche je Schritt"
+  },
+  "weitergabe": {
+    "im_repo": "data/eis.json, data/eis/referenz/*.png, data/eis/a1/*.png (je 33, 0,5°)",
+    "nicht_im_repo": "Raster der Quelle (~/ZeroEarth/rohdaten/ice_reconstruction)"
+  },
+  "auswahl": [
+    "eis/auswahl/ideale",
+    "eis/auswahl/aufloesung"
+  ],
+  "reduktion": [
+    {
+      "schritt": "auswaehlen",
+      "angabe": "Variable ice_thickness; jeder zweite Gitterpunkt (0,25° -> 0,5°)"
+    },
+    {
+      "schritt": "vergroebern",
+      "angabe": "Eisdicke in 256 Klassen, 0 bis 5 000 m, Wurzelskala"
+    },
+    {
+      "schritt": "vergroebern",
+      "angabe": "Eisvolumen und Eisfläche je Schritt als Summe über das 0,5°-Gitter"
+    }
+  ],
+  "ideale": {
+    "gruppe": "eis/ideale/eisgeschichte",
+    "varianten": {
+      "referenz": {
+        "name": "PaleoMIST Referenz",
+        "variante": "reconstruction_0.25_degree.nc"
+      },
+      "a1": {
+        "name": "PaleoMIST a1 (alternative Eisgeschichte)",
+        "variante": "reconstruction_a1_0.25_degree.nc"
+      }
+    },
+    "gesetzt_in": "PaleoMIST 1.0 (Gowan et al. 2021): die Quelle liefert beide Läufe",
+    "begruendung": "Beide Eisgeschichten stammen aus derselben Quelle und sind dort gleichrangig; keine wird bevorzugt (Regel 13)"
+  }
+}

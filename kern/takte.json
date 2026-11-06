@@ -57,7 +57,54 @@
         "fehlt": true,
         "grund": "Der Strukturstand nennt rund 21, 41 und 100 ka; Spannweiten nicht belegt"
       },
-      "quelle": "docs/strukturstand.md, Abschnitt Zeit (Takt und Richtung)"
+      "quelle": "docs/strukturstand.md, Abschnitt Zeit (Takt und Richtung)",
+      "hinweis": "Zählraster von heute an in 100-ka-Schritten; die Phase der Exzentrizität ist nicht eingezeichnet (fehlt)",
+      "phase": {
+        "fehlt": true,
+        "grund": "Keine Bahnlösung eingebunden (Berger & Loutre 1991 vorgemerkt)"
+      }
+    },
+    {
+      "id": "schiefe",
+      "name": "Schiefe der Ekliptik",
+      "art": "takt",
+      "natur": "0",
+      "neben": "milankovic",
+      "periode": {
+        "wert": 41,
+        "einheit": "ka"
+      },
+      "spannweite": {
+        "fehlt": true,
+        "grund": "Hays et al. 1976 nennen rund 41–42 ka; keine Spannweite übernommen"
+      },
+      "phase": {
+        "fehlt": true,
+        "grund": "Keine Bahnlösung eingebunden; gezeichnet wird nur ein Raster der Periode ab heute"
+      },
+      "quelle": "Hays, J. D., Imbrie, J., Shackleton, N. J. (1976): Variations in the Earth's Orbit: Pacemaker of the Ice Ages. Science 194, 1121–1132, doi:10.1126/science.194.4270.1121"
+    },
+    {
+      "id": "praezession",
+      "name": "Präzession",
+      "art": "takt",
+      "natur": "0",
+      "neben": "milankovic",
+      "periode": {
+        "wert": 21,
+        "einheit": "ka"
+      },
+      "spannweite": {
+        "min": 19,
+        "max": 23,
+        "einheit": "ka",
+        "quelle": "Hays et al. 1976: Teilperioden rund 19 und 23 ka"
+      },
+      "phase": {
+        "fehlt": true,
+        "grund": "Keine Bahnlösung eingebunden; gezeichnet wird nur ein Raster der Periode ab heute"
+      },
+      "quelle": "Hays, J. D., Imbrie, J., Shackleton, N. J. (1976): Variations in the Earth's Orbit: Pacemaker of the Ice Ages. Science 194, 1121–1132, doi:10.1126/science.194.4270.1121"
     },
     {
       "id": "ka",

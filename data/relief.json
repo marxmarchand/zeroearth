@@ -1,5 +1,5 @@
 {
- "erzeugt": "2026-11-06T07:30:59+00:00",
+ "erzeugt": "2026-11-06T08:14:16+00:00",
  "hinweis": "erzeugt von matrix-scharnier/adapter/relief.py",
  "klassen": {
   "meer": {
@@ -3509,7 +3509,7 @@
    }
   },
   "gebco": {
-   "name": "GEBCO_2026 (GEBCO Compilation Group 2026)",
+   "name": "GEBCO_2025 (GEBCO Compilation Group 2025)",
    "einheit": "a CE",
    "bezugssystem": "a_ce",
    "aufloesung_grad": 0.1,
@@ -3522,7 +3522,7 @@
     "berechnet",
     "kuratiert"
    ],
-   "lizenz": "gemeinfrei (GEBCO-Nutzungsbedingungen); doi:10.5285/4f68d5c7-45eb-f999-e063-7086abc036fa",
+   "lizenz": "gemeinfrei (GEBCO-Nutzungsbedingungen); doi:10.5285/37c52e96-24ea-67ce-e063-7086abc05f29",
    "bezugsrahmen": "heutige Koordinaten",
    "eis": {
     "fehlt": true,
@@ -3534,15 +3534,14 @@
    },
    "herkunft_anteile": {
     "land": {
-     "anteil": 0.26274,
-     "art": "beobachtung",
+     "anteil": 0.26174,
      "codes": [
       0
-     ]
+     ],
+     "art": "beobachtung"
     },
     "gemessen": {
-     "anteil": 0.22051,
-     "art": "beobachtung",
+     "anteil": 0.21233,
      "codes": [
       10,
       11,
@@ -3552,102 +3551,102 @@
       15,
       16,
       17,
-      47,
-      48
-     ]
+      47
+     ],
+     "art": "beobachtung"
     },
     "aus_schwere_vorhergesagt": {
-     "anteil": 0.40308,
-     "art": "modell",
+     "anteil": 0.39795,
      "codes": [
       40,
       45
-     ]
+     ],
+     "art": "modell"
     },
     "interpoliert": {
-     "anteil": 0.06787,
-     "art": "modell",
+     "anteil": 0.07279,
      "codes": [
       41
-     ]
+     ],
+     "art": "modell"
     },
     "aus_karten_digitalisiert": {
-     "anteil": 0.00059,
-     "art": "kuratiert",
+     "anteil": 0.00078,
      "codes": [
       42,
       43
-     ]
+     ],
+     "art": "kuratiert"
     },
     "gemischt_schwere_gestuetzt": {
-     "anteil": 0.01006,
-     "art": "modell",
+     "anteil": 0.00882,
      "codes": [
       44
-     ]
+     ],
+     "art": "modell"
     },
     "aus_eisberg_geschaetzt": {
      "anteil": 0.0,
-     "art": "modell",
      "codes": [
       46
-     ]
+     ],
+     "art": "modell"
     },
     "vorgefertigtes_gitter": {
-     "anteil": 0.03512,
+     "anteil": 0.04558,
+     "codes": [
+      70
+     ],
      "art": {
       "fehlt": true,
       "grund": "Das Typ-Gitter nennt keine Messart (vorgefertigtes Gitter, unbekannt oder Steuerpunkte)"
-     },
-     "codes": [
-      70
-     ]
+     }
     },
     "unbekannt": {
      "anteil": 0.0,
+     "codes": [
+      71
+     ],
      "art": {
       "fehlt": true,
       "grund": "Das Typ-Gitter nennt keine Messart (vorgefertigtes Gitter, unbekannt oder Steuerpunkte)"
-     },
-     "codes": [
-      71
-     ]
+     }
     },
     "steuerpunkte": {
      "anteil": 1e-05,
+     "codes": [
+      72
+     ],
      "art": {
       "fehlt": true,
       "grund": "Das Typ-Gitter nennt keine Messart (vorgefertigtes Gitter, unbekannt oder Steuerpunkte)"
-     },
-     "codes": [
-      72
-     ]
+     }
     }
    },
    "tid": {
-    "flag_values": "[ 0 10 11 12 13 14 15 16 17 40 41 42 43 44 45 46 47 48 70 71 72]",
+    "flag_values": "[ 0 10 11 12 13 14 15 16 17 40 41 42 43 44 45 46 47 70 71 72]",
     "flag_meanings": "Land Singlebeam Multibeam Seismic Isolated_sounding ENC_sounding Lidar Optical Combined predicted_altimetry interpolated contour_charts contour_ENC bathymetric_sounding predicted_airborne iceberg_groundinggrounded_Argo_float_derived pre-generated_grid unknown steering_point"
    },
    "schritte": [
     {
-     "jahr": 2026,
-     "datei": "relief/gebco/2026.png",
+     "jahr": 2025,
+     "datei": "relief/gebco/2025.png",
      "groessen": {
-      "landflaeche_km2": 148391275,
-      "schelf_0_200_km2": 25824737,
-      "rand_200_1400_km2": 21593966,
+      "landflaeche_km2": 148449272,
+      "schelf_0_200_km2": 25774482,
+      "rand_200_1400_km2": 21579613,
       "mittlere_landhoehe_m": 794,
       "hypsometrie_anteil": [
        0.00665,
-       0.37057,
-       0.21869,
-       0.0202,
-       0.04234,
-       0.05063,
-       0.08103,
-       0.13488,
-       0.04373,
-       0.02619,
+       0.37059,
+       0.2187,
+       0.02019,
+       0.04231,
+       0.05053,
+       0.08113,
+       0.1349,
+       0.04372,
+       0.0262,
        0.00509
       ]
      }

@@ -11,14 +11,15 @@ geschummert wird erst im Browser; so gibt es den Grau-Modus ohne zweiten Satz.
   Klasse 255      Eis (nur PaleoMIST): Eisdicke ab EIS_AB_M, Setzung
 
 Quellen: PALEOMAP-DEM (Scotese & Wright 2018), 1°, 540–0 Ma; PaleoMIST 1.0,
-0,25° auf 0,5° ausgewählt (jeder zweite Gitterpunkt), 80–0 ka; GEBCO_2026,
+0,25° auf 0,5° ausgewählt (jeder zweite Gitterpunkt), 80–0 ka; GEBCO (lokal
+~/ZeroEarth/rohdaten/gebco, Fassung 2025),
 15″ auf 0,1° gemittelt (24 × 24 Zellen), heute, mit Herkunft je Zelle aus dem
 Typ-Gitter (TID). PALEOMAP und PaleoMIST: Zeilen von Nord nach Süd, Spalten
 −180 bis 179 (die doppelte Spalte 180 entfällt), Gitterpunkte sind Zellmitten
 (gitter 'punkte'). GEBCO: Zellen, die das Rechteck lückenlos füllen (gitter 'zellen').
 
   python3 relief.py --paleomap <Ordner mit *_Ma.nc> --paleomist <reconstruction_0.25_degree.nc> \
-          [--gebco GEBCO_2026.nc --gebco-tid GEBCO_2026_TID.nc] [--ziel ../../data]
+          [--gebco GEBCO_2025.nc --gebco-tid GEBCO_2025_TID.nc] [--ziel ../../data]
 """
 import argparse, datetime, glob, json, os, re
 import numpy as np
@@ -66,8 +67,8 @@ def groessen(z, flaeche, eis=None):
     return g
 
 
-# TID-Codes (GEBCO-Dokumentation; im Typ-Gitter als flag_values/flag_meanings, wo vorhanden)
-TID_ART = {   # GEBCO-Dokumentation 2026, Abschnitt 3.0, Tabelle 2
+# TID-Codes nach der GEBCO-Dokumentation (Tabelle 2); flag_values des Typ-Gitters stehen in relief.json
+TID_ART = {   # GEBCO-Dokumentation, Abschnitt 3.0, Tabelle 2
     0: ('land', 'beobachtung'),                                  # Land (SRTM15+, BedMachine u. a.)
     **{c: ('gemessen', 'beobachtung') for c in (10, 11, 12, 13, 14, 15, 16, 17, 47, 48)},
     40: ('aus_schwere_vorhergesagt', 'modell'), 45: ('aus_schwere_vorhergesagt', 'modell'),
@@ -78,7 +79,11 @@ TID_ART = {   # GEBCO-Dokumentation 2026, Abschnitt 3.0, Tabelle 2
 }
 
 
+GEBCO_DOI = {2025: '10.5285/37c52e96-24ea-67ce-e063-7086abc05f29', 2026: '10.5285/4f68d5c7-45eb-f999-e063-7086abc036fa'}
+
+
 def gebco(pfad, tid_pfad, ziel):
+    jahr = int(re.search(r'GEBCO_(\d{4})', os.path.basename(pfad)).group(1))
     B = 24
     d = Dataset(pfad)
     var = [v for v in d.variables if d.variables[v].ndim == 2][0]
@@ -111,18 +116,18 @@ def gebco(pfad, tid_pfad, ziel):
             e = anteile.setdefault(gruppe, {'anteil': 0.0, 'codes': [], 'art': art if art else
                 {'fehlt': True, 'grund': 'Das Typ-Gitter nennt keine Messart (vorgefertigtes Gitter, unbekannt oder Steuerpunkte)'}})
             e['anteil'] = round(e['anteil'] + f / gesamt, 5); e['codes'].append(code)
-    datei = 'relief/gebco/2026.png'
+    datei = f'relief/gebco/{jahr}.png'
     os.makedirs(os.path.join(ziel, 'relief', 'gebco'), exist_ok=True)
     png(klassen(z), os.path.join(ziel, datei))
     arten = ['beobachtung', 'modell', 'berechnet', 'kuratiert']   # gemessen; vorhergesagt/interpoliert (berechnet); aus Karten (kuratiert)
     return {
-        'name': 'GEBCO_2026 (GEBCO Compilation Group 2026)', 'einheit': 'a CE', 'bezugssystem': 'a_ce',
+        'name': f'GEBCO_{jahr} (GEBCO Compilation Group {jahr})', 'einheit': 'a CE', 'bezugssystem': 'a_ce',
         'aufloesung_grad': round(res, 4), 'breite': W, 'hoehe': H, 'gitter': 'zellen', 'arten': arten,
-        'lizenz': 'gemeinfrei (GEBCO-Nutzungsbedingungen); doi:10.5285/4f68d5c7-45eb-f999-e063-7086abc036fa',
+        'lizenz': f'gemeinfrei (GEBCO-Nutzungsbedingungen); doi:{GEBCO_DOI.get(jahr, "nicht hinterlegt")}',
         'bezugsrahmen': 'heutige Koordinaten', 'eis': {'fehlt': True, 'grund': 'GEBCO zeigt die Eisoberfläche als Höhe, ohne Eisdicke'},
         'zeit_unschaerfe': {'fehlt': True, 'grund': 'Zusammenstellung aus Messungen verschiedener Jahre; GEBCO nennt keine Bezugszeit je Zelle'},
         'herkunft_anteile': anteile, 'tid': bedeutung,
-        'schritte': [{'jahr': 2026, 'datei': datei, 'groessen': groessen(z, fl)}],
+        'schritte': [{'jahr': jahr, 'datei': datei, 'groessen': groessen(z, fl)}],
         'reduktion': 'Mittel über 24 × 24 Zellen à 15″ (0,1°)'}
 
 
@@ -192,7 +197,7 @@ def main():
         'eis': {'ab_dicke_m': EIS_AB_M, 'aus': 'ice_thickness derselben Datei',
                 'begruendung': 'Gletscher und Eisschilde ab 100 m Dicke (Setzung); dünneres Eis erscheint als Höhe'}}
 
-    # GEBCO_2026, 15″ -> 0,1° (Mittel über 24 × 24 Zellen), heute; Herkunft je Zelle aus dem TID
+    # GEBCO, 15″ -> 0,1° (Mittel über 24 × 24 Zellen), heute; Herkunft je Zelle aus dem TID
     gebco_fehlt = {'fehlt': True, 'grund': 'GEBCO für heute nicht geladen; heute bleibt das Grundbild Natural Earth'}
     if a.gebco:
         quellen['gebco'] = gebco(a.gebco, a.gebco_tid, a.ziel)

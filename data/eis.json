@@ -1,0 +1,436 @@
+{
+ "erzeugt": "2026-11-06T08:16:29+00:00",
+ "hinweis": "erzeugt von matrix-scharnier/adapter/eis.py",
+ "quelle": "PaleoMIST 1.0 (Gowan et al. 2021), ice_thickness; CC BY 4.0, doi:10.1594/PANGAEA.905800",
+ "arten": [
+  "rekonstruktion"
+ ],
+ "bezugssystem": "ka_bp_1950",
+ "zeit_unschaerfe": {
+  "fehlt": true,
+  "grund": "PaleoMIST nennt keine Unschärfe der Zeitachse; 2,5 ka sind die Auflösung"
+ },
+ "aufloesung_grad": 0.5,
+ "breite": 720,
+ "hoehe": 361,
+ "gitter": "punkte",
+ "klassen": {
+  "kein_eis": 0,
+  "von": 1,
+  "bis": 255,
+  "dicke_max_m": 5000.0,
+  "skala": "Wurzel"
+ },
+ "meereis": {
+  "fehlt": true,
+  "grund": "PaleoMIST führt nur aufliegendes Eis, kein Meereis"
+ },
+ "ideale": {
+  "referenz": {
+   "datei_quelle": "reconstruction_0.25_degree.nc",
+   "schritte": [
+    {
+     "ka": 0.0,
+     "datei": "eis/referenz/000.png",
+     "eisflaeche_km2": 15280650,
+     "eisvolumen_km3": 28586359
+    },
+    {
+     "ka": 2.5,
+     "datei": "eis/referenz/025.png",
+     "eisflaeche_km2": 15326602,
+     "eisvolumen_km3": 29342822
+    },
+    {
+     "ka": 5.0,
+     "datei": "eis/referenz/050.png",
+     "eisflaeche_km2": 16015279,
+     "eisvolumen_km3": 30548541
+    },
+    {
+     "ka": 7.5,
+     "datei": "eis/referenz/075.png",
+     "eisflaeche_km2": 17957800,
+     "eisvolumen_km3": 32137323
+    },
+    {
+     "ka": 10.0,
+     "datei": "eis/referenz/100.png",
+     "eisflaeche_km2": 23236545,
+     "eisvolumen_km3": 40176994
+    },
+    {
+     "ka": 12.5,
+     "datei": "eis/referenz/125.png",
+     "eisflaeche_km2": 28432751,
+     "eisvolumen_km3": 50495512
+    },
+    {
+     "ka": 15.0,
+     "datei": "eis/referenz/150.png",
+     "eisflaeche_km2": 33910362,
+     "eisvolumen_km3": 60714281
+    },
+    {
+     "ka": 17.5,
+     "datei": "eis/referenz/175.png",
+     "eisflaeche_km2": 39507656,
+     "eisvolumen_km3": 71041544
+    },
+    {
+     "ka": 20.0,
+     "datei": "eis/referenz/200.png",
+     "eisflaeche_km2": 41687993,
+     "eisvolumen_km3": 74421358
+    },
+    {
+     "ka": 22.5,
+     "datei": "eis/referenz/225.png",
+     "eisflaeche_km2": 40751636,
+     "eisvolumen_km3": 72565755
+    },
+    {
+     "ka": 25.0,
+     "datei": "eis/referenz/250.png",
+     "eisflaeche_km2": 38070371,
+     "eisvolumen_km3": 67085160
+    },
+    {
+     "ka": 27.5,
+     "datei": "eis/referenz/275.png",
+     "eisflaeche_km2": 34298821,
+     "eisvolumen_km3": 60315506
+    },
+    {
+     "ka": 30.0,
+     "datei": "eis/referenz/300.png",
+     "eisflaeche_km2": 29890529,
+     "eisvolumen_km3": 53042479
+    },
+    {
+     "ka": 32.5,
+     "datei": "eis/referenz/325.png",
+     "eisflaeche_km2": 27187164,
+     "eisvolumen_km3": 49223748
+    },
+    {
+     "ka": 35.0,
+     "datei": "eis/referenz/350.png",
+     "eisflaeche_km2": 25517666,
+     "eisvolumen_km3": 46153187
+    },
+    {
+     "ka": 37.5,
+     "datei": "eis/referenz/375.png",
+     "eisflaeche_km2": 24360261,
+     "eisvolumen_km3": 44178341
+    },
+    {
+     "ka": 40.0,
+     "datei": "eis/referenz/400.png",
+     "eisflaeche_km2": 22361911,
+     "eisvolumen_km3": 40160688
+    },
+    {
+     "ka": 42.5,
+     "datei": "eis/referenz/425.png",
+     "eisflaeche_km2": 21722132,
+     "eisvolumen_km3": 38932947
+    },
+    {
+     "ka": 45.0,
+     "datei": "eis/referenz/450.png",
+     "eisflaeche_km2": 24560257,
+     "eisvolumen_km3": 43833863
+    },
+    {
+     "ka": 47.5,
+     "datei": "eis/referenz/475.png",
+     "eisflaeche_km2": 24157351,
+     "eisvolumen_km3": 44939636
+    },
+    {
+     "ka": 50.0,
+     "datei": "eis/referenz/500.png",
+     "eisflaeche_km2": 23878480,
+     "eisvolumen_km3": 43236570
+    },
+    {
+     "ka": 52.5,
+     "datei": "eis/referenz/525.png",
+     "eisflaeche_km2": 26583956,
+     "eisvolumen_km3": 46904611
+    },
+    {
+     "ka": 55.0,
+     "datei": "eis/referenz/550.png",
+     "eisflaeche_km2": 29467538,
+     "eisvolumen_km3": 51025711
+    },
+    {
+     "ka": 57.5,
+     "datei": "eis/referenz/575.png",
+     "eisflaeche_km2": 31971240,
+     "eisvolumen_km3": 54965119
+    },
+    {
+     "ka": 60.0,
+     "datei": "eis/referenz/600.png",
+     "eisflaeche_km2": 33835413,
+     "eisvolumen_km3": 59767139
+    },
+    {
+     "ka": 62.5,
+     "datei": "eis/referenz/625.png",
+     "eisflaeche_km2": 31951648,
+     "eisvolumen_km3": 56381776
+    },
+    {
+     "ka": 65.0,
+     "datei": "eis/referenz/650.png",
+     "eisflaeche_km2": 28534079,
+     "eisvolumen_km3": 48833499
+    },
+    {
+     "ka": 67.5,
+     "datei": "eis/referenz/675.png",
+     "eisflaeche_km2": 25575579,
+     "eisvolumen_km3": 43830300
+    },
+    {
+     "ka": 70.0,
+     "datei": "eis/referenz/700.png",
+     "eisflaeche_km2": 23071499,
+     "eisvolumen_km3": 39429658
+    },
+    {
+     "ka": 72.5,
+     "datei": "eis/referenz/725.png",
+     "eisflaeche_km2": 20942495,
+     "eisvolumen_km3": 36463655
+    },
+    {
+     "ka": 75.0,
+     "datei": "eis/referenz/750.png",
+     "eisflaeche_km2": 19026163,
+     "eisvolumen_km3": 33812532
+    },
+    {
+     "ka": 77.5,
+     "datei": "eis/referenz/775.png",
+     "eisflaeche_km2": 17656669,
+     "eisvolumen_km3": 32138273
+    },
+    {
+     "ka": 80.0,
+     "datei": "eis/referenz/800.png",
+     "eisflaeche_km2": 17816115,
+     "eisvolumen_km3": 32563484
+    }
+   ]
+  },
+  "a1": {
+   "datei_quelle": "reconstruction_a1_0.25_degree.nc",
+   "schritte": [
+    {
+     "ka": 0.0,
+     "datei": "eis/a1/000.png",
+     "eisflaeche_km2": 15280650,
+     "eisvolumen_km3": 28586359
+    },
+    {
+     "ka": 2.5,
+     "datei": "eis/a1/025.png",
+     "eisflaeche_km2": 15327835,
+     "eisvolumen_km3": 29338580
+    },
+    {
+     "ka": 5.0,
+     "datei": "eis/a1/050.png",
+     "eisflaeche_km2": 16014794,
+     "eisvolumen_km3": 30555198
+    },
+    {
+     "ka": 7.5,
+     "datei": "eis/a1/075.png",
+     "eisflaeche_km2": 17959833,
+     "eisvolumen_km3": 32166153
+    },
+    {
+     "ka": 10.0,
+     "datei": "eis/a1/100.png",
+     "eisflaeche_km2": 23237267,
+     "eisvolumen_km3": 40183377
+    },
+    {
+     "ka": 12.5,
+     "datei": "eis/a1/125.png",
+     "eisflaeche_km2": 28431276,
+     "eisvolumen_km3": 50513462
+    },
+    {
+     "ka": 15.0,
+     "datei": "eis/a1/150.png",
+     "eisflaeche_km2": 33910362,
+     "eisvolumen_km3": 60774989
+    },
+    {
+     "ka": 17.5,
+     "datei": "eis/a1/175.png",
+     "eisflaeche_km2": 39508838,
+     "eisvolumen_km3": 71115543
+    },
+    {
+     "ka": 20.0,
+     "datei": "eis/a1/200.png",
+     "eisflaeche_km2": 41685885,
+     "eisvolumen_km3": 74572006
+    },
+    {
+     "ka": 22.5,
+     "datei": "eis/a1/225.png",
+     "eisflaeche_km2": 40753744,
+     "eisvolumen_km3": 72660499
+    },
+    {
+     "ka": 25.0,
+     "datei": "eis/a1/250.png",
+     "eisflaeche_km2": 38070397,
+     "eisvolumen_km3": 67221020
+    },
+    {
+     "ka": 27.5,
+     "datei": "eis/a1/275.png",
+     "eisflaeche_km2": 34299384,
+     "eisvolumen_km3": 60487375
+    },
+    {
+     "ka": 30.0,
+     "datei": "eis/a1/300.png",
+     "eisflaeche_km2": 29887552,
+     "eisvolumen_km3": 53196352
+    },
+    {
+     "ka": 32.5,
+     "datei": "eis/a1/325.png",
+     "eisflaeche_km2": 27187749,
+     "eisvolumen_km3": 49351714
+    },
+    {
+     "ka": 35.0,
+     "datei": "eis/a1/350.png",
+     "eisflaeche_km2": 25516678,
+     "eisvolumen_km3": 46210143
+    },
+    {
+     "ka": 37.5,
+     "datei": "eis/a1/375.png",
+     "eisflaeche_km2": 24889514,
+     "eisvolumen_km3": 46320875
+    },
+    {
+     "ka": 40.0,
+     "datei": "eis/a1/400.png",
+     "eisflaeche_km2": 24026146,
+     "eisvolumen_km3": 44141134
+    },
+    {
+     "ka": 42.5,
+     "datei": "eis/a1/425.png",
+     "eisflaeche_km2": 23814222,
+     "eisvolumen_km3": 43276335
+    },
+    {
+     "ka": 45.0,
+     "datei": "eis/a1/450.png",
+     "eisflaeche_km2": 25509224,
+     "eisvolumen_km3": 47330343
+    },
+    {
+     "ka": 47.5,
+     "datei": "eis/a1/475.png",
+     "eisflaeche_km2": 24631530,
+     "eisvolumen_km3": 46526753
+    },
+    {
+     "ka": 50.0,
+     "datei": "eis/a1/500.png",
+     "eisflaeche_km2": 24323310,
+     "eisvolumen_km3": 44472630
+    },
+    {
+     "ka": 52.5,
+     "datei": "eis/a1/525.png",
+     "eisflaeche_km2": 26817328,
+     "eisvolumen_km3": 47726454
+    },
+    {
+     "ka": 55.0,
+     "datei": "eis/a1/550.png",
+     "eisflaeche_km2": 29569794,
+     "eisvolumen_km3": 51449270
+    },
+    {
+     "ka": 57.5,
+     "datei": "eis/a1/575.png",
+     "eisflaeche_km2": 31970388,
+     "eisvolumen_km3": 54948643
+    },
+    {
+     "ka": 60.0,
+     "datei": "eis/a1/600.png",
+     "eisflaeche_km2": 33833761,
+     "eisvolumen_km3": 59735493
+    },
+    {
+     "ka": 62.5,
+     "datei": "eis/a1/625.png",
+     "eisflaeche_km2": 31951648,
+     "eisvolumen_km3": 56362828
+    },
+    {
+     "ka": 65.0,
+     "datei": "eis/a1/650.png",
+     "eisflaeche_km2": 28536387,
+     "eisvolumen_km3": 48820752
+    },
+    {
+     "ka": 67.5,
+     "datei": "eis/a1/675.png",
+     "eisflaeche_km2": 25574952,
+     "eisvolumen_km3": 43827301
+    },
+    {
+     "ka": 70.0,
+     "datei": "eis/a1/700.png",
+     "eisflaeche_km2": 23071069,
+     "eisvolumen_km3": 39425848
+    },
+    {
+     "ka": 72.5,
+     "datei": "eis/a1/725.png",
+     "eisflaeche_km2": 20945224,
+     "eisvolumen_km3": 36447464
+    },
+    {
+     "ka": 75.0,
+     "datei": "eis/a1/750.png",
+     "eisflaeche_km2": 19028385,
+     "eisvolumen_km3": 33806918
+    },
+    {
+     "ka": 77.5,
+     "datei": "eis/a1/775.png",
+     "eisflaeche_km2": 17657529,
+     "eisvolumen_km3": 32114260
+    },
+    {
+     "ka": 80.0,
+     "datei": "eis/a1/800.png",
+     "eisflaeche_km2": 17817880,
+     "eisvolumen_km3": 32535717
+    }
+   ]
+  }
+ }
+}

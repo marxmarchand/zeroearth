@@ -14,7 +14,11 @@ test('data/takte.json ist eine Kopie von kern/takte.json (die Seite liest data/)
 });
 
 test('Zeilen von außen nach innen: Umlauf, Ma, Milanković, ka, Jahr', () => {
-  assert.deepEqual(T.takte.map((/** @type {any} */ t) => t.id), ['galaktisch', 'ma', 'milankovic', 'ka', 'jahr']);
+  assert.deepEqual(T.takte.map((/** @type {any} */ t) => t.id), ['galaktisch', 'ma', 'milankovic', 'schiefe', 'praezession', 'ka', 'jahr']);
+  for (const id of ['schiefe', 'praezession']) {
+    const t = T.takte.find((/** @type {any} */ x) => x.id === id);
+    assert.equal(t.neben, 'milankovic'); assert.match(t.quelle, /Hays/); assert.ok(t.phase.fehlt);
+  }
   assert.equal(T.takte[0].periode.wert, 230);
   assert.equal(T.takte[0].setzung, true);
 });

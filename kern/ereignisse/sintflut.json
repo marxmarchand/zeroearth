@@ -74,11 +74,12 @@
         "sintflut/relation/eis-ozean/a1",
         "sintflut/ideale/vergleich"
       ],
-      "begruendung": "Bilanz Eis → Ozean geprüft, aber nur als innere Stimmigkeit (beide Seiten aus PaleoMIST). Die Prüfung gegen unabhängige Beobachtung (Spratt & Lisiecki 2016) ist erkundet, nicht eingebunden. Die Einstrahlung als Antrieb fehlt (Station 0). Eisflächen sind in der Tour nicht zu sehen: Das Raster liegt nicht im Repo.",
+      "begruendung": "Bilanz Eis → Ozean geprüft, aber nur als innere Stimmigkeit (beide Seiten aus PaleoMIST). Die Prüfung gegen unabhängige Beobachtung (Spratt & Lisiecki 2016) ist erkundet, nicht eingebunden. Die Einstrahlung als Antrieb fehlt (Station 0). Die Eisdicke ist als Feld-Ebene zu sehen (PaleoMIST, Referenz gefüllt, a1 als Rand).",
       "zeigt": {
         "ansicht": "globus",
         "ebenen": [
-          "sintflut"
+          "sintflut",
+          "eis"
         ],
         "orte": "alle"
       }

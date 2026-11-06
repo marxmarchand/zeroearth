@@ -310,6 +310,9 @@
     .tk-punkt.an{background:#fff;}
     .tk-jetzt{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--accent);pointer-events:none;}
     .tk-uhr{display:flex;gap:2px;}
+    .tk-neben .tk-bahn{height:12px;}
+    .tk-neben{height:16px;}
+    .tk-neben .tk-name{font-size:8.5px;}
     .tk-weiter{font:8.5px var(--mono);color:var(--muted);cursor:pointer;white-space:nowrap;}
     .tk-weiter:hover{color:var(--text);}
     .tk-stand{font:8.5px var(--mono);color:#8d97a8;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -602,6 +605,8 @@
       <div class="sub-head" data-sub="erdsystem"></div>
       <div class="ob ov-side on" id="tb-relief" onclick="ze.toggle('relief')"><div class="obd"></div>Relief (Grundbild: PALEOMAP-DEM, PaleoMIST, GEBCO) <span class="hz" data-hz="relief"></span></div>
       <div class="ov-status" id="relief-status"></div>
+      <div class="ob ov-side" id="tb-eis" onclick="ze.toggle('eis')"><div class="obd"></div>Eisdicke (PaleoMIST, 80–0 ka) <span class="hz" data-hz="eis"></span></div>
+      <div class="ov-status" id="eis-status"></div>
       <div class="ob ov-side" id="tb-sintflut" onclick="ze.toggle('sintflut')"><div class="obd"></div>Sintflut: Küsten, Kästen <span class="hz" data-hz="sintflut"></span></div>
       <div class="ov-status" id="sintflut-status"></div>
       <div class="ob ov-side" id="tb-tektonik" onclick="ze.toggle('tektonik')"><div class="obd"></div>Tektonik: Kontinente (Plattenmodelle) <span class="hz" data-hz="tektonik"></span></div>
@@ -2230,6 +2235,9 @@ const LEGENDE = {
                  get z() { return ze.tektonikLayer?.zeit() ?? 'keine Linie'; },
                  get farben() { return ze.tektonikLayer?.farben() ?? []; },
                  warn: 'Form heutig, nur die Lage ist rekonstruiert. Im paläomagnetischen Bezug ist die Länge eine Konvention des Modells, keine Messung.' },
+  eis:         { h: 'PaleoMIST 1.0 (Gowan et al. 2021), ice_thickness, 0,5°, Referenz und a1 (rekonstruktion; CC BY 4.0)',
+                 get z() { const s = ze.eisLayer?.stand; return s ? `${takt.zahl(s.ka, 1)} ka BP (1950); Unschärfe fehlt` : 'außerhalb 80–0 ka: fehlt'; },
+                 get farben() { return ze.eisLayer?.farben() ?? []; }, m: 55e3 },
   palaeokueste:{ h: 'PALEOMAP-DEM (Scotese & Wright 2018) -> 0-m-Linie, 1° (rekonstruktion, kuratiert, berechnet; CC BY 4.0); nicht die PALEOMAP-Rotation',
                  get z() { return ze.palaeokuesteLayer?.zeit() ?? 'keine Linie'; }, m: 111e3,
                  get farben() { return ze.palaeokuesteLayer?.farben() ?? []; },
@@ -2313,7 +2321,7 @@ const FEIN_M_PRO_PX = 250;
 class DM {
   constructor(v) {
     this.v=v; this.curDim=null; this.curSL=null;
-    this._ent={}; this._ovState={moon:false,magfield:false,tidal:false,solarwind:false,sats:false,ueberbau:false,riss:false,bestaende:false,basis:false,ware:false,erste_natur:false,pm:false,wind:false,stroeme:false,unterbau:false,seismik:false,platten:false,grenzen:false,kataster:false,gewaesser:false,sprachen:false,sintflut:false,tektonik:false,palaeokueste:false,relief:true};
+    this._ent={}; this._ovState={moon:false,magfield:false,tidal:false,solarwind:false,sats:false,ueberbau:false,riss:false,bestaende:false,basis:false,ware:false,erste_natur:false,pm:false,wind:false,stroeme:false,unterbau:false,seismik:false,platten:false,grenzen:false,kataster:false,gewaesser:false,sprachen:false,sintflut:false,tektonik:false,palaeokueste:false,relief:true,eis:false};
   }
 
   async flyTo(cam, instant=false) {
@@ -2388,6 +2396,7 @@ class DM {
     if(name==='gezeiten') { on ? ze.gezeitenLayer.show() : ze.gezeitenLayer.hide(); }
     if(name==='sprachen') { on ? ze.sprachenLayer.show() : ze.sprachenLayer.hide(); }
     if(name==='sintflut') { on ? ze.sintflutLayer.show() : ze.sintflutLayer.hide(); }
+    if(name==='eis')      { on ? ze.eisLayer.show() : ze.eisLayer.hide(); }
     if(name==='relief')   { on ? ze.reliefLayer.show() : ze.reliefLayer.hide(); }
     if(name==='tektonik') { on ? ze.tektonikLayer.show() : ze.tektonikLayer.hide(); }
     if(name==='palaeokueste') { on ? ze.palaeokuesteLayer.show() : ze.palaeokuesteLayer.hide(); }
@@ -4122,6 +4131,7 @@ class ZeroEarth {
     this.sprachenLayer = new SprachenLayer(this.cesiumV);
     this.sintflutLayer = new SintflutLayer(this.cesiumV);
     this.reliefLayer = new ReliefLayer(this.cesiumV);
+    this.eisLayer = new EisLayer(this.cesiumV);
     this.tektonikLayer = new TektonikLayer(this.cesiumV, 'umrisse');
     this.palaeokuesteLayer = new TektonikLayer(this.cesiumV, 'palaeokueste');
     this.tour = new TourMotor(this);
@@ -4189,10 +4199,12 @@ class ZeroEarth {
       this.seismikLayer.update(Tideline.t);
       this.sintflutLayer.update(Tideline.t);
       this.reliefLayer.update(Tideline.t);
+      this.eisLayer.update(Tideline.t);
       this._grundbildTiefe();
       this.tektonikLayer.update(Tideline.t);
       this.palaeokuesteLayer.update(Tideline.t);
       this.leiste?.zeichne();
+      this.tour?.zeitGeaendert(Tideline.t);
       this._renderMoonPanel();
       if (this.gewaesserLayer.on) this.gewaesserLayer.update();
       this._renderMiniNull();
@@ -5783,7 +5795,8 @@ class TektonikLayer {
       }
     }
     const st = document.getElementById(this.statusId);
-    if (st) st.innerHTML = this.stand.map(x => x.ma === null
+    const wegenRelief = this.art === 'umrisse' && !this.nutzerWahl && ze.reliefLayer?.zeigt === 'paleomap';
+    if (st) st.innerHTML = (wegenRelief ? '<span class="ds-ok">Lage nach PALEOMAP, weil Relief aus PALEOMAP</span><br>' : '') + this.stand.map(x => x.ma === null
       ? `<span class="ds-err">${tourEsc(this.art === 'umrisse' ? d.modelle[x.k].name : 'PALEOMAP-DEM')}: ${this.art === 'umrisse' ? `kein Schritt bei ${takt.zahl(ma, 1)} Ma` : 'fehlt, die Paläo-DEMs reichen nur 540–0 Ma'}</span>`
       : `<span style="color:${this.art === 'umrisse' ? TEKTONIK_FARBE[x.k] : PALAEOKUESTE_FARBE}">■</span> ${tourEsc(x.name)}: ${takt.zahl(x.ma, 1)} Ma`
         + (x.luecken?.anzahl ? ` · <span class="ds-err">${x.luecken.anzahl} Lücken im Modell (schraffiert), kein Meer</span>` : '')).join('<br>');
@@ -5813,6 +5826,8 @@ class TektonikLayer {
           + (ze.reliefLayer?.zeigt === 'paleomap' && x.k !== 'paleomap' ? ' · anderer Bezugsrahmen als das Relief, Deckung schlechter (kern/BERICHT-relief.md)' : ''), linie: true }]
       : [{ farbe: TEKTONIK_FLAECHE, text: `sandfarbene Fläche: Kontinentpolygone ${this.daten.modelle[x.k].name}, ${takt.zahl(x.ma, 1)} Ma` },
          ...(x.luecken?.anzahl ? [{ farbe: 'repeating-linear-gradient(45deg,#cdcdd2 0 2px,#78787f 2px 6px)', text: `schraffiert: Lücke im Modell, kein Meer (${x.luecken.anzahl} Gebiete ohne Polygon, ganz von Polygonen umschlossen)` }] : [])]);
+    if (!this.nutzerWahl && ze.reliefLayer?.zeigt === 'paleomap' && this.aktiv.has('paleomap'))
+      aus.unshift({ farbe: 'transparent', text: 'Lage nach PALEOMAP, weil Relief aus PALEOMAP (ein Bezugsrahmen; Merdith und Müller zuschaltbar)' });
     aus.push({ farbe: '#39414d', text: 'grau (Tiefenzeit): kein Kontinentpolygon; das Modell sagt dort nichts über Land oder Meer' });
     if (this.kuesten && an.length) aus.push({ farbe: '#e9eef5', text: 'dünne weiße Linie: Küstenpolygone in heutiger Form, gedreht', linie: true });
     return aus;
@@ -5875,7 +5890,8 @@ class ReliefLayer {
     for (const [k, name] of [['iceLayer', 'Eisdicke'], ['tempLayer', 'Temperatur'], ['paleoTempLayer', 'Paläotemperatur'], ['klimaLayer', 'Klimazonen']]) {
       const l = ze[k]; if (l?.layer || l?.imagery?.layer) an.push(name);
     }
-    if (ze.dm?._ovState?.wind && DataStore.stacks?.gfs_u10) an.push('Wind');   // nur, wenn Winddaten wirklich liegen
+    if (ze.dm?._ovState?.wind && DataStore.stacks?.gfs_u10) an.push('Wind');
+    if (ze.eisLayer?.layer) an.push('Eisdicke');   // nur, wenn Winddaten wirklich liegen
     return an;
   }
   async _klassen(datei) {
@@ -5999,6 +6015,90 @@ class ReliefLayer {
 }
 
 /* ─────────────────────────────────────────────────────────────────
+   EISDICKE — erste Feld-Ebene (data/eis.json, data/eis/*). PaleoMIST,
+   aufliegendes Eis, 80–0 ka, 0,5°. Beide Ideale (Regel 13): das gewählte
+   gefüllt (hell dünn bis dunkelblau dick), das andere als Rand seiner Eisfläche.
+   Ist die Ebene an, wird das Relief grau. Meereis fehlt in der Quelle.
+   ───────────────────────────────────────────────────────────────── */
+const EIS_FARBEN = [[0, [225, 238, 252]], [0.35, [150, 196, 238]], [0.7, [70, 128, 200]], [1, [24, 66, 140]]];
+class EisLayer {
+  constructor(v) { this.v = v; this.on = false; this.daten = null; this.ideal = 'referenz'; this.bilder = new Map(); this._schluessel = undefined; }
+  async laden() { if (!this.daten) this.daten = await fetch('data/eis.json').then(r => r.json()); return this.daten; }
+  async show() { this.on = true; await this.laden(); if (!this.on) return; this._schluessel = undefined; this.update(Tideline.t); }
+  hide() { this.on = false; this._schluessel = undefined; this._leeren(); this._status(''); ze.reliefLayer?.update(Tideline.t); }
+  _leeren() { for (const k of ['layer', 'rand']) if (this[k]) { this.v.imageryLayers.remove(this[k], false); this[k] = null; } }
+  _status(h) { const st = document.getElementById('eis-status'); if (st) st.innerHTML = h; }
+  waehle(k) { this.ideal = k; this._schluessel = undefined; this.update(Tideline.t); }
+  get anderes() { return this.ideal === 'referenz' ? 'a1' : 'referenz'; }
+  schritt(t = Tideline.t) {
+    const ka = takt.ka(t), s = this.daten?.ideale.referenz.schritte ?? [];
+    const i = s.findIndex(e => Math.abs(e.ka - ka) <= 1.25);
+    return i < 0 ? null : i;
+  }
+  static bild(kl, farbig) {
+    const { W, H, k } = kl;
+    const src = document.createElement('canvas'); src.width = W; src.height = H;
+    const x = src.getContext('2d'), img = x.createImageData(W, H), d = img.data;
+    for (let i = 0; i < W * H; i++) {
+      const c = k[i]; if (!c) continue;
+      const innen = r => k[r] > 0;
+      if (farbig) {
+        const f = reliefVerlauf(EIS_FARBEN, (c - 1) / 254);
+        d[i * 4] = f[0]; d[i * 4 + 1] = f[1]; d[i * 4 + 2] = f[2]; d[i * 4 + 3] = 225;
+      } else {
+        const r = (i / W) | 0, s = i % W;
+        const rand = !innen(r * W + (s + 1) % W) || !innen(r * W + (s + W - 1) % W) || (r > 0 && !innen(i - W)) || (r < H - 1 && !innen(i + W));
+        if (rand) { d[i * 4] = 255; d[i * 4 + 1] = 214; d[i * 4 + 2] = 90; d[i * 4 + 3] = 255; }
+      }
+    }
+    x.putImageData(img, 0, 0);
+    const c = document.createElement('canvas'); c.width = 2 * W; c.height = 2 * (H - 1);
+    const y = c.getContext('2d'); y.imageSmoothingEnabled = false;
+    for (const off of [-1, 2 * W - 1]) y.drawImage(src, 0, 0, W, H, off, -1, 2 * W, 2 * H);
+    return c.toDataURL();
+  }
+  async update(t) {
+    if (!this.on || !this.daten) return;
+    const i = this.schritt(t), schluessel = `${i}:${this.ideal}`;
+    if (schluessel === this._schluessel) return;
+    this._schluessel = schluessel;
+    if (i === null) {
+      this._leeren(); this.stand = null;
+      this._status('<span class="ds-err">Eisdicke fehlt: PaleoMIST reicht nur 80–0 ka</span>');
+      ze.reliefLayer?.update(Tideline.t); ze.zeichneLegende?.(); return;
+    }
+    const lade = k => ze.reliefLayer._klassen.call(this, k);
+    const e = this.daten.ideale[this.ideal].schritte[i], e2 = this.daten.ideale[this.anderes].schritte[i];
+    const [kl, kl2] = await Promise.all([lade(e.datei), lade(e2.datei)]);
+    if (schluessel !== this._schluessel || !this.on) return;
+    this._leeren();
+    const rechteck = { rectangle: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90), tileWidth: 2 * kl.W, tileHeight: 2 * (kl.H - 1) };
+    this.layer = this.v.imageryLayers.addImageryProvider(new Cesium.SingleTileImageryProvider({ url: EisLayer.bild(kl, true), ...rechteck }));
+    this.rand = this.v.imageryLayers.addImageryProvider(new Cesium.SingleTileImageryProvider({ url: EisLayer.bild(kl2, false), ...rechteck }));
+    this.stand = { ka: e.ka, ideal: this.ideal, volumen: e.eisvolumen_km3, volumen2: e2.eisvolumen_km3 };
+    const n = k => k === 'referenz' ? 'Referenz' : 'a1';
+    this._status(`<span class="ds-ok">PaleoMIST ${n(this.ideal)}: ${takt.zahl(e.ka, 1)} ka · ${takt.zahl(e.eisvolumen_km3 / 1e6, 1)} Mio km³</span>`
+      + ` · <a href="#" onclick="event.preventDefault();ze.eisLayer.waehle('${this.anderes}')">${n(this.anderes)} füllen</a>`);
+    ze.reliefLayer?.update(Tideline.t); ze.zeichneLegende?.(); ze.leiste?.zeichne();
+  }
+  stuetzstellen() {
+    if (!this.daten) return [];
+    const i = this.schritt(), s = this.daten.ideale.referenz.schritte;
+    return [{ name: 'Eisdicke (PaleoMIST)', einheit: 'ka', farbe: '#96c4ee', werte: s.map(e => e.ka), abdeckung: { von: 80, bis: 0 },
+      gewaehlt: i === null ? null : s[i].ka, unschaerfe_fehlt: true, zuT: takt.tKa }];
+  }
+  farben() {
+    if (!this.stand) return [];
+    const n = k => k === 'referenz' ? 'Referenz' : 'a1 (alternative Eisgeschichte)';
+    return [
+      { farbe: 'linear-gradient(90deg,rgb(225,238,252),rgb(24,66,140))', text: `Fläche: Eisdicke ${n(this.stand.ideal)}, hell dünn bis dunkel dick (0 bis 5 000 m), ${takt.zahl(this.stand.volumen / 1e6, 1)} Mio km³` },
+      { farbe: 'rgb(255,214,90)', text: `gelber Rand: Eisfläche ${n(this.stand.ideal === 'referenz' ? 'a1' : 'referenz')}, ${takt.zahl(this.stand.volumen2 / 1e6, 1)} Mio km³ (zweites Ideal, Regel 13)`, linie: true },
+      { farbe: 'transparent', text: 'Meereis fehlt: PaleoMIST führt nur aufliegendes Eis' },
+    ];
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
    HERKUNFTSZEICHEN DER EBENEN (linke Spalte). Zeichensystem, Kanal Füllung:
    ● beobachtet · ◐ rekonstruiert · ○ Modell/Ideal · ⏵ Erwartung · ✱ Fiktion ·
    ▨ kuratiert · ■ grau fehlt. Geprüft gegen die tatsächlichen Daten: Liegt die
@@ -6024,6 +6124,7 @@ const EBENEN_HERKUNFT = {
   sintflut:    { arten: ['rekonstruktion', 'berechnet'], datei: 'data/sintflut_kuesten.json' },
   tektonik:    { arten: ['rekonstruktion', 'berechnet'], datei: 'data/tektonik_umrisse.json', text: 'Standard Merdith 2021; Müller 2022 zuschaltbar ist Modell (○)' },
   palaeokueste:{ arten: ['rekonstruktion', 'kuratiert', 'berechnet'], datei: 'data/tektonik_palaeokuesten.json' },
+  eis:         { arten: ['rekonstruktion'], datei: 'data/eis.json', text: 'PaleoMIST, Referenz und a1' },
   relief:      { arten: ['rekonstruktion', 'kuratiert', 'beobachtung', 'modell', 'berechnet'], datei: 'data/relief.json', text: 'PALEOMAP-DEM (rekonstruktion, kuratiert), PaleoMIST (rekonstruktion), GEBCO (beobachtung, modell, berechnet, kuratiert); angezeigt das Unsicherste (Regel 6)' },
   nachtlicht:  { arten: ['beobachtung'], text: 'NASA GIBS, live' },
   satbild:     { arten: ['beobachtung'], text: 'NASA GIBS, live' },
@@ -6110,6 +6211,14 @@ class TaktLeiste {
     ].slice(0, f.tiefe + 1);
   }
 
+  /** Neben-Zeilen eines Takts (Schiefe 41 ka, Präzession 21 ka): gleicher Bereich wie die Haupt-Zeile.
+      Sie zeigen ein Raster der Periode ab heute, keine Zyklen: Die Phase fehlt. */
+  nebenZeilen(z) {
+    return (this.takte?.takte ?? []).filter(x => x.neben === z.id).map((x, j) => ({
+      ...z, stufe: z.stufe, neben: true, id: x.id, periode: x.periode.wert,
+      name: `${x.name} (${x.periode.wert} ka${x.spannweite?.min ? `, ${x.spannweite.min}–${x.spannweite.max} ka` : ''}), Raster ab heute, Phase fehlt`,
+      quelle: x.quelle }));
+  }
   /** Fokus aus t: die innerste Zeile, deren Bereich t enthält. */
   folge(t, { tiefe } = {}) {
     const ma = Math.max(0, takt.ma(t)), ka = Math.max(0, takt.ka(t)), ce = takt.ce(t);
@@ -6154,13 +6263,14 @@ class TaktLeiste {
 
   /** Stützstellen und Abdeckung der eingeschalteten Ebenen. */
   quellen() {
-    return [this.ze.reliefLayer, this.ze.sintflutLayer, this.ze.tektonikLayer, this.ze.palaeokuesteLayer]
+    return [this.ze.reliefLayer, this.ze.eisLayer, this.ze.sintflutLayer, this.ze.tektonikLayer, this.ze.palaeokuesteLayer]
       .filter(l => l?.on && l.stuetzstellen).flatMap(l => l.stuetzstellen());
   }
 
   zeichne() {
     if (!this.el) return;
-    const zs = this.zeilen(), sichtbar = zs.slice(-2), q = this.quellen(), t = Tideline.t;
+    const zs = this.zeilen(), q = this.quellen(), t = Tideline.t;
+    const sichtbar = zs.slice(-2).flatMap(z => z.stufe === 2 ? [z, ...this.nebenZeilen(z)] : [z]);
     const esc = tourEsc;
     const krumen = zs.map(z => `<span class="tk-krume${z.stufe === this.fokus.tiefe ? ' an' : ''}" onclick="ze.leiste.oeffne(${z.stufe})">${esc(z.name)}</span>`).join('<span class="tk-pfeil">›</span>');
     const gewaehlt = q.filter(s => s.gewaehlt !== null && s.gewaehlt !== undefined);
@@ -6174,9 +6284,9 @@ class TaktLeiste {
       const pct = v => `${(Math.max(0, Math.min(1, v)) * 100).toFixed(3)}%`;
       let inner = '';
       // Takt-Umläufe bzw. Zählstriche
-      const striche = { 0: this.periode, 1: 10, 2: 100, 3: 10, 4: 10 }[z.stufe];
+      const striche = z.neben ? z.periode : { 0: this.periode, 1: 10, 2: 100, 3: 10, 4: 10 }[z.stufe];
       for (let w = Math.ceil(Math.min(z.alt, z.jung) / striche) * striche; w <= Math.max(z.alt, z.jung) + 1e-9; w += striche) {
-        const lang = z.stufe === 1 ? w % 50 === 0 : z.stufe === 4 ? w % 50 === 0 : true;
+        const lang = z.neben ? false : z.stufe === 1 ? w % 50 === 0 : z.stufe === 4 ? w % 50 === 0 : true;
         inner += `<div class="tk-strich${lang ? ' lang' : ''}" style="left:${pct(x(w))}"></div>`;
         if (lang && x(w) > 0.02 && x(w) < 0.98) inner += `<div class="tk-zahl" style="left:${pct(x(w))}">${takt.zahl(z.stufe === 0 ? w / 1000 : w, 1)}${z.stufe === 0 ? ' Ga' : ''}</div>`;
       }
@@ -6210,8 +6320,8 @@ class TaktLeiste {
           `<span class="tk-weiter" onclick="ze.leiste.oeffne(${z.stufe + 1})" title="nächste Zeile öffnen">${tourEsc(['Umlauf', 'Milanković', 'ka', 'Kalender'][z.stufe])} ›</span>`)
         : '';
       const uhr = z.stufe === 4 ? `<div class="tk-uhr">${['echtzeit', 'raffer', 'stop'].map(m => `<span class="scb tlck${Tideline.rate === Tideline.RATES[m] ? ' on' : ''}" onclick="ze.simSpeed('${m}');ze.leiste.zeichne()" title="${m}">${{ echtzeit: '▶', raffer: '▶▶', stop: '■' }[m]}</span>`).join('')}</div>` : '';
-      return `<div class="tk-zeile"><div class="tk-name">${esc(z.name)}<small>${esc(z.mass)}${z.stufe === 2 ? ' · 41 und 21 ka nicht eingezeichnet' : ''}</small></div>` +
-        `<div class="tk-bahn" onclick="ze.leiste.klickEvent(event, ${z.stufe})">${takte}${inner}</div>${weiter}${uhr}</div>`;
+      return `<div class="tk-zeile${z.neben ? ' tk-neben' : ''}"><div class="tk-name" title="${esc(z.quelle ?? '')}">${esc(z.name)}<small>${esc(z.mass)}${z.stufe === 2 && !z.neben ? ' · Zählraster ab heute, Phase fehlt' : ''}${z.neben ? ` · Quelle: ${esc(z.quelle)}` : ''}</small></div>` +
+        `<div class="tk-bahn" onclick="ze.leiste.klickEvent(event, ${z.stufe})">${takte}${inner}</div>${z.neben ? '' : weiter}${uhr}</div>`;
     };
     const html = `<div class="tk-kopf"><div class="tk-krumen">${krumen}</div><div class="tk-wert">${esc(takt.text(t))}</div></div>` +
       sichtbar.map(zeile).join('') +
@@ -6380,6 +6490,19 @@ class TourMotor {
   }
   flieheOrt(verweis) { const b = this._boxen(() => [verweis])[0]; if (b) this.fliege(b); }
 
+  /** Die Zeit wurde anderswo gesetzt (Takt-Leiste): Regler und Tabelle der Station folgen,
+      wenn die Zeit auf einen Schritt der Quelle fällt. */
+  zeitGeaendert(t) {
+    if (!this.ev) return;
+    const s = this.seiten?.[this.i]?.st;
+    if (!s?.zeigt?.ebenen?.includes('sintflut')) return;
+    const schritte = this.ze.sintflutLayer?.schritte ?? [], ka = takt.ka(t);
+    const i = schritte.findIndex(x => Math.abs(x - ka) <= 1.25);
+    if (i < 0 || schritte[i] === this.ka) return;
+    this.ka = schritte[i];
+    const r = document.querySelector('.tour-regler input'); if (r) r.value = i;
+    this._werte();
+  }
   /** Zeitschritt in einer Station mit Ebene: nur die Schritte der Quelle, nichts dazwischen. */
   setzeSchritt(i) {
     const s = this.ze.sintflutLayer.schritte[+i];
@@ -6544,7 +6667,7 @@ class TourMotor {
         <input type="range" min="0" max="${schritte.length - 1}" step="1" value="${Math.max(0, schritte.indexOf(this.ka))}" oninput="ze.tour.setzeSchritt(this.value)">
         <small>Nur die Schritte der Quelle, nichts dazwischen. Unschärfe fehlt; ${tourKa(ev.zeitfenster.aufloesung)} ka ist die Auflösung, nur eine Untergrenze.</small></div>` : ''}
       <div id="tour-werte">${this._werteHtml(st)}</div>
-      ${regler ? `<p class="tour-leise">Küste: ${tourEsc(lage.daten.woher.grenzen[0])}. Der Kasten ist eine Setzung (Regel 7); das Grundbild ist heutig.</p>` : ''}
+      ${regler ? `<p class="tour-leise">Küste: ${tourEsc(lage.daten.woher.grenzen[0])}. Der Kasten ist eine Setzung (Regel 7); das Grundbild zeigt das Relief der Quelle zum Zeitschritt (siehe Legende).</p>` : ''}
       ${this._daten(st)}`;
   }
 

@@ -884,6 +884,7 @@ export function pruefeTakte(T) {
       if (!('spannweite' in t)) F(ort, 'ohne Spannweite; nennt die Quelle keine, heißt das {fehlt, grund}');
       else if (istFehlend(t.spannweite)) { if (!istText(t.spannweite.grund)) fehler.push({ regel: 8, ort, text: 'Spannweite fehlend ohne Grund' }); }
       else if (!(istZahl(t.spannweite?.min) && istZahl(t.spannweite?.max))) F(ort, 'Spannweite braucht min und max');
+      if (t.neben !== undefined && !T.takte.some((/** @type {any} */ x) => x.id === t.neben)) F(ort, `Neben-Zeile zu unbekanntem Takt: ${t.neben}`);
     } else if (t?.art === 'richtung') {
       if (!EINHEITEN.includes(t.einheit)) F(ort, 'Zählung braucht eine Einheit');
       if ('periode' in t) F(ort, 'Zählung ohne Takt hat keine Periode');

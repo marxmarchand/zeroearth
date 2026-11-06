@@ -80,3 +80,26 @@ Mehrere Zeilen übereinander. Jede Zeile ist ein Takt mit eigenem Maß:
 ![Umlauf 2 geöffnet, Ma-Zeile mit Tektonik und Paläoküsten](bericht-taktleiste/leiste-ma.jpg)
 ![ka-Zeile mit Sintflut-Schritten](bericht-taktleiste/leiste-ka.jpg)
 ![Sintflut-Tour, Station 1.1](bericht-taktleiste/leiste-tour.jpg)
+
+## Nachtrag 2026-11-06: 41- und 21-ka-Zeilen, Kalenderzeile (Plan)
+
+**Gebaut: Schiefe (41 ka) und Präzession (21 ka, 19–23 ka)** als Neben-Zeilen des Milanković-Zyklus. Sie erscheinen mit ihm und decken denselben Bereich ab.
+- **Quelle:** Hays, Imbrie & Shackleton 1976, Science 194, 1121–1132.
+- **Was sie zeigen:** Die Zeilen zeigen nur ein Raster der Periode ab heute, keine Zyklen. Die Phase fehlt, weil keine Bahnlösung eingebunden ist (Berger & Loutre 1991 ist vorgemerkt).
+- **Nachgezogen:** Dasselbe gilt für die 100-ka-Zeile; sie heißt jetzt ausdrücklich „Zählraster ab heute, Phase fehlt“.
+- **Kern:** In `kern/takte.json` tragen beide `neben: "milankovic"` und `phase: {fehlt, grund}`. Die Prüfung kennt das Feld `neben`.
+
+**Kalenderzeile (nur Plan).**
+
+- **Was sie ist:** eine Zeile der 2. Natur zwischen Jahrtausenden und Jahr. Im Bereich von 1 a bis 21 ka gibt die 0. Natur nur schwache Takte vor (Strukturstand).
+- **Inhalt:** benannte Zählungen mit Nullpunkt und Geltung, etwa a CE (gregorianisch), a BP (Bezugsjahr 1950) und Regierungs- oder Ären-Zählungen, wo eine Quelle sie liefert. Jede Zählung ist ein Eintrag der 2. Natur (2.2, Institution) mit Herkunft `kuratiert`.
+- **Quelle:** PeriodO (benannte Zeiträume mit Quelle) für Epochen; Kalender selbst aus einer kuratierten Liste mit Beleg je Kalender.
+- **Darstellung:**
+  - Eine Zeile mit den Kalendern, die im gewählten Bereich gelten, je als Band mit Beginn und Ende der Geltung.
+  - Fehlt die Geltung, steht `fehlt` mit Grund.
+  - Umgerechnet wird nur für die Anzeige (Strukturstand, Technische Umsetzung).
+- **Zu klären:**
+  - welche Kalender zuerst
+  - ob die ZeitRäume (`PERIODS`) dorthin wandern
+  - wie Überlappung gezeigt wird; nach Regel 16 ist Gleichzeitigkeit nur mit Unschärfe prüfbar
+

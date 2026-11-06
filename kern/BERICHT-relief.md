@@ -202,7 +202,7 @@ Gemessen mit pyGPlates im Scratchpad (`rahmen.py`), Polygone nach Platte zugeord
 ![250 Ma: PALEOMAP-DEM, Tektonik folgt der PALEOMAP-Rotation](bericht-relief/250ma.jpg)
 ![600 Ma: Relief fehlt, neutrale Kugel](bericht-relief/600ma.jpg)
 
-## GEBCO für heute (2026-11-06)
+## GEBCO für heute (2026-11-06) — ersetzt, siehe Nachtrag
 
 **Fassung:** Geladen ist GEBCO_2026 (veröffentlicht April 2026), nicht 2025; die Downloadseite bietet nur noch die neue Fassung an. Im Scratchpad liegen 7,5 GB Höhen und 3,7 GB Typ-Gitter (TID), entpackt aus 4,3 GB und 99 MB; nichts davon im Repo.
 
@@ -241,6 +241,43 @@ Die Landfläche schließt Eisoberflächen ein; GEBCO führt kein Eis als Klasse 
 
 **Grenze:** Die 0-m-Linie wird für GEBCO aus einem auf 0,3° ausgedünnten Raster gezogen, sonst wären es Hunderttausende Stücke. Sie ist dadurch gestuft.
 
-![Heute, GEBCO_2026](bericht-relief/heute-gebco.jpg)
-![Heute, GEBCO_2026, Nordatlantik](bericht-relief/heute-gebco-nah.jpg)
+## Nachtrag 2026-11-06 (zweite Runde)
+
+**GEBCO aus `~/ZeroEarth/rohdaten/gebco`.**
+- GEBCO_2025 lag dort schon. Das Relief für heute kommt jetzt aus dieser Fassung (doi:10.5285/37c52e96-24ea-67ce-e063-7086abc05f29).
+- Die geladene Kopie von GEBCO_2026 im Scratchpad ist gelöscht; `data/relief/gebco/2026.png` ist durch `2025.png` ersetzt.
+- Werte 2025: Landfläche 148,4 Mio km².
+- Herkunft nach Fläche: aus Schwere vorhergesagt 39,8 %, Land 26,2 %, gemessen 21,2 %, interpoliert 7,3 %, vorgefertigtes Gitter 4,6 %.
+- Das Typ-Gitter 2025 kennt die Codes bis 47 (2026 kommt 48 hinzu).
+
+**Erste Feld-Ebene: Eisdicke (PaleoMIST).**
+- **Daten:**
+  - `matrix-scharnier/adapter/eis.py` liest `ice_thickness` aus den lokalen 0,25°-Dateien, Referenz und a1, und wählt auf 0,5° aus: 66 Klassen-PNG, zusammen 1,6 MB.
+  - Dazu je Schritt Eisvolumen und Eisfläche.
+  - Kern-Adapter `eis` mit beiden Idealen (Regel 13); Meereis fehlt mit Grund.
+- **Plausibel:** Das Eisvolumen liegt heute bei 28,6 Mio km³ und bei 20 ka bei 74,4 Mio km³ (Referenz).
+- **Ansicht:** Das gewählte Ideal wird gefüllt (hell dünn bis dunkelblau dick), das andere als gelber Rand seiner Eisfläche gezeigt; ein Klick tauscht beide.
+- **Sintflut:** Die Station Eis → Ozean (planetarer Stoffwechsel) schaltet die Ebene jetzt ein. Ihr Hinweis „Eisflächen nicht zu sehen“ ist ersetzt.
+- **Grau-Modus geprüft:** Mit der Eisdicke an wird das Relief grau; Status und Legende sagen „grau, weil Eisdicke an“.
+
+**Tour und Takt-Leiste.** Ein Klick auf einen Punkt der Leiste führt jetzt Regler und Tabelle der Station mit (geprüft: Leiste auf 10 ka, Regler springt auf Schritt 4, Tabelle zeigt 10 ka).
+
+**Legende.** Folgt die Tektonik der PALEOMAP-Rotation, weil das Relief aus PALEOMAP kommt, steht in Status und Legende „Lage nach PALEOMAP, weil Relief aus PALEOMAP“.
+
+**PALEOMAP 0,1° geprüft.**
+- Geladen nach `~/ZeroEarth/rohdaten/paleomap_dem` (109 Karten, 6 min).
+- Als Klassen-PNG je Karte 0,55 MB (540 Ma) bis 2,26 MB (0 Ma), geschätzt zusammen rund 132 MB. Für das Repo ist das zu groß; die Bauform sieht „eine Ebene im Bereich weniger Megabyte“ vor.
+- **Vorschlag:** nicht ins Repo. Wenn gewählt, lädt die Seite die Karte auf Abruf von einem Ort außerhalb des Repos (etwa als Datei-Anhang eines Release oder einer eigenen Ablage).
+- **Alternative:** 0,25° im Repo (geschätzt rund ein Sechstel, um 20 MB). Nicht gebaut; die Entscheidung über den Ablageort fehlt.
+
+**PRISM4 geprüft, soweit erreichbar.**
+- **Lizenz:** CC0 1.0 (USGS-Seite).
+- **Zitat:** Dowsett et al. 2022, USGS data release, doi:10.5066/P9NF43WW.
+- **Zeitpunkt:** mittleres Piacenzium, rund 3 Ma, eine einzige Zeitscheibe. Ein genaues Alter (etwa 3,205 Ma) nennen weder die USGS-Seite noch der Artikel (Climate of the Past 12, 1519, 2016) auf den abgerufenen Seiten.
+- **Inhalt laut Artikel:** Paläogeographie, Topographie und Bathymetrie, Eis, Vegetation, Böden, Seen.
+- **Auflösung und Dateiliste:** nicht geprüft. Die Seite bei ScienceBase blockt automatische Zugriffe mit einer Bot-Prüfung, die ich nicht umgehe; dafür müsstest du die Seite selbst öffnen oder die Dateien nach `~/ZeroEarth/rohdaten/` legen.
+- **Lücke 80 ka bis 2,5 Ma:** Sie bleibt `fehlt`. Kein Fluten des heutigen Reliefs mit einer Meeresspiegelkurve (Regel 12).
+
+![Sintflut-Station Eis → Ozean bei 20 ka: Eisdicke Referenz, a1 als Rand, Relief grau](bericht-relief/eis-20.jpg)
+![dieselbe Station nach Klick auf 10 ka in der Takt-Leiste](bericht-relief/eis-10.jpg)
 
