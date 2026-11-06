@@ -607,6 +607,8 @@
       <div class="ov-status" id="relief-status"></div>
       <div class="ob ov-side" id="tb-eis" onclick="ze.toggle('eis')"><div class="obd"></div>Eisdicke (PaleoMIST, 80–0 ka) <span class="hz" data-hz="eis"></span></div>
       <div class="ov-status" id="eis-status"></div>
+      <div class="ob ov-side" id="tb-meereis" onclick="ze.toggle('meereis')"><div class="obd"></div>Meereis (GLOMAP, TraCE-21ka; 23–16,5 ka) <span class="hz" data-hz="meereis"></span></div>
+      <div class="ov-status" id="meereis-status"></div>
       <div class="ob ov-side" id="tb-sintflut" onclick="ze.toggle('sintflut')"><div class="obd"></div>Sintflut: Küsten, Kästen <span class="hz" data-hz="sintflut"></span></div>
       <div class="ov-status" id="sintflut-status"></div>
       <div class="ob ov-side" id="tb-tektonik" onclick="ze.toggle('tektonik')"><div class="obd"></div>Tektonik: Kontinente (Plattenmodelle) <span class="hz" data-hz="tektonik"></span></div>
@@ -2238,6 +2240,10 @@ const LEGENDE = {
   eis:         { h: 'PaleoMIST 1.0 (Gowan et al. 2021), ice_thickness, 0,5°, Referenz und a1 (rekonstruktion; CC BY 4.0)',
                  get z() { const s = ze.eisLayer?.stand; return s ? `${takt.zahl(s.ka, 1)} ka BP (1950); Unschärfe fehlt` : 'außerhalb 80–0 ka: fehlt'; },
                  get farben() { return ze.eisLayer?.farben() ?? []; }, m: 55e3 },
+  meereis:     { h: 'GLOMAP (Paul et al. 2021; rekonstruktion, 1°, Ausdehnung; CC BY 4.0) und TraCE-21ka (Liu et al. 2009; modell, CCSM3, T31, Bedeckungsgrad DJF/JJA je Jahrzehnt; CC BY 4.0); MARGO 2009 fehlt mit Grund',
+                 get z() { const s = ze.meereisLayer?.stand; if (!s) return 'außerhalb 22–16,5 ka: fehlt (vor 22 ka keine Quelle; ab 16,5 ka TraCE nicht geladen: Server nicht erreichbar, Abruf ausstehend)'; return [s.glomap ? 'GLOMAP 23–19 ka (Fenster)' : null, s.trace ? `TraCE ${takt.zahl(s.trace.ka, 2)} ka (Jahrzehnt)` : null].filter(Boolean).join(' + ') + `; ${s.monatText}; Unschärfe fehlt`; },
+                 get farben() { return ze.meereisLayer?.farben() ?? []; }, m: 111e3,
+                 warn: 'Februar und August sind Monate der Quellen (GLOMAP JFM/JAS, TraCE DJF/JJA); Gleichzeitigkeit von Rekonstruktion und Modell nicht prüfbar (Regel 16)' },
   palaeokueste:{ h: 'PALEOMAP-DEM (Scotese & Wright 2018) -> 0-m-Linie, 1° (rekonstruktion, kuratiert, berechnet; CC BY 4.0); nicht die PALEOMAP-Rotation',
                  get z() { return ze.palaeokuesteLayer?.zeit() ?? 'keine Linie'; }, m: 111e3,
                  get farben() { return ze.palaeokuesteLayer?.farben() ?? []; },
@@ -2397,6 +2403,7 @@ class DM {
     if(name==='sprachen') { on ? ze.sprachenLayer.show() : ze.sprachenLayer.hide(); }
     if(name==='sintflut') { on ? ze.sintflutLayer.show() : ze.sintflutLayer.hide(); }
     if(name==='eis')      { on ? ze.eisLayer.show() : ze.eisLayer.hide(); }
+    if(name==='meereis')  { on ? ze.meereisLayer.show() : ze.meereisLayer.hide(); }
     if(name==='relief')   { on ? ze.reliefLayer.show() : ze.reliefLayer.hide(); }
     if(name==='tektonik') { on ? ze.tektonikLayer.show() : ze.tektonikLayer.hide(); }
     if(name==='palaeokueste') { on ? ze.palaeokuesteLayer.show() : ze.palaeokuesteLayer.hide(); }
@@ -4132,6 +4139,7 @@ class ZeroEarth {
     this.sintflutLayer = new SintflutLayer(this.cesiumV);
     this.reliefLayer = new ReliefLayer(this.cesiumV);
     this.eisLayer = new EisLayer(this.cesiumV);
+    this.meereisLayer = new MeereisLayer(this.cesiumV);
     this.tektonikLayer = new TektonikLayer(this.cesiumV, 'umrisse');
     this.palaeokuesteLayer = new TektonikLayer(this.cesiumV, 'palaeokueste');
     this.tour = new TourMotor(this);
@@ -4200,6 +4208,7 @@ class ZeroEarth {
       this.sintflutLayer.update(Tideline.t);
       this.reliefLayer.update(Tideline.t);
       this.eisLayer.update(Tideline.t);
+      this.meereisLayer.update(Tideline.t);
       this._grundbildTiefe();
       this.tektonikLayer.update(Tideline.t);
       this.palaeokuesteLayer.update(Tideline.t);
@@ -6048,7 +6057,7 @@ class ReliefLayer {
       { farbe: 'linear-gradient(90deg,rgb(169,203,224),rgb(14,38,72))', text: 'Meer: hell flach bis dunkel tief (0 bis −11 000 m)' },
       { farbe: 'linear-gradient(90deg,rgb(232,216,172),rgb(96,70,52))', text: 'Land: Sand bis Braun nach Höhe (0 bis 9 000 m); ohne Grün, keine Vegetation behauptet' },
     ];
-    if (this.stand.quelle === 'paleomist') aus.push({ farbe: 'rgb(236,240,245)', text: 'Eis (Gletscher, Eisschilde) ab 100 m Dicke; Packeis fehlt in allen Quellen' });
+    if (this.stand.quelle === 'paleomist') aus.push({ farbe: 'rgb(236,240,245)', text: 'Eis (Gletscher, Eisschilde) ab 100 m Dicke, deckend; Meereis ist eine eigene Ebene' });
     const an = this.daten.quellen[this.stand.quelle].herkunft_anteile;
     const GRUPPE = { land: 'Land', gemessen: 'gemessen', aus_schwere_vorhergesagt: 'aus Schwere vorhergesagt', interpoliert: 'interpoliert',
       aus_karten_digitalisiert: 'aus Karten', gemischt_schwere_gestuetzt: 'gemischt, schweregestützt', aus_eisberg_geschaetzt: 'aus Eisbergen geschätzt',
@@ -6141,8 +6150,173 @@ class EisLayer {
     return [
       { farbe: 'linear-gradient(90deg,rgb(225,238,252),rgb(24,66,140))', text: `Fläche: Eisdicke ${n(this.stand.ideal)}, hell dünn bis dunkel dick (0 bis 5 000 m), ${takt.zahl(this.stand.volumen / 1e6, 1)} Mio km³` },
       { farbe: 'rgb(255,214,90)', text: `gelber Rand: Eisfläche ${n(this.stand.ideal === 'referenz' ? 'a1' : 'referenz')}, ${takt.zahl(this.stand.volumen2 / 1e6, 1)} Mio km³ (zweites Ideal, Regel 13)`, linie: true },
-      { farbe: 'transparent', text: 'Meereis fehlt: PaleoMIST führt nur aufliegendes Eis' },
+      { farbe: 'transparent', text: 'Meereis führt PaleoMIST nicht; es steht in der Ebene Meereis (GLOMAP, TraCE-21ka)' },
     ];
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   MEEREIS (data/meereis.json, data/meereis/): GLOMAP (rekonstruktion, LGM,
+   Ausdehnung) und TraCE-21ka (modell, je Jahrzehnt, Bedeckungsgrad), je
+   Februar oder August. Flach, bläulich-weiß, halbtransparent, ohne Relief;
+   eine Quelle füllt, die andere zeigt ihre Grenze (Regel 13). Jede Zelle wird
+   als Fläche ihres Gitters gezeichnet, nichts interpoliert.
+   ───────────────────────────────────────────────────────────────── */
+const MEEREIS_FARBE = [214, 232, 245];
+const MEEREIS_RAND = [120, 214, 255];
+const MEEREIS_STUFEN = [0.15, 0.3, 0.5, 0.7, 0.9];          // Deckkraft-Stufen des Modells (Setzung der Darstellung)
+class MeereisLayer {
+  constructor(v) { this.v = v; this.on = false; this.daten = null; this.monat = 'februar'; this.fuellt = 'glomap'; this.atlas = new Map(); this.masken = new Map(); this._schluessel = undefined; }
+  async laden() { if (!this.daten) this.daten = await fetch('data/meereis.json').then(r => r.json()); return this.daten; }
+  async show() { this.on = true; await this.laden(); if (!this.on) return; this._schluessel = undefined; this.update(Tideline.t); }
+  hide() { this.on = false; this._schluessel = undefined; this._leeren(); this._status(''); this.stand = null; }
+  _leeren() { for (const k of ['layer', 'rand']) if (this[k]) { this.v.imageryLayers.remove(this[k], false); this[k] = null; } }
+  _status(h) { const st = document.getElementById('meereis-status'); if (st) st.innerHTML = h; }
+  setze(feld, wert) { this[feld] = wert; this._schluessel = undefined; this.update(Tideline.t); }
+  get js() { return this.monat === 'februar' ? 'djf' : 'jja'; }
+  /** Welche Quellen zur Zeit t gelten: GLOMAP im Fenster, TraCE das Jahrzehnt mit dem nächsten Mittelpunkt. */
+  wahl(t = Tideline.t) {
+    const d = this.daten; if (!d) return { glomap: false, trace: null };
+    const ka = takt.ka(t), G = d.quellen.glomap, T = d.quellen.trace;
+    const glomap = ka <= G.zeitfenster_ka.von && ka >= G.zeitfenster_ka.bis;
+    const s = T.jahreszeiten.djf.schritte, halb = T.schritt_ka / 2 + 1e-6;
+    let trace = null;
+    if (ka <= s[0].ka + halb && ka >= s.at(-1).ka - halb) {
+      let a = Infinity; s.forEach((e, i) => { const dd = Math.abs(e.ka - ka); if (dd < a) { a = dd; trace = i; } });
+    }
+    return { glomap, trace };
+  }
+  async _bildDaten(url) {
+    const img = new Image(); img.src = url; await img.decode();
+    const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+    const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(img, 0, 0);
+    const d = x.getImageData(0, 0, c.width, c.height).data, k = new Uint8Array(c.width * c.height);
+    for (let i = 0; i < k.length; i++) k[i] = d[i * 4];
+    return { W: c.width, H: c.height, k };
+  }
+  async _maske(monat) {
+    if (!this.masken.has(monat)) this.masken.set(monat, this._bildDaten(`data/${this.daten.quellen.glomap.schritte[monat].datei}`));
+    return this.masken.get(monat);
+  }
+  async _atlas(js) {
+    if (!this.atlas.has(js)) this.atlas.set(js, this._bildDaten(`data/${this.daten.quellen.trace.jahreszeiten[js].datei}`));
+    return this.atlas.get(js);
+  }
+  /** Wert je Bildpunkt (0,25°): GLOMAP 0/1 (Land null), TraCE Bedeckung 0–1. */
+  static raster(quelle, daten, T) {
+    const W = 1440, H = 720, aus = new Float32Array(W * H).fill(NaN);
+    if (quelle === 'glomap') {
+      for (let r = 0; r < H; r++) for (let c = 0; c < W; c++) {
+        const k = daten.k[((r / 4) | 0) * daten.W + ((c / 4) | 0)];
+        aus[r * W + c] = k === 128 ? NaN : k === 255 ? 1 : 0;
+      }
+      return aus;
+    }
+    const { kachel } = daten, kanten = T.breiten_kanten, zeile = new Int16Array(H);
+    for (let r = 0; r < H; r++) {
+      const lat = 90 - (r + 0.5) * 0.25; let b = 0;
+      while (b < T.hoehe - 1 && lat < kanten[b + 1]) b++;
+      zeile[r] = b;
+    }
+    const kx = (kachel % T.kacheln_je_zeile) * T.breite, ky = Math.floor(kachel / T.kacheln_je_zeile) * T.hoehe;
+    for (let c = 0; c < W; c++) {
+      const lon = -180 + (c + 0.5) * 0.25;
+      const s = ((Math.floor((lon - T.laenge_start) / T.dlon) % T.breite) + T.breite) % T.breite;
+      for (let r = 0; r < H; r++) {
+        const k = daten.atlas.k[(ky + zeile[r]) * daten.atlas.W + kx + s];
+        aus[r * W + c] = k === 255 ? NaN : k / 200;
+      }
+    }
+    return aus;
+  }
+  static deckkraft(f, quelle) {
+    if (!(f >= MEEREIS_STUFEN[0])) return 0;
+    if (quelle === 'glomap') return 0.62;
+    let s = 0; while (s < MEEREIS_STUFEN.length - 1 && f >= MEEREIS_STUFEN[s + 1]) s++;
+    return 0.3 + 0.13 * s;                                    // fünf Stufen, 0,30 bis 0,82
+  }
+  static bild(a, rand) {
+    const W = 1440, H = 720, c = document.createElement('canvas'); c.width = W; c.height = H;
+    const x = c.getContext('2d'), img = x.createImageData(W, H), d = img.data;
+    const eis = i => a.raster[i] >= 0.15;
+    for (let r = 0; r < H; r++) for (let s = 0; s < W; s++) {
+      const i = r * W + s;
+      if (rand) {
+        if (!eis(i)) continue;
+        const grenze = !eis(r * W + (s + 1) % W) || !eis(r * W + (s + W - 1) % W) || (r > 0 && !eis(i - W)) || (r < H - 1 && !eis(i + W));
+        if (grenze) { d[i * 4] = MEEREIS_RAND[0]; d[i * 4 + 1] = MEEREIS_RAND[1]; d[i * 4 + 2] = MEEREIS_RAND[2]; d[i * 4 + 3] = 255; }
+      } else {
+        const al = MeereisLayer.deckkraft(a.raster[i], a.quelle); if (!al) continue;
+        d[i * 4] = MEEREIS_FARBE[0]; d[i * 4 + 1] = MEEREIS_FARBE[1]; d[i * 4 + 2] = MEEREIS_FARBE[2]; d[i * 4 + 3] = Math.round(255 * al);
+      }
+    }
+    x.putImageData(img, 0, 0);
+    return c.toDataURL();
+  }
+  async update(t) {
+    if (!this.on || !this.daten) return;
+    const D = this.daten, T = D.quellen.trace, w = this.wahl(t), ka = takt.ka(t);
+    const rest = T.rest && w.trace === null && ka < T.ka_bp_bis && ka >= T.rest.bis_ka - 0.005 ? T.rest : null;
+    const schluessel = `${w.glomap}:${w.trace}:${this.monat}:${this.fuellt}:${rest ? 'rest' : ''}`;
+    if (schluessel === this._schluessel) return;
+    this._schluessel = schluessel;
+    const monatText = this.monat === 'februar' ? 'Februar (Nordwinter, Südsommer)' : 'August (Nordsommer, Südwinter)';
+    const restText = rest ? `TraCE ${takt.zahl(rest.von_ka, 2)} ka bis heute fehlt: ${rest.grund}` : null;
+    if (!w.glomap && w.trace === null) {
+      this._leeren(); this.stand = null;
+      this._status(`<span class="ds-err">Meereis fehlt: ${tourEsc(restText ?? D.fehlt.vor_22ka.grund)}</span>`);
+      ze.zeichneLegende?.(); ze.leiste?.zeichne(); return;
+    }
+    const lagen = [];
+    if (w.glomap) lagen.push({ quelle: 'glomap', raster: MeereisLayer.raster('glomap', await this._maske(this.monat)) });
+    if (w.trace !== null) lagen.push({ quelle: 'trace', raster: MeereisLayer.raster('trace', { atlas: await this._atlas(this.js), kachel: w.trace }, T) });
+    if (schluessel !== this._schluessel || !this.on) return;
+    const fuell = lagen.find(l => l.quelle === this.fuellt) ?? lagen[0], rand = lagen.find(l => l !== fuell);
+    this._leeren();
+    const opt = { rectangle: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90), tileWidth: 1440, tileHeight: 720 };
+    this.layer = this.v.imageryLayers.addImageryProvider(new Cesium.SingleTileImageryProvider({ url: MeereisLayer.bild(fuell, false), ...opt }));
+    if (rand) this.rand = this.v.imageryLayers.addImageryProvider(new Cesium.SingleTileImageryProvider({ url: MeereisLayer.bild(rand, true), ...opt }));
+    const e = w.trace !== null ? T.jahreszeiten[this.js].schritte[w.trace] : null, g = D.quellen.glomap.schritte[this.monat];
+    this.stand = { monat: this.monat, monatText, fuell: fuell.quelle, rand: rand?.quelle ?? null, glomap: w.glomap ? g : null, trace: e };
+    const name = q => q === 'glomap' ? 'GLOMAP' : 'TraCE';
+    const teile = [];
+    if (w.glomap) teile.push(`GLOMAP 23–19 ka (Fenster)`);
+    if (e) teile.push(`TraCE ${takt.zahl(e.ka, 2)} ka (Jahrzehnt)`);
+    if (!w.glomap) teile.push('<span class="ds-err">GLOMAP fehlt: nur 23–19 ka</span>');
+    if (restText) teile.push(`<span class="ds-err">${tourEsc(restText)}</span>`);
+    const anderer = this.monat === 'februar' ? 'august' : 'februar';
+    this._status(`<span class="ds-ok">Meereis ${monatText}: ${teile.join(' + ')}</span>`
+      + ` · <a href="#" onclick="event.preventDefault();ze.meereisLayer.setze('monat','${anderer}')">${anderer === 'august' ? 'August' : 'Februar'}</a>`
+      + (rand ? ` · <a href="#" onclick="event.preventDefault();ze.meereisLayer.setze('fuellt','${rand.quelle}')">${name(rand.quelle)} füllen</a>` : ''));
+    ze.zeichneLegende?.(); ze.leiste?.zeichne();
+  }
+  stuetzstellen() {
+    if (!this.daten) return [];
+    const w = this.wahl(), T = this.daten.quellen.trace, s = T.jahreszeiten.djf.schritte, G = this.daten.quellen.glomap;
+    return [
+      { name: 'Meereis TraCE-21ka (Modell)', einheit: 'ka', farbe: '#9fd8f0', werte: s.map(e => e.ka), abdeckung: { von: s[0].ka, bis: s.at(-1).ka },
+        gewaehlt: w.trace === null ? null : s[w.trace].ka, unschaerfe_fehlt: true, zuT: takt.tKa },
+      { name: 'Meereis GLOMAP (Fenster 23–19 ka)', einheit: 'ka', farbe: '#d6e8f5', werte: [], abdeckung: { von: G.zeitfenster_ka.von, bis: G.zeitfenster_ka.bis },
+        gewaehlt: w.glomap ? (G.zeitfenster_ka.von + G.zeitfenster_ka.bis) / 2 : null, unschaerfe_fehlt: true, zuT: takt.tKa },
+    ];
+  }
+  farben() {
+    const s = this.stand; if (!s) return [];
+    const D = this.daten, mon = q => D.quellen[q].monate[s.monat];
+    const flaeche = q => q === 'glomap'
+      ? `Nord ${takt.zahl(s.glomap.flaeche_nord_km2 / 1e6, 1)}, Süd ${takt.zahl(s.glomap.flaeche_sued_km2 / 1e6, 1)} Mio km²`
+      : `Nord ${takt.zahl(s.trace.flaeche_nord_km2 / 1e6, 1)}, Süd ${takt.zahl(s.trace.flaeche_sued_km2 / 1e6, 1)} Mio km² (Fläche × Bedeckung)`;
+    const fl = `rgba(${MEEREIS_FARBE.join(',')},`;
+    const aus = [];
+    if (s.fuell === 'glomap') aus.push({ farbe: `${fl}0.62)`, text: `Fläche: Meereis GLOMAP (Rekonstruktion, Ausdehnung ja/nein, 1°), ${mon('glomap')}; ${flaeche('glomap')}` });
+    else aus.push({ farbe: `linear-gradient(90deg,${fl}0.3),${fl}0.82))`, text: `Fläche: Meereis TraCE-21ka (Modell), Bedeckung in fünf Stufen ab 15 % (Setzung), Gitter T31 (≈ 3,75°), ${mon('trace')}; ${flaeche('trace')}` });
+    if (s.rand) aus.push({ farbe: `rgb(${MEEREIS_RAND.join(',')})`, linie: true,
+      text: s.rand === 'trace' ? `heller Rand: TraCE-21ka, Grenze bei 15 % Bedeckung (Setzung), ${mon('trace')}; ${flaeche('trace')} (zweite Quelle, Regel 13)`
+                               : `heller Rand: GLOMAP-Grenze, ${mon('glomap')}; ${flaeche('glomap')} (zweite Quelle, Regel 13)` });
+    if (s.fuell === 'trace' && !s.rand) aus.push({ farbe: 'transparent', text: 'Nur das Modell: außerhalb 23–19 ka gibt es keine Rekonstruktion (GLOMAP ist eine Zeitscheibe)' });
+    aus.push({ farbe: 'transparent', text: `Landmasken verschieden: GLOMAP ${D.quellen.glomap.landmaske}, TraCE ${D.quellen.trace.landmaske}; nichts beschnitten, Meereis kann vor oder über der PaleoMIST-Küste enden` });
+    aus.push({ farbe: 'transparent', text: `MARGO 2009 fehlt: ${D.fehlt.margo.grund}` });
+    return aus;
   }
 }
 
@@ -6173,6 +6347,7 @@ const EBENEN_HERKUNFT = {
   tektonik:    { arten: ['rekonstruktion', 'berechnet'], datei: 'data/tektonik_umrisse.json', text: 'Standard Merdith 2021; Müller 2022 zuschaltbar ist Modell (○)' },
   palaeokueste:{ arten: ['rekonstruktion', 'kuratiert', 'berechnet'], datei: 'data/tektonik_palaeokuesten.json' },
   eis:         { arten: ['rekonstruktion'], datei: 'data/eis.json', text: 'PaleoMIST, Referenz und a1' },
+  meereis:     { arten: ['rekonstruktion', 'modell', 'berechnet'], datei: 'data/meereis.json', text: 'GLOMAP (rekonstruktion), TraCE-21ka (modell, berechnet); Flächen berechnet; angezeigt das Unsicherste (Regel 6)' },
   relief:      { arten: ['rekonstruktion', 'kuratiert', 'beobachtung', 'modell', 'berechnet'], datei: 'data/relief.json', text: 'PALEOMAP-DEM (rekonstruktion, kuratiert), PaleoMIST (rekonstruktion), GEBCO (beobachtung, modell, berechnet, kuratiert); angezeigt das Unsicherste (Regel 6)' },
   nachtlicht:  { arten: ['beobachtung'], text: 'NASA GIBS, live' },
   satbild:     { arten: ['beobachtung'], text: 'NASA GIBS, live' },
@@ -6311,7 +6486,7 @@ class TaktLeiste {
 
   /** Stützstellen und Abdeckung der eingeschalteten Ebenen. */
   quellen() {
-    return [this.ze.reliefLayer, this.ze.eisLayer, this.ze.sintflutLayer, this.ze.tektonikLayer, this.ze.palaeokuesteLayer]
+    return [this.ze.reliefLayer, this.ze.eisLayer, this.ze.meereisLayer, this.ze.sintflutLayer, this.ze.tektonikLayer, this.ze.palaeokuesteLayer]
       .filter(l => l?.on && l.stuetzstellen).flatMap(l => l.stuetzstellen());
   }
 

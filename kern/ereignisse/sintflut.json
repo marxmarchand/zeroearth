@@ -74,12 +74,13 @@
         "sintflut/relation/eis-ozean/a1",
         "sintflut/ideale/vergleich"
       ],
-      "begruendung": "Bilanz Eis → Ozean geprüft, aber nur als innere Stimmigkeit (beide Seiten aus PaleoMIST). Die Prüfung gegen unabhängige Beobachtung (Spratt & Lisiecki 2016) ist erkundet, nicht eingebunden. Die Einstrahlung als Antrieb fehlt (Station 0). Die Eisdicke ist als Feld-Ebene zu sehen (PaleoMIST, Referenz gefüllt, a1 als Rand).",
+      "begruendung": "Bilanz Eis → Ozean geprüft, aber nur als innere Stimmigkeit (beide Seiten aus PaleoMIST). Die Prüfung gegen unabhängige Beobachtung (Spratt & Lisiecki 2016) ist erkundet, nicht eingebunden. Die Einstrahlung als Antrieb fehlt (Station 0). Die Eisdicke ist als Feld-Ebene zu sehen (PaleoMIST, Referenz gefüllt, a1 als Rand). Meereis ist ab 22 ka zu sehen: GLOMAP (Rekonstruktion, 23–19 ka) und TraCE-21ka (Modell), Februar oder August.",
       "zeigt": {
         "ansicht": "globus",
         "ebenen": [
           "sintflut",
-          "eis"
+          "eis",
+          "meereis"
         ],
         "orte": "alle"
       }

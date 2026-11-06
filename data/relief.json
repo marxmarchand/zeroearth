@@ -48,7 +48,7 @@
   },
   "packeis": {
    "fehlt": true,
-   "grund": "Meereis (Packeis) führt keine der Quellen; PaleoMIST nennt nur aufliegendes Eis"
+   "grund": "Meereis ist nicht Teil des Reliefs: PaleoMIST nennt nur aufliegendes Eis; Meereis steht in der eigenen Ebene (GLOMAP, TraCE-21ka)"
   }
  },
  "quellen": {

@@ -1,6 +1,7 @@
 // @ts-check
 /* Eisdicke (PaleoMIST) als Feld, beide Ideale (Regel 13). Je Schritt ein Verweis
-   auf das Klassen-PNG, dazu Eisvolumen und Eisfläche. Meereis fehlt mit Grund. */
+   auf das Klassen-PNG, dazu Eisvolumen und Eisfläche. Meereis fehlt in PaleoMIST
+   mit Grund; es steht im Adapter meereis. Kryosphäre in 1.1. */
 import { SCHEMA_VERSION, fehlt } from '../../schema.mjs';
 
 const P = 'eis';
@@ -43,10 +44,10 @@ export function transform(roh, manifest) {
     ideale: ideale.map(({ schluessel, ...i }) => i),
     bestaende: [],
     eintraege: [
-      { id: `${P}/dicke`, stapel: '1.1', name: 'Eisdicke (aufliegendes Eis, PaleoMIST)', auswahl: [`${P}/auswahl/ideale`, `${P}/auswahl/aufloesung`],
+      { id: `${P}/dicke`, stapel: '1.1', sphaere: 'kryosphaere', name: 'Eisdicke (aufliegendes Eis, PaleoMIST)', auswahl: [`${P}/auswahl/ideale`, `${P}/auswahl/aufloesung`],
         wo: { geometrie: 'feld', raster: '0.5°', ausdehnung: 'global', verzerrung: { flaeche: 1, ueberhoehung: 1, gitter: { min: 0, max: 1, bezug: 'gleichabständiges Gitter' } } },
         werte },
-      { id: `${P}/meereis`, stapel: '1.1', name: 'Meereis', wo: fehlt(roh.meereis.grund), werte: { dicke: fehlt(roh.meereis.grund) } },
+      { id: `${P}/meereis`, stapel: '1.1', sphaere: 'kryosphaere', name: 'Meereis in PaleoMIST', wo: fehlt(`${roh.meereis.grund}; Meereis steht in der Ebene meereis (GLOMAP, TraCE-21ka)`), werte: { dicke: fehlt(roh.meereis.grund) } },
     ],
     prozesse: [], relationen: [],
   };

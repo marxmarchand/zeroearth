@@ -221,7 +221,7 @@ def main():
             **({'gebco': gebco_fehlt} if gebco_fehlt else {}),
             luecke={'fehlt': True, 'grund': 'Zwischen 80 ka und 2,5 Ma keine geprüfte Quelle: PaleoMIST endet bei 80 ka, das PALEOMAP-DEM hat nach 0 Ma die nächste Karte bei 5 Ma'},
             vor_540={'fehlt': True, 'grund': 'Vor 540 Ma keine geprüfte Paläo-Höhenkarte'},
-            packeis={'fehlt': True, 'grund': 'Meereis (Packeis) führt keine der Quellen; PaleoMIST nennt nur aufliegendes Eis'}),
+            packeis={'fehlt': True, 'grund': 'Meereis ist nicht Teil des Reliefs: PaleoMIST nennt nur aufliegendes Eis; Meereis steht in der eigenen Ebene (GLOMAP, TraCE-21ka)'}),
         quellen=quellen)
     with open(os.path.join(a.ziel, 'relief.json'), 'w', encoding='utf-8') as f:
         json.dump(datei, f, ensure_ascii=False, indent=1)

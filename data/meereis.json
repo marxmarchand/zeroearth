@@ -1,0 +1,5713 @@
+{
+ "erzeugt": "2026-11-06T14:27:58+00:00",
+ "hinweis": "erzeugt von matrix-scharnier/adapter/meereis.py",
+ "jahreszeit": {
+  "wahl": [
+   "februar",
+   "august"
+  ],
+  "begruendung": "Ein Bild ist ein Moment im Kalender: Februar = Nordwinter und Südsommer, August umgekehrt"
+ },
+ "schwelle_rand": {
+  "wert": 0.15,
+  "setzung": "übliche Schwelle für „Meereis vorhanden“; nur für den Rand des Modells"
+ },
+ "fehlt": {
+  "margo": {
+   "fehlt": true,
+   "grund": "MARGO 2009 enthält kein Meereis, nur Oberflächentemperaturen; das Meereis seines Umfelds (Gersonde 2005, de Vernal 2005) steckt in GLOMAP"
+  },
+  "vor_22ka": {
+   "fehlt": true,
+   "grund": "Vor 22 ka keine geprüfte Meereis-Quelle: TraCE beginnt bei 22 ka, PaleoMIST führt kein Meereis"
+  },
+  "jahresmittel_glomap": {
+   "fehlt": true,
+   "grund": "GLOMAP digitalisiert nur Winter- und Sommergrenze"
+  }
+ },
+ "quellen": {
+  "glomap": {
+   "name": "GLOMAP (Paul et al. 2021)",
+   "arten": [
+    "rekonstruktion"
+   ],
+   "art_der_werte": "ausdehnung",
+   "lizenz": "CC BY 4.0, doi:10.1594/PANGAEA.923262; Artikel doi:10.5194/cp-17-805-2021",
+   "datei_quelle": "glomap_v08_nsst_fice.nc",
+   "variable": "fice_lgm",
+   "kodierung_quelle": "1 = offen, 2 = Eis (long_name sagt 0–1; gelesen nach Lage geprüft)",
+   "zeitfenster_ka": {
+    "von": 23,
+    "bis": 19
+   },
+   "bezugssystem": "ka_bp_1950",
+   "zeit_unschaerfe": {
+    "fehlt": true,
+    "grund": "Eine Zeitscheibe (LGM, 23–19 ka), ohne Unschärfe der Grenze"
+   },
+   "raum_unschaerfe": {
+    "fehlt": true,
+    "grund": "Für die Lage der Eisgrenze nennt die Quelle keine Unschärfe; Eiszellen tragen −1,8 ± 2 °C"
+   },
+   "aufloesung_grad": 1.0,
+   "breite": 360,
+   "hoehe": 180,
+   "gitter": "zellen",
+   "landmaske": "GLAC-1D bei 21 ka (laut Artikel)",
+   "monate": {
+    "februar": "JFM als Februar (Quelle)",
+    "august": "JAS als August (Quelle)"
+   },
+   "kette": [
+    "de Vernal et al. 2005, Kucera et al. 2005 (Dinozysten, Nordatlantik)",
+    "Xiao et al. 2015 (Barentssee)",
+    "Méheust et al. 2018 (Nordpazifik, IP25; Frühjahr als Wintergrenze)",
+    "Gersonde et al. 2005 (Diatomeen, Südozean)",
+    "Roche et al. 2012 (Südozean, Sommer)",
+    "Grenzen aus veröffentlichten Karten digitalisiert und auf 1° gelegt (Paul et al. 2021)"
+   ],
+   "schritte": {
+    "februar": {
+     "datei": "meereis/glomap/februar.png",
+     "monat_quelle": 2,
+     "flaeche_nord_km2": 17131845,
+     "flaeche_sued_km2": 13836382
+    },
+    "august": {
+     "datei": "meereis/glomap/august.png",
+     "monat_quelle": 8,
+     "flaeche_nord_km2": 5978028,
+     "flaeche_sued_km2": 37648865
+    }
+   }
+  },
+  "trace": {
+   "name": "TraCE-21ka (Liu et al. 2009), CCSM3",
+   "arten": [
+    "modell",
+    "berechnet"
+   ],
+   "art_der_werte": "bedeckungsgrad",
+   "lizenz": "CC BY 4.0, NCAR GDEX d651050, doi:10.5065/CXB5-TV56; Artikel Liu et al. 2009, Science 325, 310–314",
+   "dateien_quelle": {
+    "djf": "b30.00_4kaDVTd.cam2.ncrcat.djf.nc (nur ICEFRAC, über NCSS)",
+    "jja": "b30.00_4kaDVTd.cam2.ncrcat.jja.nc (nur ICEFRAC, über NCSS)"
+   },
+   "variable": "ICEFRAC (Fraction of sfc area covered by sea-ice), Atmosphärengitter",
+   "bezugssystem": "ka_bp_1950",
+   "schritt_ka": 0.01,
+   "zeit_unschaerfe": {
+    "fehlt": true,
+    "grund": "Ein Modelllauf; das Jahrzehnt ist die Auflösung, keine Unschärfe"
+   },
+   "raum_unschaerfe": {
+    "fehlt": true,
+    "grund": "Modellwerte ohne Unschärfe; das Gitter T31 (rund 3,75°) ist die Auflösung"
+   },
+   "aufloesung_grad": 3.75,
+   "gitter": "gauss_t31",
+   "klassen": {
+    "von": 0,
+    "bis": 200,
+    "je_klasse": 0.005,
+    "fehlt": 255
+   },
+   "landmaske": "ICE-5G, mit dem Meeresspiegel veränderlich (laut NCAR GDEX)",
+   "monate": {
+    "februar": "DJF (Dezember bis Februar) steht für Februar",
+    "august": "JJA (Juni bis August) steht für August"
+   },
+   "breiten_kanten": [
+    90.0,
+    85.319,
+    81.628,
+    77.9236,
+    74.2159,
+    70.5068,
+    66.797,
+    63.0868,
+    59.3763,
+    55.6656,
+    51.9549,
+    48.244,
+    44.5331,
+    40.8221,
+    37.1111,
+    33.4001,
+    29.689,
+    25.9779,
+    22.2668,
+    18.5557,
+    14.8446,
+    11.1334,
+    7.4223,
+    3.7111,
+    0.0,
+    -3.7111,
+    -7.4223,
+    -11.1334,
+    -14.8446,
+    -18.5557,
+    -22.2668,
+    -25.9779,
+    -29.689,
+    -33.4001,
+    -37.1111,
+    -40.8221,
+    -44.5331,
+    -48.244,
+    -51.9549,
+    -55.6656,
+    -59.3763,
+    -63.0868,
+    -66.797,
+    -70.5068,
+    -74.2159,
+    -77.9236,
+    -81.628,
+    -85.319,
+    -90.0
+   ],
+   "laenge_start": -181.875,
+   "dlon": 3.75,
+   "breite": 96,
+   "hoehe": 48,
+   "anzahl": 551,
+   "kacheln_je_zeile": 48,
+   "ka_bp_von": 22.0,
+   "ka_bp_bis": 16.5,
+   "anzahl_quelle": 2204,
+   "rest": {
+    "fehlt": true,
+    "grund": "Server nicht erreichbar, Abruf ausstehend",
+    "von_ka": 16.49,
+    "bis_ka": -0.03
+   },
+   "jahreszeiten": {
+    "djf": {
+     "datei": "meereis/trace/djf.png",
+     "groesse_byte": 351942,
+     "schritte": [
+      {
+       "ka": 22.0,
+       "flaeche_nord_km2": 18477893,
+       "flaeche_sued_km2": 22390989
+      },
+      {
+       "ka": 21.99,
+       "flaeche_nord_km2": 18429783,
+       "flaeche_sued_km2": 22157953
+      },
+      {
+       "ka": 21.98,
+       "flaeche_nord_km2": 17747609,
+       "flaeche_sued_km2": 22275902
+      },
+      {
+       "ka": 21.97,
+       "flaeche_nord_km2": 18564328,
+       "flaeche_sued_km2": 22143457
+      },
+      {
+       "ka": 21.96,
+       "flaeche_nord_km2": 18161234,
+       "flaeche_sued_km2": 21863634
+      },
+      {
+       "ka": 21.95,
+       "flaeche_nord_km2": 17847362,
+       "flaeche_sued_km2": 21963749
+      },
+      {
+       "ka": 21.94,
+       "flaeche_nord_km2": 17995304,
+       "flaeche_sued_km2": 21839071
+      },
+      {
+       "ka": 21.93,
+       "flaeche_nord_km2": 17987624,
+       "flaeche_sued_km2": 22258080
+      },
+      {
+       "ka": 21.92,
+       "flaeche_nord_km2": 17980414,
+       "flaeche_sued_km2": 21849406
+      },
+      {
+       "ka": 21.91,
+       "flaeche_nord_km2": 18133941,
+       "flaeche_sued_km2": 22103584
+      },
+      {
+       "ka": 21.9,
+       "flaeche_nord_km2": 18248483,
+       "flaeche_sued_km2": 22137763
+      },
+      {
+       "ka": 21.89,
+       "flaeche_nord_km2": 18455030,
+       "flaeche_sued_km2": 22178331
+      },
+      {
+       "ka": 21.88,
+       "flaeche_nord_km2": 18524368,
+       "flaeche_sued_km2": 22300045
+      },
+      {
+       "ka": 21.87,
+       "flaeche_nord_km2": 18885108,
+       "flaeche_sued_km2": 21749647
+      },
+      {
+       "ka": 21.86,
+       "flaeche_nord_km2": 18279124,
+       "flaeche_sued_km2": 21900477
+      },
+      {
+       "ka": 21.85,
+       "flaeche_nord_km2": 18177716,
+       "flaeche_sued_km2": 21990516
+      },
+      {
+       "ka": 21.84,
+       "flaeche_nord_km2": 18318632,
+       "flaeche_sued_km2": 21936461
+      },
+      {
+       "ka": 21.83,
+       "flaeche_nord_km2": 18320127,
+       "flaeche_sued_km2": 22018779
+      },
+      {
+       "ka": 21.82,
+       "flaeche_nord_km2": 18272242,
+       "flaeche_sued_km2": 21606385
+      },
+      {
+       "ka": 21.81,
+       "flaeche_nord_km2": 18635894,
+       "flaeche_sued_km2": 22175713
+      },
+      {
+       "ka": 21.8,
+       "flaeche_nord_km2": 18649159,
+       "flaeche_sued_km2": 22034721
+      },
+      {
+       "ka": 21.79,
+       "flaeche_nord_km2": 18629334,
+       "flaeche_sued_km2": 21880210
+      },
+      {
+       "ka": 21.78,
+       "flaeche_nord_km2": 17746481,
+       "flaeche_sued_km2": 22216290
+      },
+      {
+       "ka": 21.77,
+       "flaeche_nord_km2": 18368968,
+       "flaeche_sued_km2": 22311094
+      },
+      {
+       "ka": 21.76,
+       "flaeche_nord_km2": 17840013,
+       "flaeche_sued_km2": 21993817
+      },
+      {
+       "ka": 21.75,
+       "flaeche_nord_km2": 18115721,
+       "flaeche_sued_km2": 21907377
+      },
+      {
+       "ka": 21.74,
+       "flaeche_nord_km2": 18359465,
+       "flaeche_sued_km2": 22135094
+      },
+      {
+       "ka": 21.73,
+       "flaeche_nord_km2": 18096211,
+       "flaeche_sued_km2": 22134993
+      },
+      {
+       "ka": 21.72,
+       "flaeche_nord_km2": 18909751,
+       "flaeche_sued_km2": 21618537
+      },
+      {
+       "ka": 21.71,
+       "flaeche_nord_km2": 18663072,
+       "flaeche_sued_km2": 21950421
+      },
+      {
+       "ka": 21.7,
+       "flaeche_nord_km2": 18550038,
+       "flaeche_sued_km2": 21974652
+      },
+      {
+       "ka": 21.69,
+       "flaeche_nord_km2": 18304697,
+       "flaeche_sued_km2": 22091899
+      },
+      {
+       "ka": 21.68,
+       "flaeche_nord_km2": 18320714,
+       "flaeche_sued_km2": 22332232
+      },
+      {
+       "ka": 21.67,
+       "flaeche_nord_km2": 18434539,
+       "flaeche_sued_km2": 22339780
+      },
+      {
+       "ka": 21.66,
+       "flaeche_nord_km2": 18624116,
+       "flaeche_sued_km2": 21960213
+      },
+      {
+       "ka": 21.65,
+       "flaeche_nord_km2": 18310885,
+       "flaeche_sued_km2": 22235624
+      },
+      {
+       "ka": 21.64,
+       "flaeche_nord_km2": 17777061,
+       "flaeche_sued_km2": 22084713
+      },
+      {
+       "ka": 21.63,
+       "flaeche_nord_km2": 17800172,
+       "flaeche_sued_km2": 21853291
+      },
+      {
+       "ka": 21.62,
+       "flaeche_nord_km2": 18064661,
+       "flaeche_sued_km2": 21715560
+      },
+      {
+       "ka": 21.61,
+       "flaeche_nord_km2": 18216703,
+       "flaeche_sued_km2": 22078465
+      },
+      {
+       "ka": 21.6,
+       "flaeche_nord_km2": 18093538,
+       "flaeche_sued_km2": 22148302
+      },
+      {
+       "ka": 21.59,
+       "flaeche_nord_km2": 18112562,
+       "flaeche_sued_km2": 22450779
+      },
+      {
+       "ka": 21.58,
+       "flaeche_nord_km2": 17680019,
+       "flaeche_sued_km2": 21893453
+      },
+      {
+       "ka": 21.57,
+       "flaeche_nord_km2": 18646590,
+       "flaeche_sued_km2": 22148079
+      },
+      {
+       "ka": 21.56,
+       "flaeche_nord_km2": 18346651,
+       "flaeche_sued_km2": 22057560
+      },
+      {
+       "ka": 21.55,
+       "flaeche_nord_km2": 18155327,
+       "flaeche_sued_km2": 21979653
+      },
+      {
+       "ka": 21.54,
+       "flaeche_nord_km2": 17549695,
+       "flaeche_sued_km2": 22046752
+      },
+      {
+       "ka": 21.53,
+       "flaeche_nord_km2": 18062781,
+       "flaeche_sued_km2": 22117330
+      },
+      {
+       "ka": 21.52,
+       "flaeche_nord_km2": 18900276,
+       "flaeche_sued_km2": 22307410
+      },
+      {
+       "ka": 21.51,
+       "flaeche_nord_km2": 18571308,
+       "flaeche_sued_km2": 22396283
+      },
+      {
+       "ka": 21.5,
+       "flaeche_nord_km2": 18435257,
+       "flaeche_sued_km2": 22384069
+      },
+      {
+       "ka": 21.49,
+       "flaeche_nord_km2": 18131697,
+       "flaeche_sued_km2": 22054200
+      },
+      {
+       "ka": 21.48,
+       "flaeche_nord_km2": 18351218,
+       "flaeche_sued_km2": 22437026
+      },
+      {
+       "ka": 21.47,
+       "flaeche_nord_km2": 17968797,
+       "flaeche_sued_km2": 21763451
+      },
+      {
+       "ka": 21.46,
+       "flaeche_nord_km2": 17816510,
+       "flaeche_sued_km2": 21749629
+      },
+      {
+       "ka": 21.45,
+       "flaeche_nord_km2": 18471918,
+       "flaeche_sued_km2": 21775602
+      },
+      {
+       "ka": 21.44,
+       "flaeche_nord_km2": 18533028,
+       "flaeche_sued_km2": 21976531
+      },
+      {
+       "ka": 21.43,
+       "flaeche_nord_km2": 18818993,
+       "flaeche_sued_km2": 21958978
+      },
+      {
+       "ka": 21.42,
+       "flaeche_nord_km2": 18767575,
+       "flaeche_sued_km2": 22235873
+      },
+      {
+       "ka": 21.41,
+       "flaeche_nord_km2": 18198178,
+       "flaeche_sued_km2": 21719231
+      },
+      {
+       "ka": 21.4,
+       "flaeche_nord_km2": 18697527,
+       "flaeche_sued_km2": 21922941
+      },
+      {
+       "ka": 21.39,
+       "flaeche_nord_km2": 17610684,
+       "flaeche_sued_km2": 22341468
+      },
+      {
+       "ka": 21.38,
+       "flaeche_nord_km2": 18277516,
+       "flaeche_sued_km2": 21958499
+      },
+      {
+       "ka": 21.37,
+       "flaeche_nord_km2": 18136659,
+       "flaeche_sued_km2": 22196666
+      },
+      {
+       "ka": 21.36,
+       "flaeche_nord_km2": 18272733,
+       "flaeche_sued_km2": 22001441
+      },
+      {
+       "ka": 21.35,
+       "flaeche_nord_km2": 19028702,
+       "flaeche_sued_km2": 22038322
+      },
+      {
+       "ka": 21.34,
+       "flaeche_nord_km2": 18869092,
+       "flaeche_sued_km2": 22025563
+      },
+      {
+       "ka": 21.33,
+       "flaeche_nord_km2": 18487005,
+       "flaeche_sued_km2": 21878738
+      },
+      {
+       "ka": 21.32,
+       "flaeche_nord_km2": 18640048,
+       "flaeche_sued_km2": 22042252
+      },
+      {
+       "ka": 21.31,
+       "flaeche_nord_km2": 18220147,
+       "flaeche_sued_km2": 21804360
+      },
+      {
+       "ka": 21.3,
+       "flaeche_nord_km2": 17753899,
+       "flaeche_sued_km2": 21911621
+      },
+      {
+       "ka": 21.29,
+       "flaeche_nord_km2": 17916382,
+       "flaeche_sued_km2": 22009736
+      },
+      {
+       "ka": 21.28,
+       "flaeche_nord_km2": 18865805,
+       "flaeche_sued_km2": 22076370
+      },
+      {
+       "ka": 21.27,
+       "flaeche_nord_km2": 18942449,
+       "flaeche_sued_km2": 22405171
+      },
+      {
+       "ka": 21.26,
+       "flaeche_nord_km2": 18525455,
+       "flaeche_sued_km2": 22122118
+      },
+      {
+       "ka": 21.25,
+       "flaeche_nord_km2": 18326059,
+       "flaeche_sued_km2": 22044310
+      },
+      {
+       "ka": 21.24,
+       "flaeche_nord_km2": 18352440,
+       "flaeche_sued_km2": 21807498
+      },
+      {
+       "ka": 21.23,
+       "flaeche_nord_km2": 18266131,
+       "flaeche_sued_km2": 21834397
+      },
+      {
+       "ka": 21.22,
+       "flaeche_nord_km2": 18542106,
+       "flaeche_sued_km2": 22088685
+      },
+      {
+       "ka": 21.21,
+       "flaeche_nord_km2": 18992368,
+       "flaeche_sued_km2": 22198446
+      },
+      {
+       "ka": 21.2,
+       "flaeche_nord_km2": 17702199,
+       "flaeche_sued_km2": 22161528
+      },
+      {
+       "ka": 21.19,
+       "flaeche_nord_km2": 18047450,
+       "flaeche_sued_km2": 22081188
+      },
+      {
+       "ka": 21.18,
+       "flaeche_nord_km2": 18738918,
+       "flaeche_sued_km2": 22249504
+      },
+      {
+       "ka": 21.17,
+       "flaeche_nord_km2": 18526875,
+       "flaeche_sued_km2": 21637572
+      },
+      {
+       "ka": 21.16,
+       "flaeche_nord_km2": 18540025,
+       "flaeche_sued_km2": 21884339
+      },
+      {
+       "ka": 21.15,
+       "flaeche_nord_km2": 18229490,
+       "flaeche_sued_km2": 21857566
+      },
+      {
+       "ka": 21.14,
+       "flaeche_nord_km2": 18414775,
+       "flaeche_sued_km2": 22151115
+      },
+      {
+       "ka": 21.13,
+       "flaeche_nord_km2": 18647027,
+       "flaeche_sued_km2": 22002107
+      },
+      {
+       "ka": 21.12,
+       "flaeche_nord_km2": 18723847,
+       "flaeche_sued_km2": 21821684
+      },
+      {
+       "ka": 21.11,
+       "flaeche_nord_km2": 18966537,
+       "flaeche_sued_km2": 21702576
+      },
+      {
+       "ka": 21.1,
+       "flaeche_nord_km2": 19001051,
+       "flaeche_sued_km2": 21620019
+      },
+      {
+       "ka": 21.09,
+       "flaeche_nord_km2": 17815537,
+       "flaeche_sued_km2": 22127438
+      },
+      {
+       "ka": 21.08,
+       "flaeche_nord_km2": 17962599,
+       "flaeche_sued_km2": 21723032
+      },
+      {
+       "ka": 21.07,
+       "flaeche_nord_km2": 18968971,
+       "flaeche_sued_km2": 21640310
+      },
+      {
+       "ka": 21.06,
+       "flaeche_nord_km2": 19348033,
+       "flaeche_sued_km2": 22173237
+      },
+      {
+       "ka": 21.05,
+       "flaeche_nord_km2": 18875686,
+       "flaeche_sued_km2": 22082092
+      },
+      {
+       "ka": 21.04,
+       "flaeche_nord_km2": 18024449,
+       "flaeche_sued_km2": 21900978
+      },
+      {
+       "ka": 21.03,
+       "flaeche_nord_km2": 17956606,
+       "flaeche_sued_km2": 21869400
+      },
+      {
+       "ka": 21.02,
+       "flaeche_nord_km2": 18181690,
+       "flaeche_sued_km2": 22105496
+      },
+      {
+       "ka": 21.01,
+       "flaeche_nord_km2": 18543336,
+       "flaeche_sued_km2": 22182707
+      },
+      {
+       "ka": 21.0,
+       "flaeche_nord_km2": 18626450,
+       "flaeche_sued_km2": 22059031
+      },
+      {
+       "ka": 20.99,
+       "flaeche_nord_km2": 18405168,
+       "flaeche_sued_km2": 21799810
+      },
+      {
+       "ka": 20.98,
+       "flaeche_nord_km2": 18511578,
+       "flaeche_sued_km2": 21951429
+      },
+      {
+       "ka": 20.97,
+       "flaeche_nord_km2": 18531788,
+       "flaeche_sued_km2": 22141141
+      },
+      {
+       "ka": 20.96,
+       "flaeche_nord_km2": 19066668,
+       "flaeche_sued_km2": 22137353
+      },
+      {
+       "ka": 20.95,
+       "flaeche_nord_km2": 18707687,
+       "flaeche_sued_km2": 22384269
+      },
+      {
+       "ka": 20.94,
+       "flaeche_nord_km2": 18308246,
+       "flaeche_sued_km2": 22147068
+      },
+      {
+       "ka": 20.93,
+       "flaeche_nord_km2": 18607844,
+       "flaeche_sued_km2": 21772265
+      },
+      {
+       "ka": 20.92,
+       "flaeche_nord_km2": 18296711,
+       "flaeche_sued_km2": 22150744
+      },
+      {
+       "ka": 20.91,
+       "flaeche_nord_km2": 18358607,
+       "flaeche_sued_km2": 22185999
+      },
+      {
+       "ka": 20.9,
+       "flaeche_nord_km2": 18602135,
+       "flaeche_sued_km2": 21934837
+      },
+      {
+       "ka": 20.89,
+       "flaeche_nord_km2": 19947038,
+       "flaeche_sued_km2": 21882053
+      },
+      {
+       "ka": 20.88,
+       "flaeche_nord_km2": 19015932,
+       "flaeche_sued_km2": 21981899
+      },
+      {
+       "ka": 20.87,
+       "flaeche_nord_km2": 18796667,
+       "flaeche_sued_km2": 22289067
+      },
+      {
+       "ka": 20.86,
+       "flaeche_nord_km2": 18236445,
+       "flaeche_sued_km2": 21859614
+      },
+      {
+       "ka": 20.85,
+       "flaeche_nord_km2": 18921915,
+       "flaeche_sued_km2": 22207688
+      },
+      {
+       "ka": 20.84,
+       "flaeche_nord_km2": 18710700,
+       "flaeche_sued_km2": 22139643
+      },
+      {
+       "ka": 20.83,
+       "flaeche_nord_km2": 18479445,
+       "flaeche_sued_km2": 21853449
+      },
+      {
+       "ka": 20.82,
+       "flaeche_nord_km2": 18850834,
+       "flaeche_sued_km2": 22242368
+      },
+      {
+       "ka": 20.81,
+       "flaeche_nord_km2": 18151326,
+       "flaeche_sued_km2": 22306105
+      },
+      {
+       "ka": 20.8,
+       "flaeche_nord_km2": 19066695,
+       "flaeche_sued_km2": 22245057
+      },
+      {
+       "ka": 20.79,
+       "flaeche_nord_km2": 19035067,
+       "flaeche_sued_km2": 22386826
+      },
+      {
+       "ka": 20.78,
+       "flaeche_nord_km2": 18391459,
+       "flaeche_sued_km2": 21973826
+      },
+      {
+       "ka": 20.77,
+       "flaeche_nord_km2": 18078513,
+       "flaeche_sued_km2": 22201798
+      },
+      {
+       "ka": 20.76,
+       "flaeche_nord_km2": 18927166,
+       "flaeche_sued_km2": 22336795
+      },
+      {
+       "ka": 20.75,
+       "flaeche_nord_km2": 18752324,
+       "flaeche_sued_km2": 22261860
+      },
+      {
+       "ka": 20.74,
+       "flaeche_nord_km2": 18109735,
+       "flaeche_sued_km2": 21478531
+      },
+      {
+       "ka": 20.73,
+       "flaeche_nord_km2": 18437145,
+       "flaeche_sued_km2": 22003909
+      },
+      {
+       "ka": 20.72,
+       "flaeche_nord_km2": 18306804,
+       "flaeche_sued_km2": 21809733
+      },
+      {
+       "ka": 20.71,
+       "flaeche_nord_km2": 18155024,
+       "flaeche_sued_km2": 21687597
+      },
+      {
+       "ka": 20.7,
+       "flaeche_nord_km2": 18617403,
+       "flaeche_sued_km2": 22166394
+      },
+      {
+       "ka": 20.69,
+       "flaeche_nord_km2": 19562550,
+       "flaeche_sued_km2": 22248487
+      },
+      {
+       "ka": 20.68,
+       "flaeche_nord_km2": 18781226,
+       "flaeche_sued_km2": 22193980
+      },
+      {
+       "ka": 20.67,
+       "flaeche_nord_km2": 18510147,
+       "flaeche_sued_km2": 22132965
+      },
+      {
+       "ka": 20.66,
+       "flaeche_nord_km2": 18180412,
+       "flaeche_sued_km2": 22018231
+      },
+      {
+       "ka": 20.65,
+       "flaeche_nord_km2": 18726767,
+       "flaeche_sued_km2": 21967681
+      },
+      {
+       "ka": 20.64,
+       "flaeche_nord_km2": 18979247,
+       "flaeche_sued_km2": 22020035
+      },
+      {
+       "ka": 20.63,
+       "flaeche_nord_km2": 18835940,
+       "flaeche_sued_km2": 22192479
+      },
+      {
+       "ka": 20.62,
+       "flaeche_nord_km2": 18971619,
+       "flaeche_sued_km2": 22059496
+      },
+      {
+       "ka": 20.61,
+       "flaeche_nord_km2": 19005199,
+       "flaeche_sued_km2": 21726066
+      },
+      {
+       "ka": 20.6,
+       "flaeche_nord_km2": 18879943,
+       "flaeche_sued_km2": 22027400
+      },
+      {
+       "ka": 20.59,
+       "flaeche_nord_km2": 19286137,
+       "flaeche_sued_km2": 21944612
+      },
+      {
+       "ka": 20.58,
+       "flaeche_nord_km2": 18798759,
+       "flaeche_sued_km2": 22173644
+      },
+      {
+       "ka": 20.57,
+       "flaeche_nord_km2": 18946560,
+       "flaeche_sued_km2": 21703131
+      },
+      {
+       "ka": 20.56,
+       "flaeche_nord_km2": 19083830,
+       "flaeche_sued_km2": 21981190
+      },
+      {
+       "ka": 20.55,
+       "flaeche_nord_km2": 17845234,
+       "flaeche_sued_km2": 21624887
+      },
+      {
+       "ka": 20.54,
+       "flaeche_nord_km2": 18481676,
+       "flaeche_sued_km2": 22070913
+      },
+      {
+       "ka": 20.53,
+       "flaeche_nord_km2": 18716889,
+       "flaeche_sued_km2": 22152028
+      },
+      {
+       "ka": 20.52,
+       "flaeche_nord_km2": 18227473,
+       "flaeche_sued_km2": 22210046
+      },
+      {
+       "ka": 20.51,
+       "flaeche_nord_km2": 18793021,
+       "flaeche_sued_km2": 21904697
+      },
+      {
+       "ka": 20.5,
+       "flaeche_nord_km2": 18815361,
+       "flaeche_sued_km2": 21759807
+      },
+      {
+       "ka": 20.49,
+       "flaeche_nord_km2": 19120742,
+       "flaeche_sued_km2": 21782906
+      },
+      {
+       "ka": 20.48,
+       "flaeche_nord_km2": 18330997,
+       "flaeche_sued_km2": 21912206
+      },
+      {
+       "ka": 20.47,
+       "flaeche_nord_km2": 18470289,
+       "flaeche_sued_km2": 21892966
+      },
+      {
+       "ka": 20.46,
+       "flaeche_nord_km2": 18411573,
+       "flaeche_sued_km2": 21828058
+      },
+      {
+       "ka": 20.45,
+       "flaeche_nord_km2": 18593155,
+       "flaeche_sued_km2": 22082367
+      },
+      {
+       "ka": 20.44,
+       "flaeche_nord_km2": 18371765,
+       "flaeche_sued_km2": 22554702
+      },
+      {
+       "ka": 20.43,
+       "flaeche_nord_km2": 18343589,
+       "flaeche_sued_km2": 22038708
+      },
+      {
+       "ka": 20.42,
+       "flaeche_nord_km2": 19099524,
+       "flaeche_sued_km2": 22164894
+      },
+      {
+       "ka": 20.41,
+       "flaeche_nord_km2": 18029136,
+       "flaeche_sued_km2": 21671614
+      },
+      {
+       "ka": 20.4,
+       "flaeche_nord_km2": 17814485,
+       "flaeche_sued_km2": 21870794
+      },
+      {
+       "ka": 20.39,
+       "flaeche_nord_km2": 18011270,
+       "flaeche_sued_km2": 21960570
+      },
+      {
+       "ka": 20.38,
+       "flaeche_nord_km2": 18200752,
+       "flaeche_sued_km2": 21570456
+      },
+      {
+       "ka": 20.37,
+       "flaeche_nord_km2": 17973372,
+       "flaeche_sued_km2": 22054074
+      },
+      {
+       "ka": 20.36,
+       "flaeche_nord_km2": 18560543,
+       "flaeche_sued_km2": 21945921
+      },
+      {
+       "ka": 20.35,
+       "flaeche_nord_km2": 18376559,
+       "flaeche_sued_km2": 21922780
+      },
+      {
+       "ka": 20.34,
+       "flaeche_nord_km2": 17935414,
+       "flaeche_sued_km2": 22064067
+      },
+      {
+       "ka": 20.33,
+       "flaeche_nord_km2": 18147448,
+       "flaeche_sued_km2": 22133085
+      },
+      {
+       "ka": 20.32,
+       "flaeche_nord_km2": 17493900,
+       "flaeche_sued_km2": 22077334
+      },
+      {
+       "ka": 20.31,
+       "flaeche_nord_km2": 18670641,
+       "flaeche_sued_km2": 21773307
+      },
+      {
+       "ka": 20.3,
+       "flaeche_nord_km2": 19073868,
+       "flaeche_sued_km2": 22295795
+      },
+      {
+       "ka": 20.29,
+       "flaeche_nord_km2": 18519121,
+       "flaeche_sued_km2": 22174172
+      },
+      {
+       "ka": 20.28,
+       "flaeche_nord_km2": 18494178,
+       "flaeche_sued_km2": 22162372
+      },
+      {
+       "ka": 20.27,
+       "flaeche_nord_km2": 19193164,
+       "flaeche_sued_km2": 22280820
+      },
+      {
+       "ka": 20.26,
+       "flaeche_nord_km2": 18249712,
+       "flaeche_sued_km2": 22091202
+      },
+      {
+       "ka": 20.25,
+       "flaeche_nord_km2": 19110546,
+       "flaeche_sued_km2": 22287986
+      },
+      {
+       "ka": 20.24,
+       "flaeche_nord_km2": 18487061,
+       "flaeche_sued_km2": 22146295
+      },
+      {
+       "ka": 20.23,
+       "flaeche_nord_km2": 18822567,
+       "flaeche_sued_km2": 21906679
+      },
+      {
+       "ka": 20.22,
+       "flaeche_nord_km2": 19215361,
+       "flaeche_sued_km2": 21925632
+      },
+      {
+       "ka": 20.21,
+       "flaeche_nord_km2": 18886311,
+       "flaeche_sued_km2": 21968098
+      },
+      {
+       "ka": 20.2,
+       "flaeche_nord_km2": 18444982,
+       "flaeche_sued_km2": 21945015
+      },
+      {
+       "ka": 20.19,
+       "flaeche_nord_km2": 18663481,
+       "flaeche_sued_km2": 22177901
+      },
+      {
+       "ka": 20.18,
+       "flaeche_nord_km2": 18334384,
+       "flaeche_sued_km2": 22297365
+      },
+      {
+       "ka": 20.17,
+       "flaeche_nord_km2": 18387952,
+       "flaeche_sued_km2": 22246394
+      },
+      {
+       "ka": 20.16,
+       "flaeche_nord_km2": 18246766,
+       "flaeche_sued_km2": 22057442
+      },
+      {
+       "ka": 20.15,
+       "flaeche_nord_km2": 18326887,
+       "flaeche_sued_km2": 21644182
+      },
+      {
+       "ka": 20.14,
+       "flaeche_nord_km2": 18164721,
+       "flaeche_sued_km2": 21795272
+      },
+      {
+       "ka": 20.13,
+       "flaeche_nord_km2": 18327647,
+       "flaeche_sued_km2": 21920902
+      },
+      {
+       "ka": 20.12,
+       "flaeche_nord_km2": 18574527,
+       "flaeche_sued_km2": 21775504
+      },
+      {
+       "ka": 20.11,
+       "flaeche_nord_km2": 17693490,
+       "flaeche_sued_km2": 21971420
+      },
+      {
+       "ka": 20.1,
+       "flaeche_nord_km2": 18135930,
+       "flaeche_sued_km2": 21911894
+      },
+      {
+       "ka": 20.09,
+       "flaeche_nord_km2": 18583005,
+       "flaeche_sued_km2": 21761340
+      },
+      {
+       "ka": 20.08,
+       "flaeche_nord_km2": 19081445,
+       "flaeche_sued_km2": 22054154
+      },
+      {
+       "ka": 20.07,
+       "flaeche_nord_km2": 18697784,
+       "flaeche_sued_km2": 21672843
+      },
+      {
+       "ka": 20.06,
+       "flaeche_nord_km2": 19297333,
+       "flaeche_sued_km2": 22028002
+      },
+      {
+       "ka": 20.05,
+       "flaeche_nord_km2": 18724657,
+       "flaeche_sued_km2": 21791801
+      },
+      {
+       "ka": 20.04,
+       "flaeche_nord_km2": 18711465,
+       "flaeche_sued_km2": 22109600
+      },
+      {
+       "ka": 20.03,
+       "flaeche_nord_km2": 19109963,
+       "flaeche_sued_km2": 21751118
+      },
+      {
+       "ka": 20.02,
+       "flaeche_nord_km2": 18454639,
+       "flaeche_sued_km2": 21964200
+      },
+      {
+       "ka": 20.01,
+       "flaeche_nord_km2": 17841521,
+       "flaeche_sued_km2": 21642771
+      },
+      {
+       "ka": 20.0,
+       "flaeche_nord_km2": 18097609,
+       "flaeche_sued_km2": 21939776
+      },
+      {
+       "ka": 19.99,
+       "flaeche_nord_km2": 18288343,
+       "flaeche_sued_km2": 21972139
+      },
+      {
+       "ka": 19.98,
+       "flaeche_nord_km2": 18615084,
+       "flaeche_sued_km2": 21810034
+      },
+      {
+       "ka": 19.97,
+       "flaeche_nord_km2": 18031445,
+       "flaeche_sued_km2": 22084606
+      },
+      {
+       "ka": 19.96,
+       "flaeche_nord_km2": 18200033,
+       "flaeche_sued_km2": 21868599
+      },
+      {
+       "ka": 19.95,
+       "flaeche_nord_km2": 18199746,
+       "flaeche_sued_km2": 21568041
+      },
+      {
+       "ka": 19.94,
+       "flaeche_nord_km2": 18101421,
+       "flaeche_sued_km2": 21857728
+      },
+      {
+       "ka": 19.93,
+       "flaeche_nord_km2": 17763403,
+       "flaeche_sued_km2": 21930277
+      },
+      {
+       "ka": 19.92,
+       "flaeche_nord_km2": 18419702,
+       "flaeche_sued_km2": 21915183
+      },
+      {
+       "ka": 19.91,
+       "flaeche_nord_km2": 18770128,
+       "flaeche_sued_km2": 21994495
+      },
+      {
+       "ka": 19.9,
+       "flaeche_nord_km2": 18175167,
+       "flaeche_sued_km2": 21847281
+      },
+      {
+       "ka": 19.89,
+       "flaeche_nord_km2": 18207643,
+       "flaeche_sued_km2": 21605752
+      },
+      {
+       "ka": 19.88,
+       "flaeche_nord_km2": 18872260,
+       "flaeche_sued_km2": 21596221
+      },
+      {
+       "ka": 19.87,
+       "flaeche_nord_km2": 17897272,
+       "flaeche_sued_km2": 21483976
+      },
+      {
+       "ka": 19.86,
+       "flaeche_nord_km2": 18485339,
+       "flaeche_sued_km2": 21476538
+      },
+      {
+       "ka": 19.85,
+       "flaeche_nord_km2": 18223398,
+       "flaeche_sued_km2": 21560984
+      },
+      {
+       "ka": 19.84,
+       "flaeche_nord_km2": 18259088,
+       "flaeche_sued_km2": 21705845
+      },
+      {
+       "ka": 19.83,
+       "flaeche_nord_km2": 18366071,
+       "flaeche_sued_km2": 21751508
+      },
+      {
+       "ka": 19.82,
+       "flaeche_nord_km2": 18744466,
+       "flaeche_sued_km2": 21705282
+      },
+      {
+       "ka": 19.81,
+       "flaeche_nord_km2": 18497105,
+       "flaeche_sued_km2": 21433871
+      },
+      {
+       "ka": 19.8,
+       "flaeche_nord_km2": 18182056,
+       "flaeche_sued_km2": 21854227
+      },
+      {
+       "ka": 19.79,
+       "flaeche_nord_km2": 18021245,
+       "flaeche_sued_km2": 21439793
+      },
+      {
+       "ka": 19.78,
+       "flaeche_nord_km2": 18293773,
+       "flaeche_sued_km2": 21337922
+      },
+      {
+       "ka": 19.77,
+       "flaeche_nord_km2": 18240391,
+       "flaeche_sued_km2": 21357093
+      },
+      {
+       "ka": 19.76,
+       "flaeche_nord_km2": 18082699,
+       "flaeche_sued_km2": 21892786
+      },
+      {
+       "ka": 19.75,
+       "flaeche_nord_km2": 17787988,
+       "flaeche_sued_km2": 22007422
+      },
+      {
+       "ka": 19.74,
+       "flaeche_nord_km2": 18184575,
+       "flaeche_sued_km2": 21567011
+      },
+      {
+       "ka": 19.73,
+       "flaeche_nord_km2": 18912187,
+       "flaeche_sued_km2": 21533191
+      },
+      {
+       "ka": 19.72,
+       "flaeche_nord_km2": 19538736,
+       "flaeche_sued_km2": 21495317
+      },
+      {
+       "ka": 19.71,
+       "flaeche_nord_km2": 18024739,
+       "flaeche_sued_km2": 21723354
+      },
+      {
+       "ka": 19.7,
+       "flaeche_nord_km2": 17857187,
+       "flaeche_sued_km2": 21837365
+      },
+      {
+       "ka": 19.69,
+       "flaeche_nord_km2": 18060293,
+       "flaeche_sued_km2": 21842044
+      },
+      {
+       "ka": 19.68,
+       "flaeche_nord_km2": 17273120,
+       "flaeche_sued_km2": 21764720
+      },
+      {
+       "ka": 19.67,
+       "flaeche_nord_km2": 17458369,
+       "flaeche_sued_km2": 22240179
+      },
+      {
+       "ka": 19.66,
+       "flaeche_nord_km2": 18080273,
+       "flaeche_sued_km2": 21606580
+      },
+      {
+       "ka": 19.65,
+       "flaeche_nord_km2": 17968114,
+       "flaeche_sued_km2": 21657548
+      },
+      {
+       "ka": 19.64,
+       "flaeche_nord_km2": 17635158,
+       "flaeche_sued_km2": 21657184
+      },
+      {
+       "ka": 19.63,
+       "flaeche_nord_km2": 17996905,
+       "flaeche_sued_km2": 22163667
+      },
+      {
+       "ka": 19.62,
+       "flaeche_nord_km2": 18281457,
+       "flaeche_sued_km2": 21875705
+      },
+      {
+       "ka": 19.61,
+       "flaeche_nord_km2": 17820794,
+       "flaeche_sued_km2": 21743685
+      },
+      {
+       "ka": 19.6,
+       "flaeche_nord_km2": 18581976,
+       "flaeche_sued_km2": 22160940
+      },
+      {
+       "ka": 19.59,
+       "flaeche_nord_km2": 19277216,
+       "flaeche_sued_km2": 22110264
+      },
+      {
+       "ka": 19.58,
+       "flaeche_nord_km2": 18281174,
+       "flaeche_sued_km2": 21786214
+      },
+      {
+       "ka": 19.57,
+       "flaeche_nord_km2": 18191377,
+       "flaeche_sued_km2": 21626384
+      },
+      {
+       "ka": 19.56,
+       "flaeche_nord_km2": 18108755,
+       "flaeche_sued_km2": 21787953
+      },
+      {
+       "ka": 19.55,
+       "flaeche_nord_km2": 18057159,
+       "flaeche_sued_km2": 21975924
+      },
+      {
+       "ka": 19.54,
+       "flaeche_nord_km2": 18419795,
+       "flaeche_sued_km2": 21782252
+      },
+      {
+       "ka": 19.53,
+       "flaeche_nord_km2": 18331128,
+       "flaeche_sued_km2": 21819105
+      },
+      {
+       "ka": 19.52,
+       "flaeche_nord_km2": 18293371,
+       "flaeche_sued_km2": 21465243
+      },
+      {
+       "ka": 19.51,
+       "flaeche_nord_km2": 18042670,
+       "flaeche_sued_km2": 21632358
+      },
+      {
+       "ka": 19.5,
+       "flaeche_nord_km2": 18430226,
+       "flaeche_sued_km2": 21711377
+      },
+      {
+       "ka": 19.49,
+       "flaeche_nord_km2": 18019214,
+       "flaeche_sued_km2": 21675257
+      },
+      {
+       "ka": 19.48,
+       "flaeche_nord_km2": 18188251,
+       "flaeche_sued_km2": 21880860
+      },
+      {
+       "ka": 19.47,
+       "flaeche_nord_km2": 18721005,
+       "flaeche_sued_km2": 21697001
+      },
+      {
+       "ka": 19.46,
+       "flaeche_nord_km2": 18581735,
+       "flaeche_sued_km2": 22007523
+      },
+      {
+       "ka": 19.45,
+       "flaeche_nord_km2": 18405570,
+       "flaeche_sued_km2": 22123783
+      },
+      {
+       "ka": 19.44,
+       "flaeche_nord_km2": 18698765,
+       "flaeche_sued_km2": 22114129
+      },
+      {
+       "ka": 19.43,
+       "flaeche_nord_km2": 19479550,
+       "flaeche_sued_km2": 22086758
+      },
+      {
+       "ka": 19.42,
+       "flaeche_nord_km2": 18088773,
+       "flaeche_sued_km2": 21914421
+      },
+      {
+       "ka": 19.41,
+       "flaeche_nord_km2": 17879971,
+       "flaeche_sued_km2": 21454768
+      },
+      {
+       "ka": 19.4,
+       "flaeche_nord_km2": 17856375,
+       "flaeche_sued_km2": 21833878
+      },
+      {
+       "ka": 19.39,
+       "flaeche_nord_km2": 18342766,
+       "flaeche_sued_km2": 22144307
+      },
+      {
+       "ka": 19.38,
+       "flaeche_nord_km2": 18499614,
+       "flaeche_sued_km2": 21596467
+      },
+      {
+       "ka": 19.37,
+       "flaeche_nord_km2": 18489423,
+       "flaeche_sued_km2": 21571978
+      },
+      {
+       "ka": 19.36,
+       "flaeche_nord_km2": 18837017,
+       "flaeche_sued_km2": 21929824
+      },
+      {
+       "ka": 19.35,
+       "flaeche_nord_km2": 18519897,
+       "flaeche_sued_km2": 21594620
+      },
+      {
+       "ka": 19.34,
+       "flaeche_nord_km2": 18382751,
+       "flaeche_sued_km2": 21762234
+      },
+      {
+       "ka": 19.33,
+       "flaeche_nord_km2": 18582801,
+       "flaeche_sued_km2": 21913849
+      },
+      {
+       "ka": 19.32,
+       "flaeche_nord_km2": 18730571,
+       "flaeche_sued_km2": 21873650
+      },
+      {
+       "ka": 19.31,
+       "flaeche_nord_km2": 18888860,
+       "flaeche_sued_km2": 22085376
+      },
+      {
+       "ka": 19.3,
+       "flaeche_nord_km2": 18866977,
+       "flaeche_sued_km2": 22063533
+      },
+      {
+       "ka": 19.29,
+       "flaeche_nord_km2": 17903637,
+       "flaeche_sued_km2": 22020612
+      },
+      {
+       "ka": 19.28,
+       "flaeche_nord_km2": 19023053,
+       "flaeche_sued_km2": 21807113
+      },
+      {
+       "ka": 19.27,
+       "flaeche_nord_km2": 18675756,
+       "flaeche_sued_km2": 22085122
+      },
+      {
+       "ka": 19.26,
+       "flaeche_nord_km2": 18511443,
+       "flaeche_sued_km2": 21958380
+      },
+      {
+       "ka": 19.25,
+       "flaeche_nord_km2": 18338960,
+       "flaeche_sued_km2": 21864561
+      },
+      {
+       "ka": 19.24,
+       "flaeche_nord_km2": 18720912,
+       "flaeche_sued_km2": 21994698
+      },
+      {
+       "ka": 19.23,
+       "flaeche_nord_km2": 18455738,
+       "flaeche_sued_km2": 21761870
+      },
+      {
+       "ka": 19.22,
+       "flaeche_nord_km2": 18982505,
+       "flaeche_sued_km2": 21870068
+      },
+      {
+       "ka": 19.21,
+       "flaeche_nord_km2": 18899684,
+       "flaeche_sued_km2": 21540714
+      },
+      {
+       "ka": 19.2,
+       "flaeche_nord_km2": 18521394,
+       "flaeche_sued_km2": 21591112
+      },
+      {
+       "ka": 19.19,
+       "flaeche_nord_km2": 18527192,
+       "flaeche_sued_km2": 21816691
+      },
+      {
+       "ka": 19.18,
+       "flaeche_nord_km2": 18198181,
+       "flaeche_sued_km2": 21863257
+      },
+      {
+       "ka": 19.17,
+       "flaeche_nord_km2": 17947690,
+       "flaeche_sued_km2": 21946874
+      },
+      {
+       "ka": 19.16,
+       "flaeche_nord_km2": 17865344,
+       "flaeche_sued_km2": 21626721
+      },
+      {
+       "ka": 19.15,
+       "flaeche_nord_km2": 17947038,
+       "flaeche_sued_km2": 21814075
+      },
+      {
+       "ka": 19.14,
+       "flaeche_nord_km2": 18209571,
+       "flaeche_sued_km2": 21842440
+      },
+      {
+       "ka": 19.13,
+       "flaeche_nord_km2": 18041489,
+       "flaeche_sued_km2": 21999757
+      },
+      {
+       "ka": 19.12,
+       "flaeche_nord_km2": 18718484,
+       "flaeche_sued_km2": 21664915
+      },
+      {
+       "ka": 19.11,
+       "flaeche_nord_km2": 18583510,
+       "flaeche_sued_km2": 21736741
+      },
+      {
+       "ka": 19.1,
+       "flaeche_nord_km2": 18712984,
+       "flaeche_sued_km2": 21859158
+      },
+      {
+       "ka": 19.09,
+       "flaeche_nord_km2": 19283798,
+       "flaeche_sued_km2": 21567675
+      },
+      {
+       "ka": 19.08,
+       "flaeche_nord_km2": 18289659,
+       "flaeche_sued_km2": 22186266
+      },
+      {
+       "ka": 19.07,
+       "flaeche_nord_km2": 18879583,
+       "flaeche_sued_km2": 21775048
+      },
+      {
+       "ka": 19.06,
+       "flaeche_nord_km2": 17889856,
+       "flaeche_sued_km2": 21608957
+      },
+      {
+       "ka": 19.05,
+       "flaeche_nord_km2": 18002122,
+       "flaeche_sued_km2": 21595549
+      },
+      {
+       "ka": 19.04,
+       "flaeche_nord_km2": 18302119,
+       "flaeche_sued_km2": 21840389
+      },
+      {
+       "ka": 19.03,
+       "flaeche_nord_km2": 18588629,
+       "flaeche_sued_km2": 21687046
+      },
+      {
+       "ka": 19.02,
+       "flaeche_nord_km2": 18892763,
+       "flaeche_sued_km2": 21933473
+      },
+      {
+       "ka": 19.01,
+       "flaeche_nord_km2": 17932488,
+       "flaeche_sued_km2": 22071371
+      },
+      {
+       "ka": 19.0,
+       "flaeche_nord_km2": 18674632,
+       "flaeche_sued_km2": 21774400
+      },
+      {
+       "ka": 18.99,
+       "flaeche_nord_km2": 19193535,
+       "flaeche_sued_km2": 21443241
+      },
+      {
+       "ka": 18.98,
+       "flaeche_nord_km2": 19307862,
+       "flaeche_sued_km2": 21942942
+      },
+      {
+       "ka": 18.97,
+       "flaeche_nord_km2": 20239759,
+       "flaeche_sued_km2": 21890318
+      },
+      {
+       "ka": 18.96,
+       "flaeche_nord_km2": 20363005,
+       "flaeche_sued_km2": 22197782
+      },
+      {
+       "ka": 18.95,
+       "flaeche_nord_km2": 20446664,
+       "flaeche_sued_km2": 21965847
+      },
+      {
+       "ka": 18.94,
+       "flaeche_nord_km2": 19686004,
+       "flaeche_sued_km2": 21767598
+      },
+      {
+       "ka": 18.93,
+       "flaeche_nord_km2": 19510078,
+       "flaeche_sued_km2": 21573811
+      },
+      {
+       "ka": 18.92,
+       "flaeche_nord_km2": 19951649,
+       "flaeche_sued_km2": 21677493
+      },
+      {
+       "ka": 18.91,
+       "flaeche_nord_km2": 19928448,
+       "flaeche_sued_km2": 21661125
+      },
+      {
+       "ka": 18.9,
+       "flaeche_nord_km2": 20456610,
+       "flaeche_sued_km2": 21605596
+      },
+      {
+       "ka": 18.89,
+       "flaeche_nord_km2": 19617101,
+       "flaeche_sued_km2": 21793989
+      },
+      {
+       "ka": 18.88,
+       "flaeche_nord_km2": 19221823,
+       "flaeche_sued_km2": 21421652
+      },
+      {
+       "ka": 18.87,
+       "flaeche_nord_km2": 19539266,
+       "flaeche_sued_km2": 21679985
+      },
+      {
+       "ka": 18.86,
+       "flaeche_nord_km2": 20158898,
+       "flaeche_sued_km2": 21383154
+      },
+      {
+       "ka": 18.85,
+       "flaeche_nord_km2": 20434696,
+       "flaeche_sued_km2": 21394894
+      },
+      {
+       "ka": 18.84,
+       "flaeche_nord_km2": 19682288,
+       "flaeche_sued_km2": 21439833
+      },
+      {
+       "ka": 18.83,
+       "flaeche_nord_km2": 20236661,
+       "flaeche_sued_km2": 21852047
+      },
+      {
+       "ka": 18.82,
+       "flaeche_nord_km2": 20860427,
+       "flaeche_sued_km2": 21823294
+      },
+      {
+       "ka": 18.81,
+       "flaeche_nord_km2": 20369583,
+       "flaeche_sued_km2": 20955944
+      },
+      {
+       "ka": 18.8,
+       "flaeche_nord_km2": 19893116,
+       "flaeche_sued_km2": 21526691
+      },
+      {
+       "ka": 18.79,
+       "flaeche_nord_km2": 19934415,
+       "flaeche_sued_km2": 20970169
+      },
+      {
+       "ka": 18.78,
+       "flaeche_nord_km2": 19915165,
+       "flaeche_sued_km2": 21262032
+      },
+      {
+       "ka": 18.77,
+       "flaeche_nord_km2": 19983326,
+       "flaeche_sued_km2": 21320790
+      },
+      {
+       "ka": 18.76,
+       "flaeche_nord_km2": 20162108,
+       "flaeche_sued_km2": 21407499
+      },
+      {
+       "ka": 18.75,
+       "flaeche_nord_km2": 20720600,
+       "flaeche_sued_km2": 21194778
+      },
+      {
+       "ka": 18.74,
+       "flaeche_nord_km2": 20795449,
+       "flaeche_sued_km2": 21601170
+      },
+      {
+       "ka": 18.73,
+       "flaeche_nord_km2": 20020207,
+       "flaeche_sued_km2": 21501917
+      },
+      {
+       "ka": 18.72,
+       "flaeche_nord_km2": 20571364,
+       "flaeche_sued_km2": 21445492
+      },
+      {
+       "ka": 18.71,
+       "flaeche_nord_km2": 21022444,
+       "flaeche_sued_km2": 21253142
+      },
+      {
+       "ka": 18.7,
+       "flaeche_nord_km2": 20788182,
+       "flaeche_sued_km2": 21404371
+      },
+      {
+       "ka": 18.69,
+       "flaeche_nord_km2": 20657904,
+       "flaeche_sued_km2": 21430261
+      },
+      {
+       "ka": 18.68,
+       "flaeche_nord_km2": 20256657,
+       "flaeche_sued_km2": 21086520
+      },
+      {
+       "ka": 18.67,
+       "flaeche_nord_km2": 19978205,
+       "flaeche_sued_km2": 21610034
+      },
+      {
+       "ka": 18.66,
+       "flaeche_nord_km2": 20110847,
+       "flaeche_sued_km2": 21458042
+      },
+      {
+       "ka": 18.65,
+       "flaeche_nord_km2": 19889444,
+       "flaeche_sued_km2": 21446301
+      },
+      {
+       "ka": 18.64,
+       "flaeche_nord_km2": 20613543,
+       "flaeche_sued_km2": 21452398
+      },
+      {
+       "ka": 18.63,
+       "flaeche_nord_km2": 19935782,
+       "flaeche_sued_km2": 21296211
+      },
+      {
+       "ka": 18.62,
+       "flaeche_nord_km2": 20449085,
+       "flaeche_sued_km2": 21269591
+      },
+      {
+       "ka": 18.61,
+       "flaeche_nord_km2": 21430123,
+       "flaeche_sued_km2": 21185608
+      },
+      {
+       "ka": 18.6,
+       "flaeche_nord_km2": 21353752,
+       "flaeche_sued_km2": 21079869
+      },
+      {
+       "ka": 18.59,
+       "flaeche_nord_km2": 20479856,
+       "flaeche_sued_km2": 20753113
+      },
+      {
+       "ka": 18.58,
+       "flaeche_nord_km2": 20223797,
+       "flaeche_sued_km2": 20824276
+      },
+      {
+       "ka": 18.57,
+       "flaeche_nord_km2": 20025666,
+       "flaeche_sued_km2": 20956503
+      },
+      {
+       "ka": 18.56,
+       "flaeche_nord_km2": 20206246,
+       "flaeche_sued_km2": 21394459
+      },
+      {
+       "ka": 18.55,
+       "flaeche_nord_km2": 20269108,
+       "flaeche_sued_km2": 21232211
+      },
+      {
+       "ka": 18.54,
+       "flaeche_nord_km2": 19865526,
+       "flaeche_sued_km2": 20804459
+      },
+      {
+       "ka": 18.53,
+       "flaeche_nord_km2": 20267863,
+       "flaeche_sued_km2": 21418060
+      },
+      {
+       "ka": 18.52,
+       "flaeche_nord_km2": 20653472,
+       "flaeche_sued_km2": 20736863
+      },
+      {
+       "ka": 18.51,
+       "flaeche_nord_km2": 20091338,
+       "flaeche_sued_km2": 21402436
+      },
+      {
+       "ka": 18.5,
+       "flaeche_nord_km2": 19451865,
+       "flaeche_sued_km2": 21211685
+      },
+      {
+       "ka": 18.49,
+       "flaeche_nord_km2": 19955104,
+       "flaeche_sued_km2": 21008416
+      },
+      {
+       "ka": 18.48,
+       "flaeche_nord_km2": 20488893,
+       "flaeche_sued_km2": 20616318
+      },
+      {
+       "ka": 18.47,
+       "flaeche_nord_km2": 21035102,
+       "flaeche_sued_km2": 20874715
+      },
+      {
+       "ka": 18.46,
+       "flaeche_nord_km2": 21096663,
+       "flaeche_sued_km2": 21356626
+      },
+      {
+       "ka": 18.45,
+       "flaeche_nord_km2": 20438734,
+       "flaeche_sued_km2": 21246528
+      },
+      {
+       "ka": 18.44,
+       "flaeche_nord_km2": 19859177,
+       "flaeche_sued_km2": 21197735
+      },
+      {
+       "ka": 18.43,
+       "flaeche_nord_km2": 20235761,
+       "flaeche_sued_km2": 20798258
+      },
+      {
+       "ka": 18.42,
+       "flaeche_nord_km2": 21231325,
+       "flaeche_sued_km2": 20920161
+      },
+      {
+       "ka": 18.41,
+       "flaeche_nord_km2": 20615803,
+       "flaeche_sued_km2": 20770217
+      },
+      {
+       "ka": 18.4,
+       "flaeche_nord_km2": 19510904,
+       "flaeche_sued_km2": 20931421
+      },
+      {
+       "ka": 18.39,
+       "flaeche_nord_km2": 19739819,
+       "flaeche_sued_km2": 20792398
+      },
+      {
+       "ka": 18.38,
+       "flaeche_nord_km2": 19896362,
+       "flaeche_sued_km2": 21089342
+      },
+      {
+       "ka": 18.37,
+       "flaeche_nord_km2": 19248911,
+       "flaeche_sued_km2": 21519943
+      },
+      {
+       "ka": 18.36,
+       "flaeche_nord_km2": 19704177,
+       "flaeche_sued_km2": 20902352
+      },
+      {
+       "ka": 18.35,
+       "flaeche_nord_km2": 20054876,
+       "flaeche_sued_km2": 20952739
+      },
+      {
+       "ka": 18.34,
+       "flaeche_nord_km2": 20214331,
+       "flaeche_sued_km2": 20885193
+      },
+      {
+       "ka": 18.33,
+       "flaeche_nord_km2": 19717094,
+       "flaeche_sued_km2": 20687963
+      },
+      {
+       "ka": 18.32,
+       "flaeche_nord_km2": 19516550,
+       "flaeche_sued_km2": 20661400
+      },
+      {
+       "ka": 18.31,
+       "flaeche_nord_km2": 19884276,
+       "flaeche_sued_km2": 20531208
+      },
+      {
+       "ka": 18.3,
+       "flaeche_nord_km2": 20102306,
+       "flaeche_sued_km2": 21096363
+      },
+      {
+       "ka": 18.29,
+       "flaeche_nord_km2": 19516428,
+       "flaeche_sued_km2": 21008880
+      },
+      {
+       "ka": 18.28,
+       "flaeche_nord_km2": 19444240,
+       "flaeche_sued_km2": 20899544
+      },
+      {
+       "ka": 18.27,
+       "flaeche_nord_km2": 19782073,
+       "flaeche_sued_km2": 21110980
+      },
+      {
+       "ka": 18.26,
+       "flaeche_nord_km2": 19973821,
+       "flaeche_sued_km2": 20418125
+      },
+      {
+       "ka": 18.25,
+       "flaeche_nord_km2": 19831080,
+       "flaeche_sued_km2": 20542019
+      },
+      {
+       "ka": 18.24,
+       "flaeche_nord_km2": 21453114,
+       "flaeche_sued_km2": 20981284
+      },
+      {
+       "ka": 18.23,
+       "flaeche_nord_km2": 21510347,
+       "flaeche_sued_km2": 20729960
+      },
+      {
+       "ka": 18.22,
+       "flaeche_nord_km2": 20859110,
+       "flaeche_sued_km2": 21333941
+      },
+      {
+       "ka": 18.21,
+       "flaeche_nord_km2": 20310670,
+       "flaeche_sued_km2": 20894679
+      },
+      {
+       "ka": 18.2,
+       "flaeche_nord_km2": 19828260,
+       "flaeche_sued_km2": 20762183
+      },
+      {
+       "ka": 18.19,
+       "flaeche_nord_km2": 20187599,
+       "flaeche_sued_km2": 20837571
+      },
+      {
+       "ka": 18.18,
+       "flaeche_nord_km2": 20030482,
+       "flaeche_sued_km2": 20641944
+      },
+      {
+       "ka": 18.17,
+       "flaeche_nord_km2": 20666279,
+       "flaeche_sued_km2": 20795565
+      },
+      {
+       "ka": 18.16,
+       "flaeche_nord_km2": 20138983,
+       "flaeche_sued_km2": 20730649
+      },
+      {
+       "ka": 18.15,
+       "flaeche_nord_km2": 20283341,
+       "flaeche_sued_km2": 20906660
+      },
+      {
+       "ka": 18.14,
+       "flaeche_nord_km2": 20431232,
+       "flaeche_sued_km2": 20587523
+      },
+      {
+       "ka": 18.13,
+       "flaeche_nord_km2": 21052816,
+       "flaeche_sued_km2": 20927001
+      },
+      {
+       "ka": 18.12,
+       "flaeche_nord_km2": 21302395,
+       "flaeche_sued_km2": 21046774
+      },
+      {
+       "ka": 18.11,
+       "flaeche_nord_km2": 20353598,
+       "flaeche_sued_km2": 20965393
+      },
+      {
+       "ka": 18.1,
+       "flaeche_nord_km2": 20308097,
+       "flaeche_sued_km2": 20822557
+      },
+      {
+       "ka": 18.09,
+       "flaeche_nord_km2": 20443141,
+       "flaeche_sued_km2": 20369631
+      },
+      {
+       "ka": 18.08,
+       "flaeche_nord_km2": 21838924,
+       "flaeche_sued_km2": 21083197
+      },
+      {
+       "ka": 18.07,
+       "flaeche_nord_km2": 20452025,
+       "flaeche_sued_km2": 20648362
+      },
+      {
+       "ka": 18.06,
+       "flaeche_nord_km2": 21163823,
+       "flaeche_sued_km2": 20664247
+      },
+      {
+       "ka": 18.05,
+       "flaeche_nord_km2": 20628464,
+       "flaeche_sued_km2": 20682750
+      },
+      {
+       "ka": 18.04,
+       "flaeche_nord_km2": 20666971,
+       "flaeche_sued_km2": 20885325
+      },
+      {
+       "ka": 18.03,
+       "flaeche_nord_km2": 21318271,
+       "flaeche_sued_km2": 20787214
+      },
+      {
+       "ka": 18.02,
+       "flaeche_nord_km2": 20666619,
+       "flaeche_sued_km2": 20727166
+      },
+      {
+       "ka": 18.01,
+       "flaeche_nord_km2": 20385474,
+       "flaeche_sued_km2": 20521766
+      },
+      {
+       "ka": 18.0,
+       "flaeche_nord_km2": 21188447,
+       "flaeche_sued_km2": 20573978
+      },
+      {
+       "ka": 17.99,
+       "flaeche_nord_km2": 21467885,
+       "flaeche_sued_km2": 20616626
+      },
+      {
+       "ka": 17.98,
+       "flaeche_nord_km2": 21390639,
+       "flaeche_sued_km2": 20516328
+      },
+      {
+       "ka": 17.97,
+       "flaeche_nord_km2": 21664533,
+       "flaeche_sued_km2": 20610408
+      },
+      {
+       "ka": 17.96,
+       "flaeche_nord_km2": 21880910,
+       "flaeche_sued_km2": 20505815
+      },
+      {
+       "ka": 17.95,
+       "flaeche_nord_km2": 21669499,
+       "flaeche_sued_km2": 20768666
+      },
+      {
+       "ka": 17.94,
+       "flaeche_nord_km2": 21389538,
+       "flaeche_sued_km2": 20431917
+      },
+      {
+       "ka": 17.93,
+       "flaeche_nord_km2": 21524084,
+       "flaeche_sued_km2": 20563879
+      },
+      {
+       "ka": 17.92,
+       "flaeche_nord_km2": 21403498,
+       "flaeche_sued_km2": 20473925
+      },
+      {
+       "ka": 17.91,
+       "flaeche_nord_km2": 21655325,
+       "flaeche_sued_km2": 20789670
+      },
+      {
+       "ka": 17.9,
+       "flaeche_nord_km2": 20706670,
+       "flaeche_sued_km2": 20625239
+      },
+      {
+       "ka": 17.89,
+       "flaeche_nord_km2": 21026619,
+       "flaeche_sued_km2": 20627213
+      },
+      {
+       "ka": 17.88,
+       "flaeche_nord_km2": 21819655,
+       "flaeche_sued_km2": 20651527
+      },
+      {
+       "ka": 17.87,
+       "flaeche_nord_km2": 23392297,
+       "flaeche_sued_km2": 20495736
+      },
+      {
+       "ka": 17.86,
+       "flaeche_nord_km2": 23122496,
+       "flaeche_sued_km2": 20606634
+      },
+      {
+       "ka": 17.85,
+       "flaeche_nord_km2": 23548960,
+       "flaeche_sued_km2": 20546057
+      },
+      {
+       "ka": 17.84,
+       "flaeche_nord_km2": 22247229,
+       "flaeche_sued_km2": 20119330
+      },
+      {
+       "ka": 17.83,
+       "flaeche_nord_km2": 22300337,
+       "flaeche_sued_km2": 20457225
+      },
+      {
+       "ka": 17.82,
+       "flaeche_nord_km2": 22747088,
+       "flaeche_sued_km2": 20318068
+      },
+      {
+       "ka": 17.81,
+       "flaeche_nord_km2": 22717874,
+       "flaeche_sued_km2": 20599498
+      },
+      {
+       "ka": 17.8,
+       "flaeche_nord_km2": 22055231,
+       "flaeche_sued_km2": 20524926
+      },
+      {
+       "ka": 17.79,
+       "flaeche_nord_km2": 23266716,
+       "flaeche_sued_km2": 20412843
+      },
+      {
+       "ka": 17.78,
+       "flaeche_nord_km2": 22249506,
+       "flaeche_sued_km2": 20637184
+      },
+      {
+       "ka": 17.77,
+       "flaeche_nord_km2": 24249841,
+       "flaeche_sued_km2": 20320852
+      },
+      {
+       "ka": 17.76,
+       "flaeche_nord_km2": 23001096,
+       "flaeche_sued_km2": 20171824
+      },
+      {
+       "ka": 17.75,
+       "flaeche_nord_km2": 22796925,
+       "flaeche_sued_km2": 20034899
+      },
+      {
+       "ka": 17.74,
+       "flaeche_nord_km2": 23601654,
+       "flaeche_sued_km2": 20399909
+      },
+      {
+       "ka": 17.73,
+       "flaeche_nord_km2": 23961157,
+       "flaeche_sued_km2": 20318948
+      },
+      {
+       "ka": 17.72,
+       "flaeche_nord_km2": 23713538,
+       "flaeche_sued_km2": 20229585
+      },
+      {
+       "ka": 17.71,
+       "flaeche_nord_km2": 22500999,
+       "flaeche_sued_km2": 20197236
+      },
+      {
+       "ka": 17.7,
+       "flaeche_nord_km2": 22946182,
+       "flaeche_sued_km2": 20046448
+      },
+      {
+       "ka": 17.69,
+       "flaeche_nord_km2": 22822983,
+       "flaeche_sued_km2": 19930166
+      },
+      {
+       "ka": 17.68,
+       "flaeche_nord_km2": 22870530,
+       "flaeche_sued_km2": 19761204
+      },
+      {
+       "ka": 17.67,
+       "flaeche_nord_km2": 24216754,
+       "flaeche_sued_km2": 20048639
+      },
+      {
+       "ka": 17.66,
+       "flaeche_nord_km2": 24489650,
+       "flaeche_sued_km2": 19666959
+      },
+      {
+       "ka": 17.65,
+       "flaeche_nord_km2": 24341153,
+       "flaeche_sued_km2": 20025928
+      },
+      {
+       "ka": 17.64,
+       "flaeche_nord_km2": 23616449,
+       "flaeche_sued_km2": 20218134
+      },
+      {
+       "ka": 17.63,
+       "flaeche_nord_km2": 23460455,
+       "flaeche_sued_km2": 19841738
+      },
+      {
+       "ka": 17.62,
+       "flaeche_nord_km2": 23439424,
+       "flaeche_sued_km2": 19815783
+      },
+      {
+       "ka": 17.61,
+       "flaeche_nord_km2": 22960788,
+       "flaeche_sued_km2": 19850814
+      },
+      {
+       "ka": 17.6,
+       "flaeche_nord_km2": 23934470,
+       "flaeche_sued_km2": 20171108
+      },
+      {
+       "ka": 17.59,
+       "flaeche_nord_km2": 24740458,
+       "flaeche_sued_km2": 19504854
+      },
+      {
+       "ka": 17.58,
+       "flaeche_nord_km2": 24450444,
+       "flaeche_sued_km2": 19846032
+      },
+      {
+       "ka": 17.57,
+       "flaeche_nord_km2": 25002541,
+       "flaeche_sued_km2": 19665119
+      },
+      {
+       "ka": 17.56,
+       "flaeche_nord_km2": 24543208,
+       "flaeche_sued_km2": 19342251
+      },
+      {
+       "ka": 17.55,
+       "flaeche_nord_km2": 23482601,
+       "flaeche_sued_km2": 19892087
+      },
+      {
+       "ka": 17.54,
+       "flaeche_nord_km2": 23261136,
+       "flaeche_sued_km2": 19923351
+      },
+      {
+       "ka": 17.53,
+       "flaeche_nord_km2": 23658901,
+       "flaeche_sued_km2": 19384469
+      },
+      {
+       "ka": 17.52,
+       "flaeche_nord_km2": 23157515,
+       "flaeche_sued_km2": 19871616
+      },
+      {
+       "ka": 17.51,
+       "flaeche_nord_km2": 23865116,
+       "flaeche_sued_km2": 19697790
+      },
+      {
+       "ka": 17.5,
+       "flaeche_nord_km2": 23777582,
+       "flaeche_sued_km2": 19415230
+      },
+      {
+       "ka": 17.49,
+       "flaeche_nord_km2": 24579136,
+       "flaeche_sued_km2": 19780517
+      },
+      {
+       "ka": 17.48,
+       "flaeche_nord_km2": 24862782,
+       "flaeche_sued_km2": 19796525
+      },
+      {
+       "ka": 17.47,
+       "flaeche_nord_km2": 24539638,
+       "flaeche_sued_km2": 19615404
+      },
+      {
+       "ka": 17.46,
+       "flaeche_nord_km2": 24080119,
+       "flaeche_sued_km2": 19428883
+      },
+      {
+       "ka": 17.45,
+       "flaeche_nord_km2": 24891041,
+       "flaeche_sued_km2": 19631254
+      },
+      {
+       "ka": 17.44,
+       "flaeche_nord_km2": 23853725,
+       "flaeche_sued_km2": 19422651
+      },
+      {
+       "ka": 17.43,
+       "flaeche_nord_km2": 24901912,
+       "flaeche_sued_km2": 19775682
+      },
+      {
+       "ka": 17.42,
+       "flaeche_nord_km2": 24748434,
+       "flaeche_sued_km2": 19214395
+      },
+      {
+       "ka": 17.41,
+       "flaeche_nord_km2": 25228092,
+       "flaeche_sued_km2": 19199150
+      },
+      {
+       "ka": 17.4,
+       "flaeche_nord_km2": 25243879,
+       "flaeche_sued_km2": 19106258
+      },
+      {
+       "ka": 17.39,
+       "flaeche_nord_km2": 24628728,
+       "flaeche_sued_km2": 19660163
+      },
+      {
+       "ka": 17.38,
+       "flaeche_nord_km2": 24717853,
+       "flaeche_sued_km2": 19601474
+      },
+      {
+       "ka": 17.37,
+       "flaeche_nord_km2": 25550207,
+       "flaeche_sued_km2": 19324942
+      },
+      {
+       "ka": 17.36,
+       "flaeche_nord_km2": 24987098,
+       "flaeche_sued_km2": 19441405
+      },
+      {
+       "ka": 17.35,
+       "flaeche_nord_km2": 25726672,
+       "flaeche_sued_km2": 19117344
+      },
+      {
+       "ka": 17.34,
+       "flaeche_nord_km2": 26189179,
+       "flaeche_sued_km2": 19326075
+      },
+      {
+       "ka": 17.33,
+       "flaeche_nord_km2": 26166774,
+       "flaeche_sued_km2": 19245148
+      },
+      {
+       "ka": 17.32,
+       "flaeche_nord_km2": 26478169,
+       "flaeche_sued_km2": 18913514
+      },
+      {
+       "ka": 17.31,
+       "flaeche_nord_km2": 25682865,
+       "flaeche_sued_km2": 19346155
+      },
+      {
+       "ka": 17.3,
+       "flaeche_nord_km2": 25793868,
+       "flaeche_sued_km2": 18972043
+      },
+      {
+       "ka": 17.29,
+       "flaeche_nord_km2": 25817508,
+       "flaeche_sued_km2": 19254533
+      },
+      {
+       "ka": 17.28,
+       "flaeche_nord_km2": 25896573,
+       "flaeche_sued_km2": 19066174
+      },
+      {
+       "ka": 17.27,
+       "flaeche_nord_km2": 25210961,
+       "flaeche_sued_km2": 19198146
+      },
+      {
+       "ka": 17.26,
+       "flaeche_nord_km2": 26230579,
+       "flaeche_sued_km2": 19080723
+      },
+      {
+       "ka": 17.25,
+       "flaeche_nord_km2": 26010203,
+       "flaeche_sued_km2": 18948949
+      },
+      {
+       "ka": 17.24,
+       "flaeche_nord_km2": 26098923,
+       "flaeche_sued_km2": 18976353
+      },
+      {
+       "ka": 17.23,
+       "flaeche_nord_km2": 26140235,
+       "flaeche_sued_km2": 18795789
+      },
+      {
+       "ka": 17.22,
+       "flaeche_nord_km2": 26255542,
+       "flaeche_sued_km2": 18949783
+      },
+      {
+       "ka": 17.21,
+       "flaeche_nord_km2": 25973554,
+       "flaeche_sued_km2": 19021410
+      },
+      {
+       "ka": 17.2,
+       "flaeche_nord_km2": 26341220,
+       "flaeche_sued_km2": 18842151
+      },
+      {
+       "ka": 17.19,
+       "flaeche_nord_km2": 26546847,
+       "flaeche_sued_km2": 18690178
+      },
+      {
+       "ka": 17.18,
+       "flaeche_nord_km2": 26755425,
+       "flaeche_sued_km2": 19046734
+      },
+      {
+       "ka": 17.17,
+       "flaeche_nord_km2": 25510005,
+       "flaeche_sued_km2": 18497892
+      },
+      {
+       "ka": 17.16,
+       "flaeche_nord_km2": 26106287,
+       "flaeche_sued_km2": 18585753
+      },
+      {
+       "ka": 17.15,
+       "flaeche_nord_km2": 26333860,
+       "flaeche_sued_km2": 18689762
+      },
+      {
+       "ka": 17.14,
+       "flaeche_nord_km2": 26388483,
+       "flaeche_sued_km2": 18307349
+      },
+      {
+       "ka": 17.13,
+       "flaeche_nord_km2": 26860376,
+       "flaeche_sued_km2": 18544388
+      },
+      {
+       "ka": 17.12,
+       "flaeche_nord_km2": 27054751,
+       "flaeche_sued_km2": 18288975
+      },
+      {
+       "ka": 17.11,
+       "flaeche_nord_km2": 26414036,
+       "flaeche_sued_km2": 18677926
+      },
+      {
+       "ka": 17.1,
+       "flaeche_nord_km2": 26233213,
+       "flaeche_sued_km2": 18365591
+      },
+      {
+       "ka": 17.09,
+       "flaeche_nord_km2": 26560756,
+       "flaeche_sued_km2": 18568425
+      },
+      {
+       "ka": 17.08,
+       "flaeche_nord_km2": 26464849,
+       "flaeche_sued_km2": 18788078
+      },
+      {
+       "ka": 17.07,
+       "flaeche_nord_km2": 26898448,
+       "flaeche_sued_km2": 18391156
+      },
+      {
+       "ka": 17.06,
+       "flaeche_nord_km2": 26625888,
+       "flaeche_sued_km2": 18289891
+      },
+      {
+       "ka": 17.05,
+       "flaeche_nord_km2": 26313881,
+       "flaeche_sued_km2": 18348385
+      },
+      {
+       "ka": 17.04,
+       "flaeche_nord_km2": 26476888,
+       "flaeche_sued_km2": 17923564
+      },
+      {
+       "ka": 17.03,
+       "flaeche_nord_km2": 26828977,
+       "flaeche_sued_km2": 17961396
+      },
+      {
+       "ka": 17.02,
+       "flaeche_nord_km2": 26250681,
+       "flaeche_sued_km2": 18287290
+      },
+      {
+       "ka": 17.01,
+       "flaeche_nord_km2": 26238349,
+       "flaeche_sued_km2": 18376513
+      },
+      {
+       "ka": 17.0,
+       "flaeche_nord_km2": 26352867,
+       "flaeche_sued_km2": 17998666
+      },
+      {
+       "ka": 16.99,
+       "flaeche_nord_km2": 26499518,
+       "flaeche_sued_km2": 17741183
+      },
+      {
+       "ka": 16.98,
+       "flaeche_nord_km2": 26857745,
+       "flaeche_sued_km2": 18113973
+      },
+      {
+       "ka": 16.97,
+       "flaeche_nord_km2": 27204541,
+       "flaeche_sued_km2": 18203016
+      },
+      {
+       "ka": 16.96,
+       "flaeche_nord_km2": 26360732,
+       "flaeche_sued_km2": 18215442
+      },
+      {
+       "ka": 16.95,
+       "flaeche_nord_km2": 26520780,
+       "flaeche_sued_km2": 18202216
+      },
+      {
+       "ka": 16.94,
+       "flaeche_nord_km2": 26910015,
+       "flaeche_sued_km2": 18117241
+      },
+      {
+       "ka": 16.93,
+       "flaeche_nord_km2": 26182061,
+       "flaeche_sued_km2": 18222288
+      },
+      {
+       "ka": 16.92,
+       "flaeche_nord_km2": 26872455,
+       "flaeche_sued_km2": 17923611
+      },
+      {
+       "ka": 16.91,
+       "flaeche_nord_km2": 26473106,
+       "flaeche_sued_km2": 18120075
+      },
+      {
+       "ka": 16.9,
+       "flaeche_nord_km2": 26817066,
+       "flaeche_sued_km2": 17783923
+      },
+      {
+       "ka": 16.89,
+       "flaeche_nord_km2": 26600746,
+       "flaeche_sued_km2": 18068823
+      },
+      {
+       "ka": 16.88,
+       "flaeche_nord_km2": 26581659,
+       "flaeche_sued_km2": 17816757
+      },
+      {
+       "ka": 16.87,
+       "flaeche_nord_km2": 26438896,
+       "flaeche_sued_km2": 17662710
+      },
+      {
+       "ka": 16.86,
+       "flaeche_nord_km2": 26723985,
+       "flaeche_sued_km2": 17552765
+      },
+      {
+       "ka": 16.85,
+       "flaeche_nord_km2": 27019500,
+       "flaeche_sued_km2": 17814233
+      },
+      {
+       "ka": 16.84,
+       "flaeche_nord_km2": 26895151,
+       "flaeche_sued_km2": 17507153
+      },
+      {
+       "ka": 16.83,
+       "flaeche_nord_km2": 26598812,
+       "flaeche_sued_km2": 18108294
+      },
+      {
+       "ka": 16.82,
+       "flaeche_nord_km2": 26925720,
+       "flaeche_sued_km2": 17886635
+      },
+      {
+       "ka": 16.81,
+       "flaeche_nord_km2": 26959973,
+       "flaeche_sued_km2": 17617792
+      },
+      {
+       "ka": 16.8,
+       "flaeche_nord_km2": 26536408,
+       "flaeche_sued_km2": 17761099
+      },
+      {
+       "ka": 16.79,
+       "flaeche_nord_km2": 25730306,
+       "flaeche_sued_km2": 18181472
+      },
+      {
+       "ka": 16.78,
+       "flaeche_nord_km2": 25908683,
+       "flaeche_sued_km2": 17425160
+      },
+      {
+       "ka": 16.77,
+       "flaeche_nord_km2": 26414611,
+       "flaeche_sued_km2": 17334553
+      },
+      {
+       "ka": 16.76,
+       "flaeche_nord_km2": 26259096,
+       "flaeche_sued_km2": 17703446
+      },
+      {
+       "ka": 16.75,
+       "flaeche_nord_km2": 26456254,
+       "flaeche_sued_km2": 17557268
+      },
+      {
+       "ka": 16.74,
+       "flaeche_nord_km2": 26156979,
+       "flaeche_sued_km2": 17614637
+      },
+      {
+       "ka": 16.73,
+       "flaeche_nord_km2": 26513365,
+       "flaeche_sued_km2": 17456960
+      },
+      {
+       "ka": 16.72,
+       "flaeche_nord_km2": 26586281,
+       "flaeche_sued_km2": 17315909
+      },
+      {
+       "ka": 16.71,
+       "flaeche_nord_km2": 27124201,
+       "flaeche_sued_km2": 17293052
+      },
+      {
+       "ka": 16.7,
+       "flaeche_nord_km2": 27239486,
+       "flaeche_sued_km2": 17281311
+      },
+      {
+       "ka": 16.69,
+       "flaeche_nord_km2": 25702225,
+       "flaeche_sued_km2": 17636446
+      },
+      {
+       "ka": 16.68,
+       "flaeche_nord_km2": 26331854,
+       "flaeche_sued_km2": 17283797
+      },
+      {
+       "ka": 16.67,
+       "flaeche_nord_km2": 26581063,
+       "flaeche_sued_km2": 17475885
+      },
+      {
+       "ka": 16.66,
+       "flaeche_nord_km2": 26508829,
+       "flaeche_sued_km2": 17455505
+      },
+      {
+       "ka": 16.65,
+       "flaeche_nord_km2": 26634768,
+       "flaeche_sued_km2": 17674440
+      },
+      {
+       "ka": 16.64,
+       "flaeche_nord_km2": 26052547,
+       "flaeche_sued_km2": 17183037
+      },
+      {
+       "ka": 16.63,
+       "flaeche_nord_km2": 26150250,
+       "flaeche_sued_km2": 17324217
+      },
+      {
+       "ka": 16.62,
+       "flaeche_nord_km2": 26176888,
+       "flaeche_sued_km2": 17187465
+      },
+      {
+       "ka": 16.61,
+       "flaeche_nord_km2": 26545203,
+       "flaeche_sued_km2": 16994167
+      },
+      {
+       "ka": 16.6,
+       "flaeche_nord_km2": 26795400,
+       "flaeche_sued_km2": 17236511
+      },
+      {
+       "ka": 16.59,
+       "flaeche_nord_km2": 26808744,
+       "flaeche_sued_km2": 17303946
+      },
+      {
+       "ka": 16.58,
+       "flaeche_nord_km2": 26844445,
+       "flaeche_sued_km2": 17180562
+      },
+      {
+       "ka": 16.57,
+       "flaeche_nord_km2": 26326691,
+       "flaeche_sued_km2": 17140898
+      },
+      {
+       "ka": 16.56,
+       "flaeche_nord_km2": 25987173,
+       "flaeche_sued_km2": 16830652
+      },
+      {
+       "ka": 16.55,
+       "flaeche_nord_km2": 25983965,
+       "flaeche_sued_km2": 17194496
+      },
+      {
+       "ka": 16.54,
+       "flaeche_nord_km2": 26087101,
+       "flaeche_sued_km2": 17003610
+      },
+      {
+       "ka": 16.53,
+       "flaeche_nord_km2": 26384203,
+       "flaeche_sued_km2": 17070396
+      },
+      {
+       "ka": 16.52,
+       "flaeche_nord_km2": 26050290,
+       "flaeche_sued_km2": 17060199
+      },
+      {
+       "ka": 16.51,
+       "flaeche_nord_km2": 26024020,
+       "flaeche_sued_km2": 16944000
+      },
+      {
+       "ka": 16.5,
+       "flaeche_nord_km2": 25789414,
+       "flaeche_sued_km2": 17321459
+      }
+     ]
+    },
+    "jja": {
+     "datei": "meereis/trace/jja.png",
+     "groesse_byte": 326714,
+     "schritte": [
+      {
+       "ka": 22.0,
+       "flaeche_nord_km2": 11227850,
+       "flaeche_sued_km2": 37678083
+      },
+      {
+       "ka": 21.99,
+       "flaeche_nord_km2": 11261289,
+       "flaeche_sued_km2": 37689323
+      },
+      {
+       "ka": 21.98,
+       "flaeche_nord_km2": 11124397,
+       "flaeche_sued_km2": 37622836
+      },
+      {
+       "ka": 21.97,
+       "flaeche_nord_km2": 11354390,
+       "flaeche_sued_km2": 37651062
+      },
+      {
+       "ka": 21.96,
+       "flaeche_nord_km2": 11105330,
+       "flaeche_sued_km2": 37535581
+      },
+      {
+       "ka": 21.95,
+       "flaeche_nord_km2": 11093131,
+       "flaeche_sued_km2": 37386695
+      },
+      {
+       "ka": 21.94,
+       "flaeche_nord_km2": 11216326,
+       "flaeche_sued_km2": 37448085
+      },
+      {
+       "ka": 21.93,
+       "flaeche_nord_km2": 11068074,
+       "flaeche_sued_km2": 37745663
+      },
+      {
+       "ka": 21.92,
+       "flaeche_nord_km2": 11324378,
+       "flaeche_sued_km2": 37419345
+      },
+      {
+       "ka": 21.91,
+       "flaeche_nord_km2": 11204582,
+       "flaeche_sued_km2": 37635325
+      },
+      {
+       "ka": 21.9,
+       "flaeche_nord_km2": 11285314,
+       "flaeche_sued_km2": 37831335
+      },
+      {
+       "ka": 21.89,
+       "flaeche_nord_km2": 11373000,
+       "flaeche_sued_km2": 37688743
+      },
+      {
+       "ka": 21.88,
+       "flaeche_nord_km2": 11446331,
+       "flaeche_sued_km2": 37620026
+      },
+      {
+       "ka": 21.87,
+       "flaeche_nord_km2": 11390442,
+       "flaeche_sued_km2": 37237098
+      },
+      {
+       "ka": 21.86,
+       "flaeche_nord_km2": 11209909,
+       "flaeche_sued_km2": 37922329
+      },
+      {
+       "ka": 21.85,
+       "flaeche_nord_km2": 11248739,
+       "flaeche_sued_km2": 37408312
+      },
+      {
+       "ka": 21.84,
+       "flaeche_nord_km2": 11326390,
+       "flaeche_sued_km2": 37189281
+      },
+      {
+       "ka": 21.83,
+       "flaeche_nord_km2": 11130254,
+       "flaeche_sued_km2": 37450225
+      },
+      {
+       "ka": 21.82,
+       "flaeche_nord_km2": 11225610,
+       "flaeche_sued_km2": 37132017
+      },
+      {
+       "ka": 21.81,
+       "flaeche_nord_km2": 11453042,
+       "flaeche_sued_km2": 37445845
+      },
+      {
+       "ka": 21.8,
+       "flaeche_nord_km2": 11213409,
+       "flaeche_sued_km2": 37456579
+      },
+      {
+       "ka": 21.79,
+       "flaeche_nord_km2": 11362885,
+       "flaeche_sued_km2": 37390596
+      },
+      {
+       "ka": 21.78,
+       "flaeche_nord_km2": 11069475,
+       "flaeche_sued_km2": 37678966
+      },
+      {
+       "ka": 21.77,
+       "flaeche_nord_km2": 11290287,
+       "flaeche_sued_km2": 37674612
+      },
+      {
+       "ka": 21.76,
+       "flaeche_nord_km2": 11055981,
+       "flaeche_sued_km2": 37504420
+      },
+      {
+       "ka": 21.75,
+       "flaeche_nord_km2": 11079685,
+       "flaeche_sued_km2": 37477875
+      },
+      {
+       "ka": 21.74,
+       "flaeche_nord_km2": 11212126,
+       "flaeche_sued_km2": 37705806
+      },
+      {
+       "ka": 21.73,
+       "flaeche_nord_km2": 11156229,
+       "flaeche_sued_km2": 37696819
+      },
+      {
+       "ka": 21.72,
+       "flaeche_nord_km2": 11409948,
+       "flaeche_sued_km2": 37087990
+      },
+      {
+       "ka": 21.71,
+       "flaeche_nord_km2": 11379926,
+       "flaeche_sued_km2": 37526245
+      },
+      {
+       "ka": 21.7,
+       "flaeche_nord_km2": 11406519,
+       "flaeche_sued_km2": 37330501
+      },
+      {
+       "ka": 21.69,
+       "flaeche_nord_km2": 11260180,
+       "flaeche_sued_km2": 37886304
+      },
+      {
+       "ka": 21.68,
+       "flaeche_nord_km2": 11354723,
+       "flaeche_sued_km2": 37969385
+      },
+      {
+       "ka": 21.67,
+       "flaeche_nord_km2": 11382044,
+       "flaeche_sued_km2": 37978975
+      },
+      {
+       "ka": 21.66,
+       "flaeche_nord_km2": 11273345,
+       "flaeche_sued_km2": 37395088
+      },
+      {
+       "ka": 21.65,
+       "flaeche_nord_km2": 11245446,
+       "flaeche_sued_km2": 37759865
+      },
+      {
+       "ka": 21.64,
+       "flaeche_nord_km2": 11148041,
+       "flaeche_sued_km2": 37796296
+      },
+      {
+       "ka": 21.63,
+       "flaeche_nord_km2": 11094405,
+       "flaeche_sued_km2": 37378224
+      },
+      {
+       "ka": 21.62,
+       "flaeche_nord_km2": 11164644,
+       "flaeche_sued_km2": 37034654
+      },
+      {
+       "ka": 21.61,
+       "flaeche_nord_km2": 11282062,
+       "flaeche_sued_km2": 37368962
+      },
+      {
+       "ka": 21.6,
+       "flaeche_nord_km2": 11118076,
+       "flaeche_sued_km2": 37367541
+      },
+      {
+       "ka": 21.59,
+       "flaeche_nord_km2": 11234618,
+       "flaeche_sued_km2": 38010352
+      },
+      {
+       "ka": 21.58,
+       "flaeche_nord_km2": 11151184,
+       "flaeche_sued_km2": 37327952
+      },
+      {
+       "ka": 21.57,
+       "flaeche_nord_km2": 11346731,
+       "flaeche_sued_km2": 37456686
+      },
+      {
+       "ka": 21.56,
+       "flaeche_nord_km2": 11202854,
+       "flaeche_sued_km2": 37746689
+      },
+      {
+       "ka": 21.55,
+       "flaeche_nord_km2": 11201110,
+       "flaeche_sued_km2": 37765732
+      },
+      {
+       "ka": 21.54,
+       "flaeche_nord_km2": 10930409,
+       "flaeche_sued_km2": 37334340
+      },
+      {
+       "ka": 21.53,
+       "flaeche_nord_km2": 11181684,
+       "flaeche_sued_km2": 37728914
+      },
+      {
+       "ka": 21.52,
+       "flaeche_nord_km2": 11345648,
+       "flaeche_sued_km2": 37714354
+      },
+      {
+       "ka": 21.51,
+       "flaeche_nord_km2": 11340353,
+       "flaeche_sued_km2": 37589326
+      },
+      {
+       "ka": 21.5,
+       "flaeche_nord_km2": 11224958,
+       "flaeche_sued_km2": 37565411
+      },
+      {
+       "ka": 21.49,
+       "flaeche_nord_km2": 11256090,
+       "flaeche_sued_km2": 37755881
+      },
+      {
+       "ka": 21.48,
+       "flaeche_nord_km2": 11183710,
+       "flaeche_sued_km2": 38087299
+      },
+      {
+       "ka": 21.47,
+       "flaeche_nord_km2": 11122669,
+       "flaeche_sued_km2": 37089072
+      },
+      {
+       "ka": 21.46,
+       "flaeche_nord_km2": 10970766,
+       "flaeche_sued_km2": 37285458
+      },
+      {
+       "ka": 21.45,
+       "flaeche_nord_km2": 11267553,
+       "flaeche_sued_km2": 36868497
+      },
+      {
+       "ka": 21.44,
+       "flaeche_nord_km2": 11257075,
+       "flaeche_sued_km2": 37489361
+      },
+      {
+       "ka": 21.43,
+       "flaeche_nord_km2": 11447222,
+       "flaeche_sued_km2": 37506976
+      },
+      {
+       "ka": 21.42,
+       "flaeche_nord_km2": 11400537,
+       "flaeche_sued_km2": 37905069
+      },
+      {
+       "ka": 21.41,
+       "flaeche_nord_km2": 11256509,
+       "flaeche_sued_km2": 36844109
+      },
+      {
+       "ka": 21.4,
+       "flaeche_nord_km2": 11257555,
+       "flaeche_sued_km2": 37272302
+      },
+      {
+       "ka": 21.39,
+       "flaeche_nord_km2": 10907900,
+       "flaeche_sued_km2": 37562046
+      },
+      {
+       "ka": 21.38,
+       "flaeche_nord_km2": 11201205,
+       "flaeche_sued_km2": 37374574
+      },
+      {
+       "ka": 21.37,
+       "flaeche_nord_km2": 11159841,
+       "flaeche_sued_km2": 37676511
+      },
+      {
+       "ka": 21.36,
+       "flaeche_nord_km2": 11137481,
+       "flaeche_sued_km2": 37522556
+      },
+      {
+       "ka": 21.35,
+       "flaeche_nord_km2": 11403281,
+       "flaeche_sued_km2": 37412564
+      },
+      {
+       "ka": 21.34,
+       "flaeche_nord_km2": 11346845,
+       "flaeche_sued_km2": 37116238
+      },
+      {
+       "ka": 21.33,
+       "flaeche_nord_km2": 11188105,
+       "flaeche_sued_km2": 37129923
+      },
+      {
+       "ka": 21.32,
+       "flaeche_nord_km2": 11350744,
+       "flaeche_sued_km2": 37571952
+      },
+      {
+       "ka": 21.31,
+       "flaeche_nord_km2": 11089276,
+       "flaeche_sued_km2": 37206614
+      },
+      {
+       "ka": 21.3,
+       "flaeche_nord_km2": 10973582,
+       "flaeche_sued_km2": 37320054
+      },
+      {
+       "ka": 21.29,
+       "flaeche_nord_km2": 10951207,
+       "flaeche_sued_km2": 37552275
+      },
+      {
+       "ka": 21.28,
+       "flaeche_nord_km2": 11328754,
+       "flaeche_sued_km2": 37680560
+      },
+      {
+       "ka": 21.27,
+       "flaeche_nord_km2": 11323690,
+       "flaeche_sued_km2": 37951069
+      },
+      {
+       "ka": 21.26,
+       "flaeche_nord_km2": 11133574,
+       "flaeche_sued_km2": 37756060
+      },
+      {
+       "ka": 21.25,
+       "flaeche_nord_km2": 11042771,
+       "flaeche_sued_km2": 37465204
+      },
+      {
+       "ka": 21.24,
+       "flaeche_nord_km2": 10999549,
+       "flaeche_sued_km2": 37366961
+      },
+      {
+       "ka": 21.23,
+       "flaeche_nord_km2": 11289974,
+       "flaeche_sued_km2": 37001208
+      },
+      {
+       "ka": 21.22,
+       "flaeche_nord_km2": 11250074,
+       "flaeche_sued_km2": 37366415
+      },
+      {
+       "ka": 21.21,
+       "flaeche_nord_km2": 11567036,
+       "flaeche_sued_km2": 37567801
+      },
+      {
+       "ka": 21.2,
+       "flaeche_nord_km2": 11043512,
+       "flaeche_sued_km2": 37882394
+      },
+      {
+       "ka": 21.19,
+       "flaeche_nord_km2": 11294537,
+       "flaeche_sued_km2": 37760929
+      },
+      {
+       "ka": 21.18,
+       "flaeche_nord_km2": 11320793,
+       "flaeche_sued_km2": 37288213
+      },
+      {
+       "ka": 21.17,
+       "flaeche_nord_km2": 11311902,
+       "flaeche_sued_km2": 36888169
+      },
+      {
+       "ka": 21.16,
+       "flaeche_nord_km2": 11229916,
+       "flaeche_sued_km2": 37507675
+      },
+      {
+       "ka": 21.15,
+       "flaeche_nord_km2": 11117954,
+       "flaeche_sued_km2": 37434256
+      },
+      {
+       "ka": 21.14,
+       "flaeche_nord_km2": 11206524,
+       "flaeche_sued_km2": 37783248
+      },
+      {
+       "ka": 21.13,
+       "flaeche_nord_km2": 11317759,
+       "flaeche_sued_km2": 37574814
+      },
+      {
+       "ka": 21.12,
+       "flaeche_nord_km2": 11335500,
+       "flaeche_sued_km2": 37369408
+      },
+      {
+       "ka": 21.11,
+       "flaeche_nord_km2": 11385433,
+       "flaeche_sued_km2": 37149461
+      },
+      {
+       "ka": 21.1,
+       "flaeche_nord_km2": 11430631,
+       "flaeche_sued_km2": 37081122
+      },
+      {
+       "ka": 21.09,
+       "flaeche_nord_km2": 11041191,
+       "flaeche_sued_km2": 37448166
+      },
+      {
+       "ka": 21.08,
+       "flaeche_nord_km2": 11129680,
+       "flaeche_sued_km2": 37138754
+      },
+      {
+       "ka": 21.07,
+       "flaeche_nord_km2": 11246371,
+       "flaeche_sued_km2": 37058359
+      },
+      {
+       "ka": 21.06,
+       "flaeche_nord_km2": 11499938,
+       "flaeche_sued_km2": 37621476
+      },
+      {
+       "ka": 21.05,
+       "flaeche_nord_km2": 11412757,
+       "flaeche_sued_km2": 37704251
+      },
+      {
+       "ka": 21.04,
+       "flaeche_nord_km2": 11176426,
+       "flaeche_sued_km2": 37174820
+      },
+      {
+       "ka": 21.03,
+       "flaeche_nord_km2": 11150815,
+       "flaeche_sued_km2": 37370416
+      },
+      {
+       "ka": 21.02,
+       "flaeche_nord_km2": 11132617,
+       "flaeche_sued_km2": 37544067
+      },
+      {
+       "ka": 21.01,
+       "flaeche_nord_km2": 11232319,
+       "flaeche_sued_km2": 37934281
+      },
+      {
+       "ka": 21.0,
+       "flaeche_nord_km2": 11352432,
+       "flaeche_sued_km2": 37270430
+      },
+      {
+       "ka": 20.99,
+       "flaeche_nord_km2": 11295854,
+       "flaeche_sued_km2": 37095138
+      },
+      {
+       "ka": 20.98,
+       "flaeche_nord_km2": 11233218,
+       "flaeche_sued_km2": 37567975
+      },
+      {
+       "ka": 20.97,
+       "flaeche_nord_km2": 11219143,
+       "flaeche_sued_km2": 37453131
+      },
+      {
+       "ka": 20.96,
+       "flaeche_nord_km2": 11373560,
+       "flaeche_sued_km2": 37309043
+      },
+      {
+       "ka": 20.95,
+       "flaeche_nord_km2": 11304313,
+       "flaeche_sued_km2": 37590891
+      },
+      {
+       "ka": 20.94,
+       "flaeche_nord_km2": 11180664,
+       "flaeche_sued_km2": 37447282
+      },
+      {
+       "ka": 20.93,
+       "flaeche_nord_km2": 11345939,
+       "flaeche_sued_km2": 37121891
+      },
+      {
+       "ka": 20.92,
+       "flaeche_nord_km2": 11109256,
+       "flaeche_sued_km2": 37264676
+      },
+      {
+       "ka": 20.91,
+       "flaeche_nord_km2": 11158893,
+       "flaeche_sued_km2": 37761660
+      },
+      {
+       "ka": 20.9,
+       "flaeche_nord_km2": 11167046,
+       "flaeche_sued_km2": 37226519
+      },
+      {
+       "ka": 20.89,
+       "flaeche_nord_km2": 11745839,
+       "flaeche_sued_km2": 37437733
+      },
+      {
+       "ka": 20.88,
+       "flaeche_nord_km2": 11402698,
+       "flaeche_sued_km2": 37386079
+      },
+      {
+       "ka": 20.87,
+       "flaeche_nord_km2": 11308138,
+       "flaeche_sued_km2": 37642330
+      },
+      {
+       "ka": 20.86,
+       "flaeche_nord_km2": 11077012,
+       "flaeche_sued_km2": 37600936
+      },
+      {
+       "ka": 20.85,
+       "flaeche_nord_km2": 11177122,
+       "flaeche_sued_km2": 37690252
+      },
+      {
+       "ka": 20.84,
+       "flaeche_nord_km2": 11301258,
+       "flaeche_sued_km2": 37239102
+      },
+      {
+       "ka": 20.83,
+       "flaeche_nord_km2": 11256740,
+       "flaeche_sued_km2": 37362852
+      },
+      {
+       "ka": 20.82,
+       "flaeche_nord_km2": 11431350,
+       "flaeche_sued_km2": 37966644
+      },
+      {
+       "ka": 20.81,
+       "flaeche_nord_km2": 11001861,
+       "flaeche_sued_km2": 37759350
+      },
+      {
+       "ka": 20.8,
+       "flaeche_nord_km2": 11363264,
+       "flaeche_sued_km2": 37775561
+      },
+      {
+       "ka": 20.79,
+       "flaeche_nord_km2": 11488299,
+       "flaeche_sued_km2": 37687339
+      },
+      {
+       "ka": 20.78,
+       "flaeche_nord_km2": 11105760,
+       "flaeche_sued_km2": 37509056
+      },
+      {
+       "ka": 20.77,
+       "flaeche_nord_km2": 10877620,
+       "flaeche_sued_km2": 37504586
+      },
+      {
+       "ka": 20.76,
+       "flaeche_nord_km2": 11382013,
+       "flaeche_sued_km2": 37567656
+      },
+      {
+       "ka": 20.75,
+       "flaeche_nord_km2": 11348475,
+       "flaeche_sued_km2": 37587139
+      },
+      {
+       "ka": 20.74,
+       "flaeche_nord_km2": 11101936,
+       "flaeche_sued_km2": 37062110
+      },
+      {
+       "ka": 20.73,
+       "flaeche_nord_km2": 11153410,
+       "flaeche_sued_km2": 37453697
+      },
+      {
+       "ka": 20.72,
+       "flaeche_nord_km2": 11348479,
+       "flaeche_sued_km2": 37247326
+      },
+      {
+       "ka": 20.71,
+       "flaeche_nord_km2": 11202111,
+       "flaeche_sued_km2": 36982442
+      },
+      {
+       "ka": 20.7,
+       "flaeche_nord_km2": 11310121,
+       "flaeche_sued_km2": 37368113
+      },
+      {
+       "ka": 20.69,
+       "flaeche_nord_km2": 11473975,
+       "flaeche_sued_km2": 37644519
+      },
+      {
+       "ka": 20.68,
+       "flaeche_nord_km2": 11143511,
+       "flaeche_sued_km2": 37065133
+      },
+      {
+       "ka": 20.67,
+       "flaeche_nord_km2": 11129155,
+       "flaeche_sued_km2": 37242264
+      },
+      {
+       "ka": 20.66,
+       "flaeche_nord_km2": 11121103,
+       "flaeche_sued_km2": 37640605
+      },
+      {
+       "ka": 20.65,
+       "flaeche_nord_km2": 11268094,
+       "flaeche_sued_km2": 37527421
+      },
+      {
+       "ka": 20.64,
+       "flaeche_nord_km2": 11337741,
+       "flaeche_sued_km2": 37431210
+      },
+      {
+       "ka": 20.63,
+       "flaeche_nord_km2": 11299948,
+       "flaeche_sued_km2": 37540367
+      },
+      {
+       "ka": 20.62,
+       "flaeche_nord_km2": 11260536,
+       "flaeche_sued_km2": 37381960
+      },
+      {
+       "ka": 20.61,
+       "flaeche_nord_km2": 11413849,
+       "flaeche_sued_km2": 37028233
+      },
+      {
+       "ka": 20.6,
+       "flaeche_nord_km2": 11089498,
+       "flaeche_sued_km2": 37464355
+      },
+      {
+       "ka": 20.59,
+       "flaeche_nord_km2": 11423242,
+       "flaeche_sued_km2": 37136388
+      },
+      {
+       "ka": 20.58,
+       "flaeche_nord_km2": 11418061,
+       "flaeche_sued_km2": 37363464
+      },
+      {
+       "ka": 20.57,
+       "flaeche_nord_km2": 11321683,
+       "flaeche_sued_km2": 36825908
+      },
+      {
+       "ka": 20.56,
+       "flaeche_nord_km2": 11263493,
+       "flaeche_sued_km2": 37371052
+      },
+      {
+       "ka": 20.55,
+       "flaeche_nord_km2": 10996364,
+       "flaeche_sued_km2": 37262180
+      },
+      {
+       "ka": 20.54,
+       "flaeche_nord_km2": 11140140,
+       "flaeche_sued_km2": 37497869
+      },
+      {
+       "ka": 20.53,
+       "flaeche_nord_km2": 11111501,
+       "flaeche_sued_km2": 37627799
+      },
+      {
+       "ka": 20.52,
+       "flaeche_nord_km2": 11274552,
+       "flaeche_sued_km2": 37857456
+      },
+      {
+       "ka": 20.51,
+       "flaeche_nord_km2": 11364678,
+       "flaeche_sued_km2": 37530994
+      },
+      {
+       "ka": 20.5,
+       "flaeche_nord_km2": 11203195,
+       "flaeche_sued_km2": 37408664
+      },
+      {
+       "ka": 20.49,
+       "flaeche_nord_km2": 11293623,
+       "flaeche_sued_km2": 36874891
+      },
+      {
+       "ka": 20.48,
+       "flaeche_nord_km2": 11126679,
+       "flaeche_sued_km2": 37106520
+      },
+      {
+       "ka": 20.47,
+       "flaeche_nord_km2": 11095152,
+       "flaeche_sued_km2": 37082122
+      },
+      {
+       "ka": 20.46,
+       "flaeche_nord_km2": 11106936,
+       "flaeche_sued_km2": 36807387
+      },
+      {
+       "ka": 20.45,
+       "flaeche_nord_km2": 11119191,
+       "flaeche_sued_km2": 37638476
+      },
+      {
+       "ka": 20.44,
+       "flaeche_nord_km2": 11185181,
+       "flaeche_sued_km2": 37769875
+      },
+      {
+       "ka": 20.43,
+       "flaeche_nord_km2": 11071672,
+       "flaeche_sued_km2": 37687035
+      },
+      {
+       "ka": 20.42,
+       "flaeche_nord_km2": 11327708,
+       "flaeche_sued_km2": 37546117
+      },
+      {
+       "ka": 20.41,
+       "flaeche_nord_km2": 11035340,
+       "flaeche_sued_km2": 36820750
+      },
+      {
+       "ka": 20.4,
+       "flaeche_nord_km2": 10932252,
+       "flaeche_sued_km2": 37108259
+      },
+      {
+       "ka": 20.39,
+       "flaeche_nord_km2": 11011944,
+       "flaeche_sued_km2": 37155585
+      },
+      {
+       "ka": 20.38,
+       "flaeche_nord_km2": 11101654,
+       "flaeche_sued_km2": 36915022
+      },
+      {
+       "ka": 20.37,
+       "flaeche_nord_km2": 10914402,
+       "flaeche_sued_km2": 37530812
+      },
+      {
+       "ka": 20.36,
+       "flaeche_nord_km2": 11068315,
+       "flaeche_sued_km2": 37424030
+      },
+      {
+       "ka": 20.35,
+       "flaeche_nord_km2": 11153514,
+       "flaeche_sued_km2": 37225792
+      },
+      {
+       "ka": 20.34,
+       "flaeche_nord_km2": 10871650,
+       "flaeche_sued_km2": 37325006
+      },
+      {
+       "ka": 20.33,
+       "flaeche_nord_km2": 11143392,
+       "flaeche_sued_km2": 37755347
+      },
+      {
+       "ka": 20.32,
+       "flaeche_nord_km2": 10780142,
+       "flaeche_sued_km2": 37385173
+      },
+      {
+       "ka": 20.31,
+       "flaeche_nord_km2": 11164779,
+       "flaeche_sued_km2": 37174308
+      },
+      {
+       "ka": 20.3,
+       "flaeche_nord_km2": 11253150,
+       "flaeche_sued_km2": 37966659
+      },
+      {
+       "ka": 20.29,
+       "flaeche_nord_km2": 11138373,
+       "flaeche_sued_km2": 37607280
+      },
+      {
+       "ka": 20.28,
+       "flaeche_nord_km2": 11079218,
+       "flaeche_sued_km2": 37370713
+      },
+      {
+       "ka": 20.27,
+       "flaeche_nord_km2": 11411524,
+       "flaeche_sued_km2": 37672292
+      },
+      {
+       "ka": 20.26,
+       "flaeche_nord_km2": 10950547,
+       "flaeche_sued_km2": 37396436
+      },
+      {
+       "ka": 20.25,
+       "flaeche_nord_km2": 11357278,
+       "flaeche_sued_km2": 37727515
+      },
+      {
+       "ka": 20.24,
+       "flaeche_nord_km2": 11097499,
+       "flaeche_sued_km2": 37004065
+      },
+      {
+       "ka": 20.23,
+       "flaeche_nord_km2": 11328277,
+       "flaeche_sued_km2": 37216283
+      },
+      {
+       "ka": 20.22,
+       "flaeche_nord_km2": 11326718,
+       "flaeche_sued_km2": 37387812
+      },
+      {
+       "ka": 20.21,
+       "flaeche_nord_km2": 11189904,
+       "flaeche_sued_km2": 37174134
+      },
+      {
+       "ka": 20.2,
+       "flaeche_nord_km2": 11061803,
+       "flaeche_sued_km2": 37204933
+      },
+      {
+       "ka": 20.19,
+       "flaeche_nord_km2": 10982915,
+       "flaeche_sued_km2": 37649551
+      },
+      {
+       "ka": 20.18,
+       "flaeche_nord_km2": 11115921,
+       "flaeche_sued_km2": 37395145
+      },
+      {
+       "ka": 20.17,
+       "flaeche_nord_km2": 11167896,
+       "flaeche_sued_km2": 37566422
+      },
+      {
+       "ka": 20.16,
+       "flaeche_nord_km2": 11038631,
+       "flaeche_sued_km2": 37352480
+      },
+      {
+       "ka": 20.15,
+       "flaeche_nord_km2": 11079943,
+       "flaeche_sued_km2": 36850557
+      },
+      {
+       "ka": 20.14,
+       "flaeche_nord_km2": 11120822,
+       "flaeche_sued_km2": 37026847
+      },
+      {
+       "ka": 20.13,
+       "flaeche_nord_km2": 10922385,
+       "flaeche_sued_km2": 37352466
+      },
+      {
+       "ka": 20.12,
+       "flaeche_nord_km2": 11082072,
+       "flaeche_sued_km2": 37287142
+      },
+      {
+       "ka": 20.11,
+       "flaeche_nord_km2": 10894680,
+       "flaeche_sued_km2": 37384757
+      },
+      {
+       "ka": 20.1,
+       "flaeche_nord_km2": 10991825,
+       "flaeche_sued_km2": 37282947
+      },
+      {
+       "ka": 20.09,
+       "flaeche_nord_km2": 11150874,
+       "flaeche_sued_km2": 37242915
+      },
+      {
+       "ka": 20.08,
+       "flaeche_nord_km2": 11294384,
+       "flaeche_sued_km2": 37408932
+      },
+      {
+       "ka": 20.07,
+       "flaeche_nord_km2": 11027929,
+       "flaeche_sued_km2": 36934705
+      },
+      {
+       "ka": 20.06,
+       "flaeche_nord_km2": 11283147,
+       "flaeche_sued_km2": 37153430
+      },
+      {
+       "ka": 20.05,
+       "flaeche_nord_km2": 11132976,
+       "flaeche_sued_km2": 37291880
+      },
+      {
+       "ka": 20.04,
+       "flaeche_nord_km2": 11087985,
+       "flaeche_sued_km2": 37439535
+      },
+      {
+       "ka": 20.03,
+       "flaeche_nord_km2": 11309516,
+       "flaeche_sued_km2": 36846724
+      },
+      {
+       "ka": 20.02,
+       "flaeche_nord_km2": 11048022,
+       "flaeche_sued_km2": 37024963
+      },
+      {
+       "ka": 20.01,
+       "flaeche_nord_km2": 10878521,
+       "flaeche_sued_km2": 36876959
+      },
+      {
+       "ka": 20.0,
+       "flaeche_nord_km2": 10883720,
+       "flaeche_sued_km2": 36933025
+      },
+      {
+       "ka": 19.99,
+       "flaeche_nord_km2": 10857894,
+       "flaeche_sued_km2": 37214019
+      },
+      {
+       "ka": 19.98,
+       "flaeche_nord_km2": 11070247,
+       "flaeche_sued_km2": 36988244
+      },
+      {
+       "ka": 19.97,
+       "flaeche_nord_km2": 10976377,
+       "flaeche_sued_km2": 37465391
+      },
+      {
+       "ka": 19.96,
+       "flaeche_nord_km2": 10896674,
+       "flaeche_sued_km2": 37025357
+      },
+      {
+       "ka": 19.95,
+       "flaeche_nord_km2": 11005852,
+       "flaeche_sued_km2": 36965900
+      },
+      {
+       "ka": 19.94,
+       "flaeche_nord_km2": 11000174,
+       "flaeche_sued_km2": 36994994
+      },
+      {
+       "ka": 19.93,
+       "flaeche_nord_km2": 10777764,
+       "flaeche_sued_km2": 37112758
+      },
+      {
+       "ka": 19.92,
+       "flaeche_nord_km2": 10901557,
+       "flaeche_sued_km2": 37232236
+      },
+      {
+       "ka": 19.91,
+       "flaeche_nord_km2": 11070017,
+       "flaeche_sued_km2": 37154426
+      },
+      {
+       "ka": 19.9,
+       "flaeche_nord_km2": 10954794,
+       "flaeche_sued_km2": 37221940
+      },
+      {
+       "ka": 19.89,
+       "flaeche_nord_km2": 10878183,
+       "flaeche_sued_km2": 36878079
+      },
+      {
+       "ka": 19.88,
+       "flaeche_nord_km2": 11245656,
+       "flaeche_sued_km2": 36691610
+      },
+      {
+       "ka": 19.87,
+       "flaeche_nord_km2": 10960666,
+       "flaeche_sued_km2": 36890735
+      },
+      {
+       "ka": 19.86,
+       "flaeche_nord_km2": 10958160,
+       "flaeche_sued_km2": 36664824
+      },
+      {
+       "ka": 19.85,
+       "flaeche_nord_km2": 10744472,
+       "flaeche_sued_km2": 36357647
+      },
+      {
+       "ka": 19.84,
+       "flaeche_nord_km2": 10988686,
+       "flaeche_sued_km2": 36906247
+      },
+      {
+       "ka": 19.83,
+       "flaeche_nord_km2": 10907366,
+       "flaeche_sued_km2": 37252539
+      },
+      {
+       "ka": 19.82,
+       "flaeche_nord_km2": 10988331,
+       "flaeche_sued_km2": 37089049
+      },
+      {
+       "ka": 19.81,
+       "flaeche_nord_km2": 10937893,
+       "flaeche_sued_km2": 36423327
+      },
+      {
+       "ka": 19.8,
+       "flaeche_nord_km2": 11029024,
+       "flaeche_sued_km2": 37136747
+      },
+      {
+       "ka": 19.79,
+       "flaeche_nord_km2": 10816349,
+       "flaeche_sued_km2": 36592825
+      },
+      {
+       "ka": 19.78,
+       "flaeche_nord_km2": 10998490,
+       "flaeche_sued_km2": 36709609
+      },
+      {
+       "ka": 19.77,
+       "flaeche_nord_km2": 10831450,
+       "flaeche_sued_km2": 36242758
+      },
+      {
+       "ka": 19.76,
+       "flaeche_nord_km2": 10803388,
+       "flaeche_sued_km2": 36998900
+      },
+      {
+       "ka": 19.75,
+       "flaeche_nord_km2": 10773390,
+       "flaeche_sued_km2": 37128455
+      },
+      {
+       "ka": 19.74,
+       "flaeche_nord_km2": 10933460,
+       "flaeche_sued_km2": 36912863
+      },
+      {
+       "ka": 19.73,
+       "flaeche_nord_km2": 11072207,
+       "flaeche_sued_km2": 36670751
+      },
+      {
+       "ka": 19.72,
+       "flaeche_nord_km2": 11282964,
+       "flaeche_sued_km2": 36756191
+      },
+      {
+       "ka": 19.71,
+       "flaeche_nord_km2": 10878458,
+       "flaeche_sued_km2": 37057324
+      },
+      {
+       "ka": 19.7,
+       "flaeche_nord_km2": 10842743,
+       "flaeche_sued_km2": 37258650
+      },
+      {
+       "ka": 19.69,
+       "flaeche_nord_km2": 10906500,
+       "flaeche_sued_km2": 37046758
+      },
+      {
+       "ka": 19.68,
+       "flaeche_nord_km2": 10626615,
+       "flaeche_sued_km2": 37005174
+      },
+      {
+       "ka": 19.67,
+       "flaeche_nord_km2": 10618918,
+       "flaeche_sued_km2": 37465452
+      },
+      {
+       "ka": 19.66,
+       "flaeche_nord_km2": 10826087,
+       "flaeche_sued_km2": 36822344
+      },
+      {
+       "ka": 19.65,
+       "flaeche_nord_km2": 10890932,
+       "flaeche_sued_km2": 36710887
+      },
+      {
+       "ka": 19.64,
+       "flaeche_nord_km2": 10758789,
+       "flaeche_sued_km2": 37008598
+      },
+      {
+       "ka": 19.63,
+       "flaeche_nord_km2": 10873404,
+       "flaeche_sued_km2": 37480962
+      },
+      {
+       "ka": 19.62,
+       "flaeche_nord_km2": 10980760,
+       "flaeche_sued_km2": 37335311
+      },
+      {
+       "ka": 19.61,
+       "flaeche_nord_km2": 10769896,
+       "flaeche_sued_km2": 37208643
+      },
+      {
+       "ka": 19.6,
+       "flaeche_nord_km2": 10801832,
+       "flaeche_sued_km2": 37357809
+      },
+      {
+       "ka": 19.59,
+       "flaeche_nord_km2": 11232042,
+       "flaeche_sued_km2": 37120942
+      },
+      {
+       "ka": 19.58,
+       "flaeche_nord_km2": 10997518,
+       "flaeche_sued_km2": 36668466
+      },
+      {
+       "ka": 19.57,
+       "flaeche_nord_km2": 10872968,
+       "flaeche_sued_km2": 36688068
+      },
+      {
+       "ka": 19.56,
+       "flaeche_nord_km2": 10935929,
+       "flaeche_sued_km2": 36521024
+      },
+      {
+       "ka": 19.55,
+       "flaeche_nord_km2": 10823643,
+       "flaeche_sued_km2": 37172635
+      },
+      {
+       "ka": 19.54,
+       "flaeche_nord_km2": 11017882,
+       "flaeche_sued_km2": 36897224
+      },
+      {
+       "ka": 19.53,
+       "flaeche_nord_km2": 10745462,
+       "flaeche_sued_km2": 36765094
+      },
+      {
+       "ka": 19.52,
+       "flaeche_nord_km2": 10860802,
+       "flaeche_sued_km2": 36723878
+      },
+      {
+       "ka": 19.51,
+       "flaeche_nord_km2": 10823259,
+       "flaeche_sued_km2": 36961916
+      },
+      {
+       "ka": 19.5,
+       "flaeche_nord_km2": 10955952,
+       "flaeche_sued_km2": 36931776
+      },
+      {
+       "ka": 19.49,
+       "flaeche_nord_km2": 10753540,
+       "flaeche_sued_km2": 36820412
+      },
+      {
+       "ka": 19.48,
+       "flaeche_nord_km2": 10776399,
+       "flaeche_sued_km2": 37011272
+      },
+      {
+       "ka": 19.47,
+       "flaeche_nord_km2": 10892502,
+       "flaeche_sued_km2": 36759567
+      },
+      {
+       "ka": 19.46,
+       "flaeche_nord_km2": 10929084,
+       "flaeche_sued_km2": 37412450
+      },
+      {
+       "ka": 19.45,
+       "flaeche_nord_km2": 10909787,
+       "flaeche_sued_km2": 37346432
+      },
+      {
+       "ka": 19.44,
+       "flaeche_nord_km2": 10817679,
+       "flaeche_sued_km2": 36917383
+      },
+      {
+       "ka": 19.43,
+       "flaeche_nord_km2": 11148468,
+       "flaeche_sued_km2": 36946898
+      },
+      {
+       "ka": 19.42,
+       "flaeche_nord_km2": 10819563,
+       "flaeche_sued_km2": 37167702
+      },
+      {
+       "ka": 19.41,
+       "flaeche_nord_km2": 10744217,
+       "flaeche_sued_km2": 36902898
+      },
+      {
+       "ka": 19.4,
+       "flaeche_nord_km2": 10798668,
+       "flaeche_sued_km2": 36877585
+      },
+      {
+       "ka": 19.39,
+       "flaeche_nord_km2": 10811214,
+       "flaeche_sued_km2": 37440395
+      },
+      {
+       "ka": 19.38,
+       "flaeche_nord_km2": 10856174,
+       "flaeche_sued_km2": 36691070
+      },
+      {
+       "ka": 19.37,
+       "flaeche_nord_km2": 10901531,
+       "flaeche_sued_km2": 36443719
+      },
+      {
+       "ka": 19.36,
+       "flaeche_nord_km2": 11114484,
+       "flaeche_sued_km2": 37269174
+      },
+      {
+       "ka": 19.35,
+       "flaeche_nord_km2": 10926502,
+       "flaeche_sued_km2": 36789886
+      },
+      {
+       "ka": 19.34,
+       "flaeche_nord_km2": 10876844,
+       "flaeche_sued_km2": 36950087
+      },
+      {
+       "ka": 19.33,
+       "flaeche_nord_km2": 10816903,
+       "flaeche_sued_km2": 37441534
+      },
+      {
+       "ka": 19.32,
+       "flaeche_nord_km2": 10972619,
+       "flaeche_sued_km2": 36912812
+      },
+      {
+       "ka": 19.31,
+       "flaeche_nord_km2": 10956486,
+       "flaeche_sued_km2": 36979451
+      },
+      {
+       "ka": 19.3,
+       "flaeche_nord_km2": 10894291,
+       "flaeche_sued_km2": 37085263
+      },
+      {
+       "ka": 19.29,
+       "flaeche_nord_km2": 10698787,
+       "flaeche_sued_km2": 37121437
+      },
+      {
+       "ka": 19.28,
+       "flaeche_nord_km2": 11031237,
+       "flaeche_sued_km2": 37003254
+      },
+      {
+       "ka": 19.27,
+       "flaeche_nord_km2": 10866597,
+       "flaeche_sued_km2": 36958454
+      },
+      {
+       "ka": 19.26,
+       "flaeche_nord_km2": 10822912,
+       "flaeche_sued_km2": 37325948
+      },
+      {
+       "ka": 19.25,
+       "flaeche_nord_km2": 10904614,
+       "flaeche_sued_km2": 36976724
+      },
+      {
+       "ka": 19.24,
+       "flaeche_nord_km2": 11106015,
+       "flaeche_sued_km2": 37263448
+      },
+      {
+       "ka": 19.23,
+       "flaeche_nord_km2": 10856293,
+       "flaeche_sued_km2": 36791375
+      },
+      {
+       "ka": 19.22,
+       "flaeche_nord_km2": 11012734,
+       "flaeche_sued_km2": 36859463
+      },
+      {
+       "ka": 19.21,
+       "flaeche_nord_km2": 10963397,
+       "flaeche_sued_km2": 36705265
+      },
+      {
+       "ka": 19.2,
+       "flaeche_nord_km2": 10955834,
+       "flaeche_sued_km2": 36670825
+      },
+      {
+       "ka": 19.19,
+       "flaeche_nord_km2": 10848326,
+       "flaeche_sued_km2": 36903852
+      },
+      {
+       "ka": 19.18,
+       "flaeche_nord_km2": 10734818,
+       "flaeche_sued_km2": 36954693
+      },
+      {
+       "ka": 19.17,
+       "flaeche_nord_km2": 10693636,
+       "flaeche_sued_km2": 37247002
+      },
+      {
+       "ka": 19.16,
+       "flaeche_nord_km2": 10707737,
+       "flaeche_sued_km2": 36870418
+      },
+      {
+       "ka": 19.15,
+       "flaeche_nord_km2": 10735857,
+       "flaeche_sued_km2": 36632218
+      },
+      {
+       "ka": 19.14,
+       "flaeche_nord_km2": 10821006,
+       "flaeche_sued_km2": 36768888
+      },
+      {
+       "ka": 19.13,
+       "flaeche_nord_km2": 10851124,
+       "flaeche_sued_km2": 37296385
+      },
+      {
+       "ka": 19.12,
+       "flaeche_nord_km2": 10818929,
+       "flaeche_sued_km2": 36803694
+      },
+      {
+       "ka": 19.11,
+       "flaeche_nord_km2": 10792269,
+       "flaeche_sued_km2": 36721937
+      },
+      {
+       "ka": 19.1,
+       "flaeche_nord_km2": 10916840,
+       "flaeche_sued_km2": 36759992
+      },
+      {
+       "ka": 19.09,
+       "flaeche_nord_km2": 10915307,
+       "flaeche_sued_km2": 36663111
+      },
+      {
+       "ka": 19.08,
+       "flaeche_nord_km2": 10780764,
+       "flaeche_sued_km2": 37297076
+      },
+      {
+       "ka": 19.07,
+       "flaeche_nord_km2": 10930112,
+       "flaeche_sued_km2": 36802104
+      },
+      {
+       "ka": 19.06,
+       "flaeche_nord_km2": 10709381,
+       "flaeche_sued_km2": 36561734
+      },
+      {
+       "ka": 19.05,
+       "flaeche_nord_km2": 10743741,
+       "flaeche_sued_km2": 36620874
+      },
+      {
+       "ka": 19.04,
+       "flaeche_nord_km2": 10735416,
+       "flaeche_sued_km2": 36910391
+      },
+      {
+       "ka": 19.03,
+       "flaeche_nord_km2": 10808334,
+       "flaeche_sued_km2": 37073516
+      },
+      {
+       "ka": 19.02,
+       "flaeche_nord_km2": 11000953,
+       "flaeche_sued_km2": 37631240
+      },
+      {
+       "ka": 19.01,
+       "flaeche_nord_km2": 10590696,
+       "flaeche_sued_km2": 37137005
+      },
+      {
+       "ka": 19.0,
+       "flaeche_nord_km2": 10952614,
+       "flaeche_sued_km2": 36720982
+      },
+      {
+       "ka": 18.99,
+       "flaeche_nord_km2": 11031651,
+       "flaeche_sued_km2": 36654865
+      },
+      {
+       "ka": 18.98,
+       "flaeche_nord_km2": 10925027,
+       "flaeche_sued_km2": 37075128
+      },
+      {
+       "ka": 18.97,
+       "flaeche_nord_km2": 11370319,
+       "flaeche_sued_km2": 37121504
+      },
+      {
+       "ka": 18.96,
+       "flaeche_nord_km2": 11321590,
+       "flaeche_sued_km2": 37191119
+      },
+      {
+       "ka": 18.95,
+       "flaeche_nord_km2": 11281911,
+       "flaeche_sued_km2": 36870800
+      },
+      {
+       "ka": 18.94,
+       "flaeche_nord_km2": 11157657,
+       "flaeche_sued_km2": 36804952
+      },
+      {
+       "ka": 18.93,
+       "flaeche_nord_km2": 11004022,
+       "flaeche_sued_km2": 36575143
+      },
+      {
+       "ka": 18.92,
+       "flaeche_nord_km2": 11111364,
+       "flaeche_sued_km2": 36390202
+      },
+      {
+       "ka": 18.91,
+       "flaeche_nord_km2": 11276365,
+       "flaeche_sued_km2": 36461347
+      },
+      {
+       "ka": 18.9,
+       "flaeche_nord_km2": 11512086,
+       "flaeche_sued_km2": 36607728
+      },
+      {
+       "ka": 18.89,
+       "flaeche_nord_km2": 11222504,
+       "flaeche_sued_km2": 36931545
+      },
+      {
+       "ka": 18.88,
+       "flaeche_nord_km2": 11006901,
+       "flaeche_sued_km2": 36251303
+      },
+      {
+       "ka": 18.87,
+       "flaeche_nord_km2": 11227228,
+       "flaeche_sued_km2": 36740727
+      },
+      {
+       "ka": 18.86,
+       "flaeche_nord_km2": 11243649,
+       "flaeche_sued_km2": 36380706
+      },
+      {
+       "ka": 18.85,
+       "flaeche_nord_km2": 11513958,
+       "flaeche_sued_km2": 36691423
+      },
+      {
+       "ka": 18.84,
+       "flaeche_nord_km2": 11227916,
+       "flaeche_sued_km2": 36669397
+      },
+      {
+       "ka": 18.83,
+       "flaeche_nord_km2": 11432890,
+       "flaeche_sued_km2": 36860188
+      },
+      {
+       "ka": 18.82,
+       "flaeche_nord_km2": 11578821,
+       "flaeche_sued_km2": 36837050
+      },
+      {
+       "ka": 18.81,
+       "flaeche_nord_km2": 11495170,
+       "flaeche_sued_km2": 36118295
+      },
+      {
+       "ka": 18.8,
+       "flaeche_nord_km2": 11363300,
+       "flaeche_sued_km2": 36405765
+      },
+      {
+       "ka": 18.79,
+       "flaeche_nord_km2": 11376311,
+       "flaeche_sued_km2": 35993444
+      },
+      {
+       "ka": 18.78,
+       "flaeche_nord_km2": 11154214,
+       "flaeche_sued_km2": 36405878
+      },
+      {
+       "ka": 18.77,
+       "flaeche_nord_km2": 11253516,
+       "flaeche_sued_km2": 36218765
+      },
+      {
+       "ka": 18.76,
+       "flaeche_nord_km2": 11348922,
+       "flaeche_sued_km2": 36542524
+      },
+      {
+       "ka": 18.75,
+       "flaeche_nord_km2": 11450715,
+       "flaeche_sued_km2": 36359770
+      },
+      {
+       "ka": 18.74,
+       "flaeche_nord_km2": 11641367,
+       "flaeche_sued_km2": 36281585
+      },
+      {
+       "ka": 18.73,
+       "flaeche_nord_km2": 11288086,
+       "flaeche_sued_km2": 36412669
+      },
+      {
+       "ka": 18.72,
+       "flaeche_nord_km2": 11317099,
+       "flaeche_sued_km2": 36530994
+      },
+      {
+       "ka": 18.71,
+       "flaeche_nord_km2": 11462432,
+       "flaeche_sued_km2": 36318654
+      },
+      {
+       "ka": 18.7,
+       "flaeche_nord_km2": 11440850,
+       "flaeche_sued_km2": 36548833
+      },
+      {
+       "ka": 18.69,
+       "flaeche_nord_km2": 11507391,
+       "flaeche_sued_km2": 36181800
+      },
+      {
+       "ka": 18.68,
+       "flaeche_nord_km2": 11247784,
+       "flaeche_sued_km2": 36053618
+      },
+      {
+       "ka": 18.67,
+       "flaeche_nord_km2": 11272405,
+       "flaeche_sued_km2": 36537109
+      },
+      {
+       "ka": 18.66,
+       "flaeche_nord_km2": 11344096,
+       "flaeche_sued_km2": 36508902
+      },
+      {
+       "ka": 18.65,
+       "flaeche_nord_km2": 11338006,
+       "flaeche_sued_km2": 36449984
+      },
+      {
+       "ka": 18.64,
+       "flaeche_nord_km2": 11625944,
+       "flaeche_sued_km2": 36531332
+      },
+      {
+       "ka": 18.63,
+       "flaeche_nord_km2": 11349053,
+       "flaeche_sued_km2": 36094807
+      },
+      {
+       "ka": 18.62,
+       "flaeche_nord_km2": 11507175,
+       "flaeche_sued_km2": 36280503
+      },
+      {
+       "ka": 18.61,
+       "flaeche_nord_km2": 11793468,
+       "flaeche_sued_km2": 36230149
+      },
+      {
+       "ka": 18.6,
+       "flaeche_nord_km2": 11702336,
+       "flaeche_sued_km2": 36012814
+      },
+      {
+       "ka": 18.59,
+       "flaeche_nord_km2": 11489589,
+       "flaeche_sued_km2": 35508571
+      },
+      {
+       "ka": 18.58,
+       "flaeche_nord_km2": 11381183,
+       "flaeche_sued_km2": 35746156
+      },
+      {
+       "ka": 18.57,
+       "flaeche_nord_km2": 11290711,
+       "flaeche_sued_km2": 36248421
+      },
+      {
+       "ka": 18.56,
+       "flaeche_nord_km2": 11216461,
+       "flaeche_sued_km2": 35891449
+      },
+      {
+       "ka": 18.55,
+       "flaeche_nord_km2": 11315669,
+       "flaeche_sued_km2": 36325332
+      },
+      {
+       "ka": 18.54,
+       "flaeche_nord_km2": 11354418,
+       "flaeche_sued_km2": 35999715
+      },
+      {
+       "ka": 18.53,
+       "flaeche_nord_km2": 11307438,
+       "flaeche_sued_km2": 35957703
+      },
+      {
+       "ka": 18.52,
+       "flaeche_nord_km2": 11355172,
+       "flaeche_sued_km2": 35612480
+      },
+      {
+       "ka": 18.51,
+       "flaeche_nord_km2": 11440438,
+       "flaeche_sued_km2": 36129635
+      },
+      {
+       "ka": 18.5,
+       "flaeche_nord_km2": 11200596,
+       "flaeche_sued_km2": 35987220
+      },
+      {
+       "ka": 18.49,
+       "flaeche_nord_km2": 11360119,
+       "flaeche_sued_km2": 35701150
+      },
+      {
+       "ka": 18.48,
+       "flaeche_nord_km2": 11432657,
+       "flaeche_sued_km2": 35515524
+      },
+      {
+       "ka": 18.47,
+       "flaeche_nord_km2": 11699282,
+       "flaeche_sued_km2": 35768767
+      },
+      {
+       "ka": 18.46,
+       "flaeche_nord_km2": 11641860,
+       "flaeche_sued_km2": 36039964
+      },
+      {
+       "ka": 18.45,
+       "flaeche_nord_km2": 11627513,
+       "flaeche_sued_km2": 36207330
+      },
+      {
+       "ka": 18.44,
+       "flaeche_nord_km2": 11333555,
+       "flaeche_sued_km2": 36326074
+      },
+      {
+       "ka": 18.43,
+       "flaeche_nord_km2": 11452640,
+       "flaeche_sued_km2": 35524505
+      },
+      {
+       "ka": 18.42,
+       "flaeche_nord_km2": 11904770,
+       "flaeche_sued_km2": 35475584
+      },
+      {
+       "ka": 18.41,
+       "flaeche_nord_km2": 11513663,
+       "flaeche_sued_km2": 35607472
+      },
+      {
+       "ka": 18.4,
+       "flaeche_nord_km2": 11264192,
+       "flaeche_sued_km2": 35581838
+      },
+      {
+       "ka": 18.39,
+       "flaeche_nord_km2": 11282882,
+       "flaeche_sued_km2": 35909671
+      },
+      {
+       "ka": 18.38,
+       "flaeche_nord_km2": 11307865,
+       "flaeche_sued_km2": 35953013
+      },
+      {
+       "ka": 18.37,
+       "flaeche_nord_km2": 11299284,
+       "flaeche_sued_km2": 36180764
+      },
+      {
+       "ka": 18.36,
+       "flaeche_nord_km2": 11371815,
+       "flaeche_sued_km2": 35662075
+      },
+      {
+       "ka": 18.35,
+       "flaeche_nord_km2": 11469282,
+       "flaeche_sued_km2": 35541743
+      },
+      {
+       "ka": 18.34,
+       "flaeche_nord_km2": 11387801,
+       "flaeche_sued_km2": 35404840
+      },
+      {
+       "ka": 18.33,
+       "flaeche_nord_km2": 11215016,
+       "flaeche_sued_km2": 35609050
+      },
+      {
+       "ka": 18.32,
+       "flaeche_nord_km2": 11241166,
+       "flaeche_sued_km2": 35230204
+      },
+      {
+       "ka": 18.31,
+       "flaeche_nord_km2": 11297761,
+       "flaeche_sued_km2": 35384975
+      },
+      {
+       "ka": 18.3,
+       "flaeche_nord_km2": 11131376,
+       "flaeche_sued_km2": 35871944
+      },
+      {
+       "ka": 18.29,
+       "flaeche_nord_km2": 11084618,
+       "flaeche_sued_km2": 35355635
+      },
+      {
+       "ka": 18.28,
+       "flaeche_nord_km2": 11382914,
+       "flaeche_sued_km2": 35986390
+      },
+      {
+       "ka": 18.27,
+       "flaeche_nord_km2": 11309005,
+       "flaeche_sued_km2": 35809655
+      },
+      {
+       "ka": 18.26,
+       "flaeche_nord_km2": 11354610,
+       "flaeche_sued_km2": 35186675
+      },
+      {
+       "ka": 18.25,
+       "flaeche_nord_km2": 11255806,
+       "flaeche_sued_km2": 35333889
+      },
+      {
+       "ka": 18.24,
+       "flaeche_nord_km2": 11721566,
+       "flaeche_sued_km2": 35603736
+      },
+      {
+       "ka": 18.23,
+       "flaeche_nord_km2": 11680175,
+       "flaeche_sued_km2": 35419487
+      },
+      {
+       "ka": 18.22,
+       "flaeche_nord_km2": 11631941,
+       "flaeche_sued_km2": 36298602
+      },
+      {
+       "ka": 18.21,
+       "flaeche_nord_km2": 11317949,
+       "flaeche_sued_km2": 35573541
+      },
+      {
+       "ka": 18.2,
+       "flaeche_nord_km2": 11167249,
+       "flaeche_sued_km2": 35453319
+      },
+      {
+       "ka": 18.19,
+       "flaeche_nord_km2": 11524372,
+       "flaeche_sued_km2": 35538874
+      },
+      {
+       "ka": 18.18,
+       "flaeche_nord_km2": 11249690,
+       "flaeche_sued_km2": 35579118
+      },
+      {
+       "ka": 18.17,
+       "flaeche_nord_km2": 11373699,
+       "flaeche_sued_km2": 35582999
+      },
+      {
+       "ka": 18.16,
+       "flaeche_nord_km2": 11337450,
+       "flaeche_sued_km2": 35224026
+      },
+      {
+       "ka": 18.15,
+       "flaeche_nord_km2": 11414191,
+       "flaeche_sued_km2": 35680803
+      },
+      {
+       "ka": 18.14,
+       "flaeche_nord_km2": 11468194,
+       "flaeche_sued_km2": 35115539
+      },
+      {
+       "ka": 18.13,
+       "flaeche_nord_km2": 11608477,
+       "flaeche_sued_km2": 35706114
+      },
+      {
+       "ka": 18.12,
+       "flaeche_nord_km2": 11722804,
+       "flaeche_sued_km2": 36039951
+      },
+      {
+       "ka": 18.11,
+       "flaeche_nord_km2": 11477372,
+       "flaeche_sued_km2": 35240293
+      },
+      {
+       "ka": 18.1,
+       "flaeche_nord_km2": 11318021,
+       "flaeche_sued_km2": 35670009
+      },
+      {
+       "ka": 18.09,
+       "flaeche_nord_km2": 11381781,
+       "flaeche_sued_km2": 35116417
+      },
+      {
+       "ka": 18.08,
+       "flaeche_nord_km2": 11877263,
+       "flaeche_sued_km2": 35582875
+      },
+      {
+       "ka": 18.07,
+       "flaeche_nord_km2": 11362397,
+       "flaeche_sued_km2": 35226374
+      },
+      {
+       "ka": 18.06,
+       "flaeche_nord_km2": 11565485,
+       "flaeche_sued_km2": 35541857
+      },
+      {
+       "ka": 18.05,
+       "flaeche_nord_km2": 11484564,
+       "flaeche_sued_km2": 35277630
+      },
+      {
+       "ka": 18.04,
+       "flaeche_nord_km2": 11590215,
+       "flaeche_sued_km2": 35425059
+      },
+      {
+       "ka": 18.03,
+       "flaeche_nord_km2": 11719608,
+       "flaeche_sued_km2": 35484733
+      },
+      {
+       "ka": 18.02,
+       "flaeche_nord_km2": 11380926,
+       "flaeche_sued_km2": 35358113
+      },
+      {
+       "ka": 18.01,
+       "flaeche_nord_km2": 11523899,
+       "flaeche_sued_km2": 35373435
+      },
+      {
+       "ka": 18.0,
+       "flaeche_nord_km2": 11769971,
+       "flaeche_sued_km2": 35368488
+      },
+      {
+       "ka": 17.99,
+       "flaeche_nord_km2": 11664400,
+       "flaeche_sued_km2": 35399344
+      },
+      {
+       "ka": 17.98,
+       "flaeche_nord_km2": 11647637,
+       "flaeche_sued_km2": 35349879
+      },
+      {
+       "ka": 17.97,
+       "flaeche_nord_km2": 11915859,
+       "flaeche_sued_km2": 35193080
+      },
+      {
+       "ka": 17.96,
+       "flaeche_nord_km2": 11930811,
+       "flaeche_sued_km2": 35111133
+      },
+      {
+       "ka": 17.95,
+       "flaeche_nord_km2": 11791382,
+       "flaeche_sued_km2": 35330130
+      },
+      {
+       "ka": 17.94,
+       "flaeche_nord_km2": 11635072,
+       "flaeche_sued_km2": 35200700
+      },
+      {
+       "ka": 17.93,
+       "flaeche_nord_km2": 11661192,
+       "flaeche_sued_km2": 35052420
+      },
+      {
+       "ka": 17.92,
+       "flaeche_nord_km2": 11800405,
+       "flaeche_sued_km2": 35153142
+      },
+      {
+       "ka": 17.91,
+       "flaeche_nord_km2": 11876179,
+       "flaeche_sued_km2": 35283861
+      },
+      {
+       "ka": 17.9,
+       "flaeche_nord_km2": 11494884,
+       "flaeche_sued_km2": 35087208
+      },
+      {
+       "ka": 17.89,
+       "flaeche_nord_km2": 11568407,
+       "flaeche_sued_km2": 35100340
+      },
+      {
+       "ka": 17.88,
+       "flaeche_nord_km2": 11832798,
+       "flaeche_sued_km2": 35234869
+      },
+      {
+       "ka": 17.87,
+       "flaeche_nord_km2": 12530660,
+       "flaeche_sued_km2": 35109132
+      },
+      {
+       "ka": 17.86,
+       "flaeche_nord_km2": 12248140,
+       "flaeche_sued_km2": 35259649
+      },
+      {
+       "ka": 17.85,
+       "flaeche_nord_km2": 12636011,
+       "flaeche_sued_km2": 35626117
+      },
+      {
+       "ka": 17.84,
+       "flaeche_nord_km2": 11997920,
+       "flaeche_sued_km2": 34435065
+      },
+      {
+       "ka": 17.83,
+       "flaeche_nord_km2": 12070988,
+       "flaeche_sued_km2": 35106982
+      },
+      {
+       "ka": 17.82,
+       "flaeche_nord_km2": 12343910,
+       "flaeche_sued_km2": 35091945
+      },
+      {
+       "ka": 17.81,
+       "flaeche_nord_km2": 12054446,
+       "flaeche_sued_km2": 35223426
+      },
+      {
+       "ka": 17.8,
+       "flaeche_nord_km2": 11727420,
+       "flaeche_sued_km2": 34778510
+      },
+      {
+       "ka": 17.79,
+       "flaeche_nord_km2": 12363340,
+       "flaeche_sued_km2": 34764900
+      },
+      {
+       "ka": 17.78,
+       "flaeche_nord_km2": 11964072,
+       "flaeche_sued_km2": 35066478
+      },
+      {
+       "ka": 17.77,
+       "flaeche_nord_km2": 12667317,
+       "flaeche_sued_km2": 34752336
+      },
+      {
+       "ka": 17.76,
+       "flaeche_nord_km2": 12074862,
+       "flaeche_sued_km2": 34577326
+      },
+      {
+       "ka": 17.75,
+       "flaeche_nord_km2": 12297837,
+       "flaeche_sued_km2": 34094818
+      },
+      {
+       "ka": 17.74,
+       "flaeche_nord_km2": 12408530,
+       "flaeche_sued_km2": 34643806
+      },
+      {
+       "ka": 17.73,
+       "flaeche_nord_km2": 12591278,
+       "flaeche_sued_km2": 34903109
+      },
+      {
+       "ka": 17.72,
+       "flaeche_nord_km2": 12465000,
+       "flaeche_sued_km2": 34640986
+      },
+      {
+       "ka": 17.71,
+       "flaeche_nord_km2": 12087007,
+       "flaeche_sued_km2": 34425397
+      },
+      {
+       "ka": 17.7,
+       "flaeche_nord_km2": 12342745,
+       "flaeche_sued_km2": 34173779
+      },
+      {
+       "ka": 17.69,
+       "flaeche_nord_km2": 12076494,
+       "flaeche_sued_km2": 34438374
+      },
+      {
+       "ka": 17.68,
+       "flaeche_nord_km2": 12218710,
+       "flaeche_sued_km2": 34442955
+      },
+      {
+       "ka": 17.67,
+       "flaeche_nord_km2": 12833877,
+       "flaeche_sued_km2": 34422892
+      },
+      {
+       "ka": 17.66,
+       "flaeche_nord_km2": 12733034,
+       "flaeche_sued_km2": 34142974
+      },
+      {
+       "ka": 17.65,
+       "flaeche_nord_km2": 12998485,
+       "flaeche_sued_km2": 34181347
+      },
+      {
+       "ka": 17.64,
+       "flaeche_nord_km2": 12418556,
+       "flaeche_sued_km2": 34441737
+      },
+      {
+       "ka": 17.63,
+       "flaeche_nord_km2": 12383192,
+       "flaeche_sued_km2": 34133419
+      },
+      {
+       "ka": 17.62,
+       "flaeche_nord_km2": 12201631,
+       "flaeche_sued_km2": 34060404
+      },
+      {
+       "ka": 17.61,
+       "flaeche_nord_km2": 12190025,
+       "flaeche_sued_km2": 34332501
+      },
+      {
+       "ka": 17.6,
+       "flaeche_nord_km2": 12563940,
+       "flaeche_sued_km2": 34122614
+      },
+      {
+       "ka": 17.59,
+       "flaeche_nord_km2": 12962084,
+       "flaeche_sued_km2": 33812027
+      },
+      {
+       "ka": 17.58,
+       "flaeche_nord_km2": 12738509,
+       "flaeche_sued_km2": 34291016
+      },
+      {
+       "ka": 17.57,
+       "flaeche_nord_km2": 13000922,
+       "flaeche_sued_km2": 34116042
+      },
+      {
+       "ka": 17.56,
+       "flaeche_nord_km2": 12940509,
+       "flaeche_sued_km2": 33760061
+      },
+      {
+       "ka": 17.55,
+       "flaeche_nord_km2": 12348445,
+       "flaeche_sued_km2": 33801144
+      },
+      {
+       "ka": 17.54,
+       "flaeche_nord_km2": 12133609,
+       "flaeche_sued_km2": 34049326
+      },
+      {
+       "ka": 17.53,
+       "flaeche_nord_km2": 12473231,
+       "flaeche_sued_km2": 33937127
+      },
+      {
+       "ka": 17.52,
+       "flaeche_nord_km2": 12369638,
+       "flaeche_sued_km2": 33971486
+      },
+      {
+       "ka": 17.51,
+       "flaeche_nord_km2": 12456046,
+       "flaeche_sued_km2": 33857177
+      },
+      {
+       "ka": 17.5,
+       "flaeche_nord_km2": 12552790,
+       "flaeche_sued_km2": 33911162
+      },
+      {
+       "ka": 17.49,
+       "flaeche_nord_km2": 12738620,
+       "flaeche_sued_km2": 33922625
+      },
+      {
+       "ka": 17.48,
+       "flaeche_nord_km2": 13211350,
+       "flaeche_sued_km2": 33910956
+      },
+      {
+       "ka": 17.47,
+       "flaeche_nord_km2": 12889129,
+       "flaeche_sued_km2": 33946865
+      },
+      {
+       "ka": 17.46,
+       "flaeche_nord_km2": 12580409,
+       "flaeche_sued_km2": 33463930
+      },
+      {
+       "ka": 17.45,
+       "flaeche_nord_km2": 13141846,
+       "flaeche_sued_km2": 33590325
+      },
+      {
+       "ka": 17.44,
+       "flaeche_nord_km2": 12628956,
+       "flaeche_sued_km2": 33521389
+      },
+      {
+       "ka": 17.43,
+       "flaeche_nord_km2": 13105604,
+       "flaeche_sued_km2": 34028566
+      },
+      {
+       "ka": 17.42,
+       "flaeche_nord_km2": 13041043,
+       "flaeche_sued_km2": 33514540
+      },
+      {
+       "ka": 17.41,
+       "flaeche_nord_km2": 13300167,
+       "flaeche_sued_km2": 33340115
+      },
+      {
+       "ka": 17.4,
+       "flaeche_nord_km2": 13031068,
+       "flaeche_sued_km2": 33386841
+      },
+      {
+       "ka": 17.39,
+       "flaeche_nord_km2": 13098130,
+       "flaeche_sued_km2": 33700869
+      },
+      {
+       "ka": 17.38,
+       "flaeche_nord_km2": 12955732,
+       "flaeche_sued_km2": 33813672
+      },
+      {
+       "ka": 17.37,
+       "flaeche_nord_km2": 13453020,
+       "flaeche_sued_km2": 33164519
+      },
+      {
+       "ka": 17.36,
+       "flaeche_nord_km2": 13076579,
+       "flaeche_sued_km2": 33272584
+      },
+      {
+       "ka": 17.35,
+       "flaeche_nord_km2": 13235883,
+       "flaeche_sued_km2": 33111367
+      },
+      {
+       "ka": 17.34,
+       "flaeche_nord_km2": 14129121,
+       "flaeche_sued_km2": 33259538
+      },
+      {
+       "ka": 17.33,
+       "flaeche_nord_km2": 13805254,
+       "flaeche_sued_km2": 32929087
+      },
+      {
+       "ka": 17.32,
+       "flaeche_nord_km2": 13841973,
+       "flaeche_sued_km2": 32846208
+      },
+      {
+       "ka": 17.31,
+       "flaeche_nord_km2": 13798597,
+       "flaeche_sued_km2": 33169903
+      },
+      {
+       "ka": 17.3,
+       "flaeche_nord_km2": 13747639,
+       "flaeche_sued_km2": 32925633
+      },
+      {
+       "ka": 17.29,
+       "flaeche_nord_km2": 13472598,
+       "flaeche_sued_km2": 33290529
+      },
+      {
+       "ka": 17.28,
+       "flaeche_nord_km2": 13667043,
+       "flaeche_sued_km2": 32809995
+      },
+      {
+       "ka": 17.27,
+       "flaeche_nord_km2": 13299355,
+       "flaeche_sued_km2": 32799647
+      },
+      {
+       "ka": 17.26,
+       "flaeche_nord_km2": 13979144,
+       "flaeche_sued_km2": 32945898
+      },
+      {
+       "ka": 17.25,
+       "flaeche_nord_km2": 13930424,
+       "flaeche_sued_km2": 32689162
+      },
+      {
+       "ka": 17.24,
+       "flaeche_nord_km2": 14018902,
+       "flaeche_sued_km2": 33032553
+      },
+      {
+       "ka": 17.23,
+       "flaeche_nord_km2": 14197113,
+       "flaeche_sued_km2": 32658918
+      },
+      {
+       "ka": 17.22,
+       "flaeche_nord_km2": 14215367,
+       "flaeche_sued_km2": 32570293
+      },
+      {
+       "ka": 17.21,
+       "flaeche_nord_km2": 14376954,
+       "flaeche_sued_km2": 32755234
+      },
+      {
+       "ka": 17.2,
+       "flaeche_nord_km2": 14526339,
+       "flaeche_sued_km2": 32675925
+      },
+      {
+       "ka": 17.19,
+       "flaeche_nord_km2": 14239567,
+       "flaeche_sued_km2": 32492625
+      },
+      {
+       "ka": 17.18,
+       "flaeche_nord_km2": 14838336,
+       "flaeche_sued_km2": 32729662
+      },
+      {
+       "ka": 17.17,
+       "flaeche_nord_km2": 13565785,
+       "flaeche_sued_km2": 31854447
+      },
+      {
+       "ka": 17.16,
+       "flaeche_nord_km2": 14094152,
+       "flaeche_sued_km2": 32503929
+      },
+      {
+       "ka": 17.15,
+       "flaeche_nord_km2": 13908318,
+       "flaeche_sued_km2": 32229897
+      },
+      {
+       "ka": 17.14,
+       "flaeche_nord_km2": 14291097,
+       "flaeche_sued_km2": 32062176
+      },
+      {
+       "ka": 17.13,
+       "flaeche_nord_km2": 14716220,
+       "flaeche_sued_km2": 32384717
+      },
+      {
+       "ka": 17.12,
+       "flaeche_nord_km2": 14791868,
+       "flaeche_sued_km2": 32158491
+      },
+      {
+       "ka": 17.11,
+       "flaeche_nord_km2": 14160786,
+       "flaeche_sued_km2": 32257454
+      },
+      {
+       "ka": 17.1,
+       "flaeche_nord_km2": 14280273,
+       "flaeche_sued_km2": 31949572
+      },
+      {
+       "ka": 17.09,
+       "flaeche_nord_km2": 14373968,
+       "flaeche_sued_km2": 32253635
+      },
+      {
+       "ka": 17.08,
+       "flaeche_nord_km2": 14299828,
+       "flaeche_sued_km2": 32333965
+      },
+      {
+       "ka": 17.07,
+       "flaeche_nord_km2": 15047894,
+       "flaeche_sued_km2": 32094861
+      },
+      {
+       "ka": 17.06,
+       "flaeche_nord_km2": 14526154,
+       "flaeche_sued_km2": 31822837
+      },
+      {
+       "ka": 17.05,
+       "flaeche_nord_km2": 14550072,
+       "flaeche_sued_km2": 31904151
+      },
+      {
+       "ka": 17.04,
+       "flaeche_nord_km2": 13807735,
+       "flaeche_sued_km2": 31365088
+      },
+      {
+       "ka": 17.03,
+       "flaeche_nord_km2": 14491171,
+       "flaeche_sued_km2": 31739048
+      },
+      {
+       "ka": 17.02,
+       "flaeche_nord_km2": 14405156,
+       "flaeche_sued_km2": 31702662
+      },
+      {
+       "ka": 17.01,
+       "flaeche_nord_km2": 14332163,
+       "flaeche_sued_km2": 31901761
+      },
+      {
+       "ka": 17.0,
+       "flaeche_nord_km2": 14442047,
+       "flaeche_sued_km2": 31534837
+      },
+      {
+       "ka": 16.99,
+       "flaeche_nord_km2": 14842002,
+       "flaeche_sued_km2": 31103514
+      },
+      {
+       "ka": 16.98,
+       "flaeche_nord_km2": 14830649,
+       "flaeche_sued_km2": 31470298
+      },
+      {
+       "ka": 16.97,
+       "flaeche_nord_km2": 14762575,
+       "flaeche_sued_km2": 31762398
+      },
+      {
+       "ka": 16.96,
+       "flaeche_nord_km2": 14693799,
+       "flaeche_sued_km2": 31529983
+      },
+      {
+       "ka": 16.95,
+       "flaeche_nord_km2": 14154644,
+       "flaeche_sued_km2": 31750994
+      },
+      {
+       "ka": 16.94,
+       "flaeche_nord_km2": 14810441,
+       "flaeche_sued_km2": 31600408
+      },
+      {
+       "ka": 16.93,
+       "flaeche_nord_km2": 14383979,
+       "flaeche_sued_km2": 31636880
+      },
+      {
+       "ka": 16.92,
+       "flaeche_nord_km2": 14595050,
+       "flaeche_sued_km2": 31403735
+      },
+      {
+       "ka": 16.91,
+       "flaeche_nord_km2": 14330412,
+       "flaeche_sued_km2": 31616269
+      },
+      {
+       "ka": 16.9,
+       "flaeche_nord_km2": 14601863,
+       "flaeche_sued_km2": 31154605
+      },
+      {
+       "ka": 16.89,
+       "flaeche_nord_km2": 14534582,
+       "flaeche_sued_km2": 31501573
+      },
+      {
+       "ka": 16.88,
+       "flaeche_nord_km2": 14728460,
+       "flaeche_sued_km2": 31415863
+      },
+      {
+       "ka": 16.87,
+       "flaeche_nord_km2": 13909840,
+       "flaeche_sued_km2": 30984122
+      },
+      {
+       "ka": 16.86,
+       "flaeche_nord_km2": 14737435,
+       "flaeche_sued_km2": 31041393
+      },
+      {
+       "ka": 16.85,
+       "flaeche_nord_km2": 14673457,
+       "flaeche_sued_km2": 31133869
+      },
+      {
+       "ka": 16.84,
+       "flaeche_nord_km2": 14682944,
+       "flaeche_sued_km2": 30877123
+      },
+      {
+       "ka": 16.83,
+       "flaeche_nord_km2": 14539805,
+       "flaeche_sued_km2": 31370521
+      },
+      {
+       "ka": 16.82,
+       "flaeche_nord_km2": 14907733,
+       "flaeche_sued_km2": 31371963
+      },
+      {
+       "ka": 16.81,
+       "flaeche_nord_km2": 14524956,
+       "flaeche_sued_km2": 30942259
+      },
+      {
+       "ka": 16.8,
+       "flaeche_nord_km2": 14149503,
+       "flaeche_sued_km2": 30912149
+      },
+      {
+       "ka": 16.79,
+       "flaeche_nord_km2": 13750812,
+       "flaeche_sued_km2": 31301474
+      },
+      {
+       "ka": 16.78,
+       "flaeche_nord_km2": 14073682,
+       "flaeche_sued_km2": 30971951
+      },
+      {
+       "ka": 16.77,
+       "flaeche_nord_km2": 14504259,
+       "flaeche_sued_km2": 30852050
+      },
+      {
+       "ka": 16.76,
+       "flaeche_nord_km2": 14254519,
+       "flaeche_sued_km2": 30823057
+      },
+      {
+       "ka": 16.75,
+       "flaeche_nord_km2": 14139151,
+       "flaeche_sued_km2": 30477769
+      },
+      {
+       "ka": 16.74,
+       "flaeche_nord_km2": 14272808,
+       "flaeche_sued_km2": 30743919
+      },
+      {
+       "ka": 16.73,
+       "flaeche_nord_km2": 14287877,
+       "flaeche_sued_km2": 30948850
+      },
+      {
+       "ka": 16.72,
+       "flaeche_nord_km2": 14292756,
+       "flaeche_sued_km2": 30576508
+      },
+      {
+       "ka": 16.71,
+       "flaeche_nord_km2": 14742848,
+       "flaeche_sued_km2": 30661208
+      },
+      {
+       "ka": 16.7,
+       "flaeche_nord_km2": 14664665,
+       "flaeche_sued_km2": 30591956
+      },
+      {
+       "ka": 16.69,
+       "flaeche_nord_km2": 13851501,
+       "flaeche_sued_km2": 30923345
+      },
+      {
+       "ka": 16.68,
+       "flaeche_nord_km2": 14283817,
+       "flaeche_sued_km2": 30641896
+      },
+      {
+       "ka": 16.67,
+       "flaeche_nord_km2": 14113790,
+       "flaeche_sued_km2": 30652283
+      },
+      {
+       "ka": 16.66,
+       "flaeche_nord_km2": 14183846,
+       "flaeche_sued_km2": 30772487
+      },
+      {
+       "ka": 16.65,
+       "flaeche_nord_km2": 14297909,
+       "flaeche_sued_km2": 30940409
+      },
+      {
+       "ka": 16.64,
+       "flaeche_nord_km2": 14225556,
+       "flaeche_sued_km2": 30377684
+      },
+      {
+       "ka": 16.63,
+       "flaeche_nord_km2": 14162701,
+       "flaeche_sued_km2": 30729589
+      },
+      {
+       "ka": 16.62,
+       "flaeche_nord_km2": 13771615,
+       "flaeche_sued_km2": 30373693
+      },
+      {
+       "ka": 16.61,
+       "flaeche_nord_km2": 14416164,
+       "flaeche_sued_km2": 30275771
+      },
+      {
+       "ka": 16.6,
+       "flaeche_nord_km2": 14388753,
+       "flaeche_sued_km2": 30583769
+      },
+      {
+       "ka": 16.59,
+       "flaeche_nord_km2": 14550585,
+       "flaeche_sued_km2": 30614569
+      },
+      {
+       "ka": 16.58,
+       "flaeche_nord_km2": 14263950,
+       "flaeche_sued_km2": 30602487
+      },
+      {
+       "ka": 16.57,
+       "flaeche_nord_km2": 13873569,
+       "flaeche_sued_km2": 30254566
+      },
+      {
+       "ka": 16.56,
+       "flaeche_nord_km2": 13924105,
+       "flaeche_sued_km2": 30083611
+      },
+      {
+       "ka": 16.55,
+       "flaeche_nord_km2": 13895911,
+       "flaeche_sued_km2": 30078833
+      },
+      {
+       "ka": 16.54,
+       "flaeche_nord_km2": 14211294,
+       "flaeche_sued_km2": 30193518
+      },
+      {
+       "ka": 16.53,
+       "flaeche_nord_km2": 14160339,
+       "flaeche_sued_km2": 30055085
+      },
+      {
+       "ka": 16.52,
+       "flaeche_nord_km2": 14123761,
+       "flaeche_sued_km2": 30026772
+      },
+      {
+       "ka": 16.51,
+       "flaeche_nord_km2": 13675551,
+       "flaeche_sued_km2": 30356791
+      },
+      {
+       "ka": 16.5,
+       "flaeche_nord_km2": 13644177,
+       "flaeche_sued_km2": 30434396
+      }
+     ]
+    }
+   }
+  }
+ }
+}
