@@ -1,0 +1,78 @@
+{
+  "id": "rocky",
+  "eingabe": "kern/adapter/rocky/fiktion.json",
+  "quelle": {
+    "name": "Andy Weir, Project Hail Mary (Roman, 2021)",
+    "dateien": [
+      "kern/adapter/rocky/fiktion.json (nur Namen und Rolle in eigenen Worten, keine Zitate)"
+    ],
+    "abgeleitet_durch": "von Hand (Gerüst für Max)",
+    "pangaea": {
+      "fehlt": true,
+      "grund": "Fiktion; keine Datenquelle"
+    }
+  },
+  "stapel": [
+    "0.2",
+    "1.2"
+  ],
+  "vorgang": {
+    "fehlt": true,
+    "grund": "Gerüst; Vorgänge sind Inhalt von Max"
+  },
+  "herkunft": {
+    "arten": [
+      "fiktion"
+    ],
+    "ebene": "Wert",
+    "hinweis": "Nur Fiktion (Regel 15). Echtes (40 Eridani A, 40 Eri b) steht im Adapter nachbarsterne und ist dort beobachtet bzw. umstritten.",
+    "archivkette": [
+      {
+        "archiv": "zeroearth (kern/adapter/rocky/fiktion.json)",
+        "art": "zeroearth"
+      },
+      {
+        "archiv": "Roman: Andy Weir, Project Hail Mary (2021)",
+        "art": "gesellschaftlich"
+      }
+    ]
+  },
+  "zeitsemantik": {
+    "bezugssystem": "a_ce",
+    "unschaerfe": {
+      "fehlt": true,
+      "grund": "Fiktion ohne übernommenes Datum; Bezug ist das Erscheinungsjahr"
+    },
+    "aufloesung": {
+      "fehlt": true,
+      "grund": "Keine Zeitreihe"
+    },
+    "abdeckung": {
+      "von": 2021,
+      "bis": 2021,
+      "schritte": 1
+    },
+    "verzoegerung": {
+      "fehlt": true,
+      "grund": "Kein Wissensstand"
+    }
+  },
+  "geometrie": {
+    "fehlt": true,
+    "grund": "Fiktive Orte werden nicht verortet"
+  },
+  "lizenz": {
+    "angabe": "keine Übernahme von Text; Namen und Rollen in eigenen Worten",
+    "quelle": "Andy Weir, Project Hail Mary, Ballantine Books 2021",
+    "geprueft": "2026-11-06",
+    "bearbeitung": "keine Zitate (Auftrag Teil D)"
+  },
+  "weitergabe": {
+    "im_repo": "kern/adapter/rocky/fiktion.json",
+    "nicht_im_repo": "Romantext"
+  },
+  "auswahl": [
+    "rocky/auswahl/fiktion"
+  ],
+  "reduktion": []
+}

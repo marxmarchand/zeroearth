@@ -220,3 +220,54 @@ Stand: 2026-11-06. Nur Plan, gebaut wird nach deiner Freigabe (Abschnitt 8). Gep
 ![Titan ohne Dunst: Cassini ISS 938 nm](bericht-planeten/titan-ohne-dunst.jpg)
 ![Venus ohne Wolken: Magellan-Radar](bericht-planeten/venus-radar.jpg)
 ![Mars mit dünner Hülle](bericht-planeten/mars.jpg)
+
+## Teil D: Rocky-Gerüst (2026-11-06)
+
+**Was es ist.** Ein Gedankenexperiment nach dem Roman Project Hail Mary (Andy Weir, 2021): gleiche 0. Natur, erfundene 1. und 2. Natur (Regel 15). Nur das Gerüst; die Inhalte fehlen mit dem Grund „Inhalt von Max“. Keine Buchzitate.
+
+**Herkunft gemischt, getrennt geführt.** Der Kern erlaubt Fiktion in einem Adapter nur allein („ein Adapter mit fiktion führt im Manifest nur fiktion“). Darum zwei Adapter:
+- **`kern/adapter/nachbarsterne/`** (0.2, echt):
+  - **40 Eridani A** aus Gaia DR3, source_id 3195919528989223040: Parallaxe 199,608 ± 0,121 mas, G = 4,18 mag, Radialgeschwindigkeit −42,5 km/s. Herkunft `beobachtung`.
+    - **Abruf:** Die TAP-Abfrage lief am 2026-11-06; danach antwortete das Archiv mit 503. Die Werte stehen darum als „Stand vom 2026-11-06“ im Skript, das künftig zuerst neu abfragt.
+    - **Abstand:** 16,3 Lj, nur in der Anzeige aus der Parallaxe gerechnet.
+    - **Spektraltyp:** fehlt mit Grund. Gaia DR3 führt keinen, und SIMBAD war beim Bau nicht erreichbar; ein Wert aus dem Gedächtnis wird nicht eingetragen.
+  - **40 Eri b**, als umstritten geführt, mit zwei Deutungen desselben Radialgeschwindigkeitssignals als Ideale (Regel 13), keine entschieden:
+    - **Planet:** Ma et al. 2018, MNRAS 480, 2411–2422; Periode 42,38 d, mindestens 8,47 Erdmassen. Unabhängig dasselbe Signal bei Díaz et al. 2018.
+    - **Sternaktivität:** Burrows et al. 2024, AJ 167, 243 (NEID).
+    - **Herkunft** je Deutung `beobachtung` + `rekonstruktion`.
+  - **Weitere Nachbarsterne** fehlen mit Grund.
+  - **Erzeugt von** `matrix-scharnier/adapter/nachbarsterne.py` nach `data/nachbarsterne.json`, das in Teil C vorbereitet wurde.
+- **`kern/adapter/rocky/`** (nur `fiktion`):
+  - Erid (0.2), Rocky (1.2), Astrophage (1.2), je mit Name und einer Rolle in eigenen Worten (`kern/adapter/rocky/fiktion.json`).
+  - Der Inhalt fehlt mit dem Grund „Inhalt von Max“.
+
+**Ereignis `kern/ereignisse/rocky.json`** (gleiche Schablone wie Haus und Sintflut):
+- **Orte:** Verweise auf die fünf Einträge; der Name nennt die Herkunft: „beobachtet“, „umstritten“ oder „Fiktion“.
+- **Stationen mit deinen Fragen,** alle `fehlt` mit „Inhalt von Max“; je Station ist die vorgesehene Quelle samt Herkunftsarten und Lizenz vorgemerkt:
+  - **0:** gleiche Physik, andere Sterne; Astrophage bedroht beide Sonnen. Ansicht Sonnensystem.
+  - **Planetarer Stoffwechsel:** Atmosphäre von Erid im Vergleich zu Erde, Venus und Titan, mit Verweis auf die Planetenansicht. Ansicht Sonnensystem.
+  - **1.2:** Leben unter diesen Bedingungen.
+  - **Gesellschaftlicher Stoffwechsel:** Technik ohne Kenntnis von Strahlung.
+  - **2.3:** Verständigung über Töne statt Bilder; gemeinsame Sprache als Übersetzung (Signal → Symbol, Wörterbuch).
+- **Zuordnung als Vorschlag (Regel 7):** „1“ steht als 1.2 (Lebensnetz), „2“ als 2.3 (symbolisches System).
+- **Übrige Naturen:** 1.1, 1.3, 2.1 und 2.2 sind bewusst leer. Regel E verlangt jede Natur als Station; der Grund lautet, dass das Gerüst dort keine Station vorsieht.
+- **Zeitfenster** bewusst leer (die Erzählung wird nicht datiert); **Brüche** fehlen mit „Inhalt von Max“.
+- **Eingetragen** in `data/ereignisse.json`.
+
+**Geprüft:**
+- **Kern:**
+  - Die Prüfung meldet für das Ereignis 5 Stationen `fehlt` und 4 `bewusst_leer`, keine Verstöße.
+  - Test `kern/test/rocky.test.mjs`:
+    - Der Fiktions-Adapter führt nur `fiktion`, das Echte nie `fiktion`.
+    - Beide Deutungen von 40 Eri b sind Pflicht.
+    - Die Rollen sind kurz und ohne Anführungszeichen.
+  - Alle 285 Tests sind grün.
+- **Browser:** Die Rocky-Tour läuft durch alle acht Seiten ohne Fehler. Die vorgemerkten Quellen zeigen „✱ Fiktion“ bzw. die echte Herkunft.
+  - In der Ansicht „interstellar“ steht oben „Nachbarsterne (0.2): 40 Eridani A 16,3 Lj (Gaia DR3, Abstand aus der Parallaxe berechnet) · Zoom noch nicht gebaut“.
+
+**Offen:**
+- Die Inhalte (Max).
+- Der Zoom in den interstellaren Raum selbst.
+- Ob Erid in der Planetenansicht erscheinen soll; dann als Fiktion gekennzeichnet, ohne Werte, die nach Messung aussehen.
+
+![Rocky-Tour, Startseite](bericht-planeten/rocky-tour.jpg)

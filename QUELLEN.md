@@ -27,6 +27,9 @@ abgeleitet · `modell` — gerechnet · `kuratiert` — von Hand zusammengetrage
 | Huygens HASI (Fulchignoni et al. 2005) und GCMS (Niemann et al. 2010) | Titan: Druck, Temperatur, Methan am Boden | `nullnatur/solar` (0.3) | 14.01.2005 | beobachtung | Artikel; Werte zitiert |
 | USGS Astrogeology WMS (MESSENGER, Magellan, Viking MDIM 2.1 color, Cassini ISS); NASA Photojournal PIA07782 | Texturen der Planetenansicht (`data/planeten/`) | `nullnatur/solar` (0.3) | je 2048 × 1024 | beobachtung (Mars: eingefärbt, kuratiert) | gemeinfrei; PIA07782 Credit NASA/JPL/Space Science Institute |
 | three.js r149 (jsDelivr) | Kugelansicht der Planeten | – | – | – | MIT |
+| Gaia DR3 (ESA/Gaia/DPAC), gaiadr3.gaia_source | Nachbarsterne, bisher 40 Eridani A (`data/nachbarsterne.json`) | `nullnatur/interstellar` (0.2) | Epoche J2016.0; Abfrage 2026-11-06 | beobachtung | CC BY-NC 3.0 IGO (nur nicht-kommerziell; geprüft 2026-11-06) |
+| Ma et al. 2018 (MNRAS 480); Burrows et al. 2024 (AJ 167, 243) | 40 Eri b: Planet gegen Sternaktivität, beide Deutungen | `nullnatur/interstellar` (0.2) | 2018, 2024 | beobachtung, rekonstruktion | Artikel; Werte zitiert |
+| Andy Weir, Project Hail Mary (2021) | Rocky-Gerüst: Erid, Rocky, Astrophage nur als Namen und Rolle (`kern/adapter/rocky/`) | Fiktion (Regel 15) | – | fiktion | keine Übernahme von Text |
 | Spratt & Lisiecki | Meeresspiegelkurve | `erste_natur/erdsystem` | 1D-Zeitreihe | rekonstruktion | PANGAEA, CC BY |
 | Scotese PALEOMAP | Paläogeographie-Texturen | `erste_natur/erdsystem` | Textur | rekonstruktion | MIT |
 | Berger & Loutre 1991 (NOAA NCEI) | Einstrahlung aus Bahnparametern, vorgemerkt für Station 0 der Sintflut, noch kein Adapter | `nullnatur/solar` | 1-ka-Zeitreihe, 0–5 Ma | modell, berechnet | keine genannt, zu klären |

@@ -1,0 +1,10 @@
+{
+ "erzeugt": "2026-11-06",
+ "hinweis": "Gerüst für die Rocky-Tour: nur Namen und Rolle in eigenen Worten, keine Zitate. Inhalt von Max.",
+ "werk": "Andy Weir, Project Hail Mary (2021)",
+ "fiktion": [
+  { "id": "erid", "name": "Erid", "stapel": "0.2", "rolle": "Planet um 40 Eridani A in der Erzählung", "inhalt": { "fehlt": true, "grund": "Inhalt von Max" } },
+  { "id": "rocky", "name": "Rocky", "stapel": "1.2", "rolle": "Lebewesen von Erid in der Erzählung", "inhalt": { "fehlt": true, "grund": "Inhalt von Max" } },
+  { "id": "astrophage", "name": "Astrophage", "stapel": "1.2", "rolle": "Mikroorganismus in der Erzählung, der Sterne verdunkelt", "inhalt": { "fehlt": true, "grund": "Inhalt von Max" } }
+ ]
+}

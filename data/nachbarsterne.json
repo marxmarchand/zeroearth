@@ -1,22 +1,100 @@
 {
- "hinweis": "Vorbereitet für den Zoom zu den Nachbarsternen (0.2, interstellarer Raum); noch ohne Sterne. Siehe kern/BERICHT-planeten.md, Abschnitt 7",
- "sterne": {
-  "fehlt": true,
-  "grund": "Noch nicht abgeleitet; Quellen geprüft, Ableitung offen"
- },
- "felder_je_stern": ["name", "ra_grad", "dec_grad", "parallaxe_mas", "parallaxe_unschaerfe_mas", "abstand_lj (berechnet)", "spektraltyp", "quelle", "arten"],
+ "erzeugt": "2026-11-06T16:21:35+00:00",
+ "hinweis": "erzeugt von matrix-scharnier/adapter/nachbarsterne.py; Zoom zu den Nachbarsternen (0.2), siehe kern/BERICHT-planeten.md",
  "quellen": [
   {
    "name": "Gaia DR3 (ESA/Gaia/DPAC)",
-   "lizenz": "CC BY-NC 3.0 IGO (nur nicht-kommerziell; laut cosmos.esa.int/web/gaia-users/license, geprüft 2026-11-06)",
+   "lizenz": "CC BY-NC 3.0 IGO (nur nicht-kommerziell; geprüft 2026-11-06)",
    "entscheidung": "wird genutzt; zeroearth bleibt nicht-kommerziell (Max, 2026-11-06)",
    "luecke": "sehr helle Sterne fehlen oder sind unsicher (etwa Sirius, Alpha Centauri A/B); Ergänzung Hipparcos (van Leeuwen 2007), Lizenz offen"
   },
   {
    "name": "NASA Exoplanet Archive (Caltech/IPAC)",
    "lizenz": "keine förmliche Lizenz genannt; Danksagung und Zitat Christiansen et al. 2025 (PSJ) verlangt",
-   "inhalt": "Sterne mit bestätigten Planeten und deren Planeten; umstrittene Planeten mit Status"
+   "stand": "noch nicht abgefragt"
   }
  ],
- "erster_eintrag": "40 Eridani A (Teil D, Rocky-Gerüst)"
+ "zeit": {
+  "bezugssystem": "a_ce",
+  "epoche": "J2016.0 (Gaia DR3)",
+  "unschaerfe": {
+   "fehlt": true,
+   "grund": "Gaia nennt die Epoche, keine Unschärfe der Zeit"
+  }
+ },
+ "sterne": [
+  {
+   "id": "40_eridani_a",
+   "name": "40 Eridani A",
+   "andere_namen": [
+    "HD 26965",
+    "Keid",
+    "omicron² Eridani"
+   ],
+   "gaia_source_id": 3195919528989223040,
+   "spektraltyp": {
+    "fehlt": true,
+    "grund": "Nicht geprüft: Gaia DR3 führt keinen Spektraltyp, SIMBAD war am 2026-11-06 nicht erreichbar"
+   },
+   "begleiter": "40 Eridani B (Weißer Zwerg) und C (Roter Zwerg) im selben System, Gaia DR3 3195919254111315712 und 3195919254111314816",
+   "gaia": {
+    "ra_grad": 63.80795300602079,
+    "dec_grad": -7.6680778150199815,
+    "parallaxe_mas": 199.6080124181338,
+    "parallaxe_unschaerfe_mas": 0.12083028,
+    "g_mag": 4.179894,
+    "pmra_mas_a": -2240.0849838923477,
+    "pmdec_mas_a": -3421.8086201704023,
+    "rv_km_s": -42.46972,
+    "rv_unschaerfe_km_s": null
+   },
+   "abruf": "TAP-Abfrage vom 2026-11-06 (Archiv beim Erzeugen nicht erreichbar)",
+   "arten": [
+    "beobachtung"
+   ],
+   "quelle": "Gaia DR3 (ESA/Gaia/DPAC), gaiadr3.gaia_source",
+   "epoche": "J2016.0"
+  }
+ ],
+ "planeten": [
+  {
+   "id": "40_eridani_b",
+   "name": "40 Eri b (HD 26965 b)",
+   "stern": "40_eridani_a",
+   "status": "umstritten",
+   "deutungen": [
+    {
+     "ideal": "planet",
+     "name": "Planet (Radialgeschwindigkeit)",
+     "arten": [
+      "beobachtung",
+      "rekonstruktion"
+     ],
+     "quelle": "Ma et al. 2018, MNRAS 480, 2411–2422 (Dharma Planet Survey); unabhängig dasselbe Signal bei Díaz et al. 2018",
+     "wert": {
+      "periode_d": 42.38,
+      "masse_min_erdmassen": 8.47
+     },
+     "hinweis": "Die Autoren schlossen Sternaktivität mit Photometrie und Linienbisektoren aus"
+    },
+    {
+     "ideal": "aktivitaet",
+     "name": "Sternaktivität statt Planet",
+     "arten": [
+      "beobachtung",
+      "rekonstruktion"
+     ],
+     "quelle": "Burrows et al. 2024, AJ 167, 243 („The Death of Vulcan“, NEID)",
+     "wert": {
+      "deutung": "Signal aus Sternflecken und unterdrückter Konvektionsblauverschiebung"
+     },
+     "hinweis": "Zeitverzug zwischen Aktivitätsindikatoren und Radialgeschwindigkeit; die Methoden einzeln schließen einen Planeten nicht aus, zusammen sprechen sie für Aktivität"
+    }
+   ]
+  }
+ ],
+ "weitere": {
+  "fehlt": true,
+  "grund": "Bisher nur 40 Eridani A (Rocky-Gerüst); weitere Nachbarsterne noch nicht abgeleitet"
+ }
 }

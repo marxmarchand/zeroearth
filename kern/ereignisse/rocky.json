@@ -1,0 +1,171 @@
+{
+  "ereignis": "rocky",
+  "titel": "Rocky: gleiche Physik, erfundene Naturen (Fiktion)",
+  "satz": "Gedankenexperiment nach dem Roman Project Hail Mary (Andy Weir, 2021): Die 0. Natur ist dieselbe wie unsere, Stern und Physik sind echt; die 1. und 2. Natur von Erid sind erfunden (Fiktion, Regel 15). Was folgt daraus für Stoffwechsel, Leben und Verständigung?",
+  "zeitfenster": {
+    "bewusst_leer": true,
+    "grund": "Gedankenexperiment; die Erzählung wird nicht datiert"
+  },
+  "orte": [
+    {
+      "name": "40 Eridani A (Stern, beobachtet: Gaia DR3)",
+      "verweis": "nachbarsterne:nachbarsterne/40_eridani_a"
+    },
+    {
+      "name": "40 Eri b (gemeldeter Planet, umstritten: Ma et al. 2018 gegen Burrows et al. 2024)",
+      "verweis": "nachbarsterne:nachbarsterne/40_eridani_b"
+    },
+    {
+      "name": "Erid (Fiktion)",
+      "verweis": "rocky:rocky/erid"
+    },
+    {
+      "name": "Rocky (Fiktion)",
+      "verweis": "rocky:rocky/rocky"
+    },
+    {
+      "name": "Astrophage (Fiktion)",
+      "verweis": "rocky:rocky/astrophage"
+    }
+  ],
+  "auswahl_begruendung": "Gerüst nach Auftrag Teil D (2026-11-06): ein Gedankenexperiment mit gleicher 0. Natur und erfundener 1. und 2. Natur. Herkunft gemischt und getrennt geführt: der Stern im Adapter nachbarsterne (beobachtet), der gemeldete Planet dort mit beiden Deutungen (umstritten), Erid, Rocky und Astrophage im Adapter rocky (nur Fiktion). Die Zuordnung der Fragen zu 1.2 (Leben) und 2.3 (Sprache) ist ein Vorschlag (Regel 7). Keine Buchzitate.",
+  "stationen": [
+    {
+      "natur": "0",
+      "frage": "Gleiche Physik, andere Sterne: Was ist an 40 Eridani A wie an der Sonne, was anders? Astrophage bedroht beide Sonnen.",
+      "quelle": null,
+      "status": "fehlt",
+      "begruendung": "Inhalt von Max",
+      "vorgemerkt": {
+        "quelle": "nachbarsterne (Gaia DR3) und rocky (Astrophage, Fiktion)",
+        "ort": "kern/adapter/nachbarsterne, kern/adapter/rocky",
+        "arten": [
+          "beobachtung",
+          "fiktion"
+        ],
+        "lizenz": "Gaia DR3: CC BY-NC 3.0 IGO; Fiktion: keine Übernahme von Text"
+      },
+      "zeigt": {
+        "ansicht": "sonnensystem",
+        "ebenen": [],
+        "orte": "alle"
+      }
+    },
+    {
+      "natur": "planetarer_stoffwechsel",
+      "frage": "Wie unterscheidet sich die Atmosphäre von Erid von der der Erde, der Venus und des Titan?",
+      "quelle": null,
+      "status": "fehlt",
+      "begruendung": "Inhalt von Max",
+      "vorgemerkt": {
+        "quelle": "planeten (Erde, Venus, Titan; Planetenansicht) und rocky (Erid, Fiktion)",
+        "ort": "kern/adapter/planeten, kern/adapter/rocky",
+        "arten": [
+          "kuratiert",
+          "beobachtung",
+          "fiktion"
+        ],
+        "lizenz": "Fact Sheet und Huygens: gemeinfrei bzw. zitiert; Fiktion: keine Übernahme von Text"
+      },
+      "zeigt": {
+        "ansicht": "sonnensystem",
+        "ebenen": [],
+        "orte": "alle"
+      }
+    },
+    {
+      "natur": "1.1",
+      "frage": "Keine Frage gesetzt (Erdsystem)",
+      "quelle": null,
+      "status": "bewusst_leer",
+      "begruendung": "Das Gerüst (Auftrag Teil D) sieht hier keine Station vor; ob eine dazukommt, entscheidet Max"
+    },
+    {
+      "natur": "1.2",
+      "frage": "Wie sieht Leben unter diesen Bedingungen aus?",
+      "quelle": null,
+      "status": "fehlt",
+      "begruendung": "Inhalt von Max",
+      "vorgemerkt": {
+        "quelle": "rocky (Rocky, Fiktion)",
+        "ort": "kern/adapter/rocky",
+        "arten": [
+          "fiktion"
+        ],
+        "lizenz": "keine Übernahme von Text"
+      },
+      "zeigt": {
+        "ansicht": "netz",
+        "ebenen": [],
+        "orte": "alle"
+      }
+    },
+    {
+      "natur": "1.3",
+      "frage": "Keine Frage gesetzt (Basis)",
+      "quelle": null,
+      "status": "bewusst_leer",
+      "begruendung": "Das Gerüst (Auftrag Teil D) sieht hier keine Station vor; ob eine dazukommt, entscheidet Max"
+    },
+    {
+      "natur": "gesellschaftlicher_stoffwechsel",
+      "frage": "Wie entsteht Technik ohne Kenntnis von Strahlung?",
+      "quelle": null,
+      "status": "fehlt",
+      "begruendung": "Inhalt von Max",
+      "vorgemerkt": {
+        "quelle": "rocky (Fiktion)",
+        "ort": "kern/adapter/rocky",
+        "arten": [
+          "fiktion"
+        ],
+        "lizenz": "keine Übernahme von Text"
+      },
+      "zeigt": {
+        "ansicht": "netz",
+        "ebenen": [],
+        "orte": "alle"
+      }
+    },
+    {
+      "natur": "2.1",
+      "frage": "Keine Frage gesetzt (konstruierte Wirklichkeit)",
+      "quelle": null,
+      "status": "bewusst_leer",
+      "begruendung": "Das Gerüst (Auftrag Teil D) sieht hier keine Station vor; ob eine dazukommt, entscheidet Max"
+    },
+    {
+      "natur": "2.2",
+      "frage": "Keine Frage gesetzt (Überbau)",
+      "quelle": null,
+      "status": "bewusst_leer",
+      "begruendung": "Das Gerüst (Auftrag Teil D) sieht hier keine Station vor; ob eine dazukommt, entscheidet Max"
+    },
+    {
+      "natur": "2.3",
+      "frage": "Wie verständigt man sich über Töne statt Bilder, und wie wird eine gemeinsame Sprache zur Übersetzung (Signal → Symbol, Wörterbuch)?",
+      "quelle": null,
+      "status": "fehlt",
+      "begruendung": "Inhalt von Max",
+      "vorgemerkt": {
+        "quelle": "rocky (Fiktion)",
+        "ort": "kern/adapter/rocky",
+        "arten": [
+          "fiktion"
+        ],
+        "lizenz": "keine Übernahme von Text"
+      },
+      "zeigt": {
+        "ansicht": "netz",
+        "ebenen": [],
+        "orte": "alle"
+      }
+    }
+  ],
+  "brueche": {
+    "fehlt": true,
+    "grund": "Inhalt von Max"
+  },
+  "autor": "Max",
+  "stand": "2026-11-06"
+}

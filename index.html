@@ -1775,7 +1775,10 @@ class SolarSystem2D {
       if (this.nachbarn === undefined) { this.nachbarn = null; fetch('data/nachbarsterne.json').then(r => r.json()).then(d => { this.nachbarn = d; }).catch(() => {}); }
       const n = this.nachbarn;
       ctx.save(); ctx.fillStyle = 'rgba(160,160,170,0.7)'; ctx.font = '9px JetBrains Mono,monospace'; ctx.textAlign = 'center';
-      ctx.fillText(n?.sterne?.fehlt ? `Nachbarsterne (0.2) fehlt: ${n.sterne.grund} · vorbereitet für Gaia DR3 und NASA Exoplanet Archive` : 'Nachbarsterne: lädt', this.canvas.width / 2, 64);
+      const txt = !n ? 'Nachbarsterne: lädt'
+        : n.sterne?.fehlt ? `Nachbarsterne (0.2) fehlt: ${n.sterne.grund}`
+        : `Nachbarsterne (0.2): ${n.sterne.map(x => `${x.name} ${takt.zahl(1000 / x.gaia.parallaxe_mas * 3.26156, 1)} Lj (Gaia DR3, Abstand aus der Parallaxe berechnet)`).join(', ')} · Zoom noch nicht gebaut; weitere fehlen`;
+      ctx.fillText(txt, this.canvas.width / 2, 64);
       ctx.restore();
     }
 

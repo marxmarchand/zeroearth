@@ -1,0 +1,97 @@
+{
+  "id": "nachbarsterne",
+  "eingabe": "data/nachbarsterne.json",
+  "quelle": {
+    "name": "Gaia DR3 (ESA/Gaia/DPAC); Planetenmeldungen aus Fachartikeln (Ma et al. 2018; Burrows et al. 2024)",
+    "dateien": [
+      "gaiadr3.gaia_source (TAP, eine Zeile je Stern)"
+    ],
+    "abgeleitet_durch": "matrix-scharnier/adapter/nachbarsterne.py",
+    "pangaea": {
+      "fehlt": true,
+      "grund": "Keine PANGAEA-Quelle; Gaia-Archiv gea.esac.esa.int"
+    }
+  },
+  "stapel": [
+    "0.2"
+  ],
+  "vorgang": {
+    "fehlt": true,
+    "grund": "Zustandswerte von Sternen; kein Vorgang"
+  },
+  "herkunft": {
+    "arten": [
+      "beobachtung",
+      "rekonstruktion"
+    ],
+    "ebene": "Wert",
+    "hinweis": "Gaia: beobachtung. Planetenmeldungen: beobachtung (Radialgeschwindigkeit) + rekonstruktion (Deutung des Signals), je Deutung ein Ideal (Regel 13). Spektraltyp fehlt (nicht geprüft).",
+    "archivkette": [
+      {
+        "archiv": "zeroearth (data/nachbarsterne.json)",
+        "art": "zeroearth"
+      },
+      {
+        "archiv": "ESA Gaia-Archiv; Fachzeitschriften (MNRAS, AJ)",
+        "art": "gesellschaftlich"
+      }
+    ]
+  },
+  "zeitsemantik": {
+    "bezugssystem": "a_ce",
+    "unschaerfe": {
+      "fehlt": true,
+      "grund": "Gaia nennt die Epoche J2016.0, keine Unschärfe der Zeit"
+    },
+    "aufloesung": {
+      "fehlt": true,
+      "grund": "Ein Zustand, keine Zeitreihe"
+    },
+    "abdeckung": {
+      "von": 2016,
+      "bis": 2024,
+      "schritte": 1
+    },
+    "verzoegerung": {
+      "fehlt": true,
+      "grund": "Kein Wissensstand angegeben"
+    }
+  },
+  "geometrie": [
+    "punkt"
+  ],
+  "lizenz": {
+    "angabe": "CC BY-NC 3.0 IGO (Gaia DR3; nur nicht-kommerziell, Entscheidung von Max 2026-11-06)",
+    "quelle": "cosmos.esa.int/web/gaia-users/license",
+    "geprueft": "2026-11-06",
+    "bearbeitung": "Spalten ausgewählt; Abstand erst in der Anzeige aus der Parallaxe"
+  },
+  "weitergabe": {
+    "im_repo": "data/nachbarsterne.json",
+    "nicht_im_repo": "Gaia-Katalog"
+  },
+  "auswahl": [
+    "nachbarsterne/auswahl/sterne"
+  ],
+  "reduktion": [
+    {
+      "schritt": "auswaehlen",
+      "angabe": "Gaia DR3: Position, Parallaxe, Helligkeit G, Eigenbewegung, Radialgeschwindigkeit je Stern"
+    }
+  ],
+  "ideale": {
+    "gruppe": "nachbarsterne/ideale/40_eri_b",
+    "varianten": {
+      "planet": {
+        "name": "Planet (Ma et al. 2018)",
+        "variante": "Radialgeschwindigkeitssignal als Planet"
+      },
+      "aktivitaet": {
+        "name": "Sternaktivität (Burrows et al. 2024)",
+        "variante": "Radialgeschwindigkeitssignal als Sternaktivität"
+      }
+    },
+    "gesetzt_in": "Auftrag Teil D (2026-11-06): 40 Eri b als umstritten mit Quellen",
+    "begruendung": "Zwei Deutungen desselben Signals; keine wird entschieden (Regel 13)"
+  }
+}
