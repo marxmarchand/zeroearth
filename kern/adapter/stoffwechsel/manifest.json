@@ -1,0 +1,95 @@
+{
+  "id": "stoffwechsel",
+  "eingabe": "data/stofffluss/laendercodes.json",
+  "zusatz": {
+    "mfa": "data/stofffluss/eurostat_mfa.json",
+    "energie": "data/stofffluss/eurostat_energie.json",
+    "produktion": "data/stofffluss/faostat_produktion.json",
+    "land": "data/stofffluss/faostat_landnutzung.json",
+    "arbeit": "data/stofffluss/ilostat_arbeitszeit.json"
+  },
+  "quelle": {
+    "name": "Prozess „gesellschaftlicher Stoffwechsel“ je Land aus Eurostat, FAOSTAT und ILOSTAT (Plan Prozess, kern/BERICHT-stofffluss.md); Ländercodes aus ILOSTAT CL_AREA",
+    "dateien": [
+      "data/stofffluss/*.json"
+    ],
+    "abgeleitet_durch": "kern/adapter/stoffwechsel/transform.mjs (Einträge aus den Adaptern eurostat, faostat, ilostat)",
+    "pangaea": {
+      "fehlt": true,
+      "grund": "Amtliche Statistiken; keine PANGAEA-Quelle"
+    }
+  },
+  "stapel": [
+    "0.3",
+    "1.1",
+    "1.2",
+    "1.3"
+  ],
+  "vorgang": "stoffwechsel",
+  "herkunft": {
+    "arten": [
+      "beobachtung",
+      "kuratiert",
+      "modell",
+      "berechnet",
+      "erwartung"
+    ],
+    "ebene": "Wert",
+    "hinweis": "Werte wie in den Adaptern eurostat, faostat und ilostat (Kennzeichen → Herkunft, kern/adapter/stofffluss_herkunft.mjs). Prozesse, Bestände und Relationen sind Setzungen nach dem Plan Prozess (kuratiert); Bilanzen tragen die Herkunft ihrer Werte.",
+    "archivkette": [
+      {
+        "archiv": "zeroearth (kern/adapter/stoffwechsel)",
+        "art": "zeroearth"
+      },
+      {
+        "archiv": "Eurostat; FAO; ILO",
+        "art": "gesellschaftlich"
+      }
+    ]
+  },
+  "zeitsemantik": {
+    "bezugssystem": "a_ce",
+    "unschaerfe": {
+      "fehlt": true,
+      "grund": "Jahreswerte; die Quellen nennen keine Unschärfe der Zeit"
+    },
+    "aufloesung": {
+      "wert": 1,
+      "einheit": "a"
+    },
+    "abdeckung": {
+      "von": 1961,
+      "bis": 2027,
+      "schritte": 67
+    },
+    "verzoegerung": {
+      "fehlt": true,
+      "grund": "Kein Stand je Wert"
+    }
+  },
+  "geometrie": {
+    "fehlt": true,
+    "grund": "Länder als Bezugseinheit; Umrisse nicht eingebunden"
+  },
+  "lizenz": {
+    "angabe": "wie die Quellen: Eurostat CC BY 4.0; FAOSTAT CC BY 4.0 mit FAO-Bedingungen; ILOSTAT CC BY 4.0 (ab Mai 2023)",
+    "quelle": "siehe Adapter eurostat, faostat, ilostat",
+    "geprueft": "2026-11-08",
+    "bearbeitung": "Zusammenstellung je Land, nichts verrechnet"
+  },
+  "weitergabe": {
+    "im_repo": "Daten der Adapter eurostat, faostat, ilostat; data/stofffluss/laendercodes.json",
+    "nicht_im_repo": "Rohdaten der Quellen"
+  },
+  "auswahl": [
+    "stoffwechsel/auswahl/prozesse",
+    "stoffwechsel/auswahl/bilanzjahr",
+    "stoffwechsel/auswahl/laendercodes"
+  ],
+  "reduktion": [
+    {
+      "schritt": "auswaehlen",
+      "angabe": "je Land ein Prozess; Bilanz-Relation für das jüngste vollständige Jahr je Gruppe bzw. Energieträger (alle Jahre im Test)"
+    }
+  ]
+}

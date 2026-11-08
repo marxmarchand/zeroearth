@@ -28,7 +28,7 @@ test('Regel 5: Eurostat-Bilanzen gehen auf (DMC = DE + IMP − EXP; GAE und GIC)
     if (v.some(x => x === null || x === undefined)) continue;
     n++; assert.ok(Math.abs(v[0] + v[1] - v[2] - v[3]) <= Math.max(1, 1e-3 * Math.abs(v[3])), `${r.geo} ${r.gruppe} ${j}`);
   }
-  assert.ok(n > 4000, `${n} geprüft`);
+  assert.ok(n > 3900, `${n} geprüft`);
   const e = await lies('eurostat_energie.json');
   n = 0;
   for (const r of e.reihen) for (const j of Object.keys(r.werte.GAE ?? {})) {
@@ -75,6 +75,8 @@ test('Regel 8: Lücken bleiben Jahre mit Grund; fehlende FAO-Gruppen stehen als 
   const p = await lies('faostat_produktion.json');
   for (const c of Object.keys(p.fehlend)) assert.ok(eintrag(A.faostat.graph, `faostat/produktion/gruppe_${c}`).werte.produktion.fehlt);
   assert.ok(!p.reihen.some((/** @type {any} */ r) => Number(r.land) >= 5000 || r.land === '351'), 'keine Regionen, kein China (351) doppelt');
+  for (const f of ['eurostat_mfa.json', 'eurostat_energie.json'])
+    assert.ok(!Object.keys((await lies(f)).laender).some(g => g.includes('_') || /^E[UA]/.test(g)), `${f}: keine Summengebiete`);
   const i = await lies('ilostat_arbeitszeit.json');
   assert.ok(!i.laender.some((/** @type {string} */ l) => l.startsWith('X')), 'keine ILO-Regionen');
 });

@@ -5,6 +5,7 @@
    Sonnenstrahlung 0.3). Nichts wird über Länder oder Gruppen summiert. */
 import { SCHEMA_VERSION } from '../../schema.mjs';
 import { jahresreihe, idTeil } from '../stofffluss_reihe.mjs';
+import { artenEurostat } from '../stofffluss_herkunft.mjs';
 
 const P = 'eurostat';
 const NAMEN_MFA = /** @type {Record<string, string>} */ ({ DE: 'entnahme', IMP: 'import', EXP: 'export', DMC: 'inlandsverbrauch' });
@@ -14,9 +15,8 @@ export function transform(mfa, manifest, zusatz) {
   const E = zusatz.energie, kette = manifest.herkunft.archivkette;
   /** @param {any} q */
   const herkunft = q => (/** @type {number} */ _j, /** @type {string|null} */ kz) => {
-    const geschaetzt = kz !== null && /[ei]/.test(kz);
     return {
-      arten: geschaetzt ? ['kuratiert', 'modell', 'berechnet'] : ['beobachtung', 'kuratiert'],
+      arten: artenEurostat(kz),
       quelle: `${q.quelle.name}; Stand ${String(q.quelle.aktualisiert).slice(0, 10)}`,
       ...(kz ? { hinweis: `Kennzeichen ${kz}: ${[...kz].map(c => q.kennzeichen[c] ?? 'Bedeutung nicht geliefert').join('; ')}` } : {}),
       ...(kz?.includes('p') ? { wissensstand: { seit: String(q.quelle.aktualisiert).slice(0, 10), status: 'vorlaeufig' } } : {}),

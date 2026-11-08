@@ -32,3 +32,12 @@ test('Eisvolumen plausibel: heute rund 28 Mio km³, bei 20 ka mehr als doppelt s
   assert.ok(v(20) > 2 * v(0));
   assert.ok(roh.meereis.fehlt);
 });
+
+test('Schwelle 100 m wie im Relief; negative Dicken der Quelle gezählt und als kein Eis behandelt', () => {
+  assert.equal(roh.schwelle.eis_ab_m, 100); assert.equal(roh.schwelle.klasse_ab, 37);
+  for (const s of roh.ideale.referenz.schritte) {
+    assert.ok(s.zellen_ab_schwelle <= s.zellen_eis);
+    assert.ok(s.negativ_zellen_quelle_025 >= 0 && s.negativ_min_m <= 0);
+  }
+  assert.ok(roh.ideale.referenz.schritte[0].negativ_zellen_quelle_025 > 0, 'bei 0 ka hat die Quelle negative Dicken');
+});

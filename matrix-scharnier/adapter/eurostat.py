@@ -30,6 +30,9 @@ ENERGIE = dict(datensatz='nrg_bal_c', einheit='TJ', einheit_text='TJ',
                traeger={'C0000X0350-0370': '1.1', 'P1000': '1.1', 'S2000': '1.1', 'G3000': '1.1', 'O4000XBIO': '1.1',
                         'N900H': '1.1', 'RA100': '1.1', 'RA300': '1.1', 'RA410': '0.3', 'RA420': '0.3',
                         'R5110-5150_W6000RI': '1.2'})
+SUMMENGEBIET = lambda g: '_' in g or g.startswith(('EU', 'EA'))   # etwa EU27_2020, EA20: keine Länder
+
+
 STAPEL_GRUND = {'0.3': 'Sonnenstrahlung: Zufluss aus der 0. Natur', '1.1': 'aus dem Erdsystem', '1.2': 'aus der Biomasse'}
 
 
@@ -73,6 +76,8 @@ def main():
     laender = d['dimension']['geo']['category']['label']
     reihen = {}
     for pos, wert, flag in zeilen(d):
+        if SUMMENGEBIET(pos['geo']):
+            continue
         k = (pos['geo'], pos['material'])
         reihen.setdefault(k, {}).setdefault(pos['indic_env'], {})[pos['time']] = [wert, flag]
     mfa = dict(
@@ -82,7 +87,7 @@ def main():
         einheit=MFA['einheit_text'], kennzeichen=kennzeichen(d),
         indikatoren={k: d['dimension']['indic_env']['category']['label'][k] for k in MFA['indikatoren']},
         gruppen={k: dict(name=d['dimension']['material']['category']['label'][k], stapel=s, stapel_grund=STAPEL_GRUND[s]) for k, s in MFA['gruppen'].items()},
-        auswahl='MF1–MF4 einzeln; MF5/MF6 (nur Handel) und TOTAL (mischt Stapel) ausgelassen',
+        auswahl='MF1–MF4 einzeln; MF5/MF6 (nur Handel) und TOTAL (mischt Stapel) ausgelassen; Summengebiete (etwa EU27_2020) ausgelassen',
         identitaet='DMC = DE + IMP − EXP (Definition der Materialflusskonten)',
         laender={g: laender[g] for g in sorted({g for g, _ in reihen})},
         reihen=[dict(geo=g, gruppe=m, werte=w) for (g, m), w in sorted(reihen.items())])
@@ -93,6 +98,8 @@ def main():
     laender = d['dimension']['geo']['category']['label']
     reihen = {}
     for pos, wert, flag in zeilen(d):
+        if SUMMENGEBIET(pos['geo']):
+            continue
         k = (pos['geo'], pos['siec'])
         reihen.setdefault(k, {}).setdefault(pos['nrg_bal'], {})[pos['time']] = [wert, flag]
     energie = dict(
@@ -102,7 +109,7 @@ def main():
         einheit=ENERGIE['einheit_text'], kennzeichen=kennzeichen(d),
         posten={k: d['dimension']['nrg_bal']['category']['label'][k] for k in ENERGIE['posten']},
         traeger={k: dict(name=d['dimension']['siec']['category']['label'][k], stapel=s, stapel_grund=STAPEL_GRUND[s]) for k, s in ENERGIE['traeger'].items()},
-        auswahl='Energieträger einzeln (kein TOTAL, mischt Stapel); Bilanzposten von der Primärproduktion bis zum Bruttoinlandsverbrauch',
+        auswahl='Energieträger einzeln (kein TOTAL, mischt Stapel); Bilanzposten von der Primärproduktion bis zum Bruttoinlandsverbrauch; Summengebiete (etwa EU27_2020) ausgelassen',
         identitaet='GAE = PPRD + RCV_RCY + IMP − EXP + STK_CHG; GIC = GAE − INTMARB (Definition der Energiebilanz)',
         laender={g: laender[g] for g in sorted({g for g, _ in reihen})},
         reihen=[dict(geo=g, traeger=t, werte=w) for (g, t), w in sorted(reihen.items())])

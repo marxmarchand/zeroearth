@@ -46,6 +46,17 @@ def status_codes(roh):
             for m in re.finditer(r'<structure:Code id="([^"]+)">(.*?)</structure:Code>', t, re.S)}
 
 
+def laendercodes(roh):
+    """CL_AREA der ILO: ISO-3 mit ISO-2 und M49 (Annotationen der Quelle); Gruppen (Regionen) markiert."""
+    t = holen('codelist/ILO/CL_AREA', 'application/xml', roh, 'CL_AREA.xml')
+    aus = {}
+    for m in re.finditer(r'<structure:Code id="([^"]+)">(.*?)</structure:Code>', t, re.S):
+        ann = dict((typ, titel) for titel, typ in re.findall(r'<common:AnnotationTitle>([^<]*)</common:AnnotationTitle>\s*<common:AnnotationType>([^<]*)</common:AnnotationType>', m.group(2)))
+        name = re.search(r'<common:Name xml:lang="en">([^<]+)</common:Name>', m.group(2))
+        aus[m.group(1)] = dict(name=name.group(1) if name else None, iso2=ann.get('ISO2Code'), m49=ann.get('M49Code'), gruppe=ann.get('GROUP') == 'Y')
+    return aus
+
+
 def main():
     a = argparse.ArgumentParser()
     a.add_argument('--ziel', default='../../data')
@@ -86,6 +97,13 @@ def main():
         laender=sorted(laender), teile=teile)
     with open(os.path.join(a.ziel, 'stofffluss', 'ilostat_arbeitszeit.json'), 'w', encoding='utf-8') as f:
         json.dump(aus, f, ensure_ascii=False, separators=(',', ':'))
+    codes = laendercodes(a.roh)
+    with open(os.path.join(a.ziel, 'stofffluss', 'laendercodes.json'), 'w', encoding='utf-8') as f:
+        json.dump(dict(erzeugt=aus['erzeugt'], hinweis='erzeugt von matrix-scharnier/adapter/ilostat.py',
+                       quelle=dict(name='ILOSTAT, Codeliste CL_AREA (sdmx.ilo.org), Annotationen ISO2Code und M49Code', lizenz=aus['quelle']['lizenz']),
+                       eurostat_abweichungen=dict(EL='GR', UK='GB', beleg='Eurostat, Glossary: Country codes: ISO 3166 alpha-2 außer UK (statt GB) und EL (statt GR)'),
+                       laender=codes), f, ensure_ascii=False, separators=(',', ':'))
+    print('Ländercodes:', len(codes), 'davon Gruppen', sum(1 for c in codes.values() if c['gruppe']))
     for k, t in teile.items():
         jahre = sorted({j for r in t['reihen'] for j in r['werte']})
         print(k, len(t['reihen']), 'Reihen,', len({r['land'] for r in t['reihen']}), 'Länder,', jahre[0], '–', jahre[-1], '| Einheit', t['einheit'])

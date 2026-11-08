@@ -160,3 +160,178 @@ Gebaut nach Freigabe („Alle drei“). Jede Quelle bleibt einzeln; nichts wird 
 - Prozesse des gesellschaftlichen Stoffwechsels, an die die Zuflüsse anschließen.
 - Ort der Arbeitszeit in der Matrix (1.3 oder eigener Zufluss „zeit“ ohne Eintrag).
 - Länderumrisse als `wo`.
+
+## Plan Prozess (2026-11-08, nicht gebaut)
+
+Anschluss an `03c2832`.
+- **Entscheidung von Max:** Die Erwerbstätigen bleiben Träger in 1.3. Die Arbeitsstunden sind ein **Zufluss aus 1.3** in den Prozess des gesellschaftlichen Stoffwechsels, kein Stapel.
+- **Kernregeln, an denen sich der Plan ausrichtet:**
+  - Ein Prozess gehört keinem Stapel und hat einen Übergang.
+  - Zuflüsse verweisen auf Einträge mit Herkunftsstapel; Ausgänge verweisen auf Einträge.
+  - Eine Stoffwechsel-Relation braucht einen Bestand mit Formen und eine Bilanz mit Prüfart (wie Eis → Ozean bei der Sintflut).
+
+### 0. Vorab gefunden: Summengebiete in den Eurostat-Daten
+
+`data/stofffluss/eurostat_mfa.json` und `eurostat_energie.json` enthalten beide das Summengebiet `EU27_2020` (sonst keine weiteren). Das widerspricht „keine Summengebiete“ aus dem Bericht; die Länderzahlen 36 bzw. 41 zählen es mit.
+- **Vorschlag:** Diese Gebiete im Konverter auslassen und als Auswahl ausweisen, wie bei FAOSTAT und ILOSTAT.
+- Nicht geändert, wartet auf Freigabe.
+
+### 1. Der Prozess je Land
+
+- **Eintragsart:** Ein Prozess je Land, `stofffluss/prozess/<Land>`, Übergang `gesellschaftlicher_stoffwechsel`.
+- **Kein Prozess je Jahr:** Die Jahre stecken in den Zeitreihen der Zu- und Ausgänge; Zu- und Ausgänge verweisen auf Größen (`eintrag#groesse`). Ein Prozess je Land und Jahr gäbe rund 1 300 gleichförmige Knoten ohne zusätzliche Aussage.
+- **Bilanz:** Sie ist je Jahr eine eigene Relation, siehe Abschnitt 3.
+
+**Zuflüsse:**
+
+| Zufluss | Quelle, Größe | Herkunftsstapel | Art | Bemerkung |
+| --- | --- | --- | --- | --- |
+| Entnahme Biomasse (MF1) | Eurostat `eurostat/mfa/<geo>/mf1#entnahme` | 1.2 | stoff | |
+| Entnahme Erze, Mineralien, Fossiles (MF2–MF4) | Eurostat `…/mf2…mf4#entnahme` | 1.1 | stoff | je Gruppe ein Zufluss |
+| Import je Materialgruppe | Eurostat `…#import` | **fehlt** | stoff | siehe unten: Import kommt aus Prozessen anderer Länder, nicht aus einem Stapel |
+| Energie je Träger: Primärproduktion, Wiedergewinnung, Einfuhr | Eurostat `eurostat/energie/<geo>/<träger>#pprd`, `#rcv_rcy`, `#imp` | 1.1 bzw. 1.2 (Biobrennstoffe) bzw. **0.3** (Solar) | energie | Solar aus 0.3 braucht nach Schema eine Kette der Grundkräfte und „extern“ (Abschnitt 5) |
+| Energie aus Lagerabbau | Eurostat `#stk_chg` | – | energie | Vorzeichen der Quelle: positiv = Entnahme aus Lager; als Formwechsel eines Bestands „Energievorräte“, nicht als Stapel-Zufluss |
+| Arbeitsstunden insgesamt | ILOSTAT `ilostat/how_2tot/<iso3>/gesamt#stunden_je_woche` | 1.3 | zeit | nur Modell der ILO (h je Woche). **Keine Hochrechnung auf das Jahr.** |
+| Erzeugung nach FAO-Gruppen | FAOSTAT `faostat/produktion/<code>/<gruppe>#produktion` | 1.2 | stoff | eigener Zufluss, **nie** mit MF1 verrechnet (Abschnitt 2) |
+
+- **Import:** Er ist kein Zufluss aus der 1. Natur, sondern Ausgang eines anderen gesellschaftlichen Stoffwechsels. Die Materialflusskonten nennen das Partnerland nicht. Darum ein Prozess **„Rest der Welt“**: Import fließt von dort, Export dorthin.
+  - Er erscheint als Prozess mit `wo` fehlt, Grund „Handelspartner nennt env_ac_mfa nicht“.
+  - Der Kern verlangt bei Zuflüssen einen Eintrag mit Stapel. Import und Export werden darum **Relationen zwischen zwei Prozessen** (Vorgang Stoffwechsel), keine Zuflüsse; der Kern lässt Prozesse als Enden einer Relation zu.
+
+**Ausgänge:**
+
+| Ausgang | Quelle, Größe | Art | nach |
+| --- | --- | --- | --- |
+| Export je Materialgruppe | Eurostat `#export` | stoff | Prozess „Rest der Welt“ (Relation) |
+| Inlandsverbrauch je Materialgruppe | Eurostat `#inlandsverbrauch` | stoff | Bestand „Material im Land“, Form „verbraucht oder eingebaut“ (Abschnitt 3) |
+| Energie: Ausfuhr, Hochseebunker | Eurostat `#exp`, `#intmarb` | energie | Prozess „Rest der Welt“ bzw. internationale Schifffahrt (fehlt als eigener Prozess, Grund: nicht Teil des Landes) |
+| Energie: Bruttoinlandsverbrauch | Eurostat `#gic` | energie | Bestand „Energie im Land“; weiter als Wärme (`waerme`) **fehlt**: Endenergie und Verluste sind nicht ausgewählt |
+
+### 2. Wer wo anschließt (nichts verschmelzen)
+
+- **Eurostat:** trägt die Bilanz (Material und Energie). Das ist die einzige Quelle mit geschlossener Kontendefinition.
+- **FAOSTAT Produktion:** ein eigener Zufluss neben Eurostat MF1, nicht Teil der Bilanz.
+  - **Warum nicht als Ideal:** MF1 umfasst auch Holz, Weidebiomasse, Fisch und Ernterückstände; die FAO-Gruppen sind enger. Es sind verschiedene Größen, keine konkurrierenden Ideale derselben Größe (Regel 13 greift nicht).
+  - **Anzeige:** „überschneidet sich mit MF1, nicht addierbar“.
+  - **Außerhalb Europas** ist FAOSTAT der einzige Biomasse-Zufluss. Dort hat der Prozess keine Bilanz; die fehlt mit Grund „keine Materialflusskonten für dieses Land“.
+- **FAOSTAT Landnutzung:** kein Fluss, sondern Bestand (Fläche). Er schließt als **Rolle** an: Fläche als Arbeitsmittel des Prozesses (Vorgang Rolle, Modus vollzogen), ohne Menge.
+- **ILOSTAT, Gesamtstunden (HOW_2TOT):** Zufluss „zeit“ aus 1.3, Herkunft `modell` (ab 2026 `erwartung`, Träger ILO).
+- **ILOSTAT, Stunden je Person (HOW_TEMP):** bleibt eine Kennzahl am Träger (Erwerbstätige, 1.3), **kein** Zufluss. Ein Fluss daraus bräuchte die Zahl der Erwerbstätigen aus derselben Quelle; das wäre eine Ableitung, aber ein neuer Abruf.
+- **Ländercodes:** Eurostat nutzt ISO-2 (mit `EL` für Griechenland), ILOSTAT ISO-3, FAOSTAT eigene Codes und M49.
+  - Für den Anschluss braucht es eine **Zuordnungstabelle** ISO-2 ↔ ISO-3 ↔ M49 aus einer Quelle (UN-Statistikabteilung, M49), als `kuratiert` mit Beleg.
+  - Ohne Tabelle schließen die Quellen **nicht** an; der Zufluss fehlt dann mit Grund. Raten (etwa nach Ländernamen) ist ausgeschlossen.
+- **Zeit:** Alle drei sind Jahreswerte in `a CE`. Gleichzeitig sind nur Werte desselben Kalenderjahres (Regel 16); Unschärfe fehlt überall.
+- **ILOSTAT-Stunden je Woche und Jahreswerte:** Sie sind nicht dasselbe Maß und werden nebeneinander gezeigt, nicht verrechnet.
+
+### 3. Bestand und Bilanz: was da ist, was fehlt
+
+**Bilanz, die geht** (Prüfart `innere_stimmigkeit`):
+- **Material:** je Land, Materialgruppe und Jahr eine Stoffwechsel-Relation.
+  - Zufluss = Entnahme + Import.
+  - Abfluss = [Export, Inlandsverbrauch].
+  - Toleranz 0,1 %.
+- **Energie:** je Land, Träger und Jahr.
+  - Zufluss = Primärproduktion + Wiedergewinnung + Einfuhr + Lagerabbau.
+  - Abfluss = [Ausfuhr, Hochseebunker, Bruttoinlandsverbrauch].
+- **Größe:** zusammen rund 9 400 Relationen. Sie stehen im Kern-Graphen, nicht in einer Datei für die Seite.
+- **Ehrlich ausgewiesen:**
+  - Diese Bilanzen sind die **Definition der Konten** (Inlandsverbrauch ist so festgelegt) und prüfen nur, ob die Quelle in sich stimmt.
+  - Sie prüfen nicht, ob die Welt so ist. Regel 5 („Modell gegen Welt“) ist damit nicht erfüllt, und die Legende sagt das.
+  - Beide Seiten stammen aus derselben Quelle. `pruefeSeiten` würde `unabhaengige_beobachtung` darum zu Recht ablehnen.
+
+**Bestand, der fehlt** (als `fehlt` mit Grund, nichts hochgerechnet):
+
+| Fehlt | Grund | Was es bräuchte |
+| --- | --- | --- |
+| Materialbestand im Land (Gebäude, Infrastruktur, Güter in Nutzung) in t | Die Materialflusskonten führen nur Flüsse je Jahr, keinen Bestand | eine Bestandsquelle in Masse; GHSL hat Volumen (m³), nicht Masse. Umrechnung über eine Dichte wäre eine eigene Annahme, also ausgeschlossen |
+| Zuwachs des Bestands (Net Addition to Stock) | nicht in `env_ac_mfa` | Eurostat-Materialflussdiagramm; ob es frei abrufbar ist und NAS je Land führt, ist **nicht geprüft** |
+| Abgabe an die Natur (Emissionen, Abfälle; Domestic Processed Output) | nicht ausgewählt und nicht in `env_ac_mfa` | Eurostat Luftemissionen (`env_ac_ainah_r2`) und Abfallstatistik; andere Datensätze, eigene Herkunft. Erst dann wäre Inlandsverbrauch = Bestandszuwachs + Abgabe als Bilanz **gegen eine zweite Quelle** prüfbar (`unabhaengige_beobachtung`) |
+| Energievorräte (Lagerbestand) | Die Energiebilanz nennt nur die Veränderung, nicht den Stand | eine Lagerstatistik; nicht gesucht |
+| Partnerländer von Import und Export | nicht in `env_ac_mfa` | Außenhandelsstatistik in Masse (Comext); nicht geprüft |
+| Arbeitsstunden je Jahr | Die Quelle nennt Stunden je Woche, keine Wochen je Jahr | eine Quelle mit Jahresarbeitszeit (etwa OECD „average annual hours actually worked“); nicht geprüft |
+
+**Bestände im Kern** (Formen, keine Mengen):
+- **„Material im Land“:** Formen „in der Natur“ (Entnahme-Eintrag), „verbraucht oder eingebaut“ (Inlandsverbrauch), „im Handel“ (Prozess Rest der Welt). Erhaltung `erhalten`; Menge fehlt mit Grund.
+- **„Energie im Land“:** Formen „Primärenergie“, „Lager“ (fehlt), „verbraucht“ (Bruttoinlandsverbrauch).
+
+### 4. Anzeige auf der Seite
+
+**Flussansicht** (neu, im Strukturstand als „Mengen und Richtung, Stoff und Energie“ beschrieben, noch nicht gebaut):
+- **Auswahl:** ein Land und ein Jahr, oben gewählt und als Auswahl ausgewiesen (Regel 7).
+- **Prozessknoten** in der Zone gesellschaftlicher Stoffwechsel.
+- **Zuflüsse** kommen von unten aus ihren Bändern: 1.1 Erdsystem, 1.2 Biomasse, 1.3 Basis (Arbeitszeit). Solarenergie kommt von ganz unten aus 0.3.
+- **Import und Export** links und rechts zum Knoten „Rest der Welt“; der Inlandsverbrauch nach oben in den Bestand.
+- **Breite nach Menge nur innerhalb einer Einheit.** t, TJ und h stehen in **drei getrennten Spalten mit eigener Skala**, nie auf einer gemeinsamen. Es gibt keine Umrechnung zwischen Stoff, Energie und Zeit (Regel 3 und 8: Kommensurabilität fehlt).
+- **Zeichen je Fluss** nach dem Zeichensystem: Füllung voll = beobachtet, halb = rekonstruiert, leer = Modell, ⏵ = Erwartung, schraffiert = kuratiert, grau gestrichelt = fehlt. Angezeigt wird immer das Unsicherste; die Kennzeichen der Quelle (e, i, A, E …) stehen im Tooltip.
+- **Fehlendes erscheint als graue Stummel mit Grund:** Bestand, Abgabe an die Natur, Partnerländer, Jahresstunden.
+- **Bilanz** unter dem Knoten: „geschlossen, innere Stimmigkeit (Definition der Quelle): Rest x“, nie als Häkchen „geprüft“.
+- **Überschneidung:** FAOSTAT-Zufluss und MF1 stehen nebeneinander mit dem Hinweis „überschneidet sich, nicht addierbar“.
+
+**Netzansicht:** die Struktur ohne Mengen. Prozessknoten, Bänder, Linienarten für Stoffwechsel und Rolle (Landfläche).
+
+**Globus:** zunächst nichts.
+- Länderwerte bräuchten Länderumrisse als `wo`. Sie fehlen; Natural Earth wäre eine Kandidatin, Lizenz gemeinfrei, nicht geprüft.
+- Ein eingefärbtes Land wäre außerdem schon eine Kartenebene. Das ist ein eigener Schritt und eine eigene Entscheidung.
+
+**Takt-Leiste:** Jahr-Zeile (`a CE`). Stützstellen sind die Jahre der gewählten Quelle; jede Quelle trägt ihren eigenen Punkt.
+
+### 5. Offen, zur Entscheidung
+
+1. Summengebiete aus Eurostat entfernen (Abschnitt 0).
+2. Zuordnungstabelle der Ländercodes: welche Quelle (UN M49 als Vorschlag)?
+3. Solar als Zufluss aus 0.3: Das Schema verlangt eine Kette der Grundkräfte und die Richtung „extern“. Vorschlag: Kette „stark, elektromagnetismus“ (Fusion in der Sonne, Strahlung) als Setzung mit Begründung, oder `fehlt` mit Grund, bis du sie festlegst.
+4. Import und Export als Relationen zum Prozess „Rest der Welt“: einverstanden?
+5. Flussansicht als neue Ansicht (`fluss`) bauen, oder zuerst nur Kern und Tests?
+
+## Stand des Baus: Prozess und Flussansicht (2026-11-08)
+
+Nach Freigabe („Beides bauen“) gebaut. Offene Entscheidungen aus Abschnitt 5 nach den Vorschlägen:
+1. **`EU27_2020`** ist entfernt.
+2. **Ländercodes:** über die Codeliste von ILOSTAT statt UN M49. Die Nutzungsbedingungen der UN erlauben keine Weitergabe.
+3. **Kette der Grundkräfte (Solar):** fehlt mit Grund, bis du sie festlegst.
+4. **Import und Export:** als Relationen zum Prozess „Rest der Welt“.
+5. **Flussansicht:** gebaut.
+
+**Konverter:**
+- **`eurostat.py`:** Summengebiete (Codes mit `_` oder `EU`/`EA` am Anfang) werden ausgelassen. Jetzt 35 Länder (Material) und 40 (Energie).
+- **`faostat.py`:** führt je Land den M49-Code.
+- **`ilostat.py`:** schreibt zusätzlich `data/stofffluss/laendercodes.json`, aus der ILO-Codeliste `CL_AREA`: 335 Codes mit ISO-2 und M49, Regionen markiert.
+  - Eurostat weicht bei EL (Griechenland) und UK von ISO-2 ab; belegt im Eurostat-Glossar „Country codes“.
+  - Die UN-Liste M49 scheidet aus: Die Nutzungsbedingungen der UN erlauben nur persönlichen, nicht-kommerziellen Gebrauch und keine Weitergabe.
+
+**Gemeinsames Modul** `kern/adapter/stofffluss_herkunft.mjs`:
+- **Inhalt:** Kennzeichen → Herkunft für alle drei Quellen, die Zuordnung der Ländercodes und die Liste des Fehlenden.
+- **Nutzer:** die Kern-Adapter und die Seite gleichermaßen (Regel 14), ohne Abhängigkeiten.
+
+**Kern-Adapter `kern/adapter/stoffwechsel/`:**
+- **Übernahme:** die Einträge von eurostat, faostat und ilostat, unverändert.
+- **Prozesse:** 227 Länderprozesse „gesellschaftlicher Stoffwechsel“ und ein Prozess „Rest der Welt“.
+  - **Zuflüsse** mit Herkunftsstapel: Entnahme 1.1/1.2, Energie 1.1/1.2/0.3, Zeit 1.3 (nur ILO-Gesamtstunden), FAOSTAT-Erzeugung als eigener Zufluss mit „nicht addierbar“.
+  - **Ausgänge:** Inlandsverbrauch bzw. Bruttoinlandsverbrauch in „im Land“-Einträge.
+- **Solar (0.3):** Richtung „extern“, Kette der Grundkräfte fehlt (der Kern meldet es sichtbar).
+- **Bestände:** 569, je Land und Gruppe bzw. Träger.
+  - Formen nur innerhalb des Stapels („in der Natur“, „verbraucht oder eingebaut“), weil Regel B Formwechsel über Stapel- oder Übergangsgrenzen nicht zulässt. Prozess und Handel hängen als Relationen an.
+  - Menge fehlt mit Grund.
+- **Relationen:** 1 660.
+  - **Import und Export** zum „Rest der Welt“, Bilanz nicht prüfbar, weil die Gegenseite fehlt.
+  - **Bilanzen,** Prüfart innere Stimmigkeit: 140 für Material und 156 für Energie. Energie hat weniger, weil bei vielen Trägern ein Posten in jedem Jahr fehlt (Kennzeichen m).
+  - **Rolle „Agrarfläche als Arbeitsmittel“,** ohne Menge.
+  - **Jede Relation hat einen Beleg:** die Quelle bzw. `fehlt` bei Setzungen.
+- **Abweichung vom Plan:** Im Graphen steht je Land und Gruppe bzw. Träger nur die Bilanz des **jüngsten vollständigen Jahres** (sonst über 9 000 Hinweise in der Prüfausgabe). Alle Jahre prüft `kern/test/stofffluss.test.mjs`.
+- **Prozesse ohne Eurostat-Konten (187):** Sie tragen `bilanz: fehlt` mit Grund.
+- **Fehlendes:** sieben Einträge `stoffwechsel/fehlt/*` (Materialbestand, Bestandszuwachs, Abgabe an die Natur, Energievorräte, Partnerländer, Jahresstunden, Kette der Grundkräfte).
+- **Nicht zuordenbar** (in der Auswahl genannt): Kosovo (Eurostat XK, in der ILO-Liste ohne ISO-2) und zehn historische FAO-Gebiete (etwa UdSSR, Jugoslawien, Tschechoslowakei).
+- **Test:** `kern/test/stoffwechsel.test.mjs`, 6 Tests.
+
+**Seite, Flussansicht** (Eintrag „Stoffflüsse je Land“ unter Gesellschaftlicher Stoffwechsel → Materielle Produktionsmittel):
+- **Auswahl:** ein Land, ein Jahr, als Auswahl ausgewiesen. Das Startjahr ist das jüngste Jahr vor den ILO-Prognosen, in dem die meisten Quellen Werte haben (Deutschland: 2024).
+- **Spalten:** drei, Stoff (t), Energie (TJ), Zeit (h je Woche), je mit eigener Skala. Je Gruppe bzw. Träger Zuflüsse links, Prozess Mitte, Ausgänge rechts.
+- **Füllung** nach Herkunft (voll beobachtet, halb rekonstruiert, leer Modell, schraffiert kuratiert, ⏵ Erwartung). Fehlendes als grau gestrichelter Stummel „fehlt“, mit Grund im Tooltip.
+- **Bilanzzeile** je Gruppe: „Bilanz geschlossen, innere Stimmigkeit (Definition der Konten): Rest x“ oder „nicht prüfbar“.
+- **Kennzahl:** Wochenstunden je Erwerbstätigem als Kennzahl am Träger, kein Zufluss.
+- **Fuß:** die Liste des Fehlenden aus dem gemeinsamen Modul.
+- **Einschränkung:** Der Lagerabbau ist ein vorzeichenbehafteter Wert (negativ = Lageraufbau). Der Balken zeigt den Betrag, das Vorzeichen steht im Tooltip.
+- **Geprüft:** Deutschland 2024 (Bilanzen Rest 0–1 t bzw. 0 TJ), Brasilien 2024 (ohne Eurostat, keine Bilanz, FAOSTAT und ILOSTAT), Deutschland 2026 (Werte fehlen mit Grund); ohne Fehler auf der Konsole.
+
+![Flussansicht Deutschland 2024](bericht-stofffluss/fluss-deu.jpg)
+![Flussansicht Brasilien 2024: ohne Materialflusskonten, keine Bilanz](bericht-stofffluss/fluss-bra.jpg)

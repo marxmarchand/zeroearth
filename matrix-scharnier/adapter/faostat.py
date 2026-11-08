@@ -40,7 +40,7 @@ def lesen(pfad, element, items):
             a = r['Area Code']
             if int(a) >= 5000 or a in AUSGELASSEN:
                 continue
-            laender[a] = r['Area']; namen[r['Item Code']] = r['Item']; einheit.add(r['Unit'])
+            laender[a] = dict(name=r['Area'], m49=r['Area Code (M49)'].lstrip("'")); namen[r['Item Code']] = r['Item']; einheit.add(r['Unit'])
             wert = float(r['Value']) if r['Value'] not in ('', None) else None
             reihen.setdefault((a, r['Item Code']), {})[r['Year']] = [wert, r['Flag'] or None]
     return reihen, laender, namen, einheit, flags, name

@@ -6,6 +6,7 @@
    Erwerbstätigen ihre Träger sind (Vorschlag). */
 import { SCHEMA_VERSION } from '../../schema.mjs';
 import { jahresreihe, idTeil } from '../stofffluss_reihe.mjs';
+import { artenIlo, ERWARTUNGSTRAEGER_ILO } from '../stofffluss_herkunft.mjs';
 
 const P = 'ilostat';
 
@@ -13,10 +14,9 @@ const P = 'ilostat';
 export function transform(roh, manifest) {
   const kette = manifest.herkunft.archivkette;
   const herkunft = (/** @type {number} */ j, /** @type {string|null} */ kz, /** @type {any[]} */ rest) => {
-    const quelle = rest[0] ?? 'Quelle nicht genannt', modell = /Modelled Estimates/.test(quelle);
-    const arten = modell ? (j >= roh.erwartung_ab ? ['kuratiert', 'modell', 'berechnet', 'erwartung'] : ['kuratiert', 'modell', 'berechnet']) : ['beobachtung', 'kuratiert'];
+    const quelle = rest[0] ?? 'Quelle nicht genannt', arten = artenIlo(j, quelle, roh.erwartung_ab);
     return { arten, quelle: `ILOSTAT: ${quelle}`, ...(kz ? { hinweis: `Status ${kz}: ${roh.status[kz] ?? 'Bedeutung nicht geliefert'}` } : {}),
-      ...(arten.includes('erwartung') ? { erwartungstraeger: 'ILO (Modelled Estimates)' } : {}) };
+      ...(arten.includes('erwartung') ? { erwartungstraeger: ERWARTUNGSTRAEGER_ILO } : {}) };
   };
   const luecke = () => 'kein Wert in der Quelle';
   const eintraege = [];

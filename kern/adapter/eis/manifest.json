@@ -20,7 +20,7 @@
       "berechnet"
     ],
     "ebene": "Datei",
-    "hinweis": "Eisdicke: rekonstruktion; Eisvolumen und Eisfläche je Schritt: rekonstruktion + berechnet.",
+    "hinweis": "Eisdicke: rekonstruktion; Eisvolumen und Eisfläche je Schritt: rekonstruktion + berechnet. Negative Dicken der Quelle (Interpolationsrest, bis etwa −3,8 m) gelten als kein Eis und zählen nicht ins Volumen; Anzahl je Schritt in data/eis.json.",
     "archivkette": [
       {
         "archiv": "zeroearth (data/eis.json, data/eis/)",
@@ -88,6 +88,10 @@
     {
       "schritt": "vergroebern",
       "angabe": "Eisvolumen und Eisfläche je Schritt als Summe über das 0,5°-Gitter"
+    },
+    {
+      "schritt": "auswaehlen",
+      "angabe": "Gezeichnet wird Eis ab 100 m Dicke (Setzung, wie Relief); Klassengrenze exakt bei 100 m (Klasse 37); dünneres Eis bleibt in den Klassen 1–36"
     }
   ],
   "ideale": {

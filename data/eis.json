@@ -1,5 +1,5 @@
 {
- "erzeugt": "2026-11-06T08:16:29+00:00",
+ "erzeugt": "2026-11-08T19:40:55+00:00",
  "hinweis": "erzeugt von matrix-scharnier/adapter/eis.py",
  "quelle": "PaleoMIST 1.0 (Gowan et al. 2021), ice_thickness; CC BY 4.0, doi:10.1594/PANGAEA.905800",
  "arten": [
@@ -25,6 +25,15 @@
   "fehlt": true,
   "grund": "PaleoMIST führt nur aufliegendes Eis, kein Meereis"
  },
+ "schwelle": {
+  "eis_ab_m": 100.0,
+  "klasse_ab": 37,
+  "setzung": "Gezeichnet wird Eis ab 100 m Dicke, wie im Relief (relief.py, EIS_AB_M); dünneres Eis bleibt in den Klassen 1 bis klasse_ab − 1"
+ },
+ "negativ": {
+  "hinweis": "Die Quelle enthält negative Dicken (Interpolationsrest, bis etwa −3,4 m); sie gelten als kein Eis. Anzahl je Schritt auf dem 0,25°-Gitter in negativ_zellen_quelle_025",
+  "behandlung": "Klasse 0; im Volumen nicht mitgezählt"
+ },
  "ideale": {
   "referenz": {
    "datei_quelle": "reconstruction_0.25_degree.nc",
@@ -33,199 +42,364 @@
      "ka": 0.0,
      "datei": "eis/referenz/000.png",
      "eisflaeche_km2": 15280650,
-     "eisvolumen_km3": 28586359
+     "eisflaeche_ab_schwelle_km2": 14201046,
+     "eisvolumen_km3": 28586476,
+     "zellen_eis": 28243,
+     "zellen_ab_schwelle": 26969,
+     "negativ_zellen_quelle_025": 2793,
+     "negativ_min_m": -3.44
     },
     {
      "ka": 2.5,
      "datei": "eis/referenz/025.png",
      "eisflaeche_km2": 15326602,
-     "eisvolumen_km3": 29342822
+     "eisflaeche_ab_schwelle_km2": 14473166,
+     "eisvolumen_km3": 29342938,
+     "zellen_eis": 28480,
+     "zellen_ab_schwelle": 27413,
+     "negativ_zellen_quelle_025": 2390,
+     "negativ_min_m": -3.79
     },
     {
      "ka": 5.0,
      "datei": "eis/referenz/050.png",
      "eisflaeche_km2": 16015279,
-     "eisvolumen_km3": 30548541
+     "eisflaeche_ab_schwelle_km2": 15114630,
+     "eisvolumen_km3": 30548644,
+     "zellen_eis": 29421,
+     "zellen_ab_schwelle": 28415,
+     "negativ_zellen_quelle_025": 2156,
+     "negativ_min_m": -3.35
     },
     {
      "ka": 7.5,
      "datei": "eis/referenz/075.png",
      "eisflaeche_km2": 17957800,
-     "eisvolumen_km3": 32137323
+     "eisflaeche_ab_schwelle_km2": 16987280,
+     "eisvolumen_km3": 32137423,
+     "zellen_eis": 31167,
+     "zellen_ab_schwelle": 30137,
+     "negativ_zellen_quelle_025": 2184,
+     "negativ_min_m": -6.45
     },
     {
      "ka": 10.0,
      "datei": "eis/referenz/100.png",
      "eisflaeche_km2": 23236545,
-     "eisvolumen_km3": 40176994
+     "eisflaeche_ab_schwelle_km2": 22354737,
+     "eisvolumen_km3": 40177109,
+     "zellen_eis": 35421,
+     "zellen_ab_schwelle": 34633,
+     "negativ_zellen_quelle_025": 1766,
+     "negativ_min_m": -20.53
     },
     {
      "ka": 12.5,
      "datei": "eis/referenz/125.png",
      "eisflaeche_km2": 28432751,
-     "eisvolumen_km3": 50495512
+     "eisflaeche_ab_schwelle_km2": 27542074,
+     "eisvolumen_km3": 50495636,
+     "zellen_eis": 39593,
+     "zellen_ab_schwelle": 38824,
+     "negativ_zellen_quelle_025": 1898,
+     "negativ_min_m": -2.4
     },
     {
      "ka": 15.0,
      "datei": "eis/referenz/150.png",
      "eisflaeche_km2": 33910362,
-     "eisvolumen_km3": 60714281
+     "eisflaeche_ab_schwelle_km2": 32865651,
+     "eisvolumen_km3": 60714422,
+     "zellen_eis": 43850,
+     "zellen_ab_schwelle": 42994,
+     "negativ_zellen_quelle_025": 2068,
+     "negativ_min_m": -2.64
     },
     {
      "ka": 17.5,
      "datei": "eis/referenz/175.png",
      "eisflaeche_km2": 39507656,
-     "eisvolumen_km3": 71041544
+     "eisflaeche_ab_schwelle_km2": 38373741,
+     "eisvolumen_km3": 71041680,
+     "zellen_eis": 48048,
+     "zellen_ab_schwelle": 47141,
+     "negativ_zellen_quelle_025": 2011,
+     "negativ_min_m": -2.74
     },
     {
      "ka": 20.0,
      "datei": "eis/referenz/200.png",
      "eisflaeche_km2": 41687993,
-     "eisvolumen_km3": 74421358
+     "eisflaeche_ab_schwelle_km2": 40474411,
+     "eisvolumen_km3": 74421520,
+     "zellen_eis": 49957,
+     "zellen_ab_schwelle": 49001,
+     "negativ_zellen_quelle_025": 2101,
+     "negativ_min_m": -3.82
     },
     {
      "ka": 22.5,
      "datei": "eis/referenz/225.png",
      "eisflaeche_km2": 40751636,
-     "eisvolumen_km3": 72565755
+     "eisflaeche_ab_schwelle_km2": 39572593,
+     "eisvolumen_km3": 72565914,
+     "zellen_eis": 49076,
+     "zellen_ab_schwelle": 48142,
+     "negativ_zellen_quelle_025": 2016,
+     "negativ_min_m": -5.3
     },
     {
      "ka": 25.0,
      "datei": "eis/referenz/250.png",
      "eisflaeche_km2": 38070371,
-     "eisvolumen_km3": 67085160
+     "eisflaeche_ab_schwelle_km2": 36952587,
+     "eisvolumen_km3": 67085343,
+     "zellen_eis": 46629,
+     "zellen_ab_schwelle": 45702,
+     "negativ_zellen_quelle_025": 2232,
+     "negativ_min_m": -14.23
     },
     {
      "ka": 27.5,
      "datei": "eis/referenz/275.png",
      "eisflaeche_km2": 34298821,
-     "eisvolumen_km3": 60315506
+     "eisflaeche_ab_schwelle_km2": 33231628,
+     "eisvolumen_km3": 60315683,
+     "zellen_eis": 44062,
+     "zellen_ab_schwelle": 43141,
+     "negativ_zellen_quelle_025": 2368,
+     "negativ_min_m": -3.95
     },
     {
      "ka": 30.0,
      "datei": "eis/referenz/300.png",
      "eisflaeche_km2": 29890529,
-     "eisvolumen_km3": 53042479
+     "eisflaeche_ab_schwelle_km2": 28815725,
+     "eisvolumen_km3": 53042659,
+     "zellen_eis": 40530,
+     "zellen_ab_schwelle": 39588,
+     "negativ_zellen_quelle_025": 2363,
+     "negativ_min_m": -3.92
     },
     {
      "ka": 32.5,
      "datei": "eis/referenz/325.png",
      "eisflaeche_km2": 27187164,
-     "eisvolumen_km3": 49223748
+     "eisflaeche_ab_schwelle_km2": 26151572,
+     "eisvolumen_km3": 49223913,
+     "zellen_eis": 38327,
+     "zellen_ab_schwelle": 37417,
+     "negativ_zellen_quelle_025": 2217,
+     "negativ_min_m": -3.92
     },
     {
      "ka": 35.0,
      "datei": "eis/referenz/350.png",
      "eisflaeche_km2": 25517666,
-     "eisvolumen_km3": 46153187
+     "eisflaeche_ab_schwelle_km2": 24380903,
+     "eisvolumen_km3": 46153313,
+     "zellen_eis": 36854,
+     "zellen_ab_schwelle": 35791,
+     "negativ_zellen_quelle_025": 2334,
+     "negativ_min_m": -2.61
     },
     {
      "ka": 37.5,
      "datei": "eis/referenz/375.png",
      "eisflaeche_km2": 24360261,
-     "eisvolumen_km3": 44178341
+     "eisflaeche_ab_schwelle_km2": 23329823,
+     "eisvolumen_km3": 44178477,
+     "zellen_eis": 35782,
+     "zellen_ab_schwelle": 34785,
+     "negativ_zellen_quelle_025": 2340,
+     "negativ_min_m": -12.78
     },
     {
      "ka": 40.0,
      "datei": "eis/referenz/400.png",
      "eisflaeche_km2": 22361911,
-     "eisvolumen_km3": 40160688
+     "eisflaeche_ab_schwelle_km2": 21324329,
+     "eisvolumen_km3": 40160805,
+     "zellen_eis": 34129,
+     "zellen_ab_schwelle": 33107,
+     "negativ_zellen_quelle_025": 2325,
+     "negativ_min_m": -3.06
     },
     {
      "ka": 42.5,
      "datei": "eis/referenz/425.png",
      "eisflaeche_km2": 21722132,
-     "eisvolumen_km3": 38932947
+     "eisflaeche_ab_schwelle_km2": 20674840,
+     "eisvolumen_km3": 38933073,
+     "zellen_eis": 33703,
+     "zellen_ab_schwelle": 32674,
+     "negativ_zellen_quelle_025": 2398,
+     "negativ_min_m": -3.05
     },
     {
      "ka": 45.0,
      "datei": "eis/referenz/450.png",
      "eisflaeche_km2": 24560257,
-     "eisvolumen_km3": 43833863
+     "eisflaeche_ab_schwelle_km2": 23494637,
+     "eisvolumen_km3": 43833987,
+     "zellen_eis": 35683,
+     "zellen_ab_schwelle": 34642,
+     "negativ_zellen_quelle_025": 2459,
+     "negativ_min_m": -13.69
     },
     {
      "ka": 47.5,
      "datei": "eis/referenz/475.png",
      "eisflaeche_km2": 24157351,
-     "eisvolumen_km3": 44939636
+     "eisflaeche_ab_schwelle_km2": 23082003,
+     "eisvolumen_km3": 44939755,
+     "zellen_eis": 35171,
+     "zellen_ab_schwelle": 34122,
+     "negativ_zellen_quelle_025": 2363,
+     "negativ_min_m": -3.04
     },
     {
      "ka": 50.0,
      "datei": "eis/referenz/500.png",
      "eisflaeche_km2": 23878480,
-     "eisvolumen_km3": 43236570
+     "eisflaeche_ab_schwelle_km2": 22820183,
+     "eisvolumen_km3": 43236685,
+     "zellen_eis": 34886,
+     "zellen_ab_schwelle": 33847,
+     "negativ_zellen_quelle_025": 2334,
+     "negativ_min_m": -3.06
     },
     {
      "ka": 52.5,
      "datei": "eis/referenz/525.png",
      "eisflaeche_km2": 26583956,
-     "eisvolumen_km3": 46904611
+     "eisflaeche_ab_schwelle_km2": 25546539,
+     "eisvolumen_km3": 46904756,
+     "zellen_eis": 37329,
+     "zellen_ab_schwelle": 36311,
+     "negativ_zellen_quelle_025": 2515,
+     "negativ_min_m": -3.06
     },
     {
      "ka": 55.0,
      "datei": "eis/referenz/550.png",
      "eisflaeche_km2": 29467538,
-     "eisvolumen_km3": 51025711
+     "eisflaeche_ab_schwelle_km2": 28221658,
+     "eisvolumen_km3": 51025856,
+     "zellen_eis": 39591,
+     "zellen_ab_schwelle": 38424,
+     "negativ_zellen_quelle_025": 2653,
+     "negativ_min_m": -3.3
     },
     {
      "ka": 57.5,
      "datei": "eis/referenz/575.png",
      "eisflaeche_km2": 31971240,
-     "eisvolumen_km3": 54965119
+     "eisflaeche_ab_schwelle_km2": 30790169,
+     "eisvolumen_km3": 54965260,
+     "zellen_eis": 41985,
+     "zellen_ab_schwelle": 40900,
+     "negativ_zellen_quelle_025": 2477,
+     "negativ_min_m": -3.22
     },
     {
      "ka": 60.0,
      "datei": "eis/referenz/600.png",
      "eisflaeche_km2": 33835413,
-     "eisvolumen_km3": 59767139
+     "eisflaeche_ab_schwelle_km2": 32704541,
+     "eisvolumen_km3": 59767273,
+     "zellen_eis": 43284,
+     "zellen_ab_schwelle": 42229,
+     "negativ_zellen_quelle_025": 2384,
+     "negativ_min_m": -3.76
     },
     {
      "ka": 62.5,
      "datei": "eis/referenz/625.png",
      "eisflaeche_km2": 31951648,
-     "eisvolumen_km3": 56381776
+     "eisflaeche_ab_schwelle_km2": 30855450,
+     "eisvolumen_km3": 56381913,
+     "zellen_eis": 41817,
+     "zellen_ab_schwelle": 40785,
+     "negativ_zellen_quelle_025": 2310,
+     "negativ_min_m": -3.3
     },
     {
      "ka": 65.0,
      "datei": "eis/referenz/650.png",
      "eisflaeche_km2": 28534079,
-     "eisvolumen_km3": 48833499
+     "eisflaeche_ab_schwelle_km2": 27401161,
+     "eisvolumen_km3": 48833650,
+     "zellen_eis": 39327,
+     "zellen_ab_schwelle": 38269,
+     "negativ_zellen_quelle_025": 2462,
+     "negativ_min_m": -2.55
     },
     {
      "ka": 67.5,
      "datei": "eis/referenz/675.png",
      "eisflaeche_km2": 25575579,
-     "eisvolumen_km3": 43830300
+     "eisflaeche_ab_schwelle_km2": 24497083,
+     "eisvolumen_km3": 43830450,
+     "zellen_eis": 37165,
+     "zellen_ab_schwelle": 36124,
+     "negativ_zellen_quelle_025": 2447,
+     "negativ_min_m": -2.48
     },
     {
      "ka": 70.0,
      "datei": "eis/referenz/700.png",
      "eisflaeche_km2": 23071499,
-     "eisvolumen_km3": 39429658
+     "eisflaeche_ab_schwelle_km2": 21998382,
+     "eisvolumen_km3": 39429802,
+     "zellen_eis": 34889,
+     "zellen_ab_schwelle": 33787,
+     "negativ_zellen_quelle_025": 2582,
+     "negativ_min_m": -4.57
     },
     {
      "ka": 72.5,
      "datei": "eis/referenz/725.png",
      "eisflaeche_km2": 20942495,
-     "eisvolumen_km3": 36463655
+     "eisflaeche_ab_schwelle_km2": 19854830,
+     "eisvolumen_km3": 36463795,
+     "zellen_eis": 33207,
+     "zellen_ab_schwelle": 32102,
+     "negativ_zellen_quelle_025": 2555,
+     "negativ_min_m": -25.73
     },
     {
      "ka": 75.0,
      "datei": "eis/referenz/750.png",
      "eisflaeche_km2": 19026163,
-     "eisvolumen_km3": 33812532
+     "eisflaeche_ab_schwelle_km2": 17938742,
+     "eisvolumen_km3": 33812674,
+     "zellen_eis": 31514,
+     "zellen_ab_schwelle": 30400,
+     "negativ_zellen_quelle_025": 2568,
+     "negativ_min_m": -3.05
     },
     {
      "ka": 77.5,
      "datei": "eis/referenz/775.png",
      "eisflaeche_km2": 17656669,
-     "eisvolumen_km3": 32138273
+     "eisflaeche_ab_schwelle_km2": 16604822,
+     "eisvolumen_km3": 32138400,
+     "zellen_eis": 30296,
+     "zellen_ab_schwelle": 29209,
+     "negativ_zellen_quelle_025": 2466,
+     "negativ_min_m": -3.06
     },
     {
      "ka": 80.0,
      "datei": "eis/referenz/800.png",
      "eisflaeche_km2": 17816115,
-     "eisvolumen_km3": 32563484
+     "eisflaeche_ab_schwelle_km2": 16723599,
+     "eisvolumen_km3": 32563607,
+     "zellen_eis": 30260,
+     "zellen_ab_schwelle": 29124,
+     "negativ_zellen_quelle_025": 2454,
+     "negativ_min_m": -3.06
     }
    ]
   },
@@ -236,199 +410,364 @@
      "ka": 0.0,
      "datei": "eis/a1/000.png",
      "eisflaeche_km2": 15280650,
-     "eisvolumen_km3": 28586359
+     "eisflaeche_ab_schwelle_km2": 14201046,
+     "eisvolumen_km3": 28586476,
+     "zellen_eis": 28243,
+     "zellen_ab_schwelle": 26969,
+     "negativ_zellen_quelle_025": 2793,
+     "negativ_min_m": -3.44
     },
     {
      "ka": 2.5,
      "datei": "eis/a1/025.png",
      "eisflaeche_km2": 15327835,
-     "eisvolumen_km3": 29338580
+     "eisflaeche_ab_schwelle_km2": 14473201,
+     "eisvolumen_km3": 29338697,
+     "zellen_eis": 28481,
+     "zellen_ab_schwelle": 27414,
+     "negativ_zellen_quelle_025": 2388,
+     "negativ_min_m": -3.79
     },
     {
      "ka": 5.0,
      "datei": "eis/a1/050.png",
      "eisflaeche_km2": 16014794,
-     "eisvolumen_km3": 30555198
+     "eisflaeche_ab_schwelle_km2": 15110941,
+     "eisvolumen_km3": 30555301,
+     "zellen_eis": 29421,
+     "zellen_ab_schwelle": 28411,
+     "negativ_zellen_quelle_025": 2156,
+     "negativ_min_m": -3.35
     },
     {
      "ka": 7.5,
      "datei": "eis/a1/075.png",
      "eisflaeche_km2": 17959833,
-     "eisvolumen_km3": 32166153
+     "eisflaeche_ab_schwelle_km2": 16988210,
+     "eisvolumen_km3": 32166253,
+     "zellen_eis": 31169,
+     "zellen_ab_schwelle": 30135,
+     "negativ_zellen_quelle_025": 2180,
+     "negativ_min_m": -2.96
     },
     {
      "ka": 10.0,
      "datei": "eis/a1/100.png",
      "eisflaeche_km2": 23237267,
-     "eisvolumen_km3": 40183377
+     "eisflaeche_ab_schwelle_km2": 22354808,
+     "eisvolumen_km3": 40183492,
+     "zellen_eis": 35422,
+     "zellen_ab_schwelle": 34633,
+     "negativ_zellen_quelle_025": 1768,
+     "negativ_min_m": -3.22
     },
     {
      "ka": 12.5,
      "datei": "eis/a1/125.png",
      "eisflaeche_km2": 28431276,
-     "eisvolumen_km3": 50513462
+     "eisflaeche_ab_schwelle_km2": 27535397,
+     "eisvolumen_km3": 50513585,
+     "zellen_eis": 39592,
+     "zellen_ab_schwelle": 38820,
+     "negativ_zellen_quelle_025": 1900,
+     "negativ_min_m": -2.37
     },
     {
      "ka": 15.0,
      "datei": "eis/a1/150.png",
      "eisflaeche_km2": 33910362,
-     "eisvolumen_km3": 60774989
+     "eisflaeche_ab_schwelle_km2": 32866251,
+     "eisvolumen_km3": 60775130,
+     "zellen_eis": 43850,
+     "zellen_ab_schwelle": 42995,
+     "negativ_zellen_quelle_025": 2067,
+     "negativ_min_m": -2.64
     },
     {
      "ka": 17.5,
      "datei": "eis/a1/175.png",
      "eisflaeche_km2": 39508838,
-     "eisvolumen_km3": 71115543
+     "eisflaeche_ab_schwelle_km2": 38377974,
+     "eisvolumen_km3": 71115679,
+     "zellen_eis": 48049,
+     "zellen_ab_schwelle": 47141,
+     "negativ_zellen_quelle_025": 2009,
+     "negativ_min_m": -2.74
     },
     {
      "ka": 20.0,
      "datei": "eis/a1/200.png",
      "eisflaeche_km2": 41685885,
-     "eisvolumen_km3": 74572006
+     "eisflaeche_ab_schwelle_km2": 40469394,
+     "eisvolumen_km3": 74572168,
+     "zellen_eis": 49956,
+     "zellen_ab_schwelle": 48996,
+     "negativ_zellen_quelle_025": 2100,
+     "negativ_min_m": -3.82
     },
     {
      "ka": 22.5,
      "datei": "eis/a1/225.png",
      "eisflaeche_km2": 40753744,
-     "eisvolumen_km3": 72660499
+     "eisflaeche_ab_schwelle_km2": 39573019,
+     "eisvolumen_km3": 72660658,
+     "zellen_eis": 49077,
+     "zellen_ab_schwelle": 48140,
+     "negativ_zellen_quelle_025": 2016,
+     "negativ_min_m": -5.32
     },
     {
      "ka": 25.0,
      "datei": "eis/a1/250.png",
      "eisflaeche_km2": 38070397,
-     "eisvolumen_km3": 67221020
+     "eisflaeche_ab_schwelle_km2": 36953298,
+     "eisvolumen_km3": 67221191,
+     "zellen_eis": 46630,
+     "zellen_ab_schwelle": 45701,
+     "negativ_zellen_quelle_025": 2226,
+     "negativ_min_m": -3.89
     },
     {
      "ka": 27.5,
      "datei": "eis/a1/275.png",
      "eisflaeche_km2": 34299384,
-     "eisvolumen_km3": 60487375
+     "eisflaeche_ab_schwelle_km2": 33228346,
+     "eisvolumen_km3": 60487551,
+     "zellen_eis": 44063,
+     "zellen_ab_schwelle": 43140,
+     "negativ_zellen_quelle_025": 2367,
+     "negativ_min_m": -3.95
     },
     {
      "ka": 30.0,
      "datei": "eis/a1/300.png",
      "eisflaeche_km2": 29887552,
-     "eisvolumen_km3": 53196352
+     "eisflaeche_ab_schwelle_km2": 28808410,
+     "eisvolumen_km3": 53196531,
+     "zellen_eis": 40528,
+     "zellen_ab_schwelle": 39580,
+     "negativ_zellen_quelle_025": 2366,
+     "negativ_min_m": -3.92
     },
     {
      "ka": 32.5,
      "datei": "eis/a1/325.png",
      "eisflaeche_km2": 27187749,
-     "eisvolumen_km3": 49351714
+     "eisflaeche_ab_schwelle_km2": 26151054,
+     "eisvolumen_km3": 49351879,
+     "zellen_eis": 38329,
+     "zellen_ab_schwelle": 37417,
+     "negativ_zellen_quelle_025": 2209,
+     "negativ_min_m": -3.92
     },
     {
      "ka": 35.0,
      "datei": "eis/a1/350.png",
      "eisflaeche_km2": 25516678,
-     "eisvolumen_km3": 46210143
+     "eisflaeche_ab_schwelle_km2": 24379575,
+     "eisvolumen_km3": 46210269,
+     "zellen_eis": 36853,
+     "zellen_ab_schwelle": 35790,
+     "negativ_zellen_quelle_025": 2335,
+     "negativ_min_m": -2.61
     },
     {
      "ka": 37.5,
      "datei": "eis/a1/375.png",
      "eisflaeche_km2": 24889514,
-     "eisvolumen_km3": 46320875
+     "eisflaeche_ab_schwelle_km2": 23863320,
+     "eisvolumen_km3": 46321000,
+     "zellen_eis": 36069,
+     "zellen_ab_schwelle": 35076,
+     "negativ_zellen_quelle_025": 2320,
+     "negativ_min_m": -2.66
     },
     {
      "ka": 40.0,
      "datei": "eis/a1/400.png",
      "eisflaeche_km2": 24026146,
-     "eisvolumen_km3": 44141134
+     "eisflaeche_ab_schwelle_km2": 23006886,
+     "eisvolumen_km3": 44141249,
+     "zellen_eis": 35101,
+     "zellen_ab_schwelle": 34096,
+     "negativ_zellen_quelle_025": 2289,
+     "negativ_min_m": -3.02
     },
     {
      "ka": 42.5,
      "datei": "eis/a1/425.png",
      "eisflaeche_km2": 23814222,
-     "eisvolumen_km3": 43276335
+     "eisflaeche_ab_schwelle_km2": 22765493,
+     "eisvolumen_km3": 43276448,
+     "zellen_eis": 34973,
+     "zellen_ab_schwelle": 33944,
+     "negativ_zellen_quelle_025": 2334,
+     "negativ_min_m": -3.02
     },
     {
      "ka": 45.0,
      "datei": "eis/a1/450.png",
      "eisflaeche_km2": 25509224,
-     "eisvolumen_km3": 47330343
+     "eisflaeche_ab_schwelle_km2": 24451211,
+     "eisvolumen_km3": 47330463,
+     "zellen_eis": 36227,
+     "zellen_ab_schwelle": 35196,
+     "negativ_zellen_quelle_025": 2408,
+     "negativ_min_m": -3.01
     },
     {
      "ka": 47.5,
      "datei": "eis/a1/475.png",
      "eisflaeche_km2": 24631530,
-     "eisvolumen_km3": 46526753
+     "eisflaeche_ab_schwelle_km2": 23532373,
+     "eisvolumen_km3": 46526876,
+     "zellen_eis": 35416,
+     "zellen_ab_schwelle": 34354,
+     "negativ_zellen_quelle_025": 2386,
+     "negativ_min_m": -3.03
     },
     {
      "ka": 50.0,
      "datei": "eis/a1/500.png",
      "eisflaeche_km2": 24323310,
-     "eisvolumen_km3": 44472630
+     "eisflaeche_ab_schwelle_km2": 23290589,
+     "eisvolumen_km3": 44472746,
+     "zellen_eis": 35180,
+     "zellen_ab_schwelle": 34156,
+     "negativ_zellen_quelle_025": 2364,
+     "negativ_min_m": -3.05
     },
     {
      "ka": 52.5,
      "datei": "eis/a1/525.png",
      "eisflaeche_km2": 26817328,
-     "eisvolumen_km3": 47726454
+     "eisflaeche_ab_schwelle_km2": 25772838,
+     "eisvolumen_km3": 47726599,
+     "zellen_eis": 37455,
+     "zellen_ab_schwelle": 36434,
+     "negativ_zellen_quelle_025": 2499,
+     "negativ_min_m": -3.05
     },
     {
      "ka": 55.0,
      "datei": "eis/a1/550.png",
      "eisflaeche_km2": 29569794,
-     "eisvolumen_km3": 51449270
+     "eisflaeche_ab_schwelle_km2": 28322970,
+     "eisvolumen_km3": 51449410,
+     "zellen_eis": 39646,
+     "zellen_ab_schwelle": 38477,
+     "negativ_zellen_quelle_025": 2647,
+     "negativ_min_m": -3.3
     },
     {
      "ka": 57.5,
      "datei": "eis/a1/575.png",
      "eisflaeche_km2": 31970388,
-     "eisvolumen_km3": 54948643
+     "eisflaeche_ab_schwelle_km2": 30790649,
+     "eisvolumen_km3": 54948784,
+     "zellen_eis": 41984,
+     "zellen_ab_schwelle": 40902,
+     "negativ_zellen_quelle_025": 2477,
+     "negativ_min_m": -3.31
     },
     {
      "ka": 60.0,
      "datei": "eis/a1/600.png",
      "eisflaeche_km2": 33833761,
-     "eisvolumen_km3": 59735493
+     "eisflaeche_ab_schwelle_km2": 32707692,
+     "eisvolumen_km3": 59735633,
+     "zellen_eis": 43282,
+     "zellen_ab_schwelle": 42233,
+     "negativ_zellen_quelle_025": 2391,
+     "negativ_min_m": -6.47
     },
     {
      "ka": 62.5,
      "datei": "eis/a1/625.png",
      "eisflaeche_km2": 31951648,
-     "eisvolumen_km3": 56362828
+     "eisflaeche_ab_schwelle_km2": 30861151,
+     "eisvolumen_km3": 56362965,
+     "zellen_eis": 41817,
+     "zellen_ab_schwelle": 40791,
+     "negativ_zellen_quelle_025": 2308,
+     "negativ_min_m": -3.31
     },
     {
      "ka": 65.0,
      "datei": "eis/a1/650.png",
      "eisflaeche_km2": 28536387,
-     "eisvolumen_km3": 48820752
+     "eisflaeche_ab_schwelle_km2": 27403603,
+     "eisvolumen_km3": 48820904,
+     "zellen_eis": 39328,
+     "zellen_ab_schwelle": 38272,
+     "negativ_zellen_quelle_025": 2462,
+     "negativ_min_m": -2.55
     },
     {
      "ka": 67.5,
      "datei": "eis/a1/675.png",
      "eisflaeche_km2": 25574952,
-     "eisvolumen_km3": 43827301
+     "eisflaeche_ab_schwelle_km2": 24493399,
+     "eisvolumen_km3": 43827452,
+     "zellen_eis": 37165,
+     "zellen_ab_schwelle": 36120,
+     "negativ_zellen_quelle_025": 2447,
+     "negativ_min_m": -2.47
     },
     {
      "ka": 70.0,
      "datei": "eis/a1/700.png",
      "eisflaeche_km2": 23071069,
-     "eisvolumen_km3": 39425848
+     "eisflaeche_ab_schwelle_km2": 22002221,
+     "eisvolumen_km3": 39425993,
+     "zellen_eis": 34888,
+     "zellen_ab_schwelle": 33789,
+     "negativ_zellen_quelle_025": 2582,
+     "negativ_min_m": -3.01
     },
     {
      "ka": 72.5,
      "datei": "eis/a1/725.png",
      "eisflaeche_km2": 20945224,
-     "eisvolumen_km3": 36447464
+     "eisflaeche_ab_schwelle_km2": 19852939,
+     "eisvolumen_km3": 36447606,
+     "zellen_eis": 33209,
+     "zellen_ab_schwelle": 32102,
+     "negativ_zellen_quelle_025": 2556,
+     "negativ_min_m": -20.72
     },
     {
      "ka": 75.0,
      "datei": "eis/a1/750.png",
      "eisflaeche_km2": 19028385,
-     "eisvolumen_km3": 33806918
+     "eisflaeche_ab_schwelle_km2": 17938153,
+     "eisvolumen_km3": 33807059,
+     "zellen_eis": 31517,
+     "zellen_ab_schwelle": 30399,
+     "negativ_zellen_quelle_025": 2566,
+     "negativ_min_m": -3.05
     },
     {
      "ka": 77.5,
      "datei": "eis/a1/775.png",
      "eisflaeche_km2": 17657529,
-     "eisvolumen_km3": 32114260
+     "eisflaeche_ab_schwelle_km2": 16606003,
+     "eisvolumen_km3": 32114387,
+     "zellen_eis": 30298,
+     "zellen_ab_schwelle": 29207,
+     "negativ_zellen_quelle_025": 2464,
+     "negativ_min_m": -5.69
     },
     {
      "ka": 80.0,
      "datei": "eis/a1/800.png",
      "eisflaeche_km2": 17817880,
-     "eisvolumen_km3": 32535717
+     "eisflaeche_ab_schwelle_km2": 16726307,
+     "eisvolumen_km3": 32535840,
+     "zellen_eis": 30263,
+     "zellen_ab_schwelle": 29125,
+     "negativ_zellen_quelle_025": 2451,
+     "negativ_min_m": -3.06
     }
    ]
   }
