@@ -1,0 +1,93 @@
+{
+  "id": "eurostat",
+  "eingabe": "data/stofffluss/eurostat_mfa.json",
+  "zusatz": {
+    "energie": "data/stofffluss/eurostat_energie.json"
+  },
+  "quelle": {
+    "name": "Eurostat: Material flow accounts (env_ac_mfa), Complete energy balances (nrg_bal_c)",
+    "dateien": [
+      "env_ac_mfa (API, JSON-stat)",
+      "nrg_bal_c (API, JSON-stat)"
+    ],
+    "abgeleitet_durch": "matrix-scharnier/adapter/eurostat.py",
+    "pangaea": {
+      "fehlt": true,
+      "grund": "Amtliche Statistik; Eurostat-API"
+    }
+  },
+  "stapel": [
+    "0.3",
+    "1.1",
+    "1.2"
+  ],
+  "vorgang": "stoffwechsel",
+  "herkunft": {
+    "arten": [
+      "beobachtung",
+      "kuratiert",
+      "modell",
+      "berechnet"
+    ],
+    "ebene": "Wert",
+    "hinweis": "Ohne Kennzeichen: beobachtung + kuratiert (amtliche Statistik, von Eurostat zusammengestellt). Kennzeichen e (geschätzt) und i (imputiert): kuratiert + modell + berechnet. Vorläufige Werte (p) tragen den Wissensstand vorläufig. Auch ungekennzeichnete Positionen der Materialflusskonten (etwa Sand und Kies, Weidebiomasse) beruhen teils auf Schätzverfahren der Länder; das nennt die Quelle nicht je Wert.",
+    "archivkette": [
+      {
+        "archiv": "zeroearth (data/stofffluss/)",
+        "art": "zeroearth"
+      },
+      {
+        "archiv": "Eurostat (Statistisches Amt der EU), aus Meldungen der Mitgliedstaaten",
+        "art": "gesellschaftlich"
+      }
+    ]
+  },
+  "zeitsemantik": {
+    "bezugssystem": "a_ce",
+    "unschaerfe": {
+      "fehlt": true,
+      "grund": "Jahreswerte; die Quelle nennt keine Unschärfe der Zeit"
+    },
+    "aufloesung": {
+      "wert": 1,
+      "einheit": "a"
+    },
+    "abdeckung": {
+      "von": 1990,
+      "bis": 2025,
+      "schritte": 36
+    },
+    "verzoegerung": {
+      "fehlt": true,
+      "grund": "Eurostat nennt den Aktualisierungsstand des Datensatzes, nicht je Wert"
+    }
+  },
+  "geometrie": {
+    "fehlt": true,
+    "grund": "Länder als Bezugseinheit; Umrisse nicht eingebunden"
+  },
+  "lizenz": {
+    "angabe": "CC BY 4.0 (Beschluss 2011/833/EU), Quelle Eurostat",
+    "quelle": "ec.europa.eu/eurostat/help/copyright-notice",
+    "geprueft": "2026-11-08",
+    "bearbeitung": "Auswahl von Indikatoren, Materialgruppen, Energieträgern und Bilanzposten; Werte unverändert"
+  },
+  "weitergabe": {
+    "im_repo": "data/stofffluss/eurostat_mfa.json, data/stofffluss/eurostat_energie.json",
+    "nicht_im_repo": "Antworten der API (~/ZeroEarth/rohdaten/eurostat)"
+  },
+  "auswahl": [
+    "eurostat/auswahl/mfa",
+    "eurostat/auswahl/energie"
+  ],
+  "reduktion": [
+    {
+      "schritt": "auswaehlen",
+      "angabe": "Materialflüsse: DE, IMP, EXP, DMC für MF1–MF4 in 1000 t; ohne MF5/MF6 und TOTAL"
+    },
+    {
+      "schritt": "auswaehlen",
+      "angabe": "Energie: 11 Energieträger einzeln, 8 Bilanzposten (PPRD bis GIC) in TJ; ohne TOTAL"
+    }
+  ]
+}

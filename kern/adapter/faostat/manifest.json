@@ -1,0 +1,92 @@
+{
+  "id": "faostat",
+  "eingabe": "data/stofffluss/faostat_produktion.json",
+  "zusatz": {
+    "land": "data/stofffluss/faostat_landnutzung.json"
+  },
+  "quelle": {
+    "name": "FAOSTAT: Production – Crops and livestock products (QCL), Land use (RL)",
+    "dateien": [
+      "Production_Crops_Livestock_E_All_Data_(Normalized).zip",
+      "Inputs_LandUse_E_All_Data_(Normalized).zip"
+    ],
+    "abgeleitet_durch": "matrix-scharnier/adapter/faostat.py",
+    "pangaea": {
+      "fehlt": true,
+      "grund": "Statistik der FAO; Massendownload bulks-faostat.fao.org"
+    }
+  },
+  "stapel": [
+    "1.1",
+    "1.2"
+  ],
+  "vorgang": "stoffwechsel",
+  "herkunft": {
+    "arten": [
+      "beobachtung",
+      "kuratiert",
+      "modell",
+      "berechnet"
+    ],
+    "ebene": "Wert",
+    "hinweis": "Kennzeichen A (amtlich): beobachtung + kuratiert. E (geschätzt) und I (imputiert): kuratiert + modell + berechnet. X (externe Organisation): kuratiert. M/L: fehlt. Die Erzeugnisgruppen (17xx) bildet die FAO selbst.",
+    "archivkette": [
+      {
+        "archiv": "zeroearth (data/stofffluss/)",
+        "art": "zeroearth"
+      },
+      {
+        "archiv": "FAO, aus Meldungen der Mitgliedsländer und eigenen Schätzungen",
+        "art": "gesellschaftlich"
+      }
+    ]
+  },
+  "zeitsemantik": {
+    "bezugssystem": "a_ce",
+    "unschaerfe": {
+      "fehlt": true,
+      "grund": "Jahreswerte; die Quelle nennt keine Unschärfe der Zeit"
+    },
+    "aufloesung": {
+      "wert": 1,
+      "einheit": "a"
+    },
+    "abdeckung": {
+      "von": 1961,
+      "bis": 2025,
+      "schritte": 65
+    },
+    "verzoegerung": {
+      "fehlt": true,
+      "grund": "FAOSTAT nennt den Stand des Datensatzes, nicht je Wert"
+    }
+  },
+  "geometrie": {
+    "fehlt": true,
+    "grund": "Länder als Bezugseinheit; Umrisse nicht eingebunden"
+  },
+  "lizenz": {
+    "angabe": "CC BY 4.0 mit FAO-Datenbankbedingungen (keine Werbung für Unternehmen, keine Billigung durch die FAO behaupten)",
+    "quelle": "fao.org/contact-us/terms/db-terms-of-use",
+    "geprueft": "2026-11-08",
+    "bearbeitung": "Auswahl von Elementen, Gruppen und Gebieten; Werte unverändert"
+  },
+  "weitergabe": {
+    "im_repo": "data/stofffluss/faostat_produktion.json, data/stofffluss/faostat_landnutzung.json",
+    "nicht_im_repo": "Massendownload (~/ZeroEarth/rohdaten/faostat)"
+  },
+  "auswahl": [
+    "faostat/auswahl/produktion",
+    "faostat/auswahl/land"
+  ],
+  "reduktion": [
+    {
+      "schritt": "auswaehlen",
+      "angabe": "Produktion (Element 5510, t) für die FAO-Erzeugnisgruppen 17xx; Regionen und China (351) ausgelassen"
+    },
+    {
+      "schritt": "auswaehlen",
+      "angabe": "Landnutzung (Element 5110, 1000 ha): Landfläche, Agrarfläche, Ackerland, Dauergrünland, Wald"
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "id": "ilostat",
+  "eingabe": "data/stofffluss/ilostat_arbeitszeit.json",
+  "quelle": {
+    "name": "ILOSTAT: Arbeitszeit (HOW_TEMP, HOW_2TOT)",
+    "dateien": [
+      "DF_HOW_TEMP_SEX_ECO_NB (SDMX)",
+      "DF_HOW_2TOT_SEX_NB (SDMX)"
+    ],
+    "abgeleitet_durch": "matrix-scharnier/adapter/ilostat.py",
+    "pangaea": {
+      "fehlt": true,
+      "grund": "Statistik der ILO; SDMX sdmx.ilo.org"
+    }
+  },
+  "stapel": [
+    "1.3"
+  ],
+  "vorgang": {
+    "fehlt": true,
+    "grund": "Arbeitszeit ist ein Zufluss der Art zeit in einen Prozess; der Prozess ist noch nicht gebaut"
+  },
+  "herkunft": {
+    "arten": [
+      "beobachtung",
+      "kuratiert",
+      "modell",
+      "berechnet",
+      "erwartung"
+    ],
+    "ebene": "Wert",
+    "hinweis": "HOW_TEMP aus Arbeitskräfteerhebungen: beobachtung + kuratiert. HOW_2TOT „ILO - Modelled Estimates“: kuratiert + modell + berechnet; ab dem Abrufjahr erwartung mit Träger ILO (Regel 4).",
+    "archivkette": [
+      {
+        "archiv": "zeroearth (data/stofffluss/)",
+        "art": "zeroearth"
+      },
+      {
+        "archiv": "ILO, aus nationalen Arbeitskräfteerhebungen und eigenen Modellschätzungen",
+        "art": "gesellschaftlich"
+      }
+    ]
+  },
+  "zeitsemantik": {
+    "bezugssystem": "a_ce",
+    "unschaerfe": {
+      "fehlt": true,
+      "grund": "Jahreswerte; die Quelle nennt keine Unschärfe der Zeit"
+    },
+    "aufloesung": {
+      "wert": 1,
+      "einheit": "a"
+    },
+    "abdeckung": {
+      "von": 1969,
+      "bis": 2027,
+      "schritte": 59
+    },
+    "verzoegerung": {
+      "fehlt": true,
+      "grund": "ILOSTAT nennt keinen Stand je Wert"
+    }
+  },
+  "geometrie": {
+    "fehlt": true,
+    "grund": "Länder als Bezugseinheit; Umrisse nicht eingebunden"
+  },
+  "lizenz": {
+    "angabe": "CC BY 4.0 für ILO-Datensätze ab 3. Mai 2023; früher erzeugte Bestände nicht automatisch",
+    "quelle": "ilo.org, Rights and permissions",
+    "geprueft": "2026-11-08",
+    "bearbeitung": "Auswahl; Werte unverändert, keine Hochrechnung"
+  },
+  "weitergabe": {
+    "im_repo": "data/stofffluss/ilostat_arbeitszeit.json",
+    "nicht_im_repo": "SDMX-Antworten (~/ZeroEarth/rohdaten/ilostat)"
+  },
+  "auswahl": [
+    "ilostat/auswahl/arbeitszeit"
+  ],
+  "reduktion": [
+    {
+      "schritt": "auswaehlen",
+      "angabe": "Geschlecht insgesamt; Wirtschaftszweige insgesamt, Landwirtschaft, Industrie, Dienstleistungen; Jahreswerte; ILO-Regionen ausgelassen"
+    }
+  ]
+}
