@@ -335,3 +335,9 @@ Nach Freigabe („Beides bauen“) gebaut. Offene Entscheidungen aus Abschnitt 5
 
 ![Flussansicht Deutschland 2024](bericht-stofffluss/fluss-deu.jpg)
 ![Flussansicht Brasilien 2024: ohne Materialflusskonten, keine Bilanz](bericht-stofffluss/fluss-bra.jpg)
+
+**Nachtrag 2026-11-10: Kette der Grundkräfte für Solar** (Entscheidung von Max: „Stark, Elektromagnetismus“).
+- **Was eingetragen ist:** Der Solarzufluss aus 0.3 (Solarwärme, Photovoltaik) trägt jetzt die Kette `stark, elektromagnetismus` und die Richtung `extern`. Die Begründung steht als Setzung von Max: Kernfusion in der Sonne, Strahlung zur Erde.
+- **Wo:** im gemeinsamen Modul (`SONNE_KETTE` in `kern/adapter/stofffluss_herkunft.mjs`), damit Kern und Flussansicht dasselbe zeigen.
+- **Nicht mehr fehlend:** Der Eintrag `stoffwechsel/fehlt/sonnenkette` ist entfernt; der Kern meldet keine fehlende Kette mehr.
+- **Test:** angepasst; alle 299 Tests grün.

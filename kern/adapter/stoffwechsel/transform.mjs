@@ -6,7 +6,7 @@
 import { readFileSync } from 'node:fs';
 import { SCHEMA_VERSION, fehlt } from '../../schema.mjs';
 import { idTeil } from '../stofffluss_reihe.mjs';
-import { iso3VonEurostat, iso3VonM49, FEHLT } from '../stofffluss_herkunft.mjs';
+import { iso3VonEurostat, iso3VonM49, FEHLT, SONNE_KETTE } from '../stofffluss_herkunft.mjs';
 import { transform as eurostat } from '../eurostat/transform.mjs';
 import { transform as faostat } from '../faostat/transform.mjs';
 import { transform as ilostat } from '../ilostat/transform.mjs';
@@ -80,7 +80,7 @@ export function transform(codes, manifest, z) {
       wo: fehlt('Länder als Bezugseinheit; Umrisse nicht eingebunden'), werte: { weiter_als_waerme: fehlt('Endenergie und Verluste sind nicht ausgewählt; der Weg zur Wärme fehlt') } };
     eintraege.push(imLand);
     const zu = { von: quelleId, herkunftsstapel: t.stapel, art: 'energie', menge: `${quelleId}#pprd` };
-    if (t.stapel === '0.3') Object.assign(zu, { richtung: 'extern', kette: fehlt(FEHLT.sonnenkette[2]) });
+    if (t.stapel === '0.3') Object.assign(zu, { richtung: SONNE_KETTE.richtung, kette: [...SONNE_KETTE.kette], kette_begruendung: SONNE_KETTE.begruendung });
     p.zufluesse.push(zu);
     p.ausgaenge.push({ nach: imLand.id, art: 'energie', menge: `${quelleId}#gic` });
     const bestand = { id: `${P}/bestand/energie/${idTeil(iso3)}/${idTeil(r.traeger)}`, name: `${t.name} · ${codes.laender[iso3].name}`, erhaltung: 'erhalten',

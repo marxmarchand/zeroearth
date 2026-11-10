@@ -6646,7 +6646,7 @@ class FlussAnsicht {
     // Energie
     const zeilenEnergie = R.energie.map(r => {
       const t = energie.traeger[r.traeger], v = k => eu(energie)(r.werte[k]);
-      const zu = [{ name: `Primärproduktion aus ${t.stapel}${t.stapel === '0.3' ? ' (Kette der Grundkräfte fehlt)' : ''}`, ...v('PPRD') }, { name: 'Wiedergewinnung', ...v('RCV_RCY') },
+      const zu = [{ name: `Primärproduktion aus ${t.stapel}${t.stapel === '0.3' ? ' (Kette: stark, Elektromagnetismus; Setzung)' : ''}`, ...v('PPRD') }, { name: 'Wiedergewinnung', ...v('RCV_RCY') },
         { name: 'Einfuhr (Rest der Welt)', ...v('IMP') }, { name: 'Lagerabbau (Bestand fehlt)', ...v('STK_CHG') }];
       const ab = [{ name: 'Ausfuhr (Rest der Welt)', ...v('EXP') }, { name: 'Hochseebunker', ...v('INTMARB') }, { name: 'Bruttoinlandsverbrauch → im Land', ...v('GIC') }];
       const ok = [...zu, ...ab].every(x => !x.fehlt);

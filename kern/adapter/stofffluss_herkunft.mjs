@@ -29,6 +29,11 @@ export function iso3VonM49(m49, codes) {
   return Object.entries(codes.laender).find(([, c]) => !(/** @type {any} */ (c).gruppe) && /** @type {any} */ (c).m49 === m49)?.[0] ?? null;
 }
 
+/** Kette der Grundkräfte des Solarzuflusses (aus 0.3), Setzung von Max (2026-11-10):
+    Kernfusion in der Sonne (starke Wechselwirkung), Weg zur Erde als Strahlung (Elektromagnetismus). */
+export const SONNE_KETTE = Object.freeze({ kette: ['stark', 'elektromagnetismus'], richtung: 'extern',
+  begruendung: 'Setzung von Max (2026-11-10): Kernfusion in der Sonne (stark), Strahlung zur Erde (Elektromagnetismus)' });
+
 /** Was dem Prozess fehlt (Plan Prozess), je [Stapel, Name, Grund]; Kern und Flussansicht nennen dieselben Gründe. */
 export const FEHLT = /** @type {const} */ ({
   materialbestand: ['1.1', 'Materialbestand im Land (Gebäude, Infrastruktur, Güter in Nutzung)', 'Die Materialflusskonten führen nur Flüsse je Jahr, keinen Bestand; GHSL hat Volumen, nicht Masse, und eine Dichte wäre eine eigene Annahme'],
@@ -37,5 +42,4 @@ export const FEHLT = /** @type {const} */ ({
   energievorraete: ['1.1', 'Energievorräte (Lagerbestand)', 'Die Energiebilanz nennt nur die Bestandsveränderung, nicht den Stand'],
   partnerlaender: ['1.1', 'Partnerländer von Import und Export', 'env_ac_mfa nennt keine Handelspartner; Außenhandel in Masse (Comext) nicht geprüft'],
   jahresstunden: ['1.3', 'Arbeitsstunden je Jahr', 'ILOSTAT nennt Stunden je Woche, keine Wochen je Jahr; keine Hochrechnung (Regel 12)'],
-  sonnenkette: ['0.3', 'Kette der Grundkräfte des Solarzuflusses', 'Vom Schema verlangt; noch nicht festgelegt (Entscheidung von Max offen)'],
 });
