@@ -554,13 +554,60 @@ Die Bilanz P − E − R = ΔS (3.3) gilt zuerst nur für Kontinente. In der Leg
 - **Verhältnis zu Eurostat:** Für die EU haben wir schon die amtliche MFA (Eurostat, eingebunden). IRP käme für die übrigen Länder dazu, als zweite Quelle für die EU nebeneinander (Regel 13), nicht als Ersatz.
 - **Anschluss:** DE wäre der Zufluss aus 1.1/1.2 in den Prozess je Land; MF und DMC sind Kennzahlen des Prozesses.
 
+### B12. SWORD Europa geladen und gemessen (2026-11-11, Freigabe Max)
+
+- **Datei:** `~/ZeroEarth/rohdaten/sword/v17c/sword_EU_v17c_reaches.parquet`, 128,5 MB entpackt.
+  - Per HTTP-Range aus `SWORD_v17c_parquet.zip` geholt (100,1 MB übertragen), nicht im Repo.
+  - CRC des ZIP geprüft; SHA-256 `36611dda…6650` stimmt mit `SHA256SUMS_files.txt` des Anbieters überein (liegt daneben).
+  - Format GeoParquet, Geometrie WKB, WGS 84.
+- **Inhalt:**
+  - 31 103 Abschnitte, zusammen 232 586 km.
+  - `type`: 17 810 Fluss, 4 212 See am Fluss, 5 271 Damm/Wehr, 1 347 unzuverlässig, 2 463 Geister-Abschnitte (Nummern laut SWORD 1/3/4/5/6; Zuordnung der Nummern aus der SWORD-Dokumentation, hier nicht neu geprüft).
+  - `width` ≤ 0 bei 107 Abschnitten.
+  - `facc_total`: nie ≤ 0.
+- **Herkunft von `facc_total`** (`facc_quality`):
+
+| Herkunft | Abschnitte |
+| --- | --- |
+| an MERIT-Basins verankert (`anchor`) | 23 027 |
+| aus Seezuflüssen (`lake_derived`) | 4 458 |
+| nach Breite geteilt (`partitioned_arm`) | 1 209 |
+| aus Nachbarn ergänzt (`fallback_fill`) | 1 047 |
+| interpoliert | 712 |
+| sonst | 650 |
+
+  Also überwiegend `modell` + `berechnet` mit Verankerung.
+
+**Gemessen je Schwelle** (Messskript im Scratchpad, nicht im Repo):
+- **Vereinfachung:** Douglas-Peucker mit 5 km / 1 km / 250 m (0,045° / 0,009° / 0,00225°).
+- **Koordinaten:** auf 3 Nachkommastellen gerundet.
+- **Merkmale:** je Abschnitt ID, Breite und Einzugsfläche.
+- **Abbrüche stromab:** Abschnitte, deren Nachbar stromab existiert, aber nicht ausgewählt ist. Dort hört der gezeichnete Fluss vor der Mündung auf.
+
+| Stufe | Kriterium | Abschnitte | Länge | Abbrüche | Punkte Quelle → gezeigt | GeoJSON |
+| --- | --- | --- | --- | --- | --- | --- |
+| Globus | `facc_total` ≥ 100 000 km² | 2 888 | 27 429 km | **2** | 841 353 → 5 848 | 0,44 MB |
+| Globus | `width` ≥ 500 m | 3 882 | 30 196 km | **912** | 939 099 → 7 847 | 0,58 MB |
+| Kontinent | `facc_total` ≥ 10 000 km² | 11 530 | 106 488 km | **2** | 3 251 402 → 38 687 | 1,97 MB |
+| Kontinent | `width` ≥ 200 m | 7 652 | 59 302 km | **1 486** | 1 822 893 → 21 741 | 1,24 MB |
+| Region | `facc_total` ≥ 1 000 km² | 25 774 | 205 003 km | **2** | 6 241 330 → 180 697 | 5,85 MB |
+| Region | `width` ≥ 100 m | 13 252 | 101 500 km | **1 984** | 3 095 354 → 75 897 | 2,75 MB |
+
+**Ergebnis:**
+- **Einzugsfläche:** Die Auswahl nach Einzugsfläche ergibt zusammenhängende Netze (2 Abbrüche in Europa, Ursache nicht untersucht).
+- **Breite:** Die Auswahl nach Breite zerreißt sie (900–2 000 Abbrüche). Das bestätigt die Überlegung in B3 jetzt mit Zahlen.
+- **Größen für Europa:** Alle Stufen bleiben klein: 0,44 / 1,97 / 5,85 MB.
+- **Hochrechnung auf die Welt** (**geschätzt, nicht gemessen**): Europa ist etwa ein Neuntel der Abschnitts-Dateien. Damit wären es global etwa 4 MB für den Globus und etwa 18 MB für die Kontinentstufe; die Regionalstufe käme auf etwa 55 MB und bräuchte Kacheln.
+- **Vereinfachung:** Sie verwirft 98–99 % der Punkte. Die Längenverzerrung (`verzerrung.laenge` aus B5) ist noch nicht gemessen; sie gehört in den Konverter.
+- **Geister-Abschnitte (`type` 6)** sind in den Zahlen enthalten. Ob sie gezeigt werden, ist offen (Frage 2 unten).
+
 ## Offen, zur Entscheidung
 
 Die zwölf Fragen vom 2026-11-10 sind entschieden (siehe „Stand“). Neu:
 
-1. **SWORD Europa laden** (`sword_EU_v17c_reaches.parquet`, 100,1 MB per Range aus Zenodo, CC BY 4.0) nach `~/ZeroEarth/rohdaten/sword/v17c/`, um die Auswahl zu messen?
-2. **Auswahlkriterium SWORD:** Einzugsfläche `facc_total` (zusammenhängend, aber Modell) oder Breite `width` (gemessen, aber mit Lücken; dann je ganzer Hauptlauf)?
-3. **Schwellen:** ≥ 100 000 / 10 000 / 1 000 km² bzw. ≥ 500 / 200 / 100 m, als Setzung?
+1. **Auswahlkriterium SWORD:** nach den Messungen in B12 die Einzugsfläche `facc_total` (2 Abbrüche) statt der Breite (900–2 000 Abbrüche), mit den Schwellen ≥ 100 000 / 10 000 / 1 000 km² als Setzung? Breite dann als Strichstärke.
+2. **Geister- und Damm-Abschnitte** (`type` 6 bzw. 4): zeigen, weglassen oder anders zeichnen? Weglassen würde Lücken erzeugen; die Zahl stünde im Manifest.
+3. **Übrige Kontinente laden** (zusammen 833,8 MB per Range, davon Asien 360,1 MB)? Oder erst den Konverter an Europa bauen?
 4. **Geometrie `bahn`:** Plan wie in B5 so bauen (Schema 0.10.0, Längenverzerrung statt Flächenverzerrung, Stapel nur 1.1)?
 5. **Gemeinsamer Bestand Wasser:** als eigener kleiner Adapter `wasser`, auf den `sintflut` verweist (B10)?
 6. **AQUASTAT-Lizenz:** Soll ich eine Anfrage an die FAO entwerfen (CC BY 4.0 nach den Datenbankbedingungen gegen CC BY-NC-SA 4.0 im Katalog)?
