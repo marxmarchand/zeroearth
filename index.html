@@ -505,6 +505,33 @@
     .dim-sec .ob.on{color:#000;}
     .dim-sec .ob.on .obd{background:var(--accent);box-shadow:0 0 3px var(--accent);}
     .dim-sec .ov-status{color:rgba(0,0,0,.65);padding:0 8px 4px 20px;}
+    /* Ordner je Sphäre in 1.1 und Kreisläufe (kern/BERICHT-seitenleiste.md) */
+    .lg-schalter{cursor:pointer;text-decoration:underline dotted;}
+    .ordner{margin:4px 4px;border:1.5px solid #000;border-radius:3px;background:rgba(255,255,255,.28);}
+    .ordner-kopf{display:flex;align-items:center;gap:5px;padding:3px 6px;cursor:pointer;user-select:none;
+      font-size:8px;letter-spacing:1px;font-weight:700;color:#000;text-transform:uppercase;}
+    .ordner-kopf::before{content:'\25be';font-size:7px;opacity:.65;}
+    .ordner.zu>.ordner-kopf::before{content:'\25b8';}
+    .ordner-kopf .ok-z{margin-left:auto;font-weight:400;letter-spacing:.3px;text-transform:none;opacity:.75;}
+    .ordner.zu>.ordner-body{display:none;}
+    .ordner-kurz:empty{display:none;}
+    .ordner-kurz{padding:0 0 3px 0;}
+    .kz{display:flex;align-items:center;gap:3px;font-size:9px;color:#111;padding:1px 6px 1px 16px;}
+    .kz .hz{color:#2b3020;}
+    .kz-aus{margin-left:auto;cursor:pointer;opacity:.6;padding:0 3px;}
+    .kz-aus:hover{opacity:1;}
+    .fehlt-kopf{font-size:8px;font-style:italic;color:rgba(0,0,0,.7);padding:2px 8px 3px 8px;cursor:pointer;user-select:none;}
+    .fehlt-kopf::before{content:'\25be ';font-style:normal;}
+    .fehlt-block.zu .fehlt-kopf::before{content:'\25b8 ';}
+    .fehlt-block.zu>.fehlt-body{display:none;}
+    .fehlt-body .ob{opacity:.62;}
+    .fehlt-grund{font-size:8px;color:rgba(0,0,0,.65);padding:0 8px 4px 20px;line-height:1.45;}
+    .ordner-verweis{font-size:8px;color:#111;padding:2px 8px 4px 8px;cursor:pointer;text-decoration:underline dotted;}
+    .dim-sec .ansicht-knopf{display:flex;align-items:center;gap:5px;margin:4px 4px;padding:5px 9px;cursor:pointer;
+      background:#2b3020;color:#f2ecd9;border:1.5px solid #000;border-radius:11px;font-size:10px;}
+    .dim-sec .ansicht-knopf:hover{background:#3d4530;}
+    .ansicht-knopf .hz{color:#f2ecd9;}
+    .ansicht-knopf .ak-art{margin-left:auto;font-size:7px;letter-spacing:1px;text-transform:uppercase;opacity:.7;}
     .dim-sec .ov-status .ds-ok{color:#1e5c1e;}
     .dim-sec .ov-status .ds-err{color:#7a2810;}
     .dim-sec .ms-tag{color:#333;border-color:#555;}
@@ -598,7 +625,7 @@
       <div class="ov-status" id="ueberbau-status"></div>
       <div class="ob ov-side" id="tb-grenzen" onclick="ze.toggle('grenzen')"><div class="obd"></div>Staatsgrenzen <span class="hz" data-hz="grenzen"></span></div>
       <div class="ov-status" id="grenzen-status"></div>
-      <div class="ob ov-side" id="tb-sprachen" onclick="ze.toggle('sprachen')" title="Sprachen (2.2) am Träger Sprachgemeinschaft (1.3); Umrandung = Gefährdung der Überlieferung"><div class="obd"></div>Sprachen · Gefährdung (Glottolog) <span class="hz" data-hz="sprachen"></span></div>
+      <div class="ob ov-side" id="tb-sprachen" onclick="ze.toggle('sprachen')" title="Sprachen (2.2) am Träger Sprachgemeinschaft (1.3); Umrandung = Gefährdung der Überlieferung"><div class="obd"></div>Sprachen <span class="hz" data-hz="sprachen"></span></div>
       <div class="ov-status" id="sprachen-status"></div>
 
       <!-- Konstruierte Wirklichkeit: eingeschriebener und gebauter Raum -->
@@ -618,12 +645,12 @@
       <div class="sub-head" data-sub="mat_pm"></div>
       <div class="ob ov-side" id="tb-bestaende" onclick="ze.toggle('bestaende')"><div class="obd"></div>Bestände &amp; Mittel <span class="hz" data-hz="bestaende"></span></div>
       <div class="ov-status" id="bestaende-status"></div>
-      <div class="ob ov-side" id="tb-fluss" onclick="ze.flussAnsicht.oeffne()"><div class="obd"></div>Stoffflüsse je Land (Flussansicht: Eurostat, FAOSTAT, ILOSTAT) <span class="hz" data-hz="fluss"></span></div>
+      <div class="ansicht-knopf" id="tb-fluss" onclick="ze.flussAnsicht.oeffne()" title="Öffnet die Flussansicht (Fach unter dem Globus); keine Ebene auf dem Globus">⇲ Stoffflüsse je Land <span class="hz" data-hz="fluss"></span><span class="ak-art">Ansicht</span></div>
       <div class="ob ov-side" id="tb-stroeme" onclick="ze.toggle('stroeme')"><div class="obd"></div>Netzströme (Waren · Kapital · Arbeit) <span class="hz" data-hz="stroeme"></span></div>
       <div class="ov-status" id="stroeme-status"></div>
-      <div class="ob ov-side" id="tb-nachtlicht" onclick="ze.toggleNachtlicht()"><div class="obd"></div>Nachtlichter (VIIRS · NASA GIBS) <span class="hz" data-hz="nachtlicht"></span></div>
+      <div class="ob ov-side" id="tb-nachtlicht" onclick="ze.toggleNachtlicht()"><div class="obd"></div>Nachtlichter <span class="hz" data-hz="nachtlicht"></span></div>
       <div class="ov-status" id="nachtlicht-status"></div>
-      <div class="ob ov-side" id="tb-sats" onclick="ze.toggle('sats')"><div class="obd"></div>Satelliten (CelesTrak) <span class="hz" data-hz="sats"></span></div>
+      <div class="ob ov-side" id="tb-sats" onclick="ze.toggle('sats')"><div class="obd"></div>Satelliten <span class="hz" data-hz="sats"></span></div>
       <div class="ov-status" id="sats-status"></div>
       <div class="ov-status" style="display:block">Straßen &amp; Bebauung (OSM): Regler „Ges. Stoffwechsel" im Linsen-Panel</div>
       </div>
@@ -639,34 +666,81 @@
       <div class="ob ov-side" id="tb-unterbau" onclick="ze.toggle('unterbau')"><div class="obd"></div>Biosphäre / Lebensnetz <span class="hz" data-hz="unterbau"></span></div>
       <div class="ov-status" id="unterbau-status"></div>
       <div class="sub-head" data-sub="erdsystem"></div>
-      <div class="ob ov-side on" id="tb-relief" onclick="ze.toggle('relief')"><div class="obd"></div>Relief (Grundbild: PALEOMAP-DEM, PaleoMIST, GEBCO) <span class="hz" data-hz="relief"></span></div>
-      <div class="ov-status" id="relief-status"></div>
-      <div class="ob ov-side" id="tb-eis" onclick="ze.toggle('eis')"><div class="obd"></div>Eisdicke (PaleoMIST, 80–0 ka) <span class="hz" data-hz="eis"></span></div>
-      <div class="ov-status" id="eis-status"></div>
-      <div class="ob ov-side" id="tb-meereis" onclick="ze.toggle('meereis')"><div class="obd"></div>Meereis (GLOMAP, TraCE-21ka; 23–16,5 ka) <span class="hz" data-hz="meereis"></span></div>
-      <div class="ov-status" id="meereis-status"></div>
-      <div class="ob ov-side" id="tb-sintflut" onclick="ze.toggle('sintflut')"><div class="obd"></div>Sintflut: Küsten, Kästen <span class="hz" data-hz="sintflut"></span></div>
-      <div class="ov-status" id="sintflut-status"></div>
-      <div class="ob ov-side" id="tb-tektonik" onclick="ze.toggle('tektonik')"><div class="obd"></div>Tektonik: Kontinente (Plattenmodelle) <span class="hz" data-hz="tektonik"></span></div>
-      <div class="ov-status" id="tektonik-status"></div>
-      <div class="ov-status" id="tektonik-wahl" style="display:block"></div>
-      <div class="ob ov-side" id="tb-palaeokueste" onclick="ze.toggle('palaeokueste')"><div class="obd"></div>Paläoküsten (PALEOMAP-DEM, 540–0 Ma) <span class="hz" data-hz="palaeokueste"></span></div>
-      <div class="ov-status" id="palaeokueste-status"></div>
-      <div class="ob ov-side" id="tb-erste_natur" onclick="ze.toggle('erste_natur')"><div class="obd"></div>Materialbestände <span class="hz" data-hz="erste_natur"></span></div>
-      <div class="ov-status" id="erste_natur-status"></div>
-      <div class="ob ov-side" id="tb-wind" onclick="ze.toggle('wind')"><div class="obd"></div>Windströmung (GFS) <span class="hz" data-hz="wind"></span></div>
-      <div class="ov-status" id="wind-status"></div>
-      <div class="ob ov-side" id="tb-seismik" onclick="ze.toggle('seismik')"><div class="obd"></div>Seismik · Erdinneres (USGS) <span class="hz" data-hz="seismik"></span></div>
-      <div class="ov-status" id="seismik-status"></div>
-      <div class="ob ov-side" id="tb-platten" onclick="ze.toggle('platten')"><div class="obd"></div>Plattengrenzen <span class="hz" data-hz="platten"></span></div>
-      <div class="ov-status" id="platten-status"></div>
-      <div class="ob ov-side" id="tb-gewaesser" onclick="ze.toggle('gewaesser')"><div class="obd"></div>Gewässer · Flüsse &amp; Pegel <span class="hz" data-hz="gewaesser"></span></div>
-      <div class="ov-status" id="gewaesser-status"></div>
-      <div class="ob ov-side" id="tb-gezeiten" onclick="ze.toggle('gezeiten')"><div class="obd"></div>Gezeiten in Küstenflüssen (SWOT) <span class="hz" data-hz="gezeiten"></span></div>
-      <div class="ov-status" id="gezeiten-status"></div>
-      <div class="ob ov-side" id="tb-satbild" onclick="ze.toggleSatbild()"><div class="obd"></div>Satellitenbild (VIIRS True Color · NASA GIBS) <span class="hz" data-hz="satbild"></span></div>
-      <div class="ov-status" id="satbild-status"></div>
-      <div class="ov-status" style="display:block">Klimazonen (Köppen): Regler „Erste Natur" im Linsen-Panel</div>
+      <!-- Ordner je Sphäre (kern/BERICHT-seitenleiste.md): standardmäßig zu, Zähler im Kopf,
+           eingeschaltete Ebenen als Kurzzeile; Ebenen ohne Datei unten unter „fehlt“ (Variante A). -->
+      <div class="ordner zu" data-ordner="grundbild">
+        <div class="ordner-kopf" onclick="ze.ordnerKlappen(this)"><span class="ok-t">Grundbild</span><span class="ok-z"></span></div>
+        <div class="ordner-kurz"></div>
+        <div class="ordner-body">
+        <div class="ob ov-side on" id="tb-relief" onclick="ze.toggle('relief')"><div class="obd"></div>Relief <span class="hz" data-hz="relief"></span></div>
+        <div class="ov-status" id="relief-status"></div>
+        <div class="ob ov-side" id="tb-kueste" onclick="ze.toggle('kueste')"><div class="obd"></div>Küste <span class="hz" data-hz="kueste"></span></div>
+        <div class="ov-status" id="kueste-status"></div>
+        <div class="ob ov-side" id="tb-satbild" onclick="ze.toggleSatbild()"><div class="obd"></div>Satellitenbild <span class="hz" data-hz="satbild"></span></div>
+        <div class="ov-status" id="satbild-status"></div>
+        </div>
+      </div>
+      <div class="ordner zu" data-ordner="lithosphaere">
+        <div class="ordner-kopf" onclick="ze.ordnerKlappen(this)"><span class="ok-t">Lithosphäre</span><span class="ok-z"></span></div>
+        <div class="ordner-kurz"></div>
+        <div class="ordner-body">
+        <div class="ob ov-side" id="tb-tektonik" onclick="ze.toggle('tektonik')"><div class="obd"></div>Kontinente <span class="hz" data-hz="tektonik"></span></div>
+        <div class="ov-status" id="tektonik-status"></div>
+        <div class="ov-status" id="tektonik-wahl" style="display:block"></div>
+        <div class="ob ov-side" id="tb-palaeokueste" onclick="ze.toggle('palaeokueste')"><div class="obd"></div>Paläoküsten <span class="hz" data-hz="palaeokueste"></span></div>
+        <div class="ov-status" id="palaeokueste-status"></div>
+        <div class="ob ov-side" id="tb-platten" onclick="ze.toggle('platten')"><div class="obd"></div>Plattengrenzen <span class="hz" data-hz="platten"></span></div>
+        <div class="ov-status" id="platten-status"></div>
+        <div class="ob ov-side" id="tb-seismik" onclick="ze.toggle('seismik')"><div class="obd"></div>Erdbeben <span class="hz" data-hz="seismik"></span></div>
+        <div class="ov-status" id="seismik-status"></div>
+        </div>
+      </div>
+      <div class="ordner zu" data-ordner="kryosphaere">
+        <div class="ordner-kopf" onclick="ze.ordnerKlappen(this)"><span class="ok-t">Kryosphäre</span><span class="ok-z"></span></div>
+        <div class="ordner-kurz"></div>
+        <div class="ordner-body">
+        <div class="ob ov-side" id="tb-eis" onclick="ze.toggle('eis')"><div class="obd"></div>Eisdicke <span class="hz" data-hz="eis"></span></div>
+        <div class="ov-status" id="eis-status"></div>
+        <div class="ob ov-side" id="tb-meereis" onclick="ze.toggle('meereis')"><div class="obd"></div>Meereis <span class="hz" data-hz="meereis"></span></div>
+        <div class="ov-status" id="meereis-status"></div>
+        </div>
+      </div>
+      <div class="ordner zu" data-ordner="hydrosphaere">
+        <div class="ordner-kopf" onclick="ze.ordnerKlappen(this)"><span class="ok-t">Hydrosphäre</span><span class="ok-z"></span></div>
+        <div class="ordner-kurz"></div>
+        <div class="ordner-body">
+        <div class="ob ov-side" id="tb-gewaesser" onclick="ze.toggle('gewaesser')"><div class="obd"></div>Flüsse und Pegel <span class="hz" data-hz="gewaesser"></span></div>
+        <div class="ov-status" id="gewaesser-status"></div>
+        <div class="ob ov-side" id="tb-gezeiten" onclick="ze.toggle('gezeiten')"><div class="obd"></div>Gezeiten in Flüssen <span class="hz" data-hz="gezeiten"></span></div>
+        <div class="ov-status" id="gezeiten-status"></div>
+        <div class="ordner-verweis" onclick="ze.ordnerZeigen('kreislaeufe')" title="Formwechsel zwischen Sphären gehören in den Übergang, nicht in eine Sphäre">Kreislauf Wasser → Planetarer Stoffwechsel · Kreisläufe</div>
+        </div>
+      </div>
+      <div class="ordner zu" data-ordner="atmosphaere">
+        <div class="ordner-kopf" onclick="ze.ordnerKlappen(this)"><span class="ok-t">Atmosphäre</span><span class="ok-z"></span></div>
+        <div class="ordner-kurz"></div>
+        <div class="ordner-body">
+        <div class="ob ov-side" id="tb-wind" onclick="ze.toggle('wind')"><div class="obd"></div>Wind <span class="hz" data-hz="wind"></span></div>
+        <div class="ov-status" id="wind-status"></div>
+        <div class="ob ov-side" id="tb-klima" onclick="ze.toggle('klima')"><div class="obd"></div>Klimazonen <span class="hz" data-hz="klima"></span></div>
+        <div class="ov-status" id="klima-status"></div>
+        </div>
+      </div>
+      <div class="ordner zu" data-ordner="biomasse" data-leer="keine Ebene: in 1.1 ist noch keine Quelle für Biomasse eingebunden (die FAOSTAT-Erzeugung ist ein Fluss im Prozess, kein Bestand)">
+        <div class="ordner-kopf" onclick="ze.ordnerKlappen(this)"><span class="ok-t">Biomasse</span><span class="ok-z"></span></div>
+        <div class="ordner-kurz"></div>
+        <div class="ordner-body">
+
+        </div>
+      </div>
+      <div class="ordner zu" data-ordner="bestaende">
+        <div class="ordner-kopf" onclick="ze.ordnerKlappen(this)"><span class="ok-t">Bestände</span><span class="ok-z"></span></div>
+        <div class="ordner-kurz"></div>
+        <div class="ordner-body">
+        <div class="ob ov-side" id="tb-erste_natur" onclick="ze.toggle('erste_natur')"><div class="obd"></div>Materialbestände <span class="hz" data-hz="erste_natur"></span></div>
+        <div class="ov-status" id="erste_natur-status"></div>
+        </div>
+      </div>
       </div>
     </div>
 
@@ -676,12 +750,20 @@
       <div class="sub-head" data-sub="extern"></div>
       <div class="ob ov-side" id="tb-moon" onclick="ze.toggle('moon')"><div class="obd"></div>Mond · Phase &amp; Störgeometrie <span class="hz" data-hz="moon"></span></div>
       <div class="ob ov-side" id="tb-tidal" onclick="ze.toggle('tidal')"><div class="obd"></div>Gezeitenkraft <span class="hz" data-hz="tidal"></span></div>
-      <div class="ob ov-side" id="tb-solarwind" onclick="ze.toggle('solarwind')"><div class="obd"></div>Sonnenwind (SWPC) <span class="hz" data-hz="solarwind"></span></div>
+      <div class="ob ov-side" id="tb-solarwind" onclick="ze.toggle('solarwind')"><div class="obd"></div>Sonnenwind <span class="hz" data-hz="solarwind"></span></div>
       <div class="ov-status" id="sw-status"></div>
       <div class="sub-head" data-sub="intern"></div>
-      <div class="ob ov-side" id="tb-magfield" onclick="ze.toggle('magfield')"><div class="obd"></div>Magnetfeld (IGRF) <span class="hz" data-hz="magfield"></span></div>
+      <div class="ob ov-side" id="tb-magfield" onclick="ze.toggle('magfield')"><div class="obd"></div>Magnetfeld <span class="hz" data-hz="magfield"></span></div>
       <div class="ob ov-side" id="tb-pm" onclick="ze.toggle('pm')"><div class="obd"></div>Stoffwechselprodukte <span class="hz" data-hz="pm"></span></div>
       <div class="ov-status" id="pm-status"></div>
+      <div class="ordner zu" data-ordner="kreislaeufe">
+        <div class="ordner-kopf" onclick="ze.ordnerKlappen(this)"><span class="ok-t">Kreisläufe</span><span class="ok-z"></span></div>
+        <div class="ordner-kurz"></div>
+        <div class="ordner-body">
+        <div class="ob ov-side" id="tb-kreislauf_wasser" onclick="ze.toggle('kreislauf_wasser')"><div class="obd"></div>Wasser: Eis → Ozean <span class="hz" data-hz="kreislauf_wasser"></span></div>
+        <div class="ov-status" id="kreislauf_wasser-status"></div>
+        </div>
+      </div>
       </div>
     </div>
 
@@ -2297,10 +2379,16 @@ const LEGENDE = {
   gezeiten:    { h: 'SWOT River Tides (Zenodo 15223861, CC BY 4.0) über gezeiten.py', z: 'SWOT seit 2023; außerhalb leer', karte: true },
   satbild:     { h: 'VIIRS SNPP True Color · NASA GIBS', m: 250 },
   nachtlicht:  { h: 'VIIRS Day/Night Band · NASA GIBS', m: 500 },
-  sintflut:    { h: 'PaleoMIST 1.0 -> Grenze Land/Meer entlang der Zellkanten, global (rekonstruktion, berechnet; CC BY 4.0); Kästen: Setzung',
+  sintflut:    { name: 'Sintflut: Kästen der Tour', h: 'PaleoMIST 1.0 -> Grenze Land/Meer entlang der Zellkanten, global (rekonstruktion, berechnet; CC BY 4.0); Kästen: Setzung',
                  farben: [{ farbe: '#8fe89a', text: 'grüne Linie: Küste PaleoMIST global (Zellkanten 0,25°), Quelle und Schritt wie das Relief in der ka-Zeile', linie: true }, { farbe: '#e8e2c8', text: 'helle gestrichelte Linie: Kasten des Fensters (Fokus der Tour, Setzung)', linie: true }],
                  get z() { const l = ze.sintflutLayer, i = l?.aktuellerSchritt(); return i === null || i === undefined ? 'außerhalb von 20–0 ka BP: keine Linie' : `${tourKa(l.schritte[i])} ka BP (Bezug 1950), Schritt 2,5 ka; Unschärfe fehlt`; },
                  m: 28e3, warn: 'isostatische Deformation enthalten; Sedimentation nicht berücksichtigt' },
+  kueste:      { h: 'PaleoMIST 1.0 -> Grenze Land/Meer entlang der Zellkanten, global (rekonstruktion, berechnet; CC BY 4.0)',
+                 farben: [{ farbe: '#8fe89a', text: 'grüne Linie: Küste PaleoMIST (Zellkanten 0,25°), Grenze zwischen Hydro- und Lithosphäre', linie: true }],
+                 get z() { const ka = ze.kuesteLayer?.schritt(); return ka === null || ka === undefined ? 'außerhalb 80–0 ka BP: fehlt' : `${tourKa(ka)} ka BP (Bezug 1950), Schritt 2,5 ka; Unschärfe fehlt`; },
+                 m: 28e3, warn: 'isostatische Deformation enthalten; Sedimentation nicht berücksichtigt' },
+  klima:       { h: 'Köppen-Geiger (data/manifest.json, Datensatz koeppen)', z: 'nicht angegeben' },
+  kreislauf_wasser: { h: 'Kern-Adapter sintflut: Relation Eis → Ozean je Ideal (Setzung; Mengen PaleoMIST, rekonstruktion); Dichten Annahme', z: 'Bilanz 20–0 ka; Schritt der Masterzeit ±1,25 ka', warn: 'Prüfart innere Stimmigkeit: beide Seiten aus derselben Quelle' },
   tektonik:    { h: 'Plattenmodelle -> heutige Kontinent- und Küstenpolygone gedreht (pyGPlates); Standard Merdith 2021, weitere Ideale zuschaltbar: Müller 2022 (Mantelbezug, Modell), PALEOMAP-Rotation v19o (Merdith-Polygone je ganz der PALEOMAP-Platte mit größter Überlappung zugeordnet; Setzung); jenseits 1 Ga Cao 2024; CC BY 4.0',
                  get z() { return ze.tektonikLayer?.zeit() ?? 'keine Linie'; },
                  get farben() { return ze.tektonikLayer?.farben() ?? []; },
@@ -2395,7 +2483,7 @@ const FEIN_M_PRO_PX = 250;
 class DM {
   constructor(v) {
     this.v=v; this.curDim=null; this.curSL=null;
-    this._ent={}; this._ovState={moon:false,magfield:false,tidal:false,solarwind:false,sats:false,ueberbau:false,riss:false,bestaende:false,basis:false,ware:false,erste_natur:false,pm:false,wind:false,stroeme:false,unterbau:false,seismik:false,platten:false,grenzen:false,kataster:false,gewaesser:false,sprachen:false,sintflut:false,tektonik:false,palaeokueste:false,relief:true,eis:false,meereis:false};
+    this._ent={}; this._ovState={moon:false,magfield:false,tidal:false,solarwind:false,sats:false,ueberbau:false,riss:false,bestaende:false,basis:false,ware:false,erste_natur:false,pm:false,wind:false,stroeme:false,unterbau:false,seismik:false,platten:false,grenzen:false,kataster:false,gewaesser:false,sprachen:false,sintflut:false,tektonik:false,palaeokueste:false,relief:true,eis:false,meereis:false,kueste:false,klima:false,kreislauf_wasser:false};
   }
 
   async flyTo(cam, instant=false) {
@@ -2475,6 +2563,9 @@ class DM {
     if(name==='relief')   { on ? ze.reliefLayer.show() : ze.reliefLayer.hide(); }
     if(name==='tektonik') { on ? ze.tektonikLayer.show() : ze.tektonikLayer.hide(); }
     if(name==='palaeokueste') { on ? ze.palaeokuesteLayer.show() : ze.palaeokuesteLayer.hide(); }
+    if(name==='kueste')   { on ? ze.kuesteLayer.show() : ze.kuesteLayer.hide(); ze.sintflutLayer?.on && (ze.sintflutLayer._schritt = undefined, ze.sintflutLayer.update(Tideline.t)); }
+    if(name==='klima')    { on ? ze.klimaEbene(true) : ze.klimaEbene(false); }
+    if(name==='kreislauf_wasser') { on ? ze.kreislaufWasser.show() : ze.kreislaufWasser.hide(); }
   }
 
   _moon(on) {
@@ -4207,6 +4298,8 @@ class ZeroEarth {
     this.gezeitenLayer = new GezeitenLayer(this.cesiumV);
     this.sprachenLayer = new SprachenLayer(this.cesiumV);
     this.sintflutLayer = new SintflutLayer(this.cesiumV);
+    this.kuesteLayer = new KuesteLayer(this.cesiumV);
+    this.kreislaufWasser = new KreislaufWasser(this);
     this.reliefLayer = new ReliefLayer(this.cesiumV);
     this.eisLayer = new EisLayer(this.cesiumV);
     this.meereisLayer = new MeereisLayer(this.cesiumV);
@@ -4276,6 +4369,8 @@ class ZeroEarth {
       this.unterbauLayer.update(Tideline.t);
       this.seismikLayer.update(Tideline.t);
       this.sintflutLayer.update(Tideline.t);
+      this.kuesteLayer.update(Tideline.t);
+      this.kreislaufWasser.update(Tideline.t);
       this.reliefLayer.update(Tideline.t);
       this.eisLayer.update(Tideline.t);
       this.meereisLayer.update(Tideline.t);
@@ -4418,7 +4513,7 @@ class ZeroEarth {
     await MODELL.laden();
     this.tour.liste();
     this.leiste.laden();
-    import('./kern/schema.mjs').then(m => herkunftszeichen(m.anzeige));
+    import('./kern/schema.mjs').then(m => herkunftszeichen(m.anzeige)).then(() => this.ordnerFehlt());
     this._gruppiereSchichten();
     this.applyLabels();
     this._applyLicht();
@@ -4929,6 +5024,89 @@ class ZeroEarth {
   ebenenGeaendert() {
     this.zeichneLegende();
     this.karte?.zeichne();
+    this.ordnerZeichnen();
+  }
+
+  /* ── Ordner der Leiste (kern/BERICHT-seitenleiste.md) ──────────────
+     Je Sphäre ein Ordner, standardmäßig zu. Kopf: Zähler „n an · m“.
+     Zugeklappt bleiben eingeschaltete Ebenen als Kurzzeile sichtbar, mit
+     Herkunftszeichen und Ausschalter; Zuklappen schaltet nie etwas ab.
+     Ebenen ohne Datei sammeln sich unten unter „fehlt: n“ (Variante A),
+     je mit Grund aus EBENEN_HERKUNFT.fehlt_grund (Regel 8). */
+  ordnerKlappen(kopf) { kopf.parentElement.classList.toggle('zu'); this.ordnerZeichnen(); }
+  /** Öffnet Dimension, Schicht und Ordner und scrollt dorthin (Querverweis). */
+  ordnerZeigen(k) {
+    const o = document.querySelector(`.ordner[data-ordner="${k}"]`);
+    if (!o) return;
+    o.classList.remove('zu');
+    o.closest('.dim-sec')?.classList.add('open');
+    o.closest('.sub-sec')?.classList.remove('zu');
+    o.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    this.ordnerZeichnen();
+  }
+  /** Ebenen ohne Datei ans Ende ihres Ordners bzw. ihrer Schicht, unter eine zugeklappte Zeile. */
+  ordnerFehlt() {
+    const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+    for (const hz of document.querySelectorAll('#left .hz.hz-fehlt')) {
+      const ob = hz.closest('.ob'), k = hz.dataset.hz;
+      const behaelter = ob?.parentElement;
+      if (!ob || !behaelter || behaelter.classList.contains('fehlt-body')) continue;
+      let block = behaelter.querySelector(':scope > .fehlt-block');
+      if (!block) {
+        block = Object.assign(document.createElement('div'), { className: 'fehlt-block zu' });
+        block.innerHTML = '<div class="fehlt-kopf"></div><div class="fehlt-body"></div>';
+        block.firstChild.onclick = () => block.classList.toggle('zu');
+        behaelter.appendChild(block);
+      }
+      const status = document.getElementById(`${k}-status`);
+      block.lastChild.appendChild(ob);
+      const grund = EBENEN_HERKUNFT[k]?.fehlt_grund ?? `Datei ${EBENEN_HERKUNFT[k]?.datei ?? ''} liegt nicht vor`;
+      block.lastChild.appendChild(Object.assign(document.createElement('div'), { className: 'fehlt-grund', innerHTML: `fehlt: ${esc(grund)}` }));
+      if (status) block.lastChild.appendChild(status);
+    }
+    for (const block of document.querySelectorAll('#left .fehlt-block')) {
+      const n = block.querySelectorAll('.fehlt-body > .ob').length;
+      block.firstChild.textContent = `fehlt: ${n} ${n === 1 ? 'Ebene' : 'Ebenen'}`;
+    }
+    for (const o of document.querySelectorAll('.ordner[data-leer]')) {
+      const b = o.querySelector('.ordner-body');
+      if (b.querySelector('.fehlt-grund')) continue;
+      b.innerHTML = `<div class="fehlt-grund">fehlt: ${esc(o.dataset.leer)}</div>`;
+    }
+    this.ordnerZeichnen();
+  }
+  ordnerZeichnen() {
+    const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+    for (const o of document.querySelectorAll('.ordner')) {
+      const alle = [...o.querySelectorAll('.ordner-body .ob')];
+      const fehlend = alle.filter(e => e.closest('.fehlt-body'));
+      const an = alle.filter(e => e.classList.contains('on'));
+      const da = alle.length - fehlend.length;
+      o.querySelector('.ok-z').textContent = o.dataset.leer && !alle.length ? 'leer'
+        : `${an.length} an · ${da}${fehlend.length ? ` · fehlt ${fehlend.length}` : ''}`;
+      const kurz = o.querySelector('.ordner-kurz');
+      const zeilen = o.classList.contains('zu') ? an.map(e => {
+        const hz = e.querySelector('.hz');
+        const name = [...e.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join('').trim();
+        return `<div class="kz" data-ziel="${e.id}"><span class="kz-n">${esc(name)}</span> <span class="hz">${esc(hz?.textContent ?? '')}</span><span class="kz-aus" title="ausschalten">×</span></div>`;
+      }) : [];
+      const html = zeilen.join('');
+      if (kurz.innerHTML !== html) {
+        kurz.innerHTML = html;
+        for (const z of kurz.querySelectorAll('.kz-aus')) z.onclick = ev => { ev.stopPropagation(); document.getElementById(z.parentElement.dataset.ziel)?.click(); };
+      }
+    }
+  }
+
+  /** Klimazonen (Köppen-Geiger) als eigener Schalter; dieselbe Rasterebene wie im Linsen-Panel. */
+  klimaEbene(an) {
+    const L = this.klimaLayer, st = document.getElementById('klima-status');
+    if (!L) return;
+    if (!an) { L.hide(); if (st) st.textContent = ''; return; }
+    const ok = DataStore.status?.('koeppen') === 'ready';
+    if (!ok) { if (st) st.innerHTML = '<span class="ds-err">fehlt</span>: ' + tourEsc(EBENEN_HERKUNFT.klima.fehlt_grund); return; }
+    L.update(Tideline.t); L.setAlpha(0.55);
+    if (st) st.innerHTML = '<span class="ds-ok">Köppen-Geiger</span>';
   }
 
   zeichneLegende() {
@@ -4947,7 +5125,7 @@ class ZeroEarth {
       (e.warn ? `<div class="lg-warn">${esc(e.warn)}</div>` : '') +
       ((e.farben ?? []).length ? `<div class="lg-farben">${e.farben.map(f => `<div><span class="lg-farbe${f.linie ? ' linie' : ''}" style="background:${f.farbe}${f.staerke ? `;height:${f.staerke}px` : ''}"></span>${esc(f.text)}</div>`).join('')}</div>` : '') +
       (globus && grob(e) ? `<div class="lg-z">${esc(grob(e))}</div>` : '') + '</div>';
-    const name = k => document.getElementById('tb-' + k)?.textContent.trim() || k;
+    const name = k => document.getElementById('tb-' + k)?.textContent.trim() || LEGENDE[k]?.name || k;
     const L = LEGENDE;
     // Relief steht schon als Grundbild in der Liste, nicht noch einmal als Ebene
     const an = Object.entries(this.dm?._ovState ?? {}).filter(([k, v]) => v && k !== 'relief').map(([k]) => k);
@@ -5004,6 +5182,9 @@ class ZeroEarth {
           raster.map(([n, e]) => zeile(n, e, true)).join('') + an.map(k => zeile(name(k), L[k], true)).join('');
       }
     }
+    // Kästen der Sintflut: kein Schalter in der Leiste, nur in Tour und Legende (Entscheidung Max, 2026-11-11)
+    if (this.ansicht !== 'netz' && this.ansicht !== 'sonnensystem')
+      html += `<div class="lg-fuss"><span class="lg-schalter" onclick="ze.toggle('sintflut')">Kästen der Sintflut-Tour ${this.dm?._ovState?.sintflut ? 'ausblenden' : 'einblenden'}</span> (Setzung der Tour)</div>`;
     html += '<div class="lg-fuss">Zusammenstellung durch den Nutzer · jede Ebene einzeln abschaltbar</div>';
     if (html !== this._legendeHtml) { el.innerHTML = html; this._legendeHtml = html; }
   }
@@ -5632,7 +5813,8 @@ class SintflutLayer {
     if (!this.on || !this.daten) return;
     const i = this.aktuellerSchritt(t);
     // Zeichnet das Relief schon die PaleoMIST-Küste, nicht doppelt
-    const durchRelief = ze.reliefLayer?.zeigt === 'paleomist';
+    // Zeichnen Relief oder die eigene Küsten-Ebene die PaleoMIST-Küste schon, nicht doppelt
+    const durchRelief = ze.reliefLayer?.zeigt === 'paleomist' || !!ze.kuesteLayer?.on;
     const schluessel = `${i}|${durchRelief}`;
     if (schluessel === this._schritt) return;
     this._schritt = schluessel;
@@ -5645,7 +5827,106 @@ class SintflutLayer {
       this.linien = this.v.scene.primitives.add(new Cesium.PolylineCollection());
       Kueste.zeichne(this.linien, ringe ?? []);
     }
-    if (st) st.innerHTML = `<span class="ds-ok">Küste bei ${tourKa(this.schritte[i])} ka BP</span> · global, Zellkanten 0,25°, nichts interpoliert${durchRelief ? ' (gezeichnet vom Relief)' : ''}`;
+    if (st) st.innerHTML = `<span class="ds-ok">Küste bei ${tourKa(this.schritte[i])} ka BP</span> · global, Zellkanten 0,25°, nichts interpoliert${durchRelief ? ' (gezeichnet von Relief oder Küste)' : ''}`;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   KÜSTE — eigene Ebene im Grundbild (Entscheidung Max, 2026-11-11):
+   die Grenze zwischen Hydro- und Lithosphäre aus demselben Raster wie
+   das Relief (PaleoMIST 1.0, 0,25°), global, 33 Schritte 80–0 ka.
+   Nur Stützstellen der Quelle, nichts interpoliert; außerhalb fehlt sie.
+   ───────────────────────────────────────────────────────────────── */
+class KuesteLayer {
+  constructor(v) { this.v = v; this.on = false; this._schluessel = undefined; }
+  get schritte() { return Kueste.index?.ka_bp ?? []; }
+  /** Schritt im halben Abstand (±1,25 ka) um die Masterzeit, sonst null. */
+  schritt(t = Tideline.t) {
+    const ka = SintflutLayer.kaAus(t);
+    const i = this.schritte.findIndex(s => Math.abs(s - ka) <= 1.25);
+    return i < 0 ? null : this.schritte[i];
+  }
+  async show() { this.on = true; await Kueste.laden(); if (!this.on) return; this._schluessel = undefined; this.update(Tideline.t); }
+  hide() {
+    this.on = false; this._schluessel = undefined;
+    if (this.linien) { this.v.scene.primitives.remove(this.linien); this.linien = null; }
+    const st = document.getElementById('kueste-status'); if (st) st.textContent = '';
+  }
+  stuetzstellen() {
+    if (!Kueste.index) return [];
+    const ka = this.schritt();
+    return [{ name: 'Küste (PaleoMIST)', einheit: 'ka', farbe: KUESTE_FARBE, werte: this.schritte,
+      abdeckung: { von: Math.max(...this.schritte), bis: Math.min(...this.schritte) },
+      gewaehlt: ka, unschaerfe_fehlt: true, zuT: SintflutLayer.tAus }];
+  }
+  async update(t) {
+    if (!this.on || !Kueste.index) return;
+    const ka = this.schritt(t);
+    const durchRelief = ze.reliefLayer?.zeigt === 'paleomist';
+    const schluessel = `${ka}|${durchRelief}`;
+    if (schluessel === this._schluessel) return;
+    this._schluessel = schluessel;
+    if (this.linien) { this.v.scene.primitives.remove(this.linien); this.linien = null; }
+    const st = document.getElementById('kueste-status');
+    if (ka === null) { if (st) st.innerHTML = '<span class="ds-err">fehlt</span>: Masterzeit außerhalb 80–0 ka BP (PaleoMIST)'; return; }
+    if (!durchRelief) {
+      const ringe = await Kueste.schritt(ka);
+      if (schluessel !== this._schluessel || !this.on) return;
+      this.linien = this.v.scene.primitives.add(new Cesium.PolylineCollection());
+      Kueste.zeichne(this.linien, ringe ?? []);
+    }
+    if (st) st.innerHTML = `<span class="ds-ok">${tourKa(ka)} ka BP</span> · PaleoMIST, Zellkanten 0,25°, nichts interpoliert${durchRelief ? ' (gezeichnet vom Relief)' : ''}`;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   KREISLAUF WASSER (Planetarer Stoffwechsel · Interne Prozesse ·
+   Kreisläufe). Erster Kreislauf: Eis → Ozean aus dem Sintflut-Kern.
+   Die Seite rechnet nichts selbst: Sie lädt den Kern-Adapter `sintflut`
+   (dieselbe transform.mjs wie die Tests, Regel 14) und zeigt je Ideal
+   die Relation sintflut/relation/eis-ozean/<ideal> mit ihrer Bilanz.
+   Beide Ideale nebeneinander, keines bevorzugt (Regel 13).
+   ───────────────────────────────────────────────────────────────── */
+class KreislaufWasser {
+  constructor(erde) { this.ze = erde; this.on = false; this.graph = null; }
+  async show() {
+    this.on = true;
+    const st = document.getElementById('kreislauf_wasser-status');
+    if (st) st.textContent = 'lädt Kern-Adapter sintflut …';
+    try { this.graph ??= await this.ze.tour.adapter('sintflut'); }
+    catch (e) { if (st) st.innerHTML = `<span class="ds-err">fehlt</span>: Kern-Adapter sintflut nicht ladbar (${tourEsc(e.message)})`; return; }
+    this._zeit = undefined;
+    this.update(Tideline.t);
+  }
+  hide() { this.on = false; const st = document.getElementById('kreislauf_wasser-status'); if (st) st.textContent = ''; }
+  update(t) {
+    if (!this.on || !this.graph) return;
+    const st = document.getElementById('kreislauf_wasser-status');
+    if (!st) return;
+    const g = this.graph, ka = SintflutLayer.kaAus(t);
+    const rel = g.relationen.filter(r => r.id.startsWith('sintflut/relation/eis-ozean/'));
+    const eis = g.eintraege.find(e => e.id === 'sintflut/eis'), oz = g.eintraege.find(e => e.id === 'sintflut/ozean');
+    const zahl = (x, n = 1) => takt.zahl(x, n);
+    const exp = kg => `${zahl(kg / 1e18, 1)} · 10¹⁸ kg`;
+    const vz = x => (x > 0 ? '+' : x < 0 ? '−' : '±') + zahl(Math.abs(x), 1);
+    const B = this.ze.tour.manifeste.get('sintflut')?.bilanz;
+    const schluessel = `${rel.length}|${Math.round(ka / 1.25)}`;
+    if (schluessel === this._zeit) return;
+    this._zeit = schluessel;
+    const zeilen = rel.map(r => {
+      const ideal = r.id.split('/').pop();
+      const p = w => w?.punkte?.find(x => Math.abs(x.bezugszeit.wert - ka) <= 1.25);
+      const pe = p(eis?.werte?.[`volumen_${ideal}`]), po = p(oz?.werte?.[`volumen_${ideal}`]);
+      const h = w => w?.punkte?.find(x => x.bezugszeit.wert === 0);
+      const he = h(eis?.werte?.[`volumen_${ideal}`]), ho = h(oz?.werte?.[`volumen_${ideal}`]);
+      const zu = r.bilanz.zufluss, ab = r.bilanz.abfluss[0], rest = (ab - zu) / zu;
+      const jetzt = pe && po && he && ho
+        ? `bei ${tourKa(pe.bezugszeit.wert)} ka gegenüber heute: Eis ${vz((pe.fassungen[0].wert - he.fassungen[0].wert) / 1e15)}, Ozean ${vz((po.fassungen[0].wert - ho.fassungen[0].wert) / 1e15)} · 10¹⁵ m³`
+        : 'Masterzeit außerhalb 80–0 ka: kein Schritt (fehlt)';
+      return `<div><b>${tourEsc(ideal === 'referenz' ? 'Referenz' : ideal)}</b> · ${r.bezugszeit.von}–${r.bezugszeit.bis} ka: Eis gab ${exp(zu)} ab, Ozean nahm ${exp(ab)} auf, Rest ${zahl(100 * rest, 1)} % (Toleranz ${zahl(100 * r.bilanz.toleranz / zu, 0)} %)<br>${jetzt}</div>`;
+    });
+    st.innerHTML = zeilen.join('') +
+      `<div style="opacity:.7">Prüfart: ${tourEsc(B?.pruefart ?? 'innere_stimmigkeit')}; beide Seiten aus PaleoMIST. Dichten ${B?.annahmen?.dichte_eis_kg_m3 ?? '—'} / ${B?.annahmen?.dichte_wasser_kg_m3 ?? '—'} kg/m³ sind Annahmen von zeroearth. Kern: kern/adapter/sintflut.</div>`;
   }
 }
 
@@ -6099,6 +6380,7 @@ class ReliefLayer {
       for (const s of ReliefLayer.nullLinie(kl, q.aufloesung_grad, gitter)) this.linie.add({ width: 1, material: mat, positions: Cesium.Cartesian3.fromDegreesArrayHeights(s.flatMap(([lo, la]) => [lo, la, 2500])) });
     }
     ze.sintflutLayer?.on && ze.sintflutLayer.update(Tideline.t);
+    ze.kuesteLayer?.on && ze.kuesteLayer.update(Tideline.t);
     this.zeigt = w.quelle;
     this.stand = { quelle: w.quelle, schritt: e, grau };
     const wert = e.ma ?? e.ka ?? e.jahr, einheit = q.einheit;
@@ -6722,23 +7004,26 @@ class FlussAnsicht {
    Datei nicht vor, steht ■ (fehlt), was immer die Ebene sonst wäre.
    ───────────────────────────────────────────────────────────────── */
 const EBENEN_HERKUNFT = {
-  riss:        { arten: ['kuratiert'], datei: 'data/marker.json' },
-  ueberbau:    { arten: ['kuratiert'], datei: 'data/marker.json' },
-  ware:        { arten: ['kuratiert'], datei: 'data/marker.json' },
-  bestaende:   { arten: ['kuratiert'], datei: 'data/marker.json' },
-  basis:       { arten: ['kuratiert'], datei: 'data/marker.json' },
-  erste_natur: { arten: ['kuratiert'], datei: 'data/marker.json' },
-  pm:          { arten: ['kuratiert'], datei: 'data/marker.json' },
-  grenzen:     { arten: ['kuratiert'], datei: 'data/grenzen.geojson' },
-  kataster:    { arten: ['kuratiert'], datei: 'data/kataster.geojson' },
-  platten:     { arten: ['kuratiert'], datei: 'data/plattengrenzen.geojson' },
-  stroeme:     { arten: [], datei: 'data/stroeme.json', text: 'Herkunft nicht angegeben' },
-  unterbau:    { arten: ['beobachtung'], datei: 'data/unterbau.json', text: 'GBIF' },
-  gewaesser:   { arten: ['modell'], datei: 'data/fluesse.geojson', text: 'Flussnetz kuratiert, Pegel GloFAS (Modell)' },
-  gezeiten:    { arten: ['beobachtung'], datei: 'data/gezeiten.json', text: 'SWOT' },
-  wind:        { arten: ['modell'], datei: 'data/manifest.json', text: 'GFS (Vorhersage, Modell)' },
+  riss:        { arten: ['kuratiert'], datei: 'data/marker.json', fehlt_grund: 'Kuratierung offen, keine Quelle eingebunden' },
+  ueberbau:    { arten: ['kuratiert'], datei: 'data/marker.json', fehlt_grund: 'Kuratierung offen, keine Quelle eingebunden' },
+  ware:        { arten: ['kuratiert'], datei: 'data/marker.json', fehlt_grund: 'Kuratierung offen, keine Quelle eingebunden' },
+  bestaende:   { arten: ['kuratiert'], datei: 'data/marker.json', fehlt_grund: 'Kuratierung offen, keine Quelle eingebunden' },
+  basis:       { arten: ['kuratiert'], datei: 'data/marker.json', fehlt_grund: 'Kuratierung offen, keine Quelle eingebunden' },
+  erste_natur: { arten: ['kuratiert'], datei: 'data/marker.json', fehlt_grund: 'Kuratierung offen, keine Quelle eingebunden' },
+  pm:          { arten: ['kuratiert'], datei: 'data/marker.json', fehlt_grund: 'Kuratierung offen, keine Quelle eingebunden' },
+  grenzen:     { arten: ['kuratiert'], datei: 'data/grenzen.geojson', fehlt_grund: 'kein Adapter, Quelle nicht eingebunden' },
+  kataster:    { arten: ['kuratiert'], datei: 'data/kataster.geojson', fehlt_grund: 'kein Adapter; Kataster sind regional' },
+  platten:     { arten: ['kuratiert'], datei: 'data/plattengrenzen.geojson', fehlt_grund: 'kein Konverter' },
+  stroeme:     { arten: [], datei: 'data/stroeme.json', text: 'Herkunft nicht angegeben', fehlt_grund: 'Kuratierung offen' },
+  unterbau:    { arten: ['beobachtung'], datei: 'data/unterbau.json', text: 'GBIF', fehlt_grund: 'kein Konverter' },
+  gewaesser:   { arten: ['modell', 'berechnet'], datei: 'data/fluesse.geojson', text: 'Flussnetz aus Höhenmodell abgeleitet (modell, berechnet); Abfluss GloFAS (Modell)', fehlt_grund: 'kein Konverter; HydroSHEDS-Lizenz ungeklärt, SWORD in Vorbereitung (kern/BERICHT-hydrosphaere.md)' },
+  gezeiten:    { arten: ['beobachtung'], datei: 'data/gezeiten.json', text: 'SWOT', fehlt_grund: 'Konverter gezeiten.py vorhanden, Datei nie erzeugt' },
+  wind:        { arten: ['modell'], datei: 'data/manifest.json', text: 'GFS (Vorhersage, Modell)', fehlt_grund: 'Rasterdatensätze liegen nicht im Repo (data/manifest.json)' },
   sprachen:    { arten: ['kuratiert'], datei: 'data/glottolog.json', text: 'Glottolog' },
   sintflut:    { arten: ['rekonstruktion', 'berechnet'], datei: 'data/kuesten.json' },
+  kueste:      { arten: ['rekonstruktion', 'berechnet'], datei: 'data/kuesten.json', text: 'PaleoMIST 1.0, Grenze Land/Meer entlang der Zellkanten' },
+  klima:       { arten: ['modell'], datei: 'data/manifest.json', text: 'Köppen-Geiger', fehlt_grund: 'Rasterdatensätze liegen nicht im Repo (data/manifest.json)' },
+  kreislauf_wasser: { arten: ['rekonstruktion', 'kuratiert'], datei: 'data/paleomist_eis.json', text: 'Relation Eis → Ozean: Setzung (kuratiert), Mengen PaleoMIST (rekonstruktion); Kern-Adapter sintflut' },
   tektonik:    { arten: ['rekonstruktion', 'berechnet'], datei: 'data/tektonik_umrisse.json', text: 'Standard Merdith 2021; Müller 2022 zuschaltbar ist Modell (○)' },
   palaeokueste:{ arten: ['rekonstruktion', 'kuratiert', 'berechnet'], datei: 'data/tektonik_palaeokuesten.json' },
   eis:         { arten: ['rekonstruktion'], datei: 'data/eis.json', text: 'PaleoMIST, Referenz und a1' },
@@ -6882,7 +7167,7 @@ class TaktLeiste {
 
   /** Stützstellen und Abdeckung der eingeschalteten Ebenen. */
   quellen() {
-    return [this.ze.reliefLayer, this.ze.eisLayer, this.ze.meereisLayer, this.ze.sintflutLayer, this.ze.tektonikLayer, this.ze.palaeokuesteLayer]
+    return [this.ze.reliefLayer, this.ze.eisLayer, this.ze.meereisLayer, this.ze.sintflutLayer, this.ze.kuesteLayer, this.ze.tektonikLayer, this.ze.palaeokuesteLayer]
       .filter(l => l?.on && l.stuetzstellen).flatMap(l => l.stuetzstellen());
   }
 
