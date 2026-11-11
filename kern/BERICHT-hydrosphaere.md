@@ -605,7 +605,7 @@ Die Bilanz P − E − R = ΔS (3.3) gilt zuerst nur für Kontinente. In der Leg
 
 Die zwölf Fragen vom 2026-11-10 sind entschieden (siehe „Stand“). Neu:
 
-1. **Auswahlkriterium SWORD:** nach den Messungen in B12 die Einzugsfläche `facc_total` (2 Abbrüche) statt der Breite (900–2 000 Abbrüche), mit den Schwellen ≥ 100 000 / 10 000 / 1 000 km² als Setzung? Breite dann als Strichstärke.
+1. ~~Auswahlkriterium SWORD~~ **Entschieden (Max, 2026-11-11):** Auswahl nach Einzugsfläche `facc_total` mit ≥ 100 000 / 10 000 / 1 000 km² (Globus / Kontinent / Region) als Setzung in Manifest und Legende. Die Breite `width` (Landsat, `beobachtung`) dient als Strichstärke und Tooltip. In der Legende steht, dass die Auswahl einem Modellwert folgt (MERIT-Basins, `facc_quality`).
 2. **Geister- und Damm-Abschnitte** (`type` 6 bzw. 4): zeigen, weglassen oder anders zeichnen? Weglassen würde Lücken erzeugen; die Zahl stünde im Manifest.
 3. **Übrige Kontinente laden** (zusammen 833,8 MB per Range, davon Asien 360,1 MB)? Oder erst den Konverter an Europa bauen?
 4. **Geometrie `bahn`:** Plan wie in B5 so bauen (Schema 0.10.0, Längenverzerrung statt Flächenverzerrung, Stapel nur 1.1)?
