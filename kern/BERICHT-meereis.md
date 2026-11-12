@@ -295,10 +295,71 @@ Wie bei den Flüssen drei Stufen nach Kamerahöhe:
    - **Legende:** Stand um 2000, Schwellen, Verzerrung.
 5. **Kurzname** in der Leiste: „Gletscher“.
 
-### 9.5 Offen, zur Entscheidung
+### 9.5 Attributtabelle geladen und gemessen (2026-11-12, Freigabe Max)
+
+- **Datei:** `~/ZeroEarth/rohdaten/rgi7/RGI2000-v7.0-G-global-attributes.csv`
+  - 74,7 MB, geladen aus dem OGGM-Spiegel ohne Anmeldung, Stand 2025-11-25.
+  - SHA-256 `58846e0b…5f1c7c` in `SHA256.txt` daneben. Der Spiegel nennt keine eigene Prüfsumme.
+  - Nicht im Repo.
+- **Abgleich mit der Quelle:** Die Tabelle enthält **274 531 Gletscher** mit zusammen **706 744,0 km²**. Das stimmt genau mit der Benutzeranleitung v1.0 überein; die Tabelle ist also vollständig.
+- **Spalten:** u. a. `rgi_id`, Region `o1region`/`o2region`, `src_date`, Schwerpunkt `cenlon`/`cenlat`, `area_km2`, `glac_name`, `term_type`, `surge_type`, `zmin_m`/`zmed_m`/`zmax_m`, `lmax_m`, `dem_source`.
+  - **Damit möglich:** Punkte im Schwerpunkt für kleine Gletscher lassen sich schon aus der Tabelle setzen, ohne Umrisse.
+  - **Namen:** 57 996 Gletscher haben einen.
+  - **Endtyp `term_type`:** 1 561 stehen auf 1 (ins Meer kalbend, laut RGI-Codierung); 272 970 haben den Wert 9.
+- **Zeit (`src_date`):**
+  - **Spanne:** Aufnahmen von 1943 bis 2021, **86,3 % aus 1998–2010**, 2,9 % vor 1990, 1,0 % nach 2010.
+  - **Folge:** Das stützt eine Zeitgrenze, stellt aber 1950 in Frage. Einzelne Umrisse sind älter (Frage 3).
+
+**Zahl und Fläche je Schwelle** (global):
+
+| Schwelle | Gletscher | Anteil | Fläche | Flächenanteil |
+| --- | --- | --- | --- | --- |
+| ≥ 0,01 km² (alle) | 274 531 | 100 % | 706 744 km² | 100 % |
+| ≥ 0,1 km² | 170 512 | 62,1 % | 701 969 km² | 99,3 % |
+| ≥ 1 km² | 44 905 | 16,4 % | 658 366 km² | 93,2 % |
+| ≥ 10 km² | 6 824 | 2,5 % | 551 068 km² | 78,0 % |
+| ≥ 100 km² | 994 | 0,4 % | 386 883 km² | 54,7 % |
+| ≥ 1 000 km² | 77 | 0,03 % | 133 694 km² | 18,9 % |
+
+**Je Region:**
+
+| Region | Gletscher | Fläche km² | ≥ 100 km² | ≥ 1 km² | < 1 km² (als Punkt) |
+| --- | --- | --- | --- | --- | --- |
+| 01 Alaska | 27 509 | 86 708 | 144 | 5 683 | 21 826 |
+| 02 West-Kanada, USA | 18 730 | 14 521 | 4 | 2 762 | 15 968 |
+| 03 Arktisches Kanada Nord | 5 216 | 105 370 | 172 | 2 749 | 2 467 |
+| 04 Arktisches Kanada Süd | 11 009 | 40 538 | 49 | 3 187 | 7 822 |
+| 05 Grönland, Rand | 19 994 | 90 482 | 134 | 6 409 | 13 585 |
+| 06 Island | 568 | 11 060 | 23 | 213 | 355 |
+| 07 Svalbard, Jan Mayen | 1 666 | 33 959 | 82 | 1 003 | 663 |
+| 08 Skandinavien | 3 410 | 2 948 | 0 | 573 | 2 837 |
+| 09 Russische Arktis | 1 069 | 51 595 | 123 | 920 | 149 |
+| 10 Nordasien | 7 155 | 2 643 | 0 | 488 | 6 667 |
+| 11 Mitteleuropa | 4 079 | 2 124 | 0 | 409 | 3 670 |
+| 12 Kaukasus, Naher Osten | 2 275 | 1 407 | 0 | 289 | 1 986 |
+| 13 Zentralasien | 75 613 | 50 344 | 21 | 8 699 | 66 914 |
+| 14 Südasien West | 37 562 | 33 075 | 25 | 4 520 | 33 042 |
+| 15 Südasien Ost | 18 587 | 16 049 | 2 | 2 894 | 15 693 |
+| 16 Niedere Breiten | 3 695 | 1 929 | 0 | 476 | 3 219 |
+| 17 Südliche Anden | 30 634 | 27 674 | 38 | 2 361 | 28 273 |
+| 18 Neuseeland | 3 018 | 886 | 0 | 143 | 2 875 |
+| 19 Subantarktis, antarktische Inseln | 2 742 | 133 432 | 177 | 1 127 | 1 615 |
+
+**Folgerungen für den Plan (9.3):**
+- **Kontinentstufe ab 100 km²:**
+  - **Umfang:** 994 Umrisse, 55 % der Fläche. Das ist wenig Datenmenge.
+  - **Lücke:** **Alpen, Skandinavien, Kaukasus, Neuseeland und die Tropen haben keinen einzigen Gletscher ≥ 100 km².** Dort trägt auf dieser Stufe nur das Raster 0,1°.
+  - **Alternative:** Eine Schwelle von 10 km² (6 824 Umrisse, 78 %) zeigte auch dort die größeren Gletscher (Frage 4).
+- **Regionsstufe ab 1 km²:**
+  - **Umrisse:** 44 905 Umrisse (93 % der Fläche).
+  - **Punkte:** Die übrigen 229 626 Gletscher, aber nur 7 % der Fläche, wären Punkte aus den Schwerpunkten der Tabelle.
+  - **Größte Punktmenge:** Zentralasien (Region 13) mit 66 914. Als GeoJSON etwa 3 MB (**geschätzt, nicht gemessen**).
+- **Dateigrößen der Umrisse:** Sie bleiben ungemessen, bis die Umrisse da sind (CDS oder NSIDC, Konto von Max).
+
+### 9.6 Offen, zur Entscheidung
 
 1. **Weg:** CDS (dasselbe Konto wie für ERA5, mit Raster 0,1°) oder NSIDC (Earthdata)? Beide Konten legt Max an; ich lege keines an.
-2. **Attributtabelle laden:** `RGI2000-v7.0-G-global-attributes.csv` (71 MB, OGGM-Spiegel, ohne Anmeldung) nach `~/ZeroEarth/rohdaten/rgi7/`, um die Schwellen vorab zu messen? Dabei zu prüfen: Stimmt sie mit der NSIDC-Fassung überein (Zahl 274 531, Fläche 706 744 km²)?
-3. **Zeitgrenze:** Inventar ab 1950 CE zeigen, davor `fehlt`? Oder enger, etwa 1990–heute?
-4. **Schwellen:** Umrisse ab 100 km² in der Kontinentstufe und ab 1 km² in der Regionsstufe, kleinere als Punkt?
+2. ~~Attributtabelle laden~~ **Erledigt (2026-11-12):** geladen und gemessen, stimmt mit der Quelle überein (9.5).
+3. **Zeitgrenze:** Inventar ab 1950 CE zeigen, davor `fehlt`? Oder enger, etwa 1990–heute? Laut Tabelle stammen 86 % der Umrisse aus 1998–2010, 2,9 % aus der Zeit vor 1990, die ältesten von 1943.
+4. **Schwellen:** Kontinentstufe ab 100 km² (994 Umrisse; Alpen, Skandinavien, Kaukasus, Neuseeland, Tropen dann nur im Raster) oder ab 10 km² (6 824 Umrisse)? Regionsstufe ab 1 km², kleinere als Punkt?
 5. **Volumen:** fehlt mit Grund lassen, oder eine Dickenquelle (etwa Farinotti et al. 2019) prüfen?
