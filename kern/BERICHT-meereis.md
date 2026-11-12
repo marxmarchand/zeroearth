@@ -267,7 +267,7 @@ Wie bei den Flüssen drei Stufen nach Kamerahöhe:
 | Stufe | Was | Quelle | Auswahl | Größe (geschätzt) |
 | --- | --- | --- | --- | --- |
 | Globus (> 4 000 km) | Gletscheranteil je Zelle als Fläche, weiß mit Deckkraft nach Anteil | CDS-Raster 0,1° | alle Zellen mit Anteil > 0 | ein PNG, unter 2 MB |
-| Kontinent (> 750 km) | wie Globus, dazu Umrisse großer Gletscher | Raster; Umrisse G | Fläche ≥ 100 km² (Setzung) | einige MB global |
+| Kontinent (> 750 km) | wie Globus, dazu Umrisse großer Gletscher | Raster; Umrisse G | Fläche ≥ 10 km² (Entscheidung Max, 2026-11-12; 6 824 Umrisse, 78 % der Fläche) | einige MB global |
 | Region (≤ 750 km) | Umrisse als Fläche, kleine als Umriss oder Punkt | Umrisse G | Fläche ≥ 1 km², darunter Punkt im Schwerpunkt (`punkt` mit Näherung „vertritt fläche“) | je RGI-Region eine Datei; zusammen vermutlich über 100 MB, darum je Region, geladen nach Sicht |
 
 - **Vereinfachung** der Umrisse mit Toleranz je Stufe (Regel 11). Gemessen wird die **Flächenverzerrung** (Fläche nach / vor Vereinfachung). Für Flächen ist das die Pflichtangabe in `MIT_VERZERRUNG` (Regel 10).
@@ -361,5 +361,7 @@ Wie bei den Flüssen drei Stufen nach Kamerahöhe:
 1. **Weg:** CDS (dasselbe Konto wie für ERA5, mit Raster 0,1°) oder NSIDC (Earthdata)? Beide Konten legt Max an; ich lege keines an.
 2. ~~Attributtabelle laden~~ **Erledigt (2026-11-12):** geladen und gemessen, stimmt mit der Quelle überein (9.5).
 3. **Zeitgrenze:** Inventar ab 1950 CE zeigen, davor `fehlt`? Oder enger, etwa 1990–heute? Laut Tabelle stammen 86 % der Umrisse aus 1998–2010, 2,9 % aus der Zeit vor 1990, die ältesten von 1943.
-4. **Schwellen:** Kontinentstufe ab 100 km² (994 Umrisse; Alpen, Skandinavien, Kaukasus, Neuseeland, Tropen dann nur im Raster) oder ab 10 km² (6 824 Umrisse)? Regionsstufe ab 1 km², kleinere als Punkt?
+4. **Schwellen:**
+   - **Kontinentstufe: entschieden (Max, 2026-11-12): ab 10 km².** 6 824 Umrisse, 78 % der Fläche. Damit erscheinen auch in Alpen, Skandinavien, Kaukasus, Neuseeland und den Tropen die größeren Gletscher als Umriss, nicht nur im Raster. Die Tabelle in 9.3 ist angepasst.
+   - **Regionsstufe:** noch offen. Ab 1 km² als Umriss (44 905), kleinere als Punkt (229 626)?
 5. **Volumen:** fehlt mit Grund lassen, oder eine Dickenquelle (etwa Farinotti et al. 2019) prüfen?
