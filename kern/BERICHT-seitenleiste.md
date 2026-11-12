@@ -253,6 +253,15 @@ Alle Entscheidungen von Max aus Teil A (1–12) sind in `index.html` umgesetzt; 
 
 **Nicht geändert:** `docs/`, `ZEIT_RAUM.md`, Max' uncommittete Dateien.
 
+## Stand (2026-11-12): Biomasse in die Biosphäre
+
+- **Leiste:** Auf Anweisung von Max liegt der leere Ordner **Biomasse** jetzt unter der Schicht „Biosphäre / Lebensnetz“, nicht mehr im Erdsystem. 1.1 hat damit sechs Ordner.
+- **Grund im Ordner:** „noch keine Quelle für Biomasse eingebunden (vorgesehen laut Strukturstand: Bar-On et al. 2018, Biomasse je Hauptzweig)“.
+- **Nicht geändert:**
+  - `docs/strukturstand.md` führt Biomasse weiter als Sphäre von 1.1 im Erdsystem („1.1 Biomasse: der stoffliche Teil, ein Bestand“).
+  - Der Kern (`SPHAEREN` in `kern/schema.mjs`, Test in `regeln.test.mjs`) folgt dem Strukturstand und kennt `biomasse` als Sphäre in 1.1.
+  - Die Leiste weicht hier also von Strukturstand und Kern ab. Siehe Frage 5.
+
 ## Offen, zur Entscheidung
 
 Die Fragen 1–13 vom 2026-11-10 sind entschieden (siehe „Stand“). Neu:
@@ -265,3 +274,4 @@ Die Fragen 1–13 vom 2026-11-10 sind entschieden (siehe „Stand“). Neu:
 2. **Kurzzeile bei „fehlt“-Ebenen:** Ist eine Ebene ohne Datei eingeschaltet (etwa Klimazonen), zählt sie als „an“ und steht in der Kurzzeile mit ■. So lassen oder solche Schalter sperren?
 3. **Kreislauf zugeklappt:** Die Bilanz steht in der Statuszeile im Ordner und ist bei zugeklapptem Ordner nicht zu sehen. Soll sie in die Legende oder in ein eigenes Fach wie die Flussansicht?
 4. **Schichten außerhalb von 1.1** (Basis, Biosphäre, Konstruierte Wirklichkeit) bestehen jetzt fast nur aus einer Zeile „fehlt“. Sollen ganz leere Schichten ebenfalls einen Kopf „leer“ bekommen wie der Ordner Biomasse?
+5. **Biomasse im Kern:** Soll die Sphäre `biomasse` aus 1.1 (`SPHAEREN`) heraus und Biomasse als Bestand der Biosphäre (1.2) geführt werden? Das ginge erst, wenn der Strukturstand angepasst ist; ich ändere `docs/` nicht.

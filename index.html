@@ -665,6 +665,14 @@
       <div class="sub-head" data-sub="unterbau"></div>
       <div class="ob ov-side" id="tb-unterbau" onclick="ze.toggle('unterbau')"><div class="obd"></div>Biosphäre / Lebensnetz <span class="hz" data-hz="unterbau"></span></div>
       <div class="ov-status" id="unterbau-status"></div>
+      <!-- Biomasse in der Biosphäre (Entscheidung Max, 2026-11-12), nicht mehr im Erdsystem -->
+      <div class="ordner zu" data-ordner="biomasse" data-leer="keine Ebene: noch keine Quelle für Biomasse eingebunden (vorgesehen laut Strukturstand: Bar-On et al. 2018, Biomasse je Hauptzweig; die FAOSTAT-Erzeugung ist ein Fluss im Prozess, kein Bestand)">
+        <div class="ordner-kopf" onclick="ze.ordnerKlappen(this)"><span class="ok-t">Biomasse</span><span class="ok-z"></span></div>
+        <div class="ordner-kurz"></div>
+        <div class="ordner-body">
+
+        </div>
+      </div>
       <div class="sub-head" data-sub="erdsystem"></div>
       <!-- Ordner je Sphäre (kern/BERICHT-seitenleiste.md): standardmäßig zu, Zähler im Kopf,
            eingeschaltete Ebenen als Kurzzeile; Ebenen ohne Datei unten unter „fehlt“ (Variante A). -->
@@ -724,13 +732,6 @@
         <div class="ov-status" id="wind-status"></div>
         <div class="ob ov-side" id="tb-klima" onclick="ze.toggle('klima')"><div class="obd"></div>Klimazonen <span class="hz" data-hz="klima"></span></div>
         <div class="ov-status" id="klima-status"></div>
-        </div>
-      </div>
-      <div class="ordner zu" data-ordner="biomasse" data-leer="keine Ebene: in 1.1 ist noch keine Quelle für Biomasse eingebunden (die FAOSTAT-Erzeugung ist ein Fluss im Prozess, kein Bestand)">
-        <div class="ordner-kopf" onclick="ze.ordnerKlappen(this)"><span class="ok-t">Biomasse</span><span class="ok-z"></span></div>
-        <div class="ordner-kurz"></div>
-        <div class="ordner-body">
-
         </div>
       </div>
       <div class="ordner zu" data-ordner="bestaende">
