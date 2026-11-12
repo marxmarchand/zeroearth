@@ -2372,7 +2372,18 @@ const LEGENDE = {
   platten:     { h: 'data/plattengrenzen.geojson (lokal kuratiert)' },
   grenzen:     { h: 'data/grenzen.geojson (Natural Earth admin_0, lokal kuratiert)' },
   kataster:    { h: 'data/kataster.geojson (lokal kuratiert)' },
-  gewaesser:   { h: 'data/fluesse.geojson; Pegel: GloFAS via Open-Meteo (Modell ~5 km)', z: 'Abfluss: aktuell (live)', m: 5000 },
+  gewaesser:   { h: 'SWORD v17c (Zenodo 23870877, CC BY 4.0): Lage kuratiert (GRWL/Landsat, MERIT Hydro), Breite gemessen; Auswahl nach Einzugsfläche facc_total (MERIT-Basins, Modell). Pegel: GloFAS via Open-Meteo (Modell)',
+                 get z() { const s = ze.gewaesserLayer?.stand(); return s?.vorZeit ? `fehlt vor ${FLUSS_AB_CE} CE (Setzung): Netz gilt für die Gegenwart` : `Lage Stand Gegenwart, gezeigt ab ${FLUSS_AB_CE} CE (Setzung); Laufänderungen seit 1900 nicht enthalten; Unschärfe fehlt`; },
+                 get farben() { return [{ farbe: FLUSS_FARBE, text: 'blaue Linie: Flussabschnitt, Stärke nach gemessener Breite', linie: true },
+                   { farbe: DAMM_FARBE, text: 'orange Linie: Abschnitt an einem Damm (SWORD type 4); in der Stufe Region zusätzlich ein Punkt', linie: true }]; },
+                 get warn() {
+                   const L = ze.gewaesserLayer, I = L?.index; if (!I) return 'data/fluesse.json fehlt';
+                   const st = L.stand().stufe, S = I.stufen.find(x => x.stufe === st), E = Object.values(I.kontinente).map(k => k.stufen[st]);
+                   const sm = f => E.reduce((a, x) => a + f(x), 0);
+                   return `Stufe ${S.name}: Einzugsfläche ≥ ${takt.zahl(S.facc_total_min_km2)} km² (Setzung), Linien vereinfacht mit ${takt.zahl(S.toleranz_m)} m, Länge danach ${takt.zahl(sm(x => x.laenge_vereinfacht_km) / sm(x => x.laenge_quelle_geometrie_km) * 100, 0)} % der Quelle. `
+                     + `Geister-Abschnitte (type 6) nicht gezeichnet: ${takt.zahl(sm(x => x.geist.anzahl))}, zusammen ${takt.zahl(sm(x => x.geist.laenge_km), 0)} km. `
+                     + `Nur ${Object.keys(I.kontinente).length} von 6 Kontinenten (übrige fehlen: Rohdaten nicht geladen).`; },
+                 m: 250 },
   sprachen:    { h: 'Glottolog 5.3 (CC BY 4.0); Status: Ethnologue 2025/2020/2018, ElCat 2022, UNESCO-Atlas 2010; wo die Quelle fehlt, eigene Kategorie',
                  z: 'Status ohne Bezugszeit; Wissensstand = Jahr der Statusquelle', karte: true,
                  warn: 'Punkt = Näherung des Sprachgebiets' },
@@ -3357,19 +3368,27 @@ class FlowFieldLayer {
    aus data/stroeme.json. Partikel laufen den Großkreis, Dichte ~ wert. */
 
 /* ─────────────────────────────────────────────────────────────────
-   GEWÄSSER LAYER — Erste Natur / Erdsystem (v0.9.16)
-   Zwei Ebenen, nach Auflösung der Ansicht gestaffelt (wie der Unterbau):
-     gröber als FEIN_M_PRO_PX → Flussnetz als Linien (data/fluesse.geojson)
-     feiner                   → Pegel-Punkte mit Live-Abfluss (GloFAS)
-   Der Abfluss (m³/s) ist ein Erdsystem-Fluss — eine Rate, kein Zustand.
-   Live-Werte kommen direkt aus der Open-Meteo Flood API (kein Schlüssel);
-   fehlt das Netz, fehlt die Antwort — keine Ersatzzahlen.
+   GEWÄSSER LAYER — Erste Natur / Erdsystem · Hydrosphäre
+   Flussnetz aus SWORD v17c (data/fluesse.json, data/fluesse/<kontinent>_<stufe>.json),
+   vom Konverter matrix-scharnier/adapter/sword.py, geprüft vom Kern-Adapter `fluesse`.
+   Auswahl nach Einzugsfläche je Zoomstufe (Setzung, Max 2026-11-11):
+     Globus ≥ 100 000 km², Kontinent ≥ 10 000 km², Region ≥ 1 000 km².
+   Strichstärke aus der gemessenen Breite (GRWL). Dämme mit eigenem Zeichen;
+   Geister-Abschnitte bleiben in den Daten, werden nicht gezeichnet (Max 2026-11-12).
+   Vor 1900 CE fehlt das Netz (Setzung): gezeigt wird die Gegenwart, keine Rekonstruktion.
+   Feiner als FEIN_M_PRO_PX zusätzlich Pegel-Punkte mit Live-Abfluss (GloFAS, Modell),
+   solange data/pegel.json vorliegt (Umbau zu „Abfluss (Modell)“: Bericht B6).
    ───────────────────────────────────────────────────────────────── */
+const FLUSS_FARBE = '#2a6fd6', DAMM_FARBE = '#f08a4b', FLUSS_AB_CE = 1900;
+/** Zeichenhöhe über dem Relief wie Küsten und Tektonik (4000 m); keine Angabe über die Lage. */
+const FLUSS_HOEHE = 4000;
+/** Kamerahöhe → Stufe (Setzung, Bericht B3/B12). */
+const flussStufe = h => h > 4.0e6 ? 'globus' : h > 7.5e5 ? 'kontinent' : 'region';
 class GewaesserLayer {
   constructor(viewer) {
     this.v = viewer; this.on = false;
-    this.netz = null; this.pegel = null;
-    this.linien = []; this.coll = null; this.punkte = [];
+    this.index = null; this.netze = new Map(); this.pegel = null;
+    this.coll = null; this.linien = null; this.daemme = null; this._schluessel = null;
     this._discharge = new Map();   // name → {wert, datum}
     this._lastFetch = 0;
   }
@@ -3377,62 +3396,91 @@ class GewaesserLayer {
 
   async show() {
     this.on = true;
-    if (!this.netz) {
-      try {
-        const r = await fetch('data/fluesse.geojson');
-        this.netz = r.ok ? await r.json() : { features: [] };
-      } catch { this.netz = { features: [] }; }
+    if (!this.index) {
+      try { const r = await fetch('data/fluesse.json'); this.index = r.ok ? await r.json() : null; } catch { this.index = null; }
     }
     if (!this.pegel) {
-      try {
-        const r = await fetch('data/pegel.json');
-        this.pegel = r.ok ? await r.json() : { pegel: [] };
-      } catch { this.pegel = { pegel: [] }; }
+      try { const r = await fetch('data/pegel.json'); this.pegel = r.ok ? await r.json() : { pegel: [] }; }
+      catch { this.pegel = { pegel: [] }; }
     }
+    this._schluessel = null;
     this.update(Tideline.t);
   }
 
-  update() {
-    if (!this.on) return;
-    this.clear();
-    const nah = ze.ansichtFein();
-    this._drawNetz();
-    if (nah) this._drawPegel();
-    else this._statusNetz();
+  /** Netz einer Stufe für alle geladenen Kontinente (je Datei einmal geladen). */
+  async _netz(stufe) {
+    const K = Object.entries(this.index?.kontinente ?? {});
+    return Promise.all(K.map(async ([k, e]) => {
+      const datei = e.stufen[stufe].datei;
+      if (!this.netze.has(datei)) this.netze.set(datei, fetch(`data/${datei}`).then(r => r.json()));
+      return { k, e, fc: await this.netze.get(datei) };
+    }));
   }
 
-  _drawNetz() {
-    const feats = this.netz?.features || [];
-    const col = Cesium.Color.fromCssColorString('#5a9ee8');
-    let n = 0;
-    for (const f of feats) {
-      const of = f.properties?.ord_flow ?? 5;
-      const w = of <= 2 ? 2.4 : of <= 4 ? 1.5 : 0.9;   // große Flüsse dicker
-      const teile = f.geometry?.type === 'MultiLineString'
-        ? f.geometry.coordinates : [f.geometry?.coordinates].filter(Boolean);
-      for (const line of teile) {
-        if (!line || line.length < 2) continue;
-        const flat = [];
-        for (const c of line) flat.push(c[0], c[1]);
-        this.linien.push(this.v.entities.add({ polyline: {
-          positions: Cesium.Cartesian3.fromDegreesArray(flat),
-          width: w, material: col.withAlpha(0.55), arcType: Cesium.ArcType.GEODESIC } }));
-        n++;
+  /** Was gerade gilt, für Legende und Status. */
+  stand() {
+    const jahr = takt.ce(Tideline.t), stufe = flussStufe(ze.kameraHoehe());
+    return { jahr, stufe, vorZeit: jahr < FLUSS_AB_CE };
+  }
+
+  async update() {
+    if (!this.on) return;
+    const { jahr, stufe, vorZeit } = this.stand();
+    const nah = ze.ansichtFein();
+    const schluessel = `${stufe}|${vorZeit}|${nah}`;
+    if (schluessel === this._schluessel) return;
+    this._schluessel = schluessel;
+    this.clear();
+    if (!this.index) { this._status('<span class="ds-err">fehlt</span>: data/fluesse.json liegt nicht vor (Konverter matrix-scharnier/adapter/sword.py)'); return; }
+    if (vorZeit) {
+      this._status(`<span class="ds-err">fehlt</span>: kein Flussnetz für ${takt.text(Tideline.t)}. Das Netz gilt für die Gegenwart, gezeigt ab ${FLUSS_AB_CE} CE (Setzung); eine Rekonstruktion früherer Läufe gibt es als Quelle nicht (Regel 12)`);
+      return;
+    }
+    const netze = await this._netz(stufe);
+    if (schluessel !== this._schluessel || !this.on) return;
+    this._zeichneNetz(netze, stufe === 'region');
+    const S = this.index.stufen.find(x => x.stufe === stufe);
+    const z = netze.map(({ e }) => e.stufen[stufe]);
+    const summe = f => z.reduce((a, x) => a + f(x), 0);
+    const fehlt = Object.keys(this.index.fehlt ?? {});
+    this._status(`<span class="ds-ok">${takt.zahl(summe(x => x.gezeigt.anzahl))} Abschnitte</span> · ${S.name}: Einzugsfläche ≥ ${takt.zahl(S.facc_total_min_km2)} km² · `
+      + `${takt.zahl(summe(x => x.damm.anzahl))} an Dämmen (orange) · ${takt.zahl(summe(x => x.geist.anzahl))} Geister-Abschnitte (${takt.zahl(summe(x => x.geist.laenge_km), 0)} km) nicht gezeichnet · SWORD v17c`
+      + (fehlt.length ? `<br><span class="ds-err">fehlt</span>: ${fehlt.length} Kontinente (Rohdaten nicht geladen, Freigabe ausstehend)` : ''));
+    if (nah) this._drawPegel();
+  }
+
+  /** @param punkte Damm-Punkte nur in der feinsten Stufe; darüber trägt die Linienfarbe das Zeichen (sonst zu dicht). */
+  _zeichneNetz(netze, punkte) {
+    const P = this.v.scene.primitives;
+    this.linien = P.add(new Cesium.PolylineCollection());
+    this.daemme = P.add(new Cesium.PointPrimitiveCollection());
+    const mats = new Map();
+    const mat = (farbe, a) => { const k = farbe + a; if (!mats.has(k)) mats.set(k, Cesium.Material.fromType('Color', { color: Cesium.Color.fromCssColorString(farbe).withAlpha(a) })); return mats.get(k); };
+    for (const { fc } of netze) for (const f of fc.features) {
+      const p = f.properties;
+      if (p.typ === 'geist') continue;                     // in den Daten, nicht gezeichnet
+      const c = f.geometry.coordinates;
+      if (c.length < 2) continue;
+      const damm = p.typ === 'damm';
+      // Strichstärke aus der Breite (gemessen); ohne Breite die dünnste Stufe
+      const w = p.b ? Math.min(3.6, 1.1 + 0.9 * Math.log10(Math.max(1, p.b / 30))) : 1.1;
+      const linie = this.linien.add({ width: damm ? Math.max(w, 2) : w, material: mat(damm ? DAMM_FARBE : FLUSS_FARBE, 0.95),
+        positions: Cesium.Cartesian3.fromDegreesArrayHeights(c.flatMap(([x, y]) => [x, y, FLUSS_HOEHE])) });
+      linie.zeFluss = p;
+      if (damm && punkte) {
+        const m = c[Math.floor(c.length / 2)];
+        const pt = this.daemme.add({ position: Cesium.Cartesian3.fromDegrees(m[0], m[1], FLUSS_HOEHE), pixelSize: 5, color: Cesium.Color.fromCssColorString(DAMM_FARBE),
+          outlineColor: Cesium.Color.fromCssColorString('#20160d'), outlineWidth: 1 });
+        pt.zeFluss = p;
       }
     }
-    this._netzN = n;
-  }
-  _statusNetz() {
-    this._status(this._netzN
-      ? `<span class="ds-ok">${this._netzN} Flussläufe</span> · HydroRIVERS · ` +
-        `näher heranzoomen für Pegel (Live-Abfluss)`
-      : `<span class="ds-err">data/fluesse.geojson fehlt</span> — HydroRIVERS via gewaesser_to_zef.py`);
   }
 
   async _drawPegel() {
     const items = this.pegel?.pegel || [];
     if (!items.length) {
-      this._status(`<span class="ds-err">keine Pegel</span> — gewaesser_to_zef.py --pegel-preset`);
+      const e = document.getElementById('gewaesser-status');
+      if (e && !e.innerHTML.includes('Pegel')) e.innerHTML += '<br><span class="ds-err">fehlt</span>: Pegel (data/pegel.json liegt nicht vor; Umbau zu „Abfluss (Modell)“ aus dem Netz geplant, Bericht B6)';
       return;
     }
     this.coll = this.v.scene.primitives.add(new Cesium.PointPrimitiveCollection());
@@ -3504,11 +3552,9 @@ class GewaesserLayer {
   }
 
   clear() {
-    if (this.coll) { this.v.scene.primitives.remove(this.coll); this.coll = null; }
-    this.linien.forEach(e => this.v.entities.remove(e)); this.linien = [];
-    this._netzN = 0;
+    for (const k of ['coll', 'linien', 'daemme']) if (this[k]) { this.v.scene.primitives.remove(this[k]); this[k] = null; }
   }
-  hide() { this.on = false; this.clear(); this._status(''); }
+  hide() { this.on = false; this._schluessel = null; this.clear(); this._status(''); }
 }
 
 class FlowNetLayer {
@@ -4403,6 +4449,18 @@ class ZeroEarth {
           : 'kein Live-Abfluss verfügbar (Rate, kein Zustand — keine Ersatzzahl)';
         document.getElementById('i-meta').textContent =
           'GloFAS via Open-Meteo · Modell ~5 km, kein Messpegel';
+        return;
+      }
+      const fl = picked?.primitive?.zeFluss;
+      if (fl) {
+        const typ = { fluss: 'Fluss', see: 'See am Fluss', damm: 'Abschnitt an einem Damm', unzuverlaessig: 'Abschnitt mit unsicherer Netzlage' }[fl.typ] ?? fl.typ;
+        document.querySelector('#ip .il').textContent = 'Flussabschnitt — Erste Natur · Hydrosphäre';
+        document.getElementById('i-title').textContent = `${typ} · SWORD ${fl.id}`;
+        document.getElementById('i-desc').textContent =
+          `Breite ${fl.b != null ? `${fl.b.toLocaleString('de-DE')} m (GRWL, Landsat; gemessen)` : 'fehlt (in SWORD nicht gemessen)'} · `
+          + `Einzugsfläche ${fl.a.toLocaleString('de-DE')} km² (MERIT-Basins, Modell; ${fl.q})`
+          + (fl.typ === 'damm' ? ' · SWORD ordnet den Abschnitt einem Damm zu (type 4)' : '');
+        document.getElementById('i-meta').textContent = 'SWORD v17c (CC BY 4.0), Zenodo 23870877 · Lage Stand Gegenwart · Kern: kern/adapter/fluesse';
         return;
       }
       const gj = picked?.primitive?.zeGeo;
@@ -5377,6 +5435,7 @@ class ZeroEarth {
   _kameraGeaendert(h) {
     if (this.ansicht !== 'globus' || this.natur !== 'erde') return;   // unsichtbare Kamera steuert nichts
     if (h > ERDE_RAND_H) { this.zeigeNatur('nullnatur'); return; }
+    if (this.gewaesserLayer?.on) this.gewaesserLayer.update();   // Stufe des Flussnetzes folgt der Höhe
     const fein = this.ansichtFein();
     if (fein !== this._feinZuletzt) {
       this._feinZuletzt = fein;
@@ -7016,7 +7075,7 @@ const EBENEN_HERKUNFT = {
   platten:     { arten: ['kuratiert'], datei: 'data/plattengrenzen.geojson', fehlt_grund: 'kein Konverter' },
   stroeme:     { arten: [], datei: 'data/stroeme.json', text: 'Herkunft nicht angegeben', fehlt_grund: 'Kuratierung offen' },
   unterbau:    { arten: ['beobachtung'], datei: 'data/unterbau.json', text: 'GBIF', fehlt_grund: 'kein Konverter' },
-  gewaesser:   { arten: ['modell', 'berechnet'], datei: 'data/fluesse.geojson', text: 'Flussnetz aus Höhenmodell abgeleitet (modell, berechnet); Abfluss GloFAS (Modell)', fehlt_grund: 'kein Konverter; HydroSHEDS-Lizenz ungeklärt, SWORD in Vorbereitung (kern/BERICHT-hydrosphaere.md)' },
+  gewaesser:   { arten: ['kuratiert', 'beobachtung', 'modell', 'berechnet'], datei: 'data/fluesse.json', text: 'SWORD v17c: Lage kuratiert (Landsat, MERIT Hydro), Breite beobachtet, Auswahl nach Einzugsfläche (Modell); Pegel GloFAS (Modell)', fehlt_grund: 'Konverter matrix-scharnier/adapter/sword.py nicht gelaufen' },
   gezeiten:    { arten: ['beobachtung'], datei: 'data/gezeiten.json', text: 'SWOT', fehlt_grund: 'Konverter gezeiten.py vorhanden, Datei nie erzeugt' },
   wind:        { arten: ['modell'], datei: 'data/manifest.json', text: 'GFS (Vorhersage, Modell)', fehlt_grund: 'Rasterdatensätze liegen nicht im Repo (data/manifest.json)' },
   sprachen:    { arten: ['kuratiert'], datei: 'data/glottolog.json', text: 'Glottolog' },

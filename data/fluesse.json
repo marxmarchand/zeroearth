@@ -1,0 +1,206 @@
+{
+ "erzeugt": "2026-11-12T06:33:36+00:00",
+ "hinweis": "erzeugt von matrix-scharnier/adapter/sword.py",
+ "quelle": {
+  "name": "SWORD v17c (SWOT River Database)",
+  "zenodo": "10.5281/zenodo.23870877",
+  "archiv": "SWORD_v17c_parquet.zip, Dateien sword_<XX>_v17c_reaches.parquet",
+  "lizenz": "CC BY 4.0",
+  "veroeffentlicht": "2026-11-01"
+ },
+ "auswahl": {
+  "kriterium": "facc_total",
+  "einheit": "km2",
+  "begruendung": "Einzugsfläche wächst stromab nie: zusammenhängende Netze bis zur Mündung (Entscheidung Max, 2026-11-11)"
+ },
+ "stufen": [
+  {
+   "stufe": "globus",
+   "name": "Globus",
+   "facc_total_min_km2": 100000,
+   "toleranz_grad": 0.045,
+   "toleranz_m": 5000
+  },
+  {
+   "stufe": "kontinent",
+   "name": "Kontinent",
+   "facc_total_min_km2": 10000,
+   "toleranz_grad": 0.009,
+   "toleranz_m": 1000
+  },
+  {
+   "stufe": "region",
+   "name": "Region",
+   "facc_total_min_km2": 1000,
+   "toleranz_grad": 0.00225,
+   "toleranz_m": 250
+  }
+ ],
+ "typen": {
+  "1": "fluss",
+  "3": "see",
+  "4": "damm",
+  "5": "unzuverlaessig",
+  "6": "geist"
+ },
+ "kontinente": {
+  "eu": {
+   "name": "Europa und Naher Osten (SWORD-Region EU)",
+   "datei_quelle": "sword_EU_v17c_reaches.parquet",
+   "sha256": "36611dda21c1df4159d8469f21f19262b4ca35db21eb8bff656a1b1ebcbf6650",
+   "gesamt": {
+    "abschnitte": {
+     "anzahl": 31103,
+     "laenge_km": 232585.8
+    },
+    "je_typ": {
+     "damm": {
+      "anzahl": 5271,
+      "laenge_km": 2422.7
+     },
+     "fluss": {
+      "anzahl": 17810,
+      "laenge_km": 187049.0
+     },
+     "geist": {
+      "anzahl": 2463,
+      "laenge_km": 468.7
+     },
+     "see": {
+      "anzahl": 4212,
+      "laenge_km": 30272.6
+     },
+     "unzuverlaessig": {
+      "anzahl": 1347,
+      "laenge_km": 12372.8
+     }
+    },
+    "breite_fehlt": {
+     "anzahl": 107,
+     "laenge_km": 770.6
+    },
+    "facc_quality": {
+     "anchor": 23027,
+     "anchor_aligned": 11,
+     "anchor_proximity": 484,
+     "fallback_fill": 1047,
+     "fallback_prior": 155,
+     "interpolated": 712,
+     "lake_derived": 4458,
+     "partitioned_arm": 1209
+    }
+   },
+   "stufen": {
+    "globus": {
+     "datei": "fluesse/eu_globus.json",
+     "bytes": 529599,
+     "gezeigt": {
+      "anzahl": 2818,
+      "laenge_km": 27416.3
+     },
+     "damm": {
+      "anzahl": 152,
+      "laenge_km": 65.5
+     },
+     "geist": {
+      "anzahl": 70,
+      "laenge_km": 12.3
+     },
+     "unter_schwelle": {
+      "anzahl": 28215,
+      "laenge_km": 205157.1
+     },
+     "abbrueche_stromab": {
+      "anzahl": 2,
+      "reach_ids": [
+       23261000621,
+       23261001614
+      ]
+     },
+     "punkte": {
+      "quelle": 840921,
+      "gezeigt": 5708
+     },
+     "laenge_vereinfacht_km": 22819.6,
+     "laenge_quelle_geometrie_km": 27486.7,
+     "verzerrung_laenge": 0.8302
+    },
+    "kontinent": {
+     "datei": "fluesse/eu_kontinent.json",
+     "bytes": 2308597,
+     "gezeigt": {
+      "anzahl": 11328,
+      "laenge_km": 106452.6
+     },
+     "damm": {
+      "anzahl": 1400,
+      "laenge_km": 602.5
+     },
+     "geist": {
+      "anzahl": 202,
+      "laenge_km": 35.4
+     },
+     "unter_schwelle": {
+      "anzahl": 19573,
+      "laenge_km": 126097.8
+     },
+     "abbrueche_stromab": {
+      "anzahl": 2,
+      "reach_ids": [
+       23261000621,
+       23261001614
+      ]
+     },
+     "punkte": {
+      "quelle": 3250159,
+      "gezeigt": 38283
+     },
+     "laenge_vereinfacht_km": 95923.3,
+     "laenge_quelle_geometrie_km": 106696.4,
+     "verzerrung_laenge": 0.899
+    },
+    "region": {
+     "datei": "fluesse/eu_region.json",
+     "bytes": 6589812,
+     "gezeigt": {
+      "anzahl": 24729,
+      "laenge_km": 204807.6
+     },
+     "damm": {
+      "anzahl": 4730,
+      "laenge_km": 2149.3
+     },
+     "geist": {
+      "anzahl": 1045,
+      "laenge_km": 195.9
+     },
+     "unter_schwelle": {
+      "anzahl": 5329,
+      "laenge_km": 27582.3
+     },
+     "abbrueche_stromab": {
+      "anzahl": 2,
+      "reach_ids": [
+       23261000621,
+       23261001614
+      ]
+     },
+     "punkte": {
+      "quelle": 6234454,
+      "gezeigt": 178607
+     },
+     "laenge_vereinfacht_km": 196846.9,
+     "laenge_quelle_geometrie_km": 205345.1,
+     "verzerrung_laenge": 0.9586
+    }
+   }
+  }
+ },
+ "fehlt": {
+  "af": "Afrika: Rohdaten nicht geladen (Freigabe ausstehend)",
+  "as": "Asien: Rohdaten nicht geladen (Freigabe ausstehend)",
+  "na": "Nordamerika: Rohdaten nicht geladen (Freigabe ausstehend)",
+  "oc": "Ozeanien: Rohdaten nicht geladen (Freigabe ausstehend)",
+  "sa": "Südamerika: Rohdaten nicht geladen (Freigabe ausstehend)"
+ }
+}

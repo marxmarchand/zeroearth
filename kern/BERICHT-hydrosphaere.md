@@ -601,16 +601,86 @@ Die Bilanz P − E − R = ΔS (3.3) gilt zuerst nur für Kontinente. In der Leg
 - **Vereinfachung:** Sie verwirft 98–99 % der Punkte. Die Längenverzerrung (`verzerrung.laenge` aus B5) ist noch nicht gemessen; sie gehört in den Konverter.
 - **Geister-Abschnitte (`type` 6)** sind in den Zahlen enthalten. Ob sie gezeigt werden, ist offen (Frage 2 unten).
 
+### B13. Konverter und Ebene für Europa gebaut (2026-11-12, Entscheidungen Max)
+
+**Entscheidungen** (zu den Fragen vom 2026-11-11):
+1. **Dämme:** gezeigt, mit eigenem Zeichen und Hinweis in Legende und Tooltip.
+2. **Geister-Abschnitte:** nicht als Fluss gezeichnet, aber in den Daten behalten. Anzahl und Gesamtlänge stehen in Index, Kern-Graph, Statuszeile und Legende.
+3. **Reihenfolge:** erst den Konverter an Europa bauen und testen; die übrigen Kontinente erst nach Freigabe.
+
+**Gebaut:**
+- **Konverter** `matrix-scharnier/adapter/sword.py`:
+  - **Eingabe:** liest `~/ZeroEarth/rohdaten/sword/v17c/sword_<XX>_v17c_reaches.parquet` und prüft die SHA-256 der Rohdatei.
+  - **Schreibt** `data/fluesse.json` (Index, Zählungen, Schwellen, Größen) und `data/fluesse/<kontinent>_<stufe>.json` (GeoJSON).
+  - **Merkmale je Abschnitt:** `id`, `typ` (fluss, see, damm, unzuverlaessig, geist), Breite `b` (`null`, wenn SWORD keine misst), Einzugsfläche `a`, `facc_quality` als `q`.
+  - **Benötigt** pyarrow und shapely. Beide fehlen im System-Python; ich habe sie in einem eigenen venv im Scratchpad installiert.
+- **Kern-Adapter** `kern/adapter/fluesse`:
+  - Ein Eintrag je Kontinent in 1.1, Sphäre `hydrosphaere`, mit Zählungen je Stufe: gezeigt, Dämme, Geister mit Länge, unter der Schwelle, Abbrüche, Längenverzerrung, fehlende Breiten.
+  - `wo` steht als `fehlt` mit Grund: Die Geometrie `bahn` ist geplant, aber noch nicht im Schema (B5, Frage 4 vom 2026-11-10 noch offen).
+  - Afrika, Asien, Nordamerika, Ozeanien und Südamerika stehen als `fehlt` („Rohdaten nicht geladen, Freigabe ausstehend“).
+  - Der Adapter bricht ab, wenn gezeigt + Geister + unter der Schwelle nicht die Zahl der Abschnitte der Quelle ergibt.
+- **Tests** `kern/test/fluesse.test.mjs`, 7 Stück:
+  - Prüfung von Manifest, Herkunft und Graph;
+  - jede Linie liegt über ihrer Schwelle, Datei und Index stimmen überein, höchstens 5 Abbrüche;
+  - nichts geht verloren; eine verfälschte Zählung führt zum Abbruch;
+  - Dämme und Geister sind in Datei, Index und Graph gleich gezählt;
+  - Dateigrößen gegen den Index (jede Datei unter 100 MB, der Globus unter 2 MB), Längenverzerrung als Zahl;
+  - fehlende Kontinente mit Grund;
+  - Herkunft `modell` an der Auswahl, Lizenz, Zeit ab 1900.
+- **Ebene `gewaesser`** in `index.html` (`GewaesserLayer` umgebaut):
+  - **Stufe aus der Kamerahöhe** (Setzung): über 4 000 km Globus, über 750 km Kontinent, darunter Region. Beim Bewegen der Kamera wird nur neu gezeichnet, wenn die Stufe wechselt.
+  - **Fluss:** blaue Linie, Stärke aus der gemessenen Breite; ohne Breite die dünnste Stärke.
+  - **Damm:** orange Linie. In der Stufe Region kommt ein orangefarbener Punkt hinzu. Auf den gröberen Stufen wären die Punkte zu dicht gewesen: 1 400 auf der Kontinentstufe in Europa, im Browser geprüft.
+  - **Geister:** werden übersprungen; die Statuszeile nennt Anzahl und Länge.
+  - **Tooltip** beim Klick auf einen Abschnitt: Typ, SWORD-ID, Breite (gemessen oder „fehlt“), Einzugsfläche (Modell) mit `facc_quality`, bei Dämmen „SWORD ordnet den Abschnitt einem Damm zu (type 4)“.
+  - **Vor 1900 CE** wird nichts gezeichnet; die Statuszeile sagt „fehlt“ mit Grund (Setzung, Regel 12).
+  - **Legende:** Herkunft je Teil, Zeit (Stand Gegenwart, ab 1900), Schwelle, Toleranz und Längenanteil der Stufe, Geister mit Anzahl und Länge, „nur 1 von 6 Kontinenten“, Farben für Fluss und Damm.
+  - **Zeichenhöhe** 4 000 m wie Küste und Tektonik; auf Meereshöhe hätte das Relief die Linien verdeckt (im Browser gesehen).
+  - **Pegel:** bleiben, solange `data/pegel.json` fehlt, als Zeile „fehlt“ unter der Statuszeile. Der Umbau zu „Abfluss (Modell)“ (B6) ist nicht Teil dieses Schritts.
+  - **`EBENEN_HERKUNFT.gewaesser`** zeigt jetzt auf `data/fluesse.json`. Die Ebene steht damit nicht mehr unter „fehlt“.
+
+**Gemessen** (Europa, ersetzt die Schätzungen aus B12; Größen der Dateien, wie sie im Repo liegen):
+
+| Stufe | Schwelle | Abschnitte in der Datei | davon gezeigt | Dämme | Geister (nicht gezeichnet) | unter der Schwelle | Datei | Länge nach Vereinfachung |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Globus | ≥ 100 000 km² | 2 888 | 2 818 (27 416 km) | 152 | 70 (12,3 km) | 28 215 | **0,53 MB** | 83,0 % |
+| Kontinent | ≥ 10 000 km² | 11 530 | 11 328 (106 453 km) | 1 400 | 202 (35,4 km) | 19 573 | **2,31 MB** | 89,9 % |
+| Region | ≥ 1 000 km² | 25 774 | 24 729 (204 808 km) | 4 730 | 1 045 (195,9 km) | 5 329 | **6,59 MB** | 95,9 % |
+
+- **Gesamt:** `data/fluesse/` belegt 9,0 MB für Europa.
+- **Abweichung von B12:** Die Dateien sind etwa 15–20 % größer als dort gemessen (0,44 / 1,97 / 5,85 MB), weil sie jetzt Typ und `facc_quality` mitführen.
+- **Abbrüche stromab:** 2 je Stufe (SWORD-IDs 23261000621, 23261001614); die Ursache ist nicht untersucht.
+- **Längenverzerrung:** Die Vereinfachung kürzt die Linien auf dem Globus auf 83 % ihrer Länge. Das steht als `laengenverzerrung_<stufe>` im Graph und in der Legende (Regel 10).
+- **Abschnitte ohne gemessene Breite:** 107 in Europa (770,6 km).
+- **Hochrechnung auf die Welt** (weiter geschätzt, nicht gemessen; Europa ist etwa ein Neuntel der Abschnitts-Dateien): Globus etwa 5 MB, Kontinent etwa 21 MB, Region etwa 60 MB.
+  - Das liegt alles unter 100 MB je Datei. Für Asien allein wäre die Region etwa 25 MB; ob sie in Kacheln geteilt werden muss, zeigt erst die Messung.
+
+**Bildschirmfotos** (lokaler Server, 2026-11-12):
+
+| Bild | Inhalt |
+| --- | --- |
+| ![](bericht-hydrosphaere/sword-europa-globus.jpg) | Stufe Globus (6 000 km Höhe): 2 818 Abschnitte über GEBCO-Relief, Ordner Hydrosphäre mit Statuszeile, Legende |
+| ![](bericht-hydrosphaere/sword-europa-region-daemme.jpg) | Stufe Region (500 km Höhe, Donau und Inn um Passau): Dämme als orange Linie mit Punkt |
+
+**Geprüft im Browser:**
+- Die Stufen wechseln mit der Höhe.
+- Der Tooltip eines Damm-Abschnitts stimmt (SWORD 22780400604: Breite 44 m, Einzugsfläche 4 622 km², `anchor`).
+- Bei 1850 CE wird nichts gezeichnet und „fehlt“ steht da; zurück bei heute erscheinen wieder 24 729 Abschnitte.
+- Die Konsole zeigt keine Fehler.
+
 ## Offen, zur Entscheidung
 
 Die zwölf Fragen vom 2026-11-10 sind entschieden (siehe „Stand“). Neu:
 
 1. ~~Auswahlkriterium SWORD~~ **Entschieden (Max, 2026-11-11):** Auswahl nach Einzugsfläche `facc_total` mit ≥ 100 000 / 10 000 / 1 000 km² (Globus / Kontinent / Region) als Setzung in Manifest und Legende. Die Breite `width` (Landsat, `beobachtung`) dient als Strichstärke und Tooltip. In der Legende steht, dass die Auswahl einem Modellwert folgt (MERIT-Basins, `facc_quality`).
-2. **Geister- und Damm-Abschnitte** (`type` 6 bzw. 4): zeigen, weglassen oder anders zeichnen? Weglassen würde Lücken erzeugen; die Zahl stünde im Manifest.
-3. **Übrige Kontinente laden** (zusammen 833,8 MB per Range, davon Asien 360,1 MB)? Oder erst den Konverter an Europa bauen?
+2. ~~Geister- und Damm-Abschnitte~~ **Entschieden (Max, 2026-11-12):** Dämme gezeigt mit eigenem Zeichen, Geister nicht gezeichnet, aber gezählt (B13).
+3. **Übrige Kontinente laden** (zusammen 833,8 MB per Range: Afrika 93,5, Asien 360,1, Nordamerika 142,7, Ozeanien 58,1, Südamerika 179,4 MB)? Der Konverter ist an Europa gebaut und getestet (B13).
 4. **Geometrie `bahn`:** Plan wie in B5 so bauen (Schema 0.10.0, Längenverzerrung statt Flächenverzerrung, Stapel nur 1.1)?
 5. **Gemeinsamer Bestand Wasser:** als eigener kleiner Adapter `wasser`, auf den `sintflut` verweist (B10)?
 6. **AQUASTAT-Lizenz:** Soll ich eine Anfrage an die FAO entwerfen (CC BY 4.0 nach den Datenbankbedingungen gegen CC BY-NC-SA 4.0 im Katalog)?
 7. **IRP-Lizenz:** Soll ich eine Anfrage an das IRP-Sekretariat entwerfen? Und darf ich `mfa4_export.csv` (7,7 MB) zur Prüfung der Kennzeichen nach `~/ZeroEarth/rohdaten/irp/` laden?
 8. **Wickert 2016:** Dateiliste und Größe im App-Browser nachsehen (die Seite sperrt automatische Abrufe)? Mit der Lizenz CC BY-SA 3.0 US als eigene Datei mit eigenem Vermerk?
 9. **Konten für ERA5 (CDS) und IMERG (Earthdata):** Legt Max sie an, oder warten diese Felder?
+10. **Stufengrenzen nach Kamerahöhe** (über 4 000 km Globus, über 750 km Kontinent): so lassen?
+11. **Damm-Punkte nur in der Stufe Region**, darüber nur die orange Linie: so lassen?
+12. **Die zwei Abbrüche stromab** (SWORD 23261000621, 23261001614) untersuchen oder als Eigenheit der Quelle stehen lassen?

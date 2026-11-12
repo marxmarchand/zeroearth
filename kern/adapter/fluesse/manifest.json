@@ -1,0 +1,46 @@
+{
+  "id": "fluesse",
+  "eingabe": "data/fluesse.json",
+  "quelle": {
+    "name": "SWORD v17c (SWOT River Database), Abschnitte (reaches) je Kontinent",
+    "dateien": ["sword_EU_v17c_reaches.parquet (aus SWORD_v17c_parquet.zip)"],
+    "abgeleitet_durch": "matrix-scharnier/adapter/sword.py",
+    "pangaea": "doi:10.5281/zenodo.23870877 (Zenodo, veröffentlicht 2026-11-01)"
+  },
+  "stapel": ["1.1"],
+  "vorgang": "stoffwechsel",
+  "herkunft": {
+    "arten": ["kuratiert", "beobachtung", "modell", "berechnet"],
+    "ebene": "Datei",
+    "hinweis": "Lage: Mittellinien aus GRWL (Landsat) und MERIT Hydro, zusammengeführt (kuratiert auf beobachtung). Breite: GRWL (beobachtung). Auswahl nach Einzugsfläche facc_total aus MERIT-Basins (modell, berechnet; facc_quality je Abschnitt). Zählungen, Längen und Vereinfachung von zeroearth berechnet.",
+    "archivkette": [
+      { "archiv": "zeroearth (data/fluesse.json, data/fluesse/)", "art": "zeroearth" },
+      { "archiv": "SWORD v17c, Zenodo 23870877", "art": { "fehlt": true, "grund": "Archivart von SWORD nicht festgelegt" } },
+      { "fehlt": true, "grund": "Satellitenbilder (Landsat, SWOT) sind kein natürliches Archiv; die Rohbilder sind nicht eingebunden" }
+    ]
+  },
+  "zeitsemantik": {
+    "bezugssystem": "a_ce",
+    "unschaerfe": { "fehlt": true, "grund": "SWORD nennt keine Bezugszeit der Lage; Breiten aus der Landsat-Zeit (GRWL), SWOT-Werte ab 2023" },
+    "aufloesung": { "fehlt": true, "grund": "eine Fassung, keine Zeitreihe" },
+    "abdeckung": { "von": 1900, "bis": 2026, "schritte": 1, "hinweis": "Setzung (Max, 2026-11-11): gezeigt ab 1900 CE als Gegenwart, davor fehlt das Netz" },
+    "verzoegerung": { "fehlt": true, "grund": "Kein Wissensstand angegeben" }
+  },
+  "geometrie": [{ "fehlt": true, "grund": "Linien eines Stroms brauchen die Geometrie bahn; geplant (kern/BERICHT-hydrosphaere.md, B5), nicht im Schema" }],
+  "lizenz": {
+    "angabe": "CC BY 4.0",
+    "quelle": "Zenodo 23870877 (Metadaten: cc-by-4.0)",
+    "geprueft": "2026-11-11",
+    "bearbeitung": "Auswahl nach Einzugsfläche, Linien vereinfacht (Douglas-Peucker), Koordinaten gerundet, Merkmale reduziert"
+  },
+  "weitergabe": {
+    "im_repo": "data/fluesse.json, data/fluesse/<kontinent>_<stufe>.json (GeoJSON)",
+    "nicht_im_repo": "SWORD-Parquet (~/ZeroEarth/rohdaten/sword/v17c, SHA-256 gegen SHA256SUMS_files.txt)"
+  },
+  "auswahl": ["fluesse/auswahl/schwellen", "fluesse/auswahl/kontinente", "fluesse/auswahl/zeit"],
+  "reduktion": [
+    { "schritt": "auswaehlen", "angabe": "Abschnitte mit facc_total ≥ 100 000 / 10 000 / 1 000 km² (Globus / Kontinent / Region)" },
+    { "schritt": "vergroebern", "angabe": "Linien vereinfacht mit 5 km / 1 km / 250 m (0,045° / 0,009° / 0,00225°), Koordinaten auf 0,001°" },
+    { "schritt": "auswaehlen", "angabe": "Merkmale je Abschnitt: id, typ, Breite, Einzugsfläche, facc_quality" }
+  ]
+}
