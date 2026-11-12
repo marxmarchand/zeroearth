@@ -217,3 +217,88 @@ Stand: 2026-11-06. Plan in Abschnitt 1–7, gebaut am selben Tag (siehe „Stand
 - Lizenz und Laden von RGI 7.0: Earthdata-Konto, Lizenz bestätigen.
 - Lizenz der Ehlers-Karten klären oder eine andere Paläo-Gletscherquelle mit Lizenz suchen.
 - Vor dem Bau ein Plan zur Größe: RGI hat 274 531 Umrisse. Nötig wären eine vereinfachte, gekachelte Fassung und ein Größenziel.
+
+## 9. Plan Gebirgsgletscher heute (RGI 7.0), Stand 2026-11-12
+
+Nur Plan, nichts geladen, nichts gebaut. Geprüft am 2026-11-12 bei NSIDC, rgidata.org, im Copernicus Climate Data Store (CDS) und im Spiegel des OGGM-Projekts. Die Eiszeit (Ehlers 2011) bleibt außen vor, bis ihre Lizenz geklärt ist (Abschnitt 8).
+
+### 9.1 Zugang und Lizenz
+
+**Zwei Wege zu denselben Umrissen:**
+
+| Weg | Was | Konto | Lizenz laut Seite |
+| --- | --- | --- | --- |
+| NSIDC-0770 (Original) | Shapefiles je Region und Produkt (G, C, I, L), CSV, JSON | NASA Earthdata (die Dateiliste leitet auf die Anmeldung um, geprüft) | Zitierpflicht: „As a condition of using these data, you must cite the use of this data set.“ Eine eigene Lizenz nennt die Seite nicht |
+| CDS „Glaciers distribution data from the Randolph Glacier Inventory for year 2000“, Version 7.0 | Umrisse (Shapefile), Attribute und Hypsometrie (CSV), dazu **Raster des Gletscheranteils je Zelle** (NetCDF-4, 1° und 0,1°) | CDS (Copernicus), dasselbe Konto wie für ERA5 (Hydrosphäre, B9) | „CC-BY licence“ |
+
+- **rgidata.org** (Benutzeranleitung): „This work is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license unless specified otherwise.“ Dazu „© Copyright RGI Consortium 2022-2026“. Das deckt die Anleitung sicher ab, die Daten wahrscheinlich; ein ausdrücklicher Satz zu den Datendateien fehlt.
+- **Bewertung:** Die Weitergabe abgeleiteter Dateien mit Nennung ist nach CDS (CC BY) und rgidata.org (CC BY 4.0) gedeckt. Die Zitierpflicht von NSIDC kommt dazu.
+- **Vorschlag:** **CDS als Weg.** Ein Konto dort braucht Max ohnehin für ERA5, und nur der CDS liefert das 0,1°-Raster, das die gröberen Stufen ohne Umrisse trägt. Beim Abruf ist die Lizenz im CDS einmal zu bestätigen; das macht Max.
+- **Ohne Anmeldung** liegt im OGGM-Spiegel (cluster.klima.uni-bremen.de/~oggm/rgi/) nur die globale Attributtabelle `RGI2000-v7.0-G-global-attributes.csv` (71 MB, Stand 2025-11-25), ohne Umrisse. Mit ihr ließen sich die Zahlen je Größenschwelle schon vor dem Laden der Umrisse messen (Frage 2).
+
+**Dateien:** je Region eine ZIP `RGI2000-v7.0-<Produkt>-<Region>.zip`, 19 Regionen mit Gletschern (01 Alaska … 19 Subantarktische und antarktische Inseln). Gebraucht wird nur das Produkt **G** (Gletscher), nicht C, I, L.
+
+**Größe:**
+- Weder NSIDC noch CDS nennen sie; der NASA-Katalog führt keine Einzeldateien.
+- Zum Vergleich: RGI 6.2 hatte global 402 MB (ZIP) für rund 216 000 Gletscher.
+- RGI 7.0 mit 274 531 Gletschern dürfte bei 500–700 MB liegen (**geschätzt, nicht gemessen**).
+- Das Raster 0,1° ist klein (3 600 × 1 800 Zellen, einige MB, geschätzt).
+
+### 9.2 Einordnung in die Matrix
+
+- **Ort:** Stapel 1.1, Sphäre `kryosphaere`, Ordner Kryosphäre neben Eisdicke und Meereis.
+- **Geometrie:**
+  - `flaeche` für die Umrisse; gibt es im Schema schon, keine Erweiterung nötig.
+  - `feld` für das Raster.
+- **Herkunft:**
+  - Umrisse: `beobachtung` (Satellitenbilder, meist 30 m) und `kuratiert` (Konsortium).
+  - Raster: dazu `berechnet` (Anteil je Zelle aus den Umrissen).
+- **Bestand:** Gletschereis ist eine Form des Bestands Wasser (Hydrosphäre B10: gemeinsamer Bestand mit Ozean, Eis, Seen …). Eine Menge in Gt liefert RGI nicht, nur Fläche. Das Volumen stünde als `fehlt`. Ein Volumen aus Fläche zu schätzen (etwa Volumen-Fläche-Skalierung) wäre eine eigene Rechnung und ist ausgeschlossen (Regel 12). Eine fertige Quelle wäre etwa Farinotti et al. 2019 (Dicke je Gletscher, für RGI 6), nicht geprüft.
+- **Zeit:**
+  - **Bezugsjahr:** RGI bezieht sich auf das Jahr 2000. Die Aufnahmen stammen meist aus 1998–2010 (CDS) und haben je Gletscher ein eigenes Datum.
+  - **Unschärfe:** Die Quelle nennt keine. Die Spanne der Aufnahmedaten ist eine Angabe, keine Unschärfe (Regel 16).
+  - **Grenze (Setzung, Frage 3):** Gezeigt würde das Inventar ab 1950 CE bis heute, mit dem Hinweis „Stand um 2000; seither viel Fläche verloren“; davor `fehlt`. Gletscher ändern sich schneller als Flussläufe, darum eine engere Grenze als 1900 bei den Flüssen.
+- **Neben PaleoMIST:** RGI schließt die Eisschilde Grönlands und der Antarktis aus. PaleoMIST zeigt bei 0 ka nur Eis ab 100 m Dicke auf 0,25°. Beide zusammen ergeben kein doppeltes Eis; wo sie sich am Rand berühren, nennt die Legende beide Quellen.
+
+### 9.3 Stufen, Auswahl, Größe
+
+Wie bei den Flüssen drei Stufen nach Kamerahöhe:
+
+| Stufe | Was | Quelle | Auswahl | Größe (geschätzt) |
+| --- | --- | --- | --- | --- |
+| Globus (> 4 000 km) | Gletscheranteil je Zelle als Fläche, weiß mit Deckkraft nach Anteil | CDS-Raster 0,1° | alle Zellen mit Anteil > 0 | ein PNG, unter 2 MB |
+| Kontinent (> 750 km) | wie Globus, dazu Umrisse großer Gletscher | Raster; Umrisse G | Fläche ≥ 100 km² (Setzung) | einige MB global |
+| Region (≤ 750 km) | Umrisse als Fläche, kleine als Umriss oder Punkt | Umrisse G | Fläche ≥ 1 km², darunter Punkt im Schwerpunkt (`punkt` mit Näherung „vertritt fläche“) | je RGI-Region eine Datei; zusammen vermutlich über 100 MB, darum je Region, geladen nach Sicht |
+
+- **Vereinfachung** der Umrisse mit Toleranz je Stufe (Regel 11). Gemessen wird die **Flächenverzerrung** (Fläche nach / vor Vereinfachung). Für Flächen ist das die Pflichtangabe in `MIT_VERZERRUNG` (Regel 10).
+- **Messen vor dem Bau:** Mit der Attributtabelle (71 MB) lassen sich die Zahl der Gletscher je Schwelle und Region und ihre Gesamtfläche zählen, bevor Umrisse geladen werden. Die Dateigrößen selbst erst mit den Umrissen.
+
+### 9.4 Bau (nach Freigabe)
+
+1. **Rohdaten:** Max legt ein CDS-Konto an und bestätigt die Lizenz. Ich lade dann über die CDS-API das Raster 0,1° und die Umrisse (Größe vorher ansagen) nach `~/ZeroEarth/rohdaten/rgi7/`.
+2. **Konverter** `matrix-scharnier/adapter/rgi.py`:
+   - Raster → PNG mit Anteil in 256 Klassen.
+   - Umrisse G → GeoJSON je Stufe und Region, mit Schwelle, Vereinfachung, Flächenverzerrung, Zählungen (gezeigt, als Punkt, unter der Schwelle).
+   - Index `data/gletscher.json`.
+3. **Kern-Adapter** `gletscher`:
+   - Einträge je Region in 1.1, `kryosphaere`, Geometrie `flaeche` bzw. `feld`.
+   - Zählungen und Flächen als Werte; Volumen `fehlt` mit Grund.
+   - **Tests:**
+     - die Summe der Flächen gegen die Quelle (706 744 km² gesamt);
+     - nichts über der Schwelle verloren;
+     - Größen unter den Grenzen;
+     - Zeitgrenze;
+     - Lizenzvermerk.
+4. **Ebene** `gletscher` im Ordner Kryosphäre:
+   - **Optik** wie die Eisschilde (deckend weiß, Schummerung aus dem Relief darunter).
+   - **Tooltip** je Gletscher: Name, falls vorhanden; Fläche; Aufnahmedatum; Gletschertyp.
+   - **Legende:** Stand um 2000, Schwellen, Verzerrung.
+5. **Kurzname** in der Leiste: „Gletscher“.
+
+### 9.5 Offen, zur Entscheidung
+
+1. **Weg:** CDS (dasselbe Konto wie für ERA5, mit Raster 0,1°) oder NSIDC (Earthdata)? Beide Konten legt Max an; ich lege keines an.
+2. **Attributtabelle laden:** `RGI2000-v7.0-G-global-attributes.csv` (71 MB, OGGM-Spiegel, ohne Anmeldung) nach `~/ZeroEarth/rohdaten/rgi7/`, um die Schwellen vorab zu messen? Dabei zu prüfen: Stimmt sie mit der NSIDC-Fassung überein (Zahl 274 531, Fläche 706 744 km²)?
+3. **Zeitgrenze:** Inventar ab 1950 CE zeigen, davor `fehlt`? Oder enger, etwa 1990–heute?
+4. **Schwellen:** Umrisse ab 100 km² in der Kontinentstufe und ab 1 km² in der Regionsstufe, kleinere als Punkt?
+5. **Volumen:** fehlt mit Grund lassen, oder eine Dickenquelle (etwa Farinotti et al. 2019) prüfen?
