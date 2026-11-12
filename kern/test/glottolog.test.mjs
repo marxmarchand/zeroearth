@@ -1,5 +1,5 @@
 // @ts-check
-/* Der Glottolog-Adapter: Sprachen in 2.2 mit Verweis auf 2.3, Träger in
+/* Der Glottolog-Adapter: Sprachen in 2.3 (Entscheidung Max, 2026-11-12), Träger in
    1.3 als Näherung, Gefährdung als Überlieferung mit den AES-Stufen,
    "Quelle fehlt" als eigene Kategorie, keine Statuskommentare. */
 import { test } from 'node:test';
@@ -20,9 +20,10 @@ test('Manifest und Graph bestehen die Prüfung', () => {
   assert.deepEqual(pruefe(graph).fehler, []);
 });
 
-test('Sprache in 2.2 ohne wo, hängt an der Sprachgemeinschaft (1.3), verweist auf 2.3', () => {
+test('Sprache in 2.3 ohne wo, hängt an der Sprachgemeinschaft (1.3), verweist auf das symbolische System', () => {
   const s = E.get('glottolog/stan1295');   // Standard German
-  assert.equal(s.stapel, '2.2');
+  assert.equal(s.stapel, '2.3');
+  assert.equal(graph.eintraege.filter((/** @type {any} */ e) => e.stapel === '2.2').length, 0, 'keine Sprache mehr im Überbau');
   assert.equal('wo' in s, false);
   assert.deepEqual(s.haengt_an, ['glottolog/stan1295/gemeinschaft']);
   assert.deepEqual(s.verweist_auf, ['glottolog/zeichensystem']);

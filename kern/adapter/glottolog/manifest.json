@@ -12,13 +12,12 @@
     "zitierung": "Hammarström, Forkel, Haspelmath & Bank: Glottolog 5.3. Leipzig: MPI EVA (cldf-metadata.json nennt noch 5.2.1)"
   },
   "einordnung": {
-    "sprache": "2.2: Sprache als grundlegende Institutionalisierung von Kommunikation. Schon die Abgrenzung Sprache/Dialekt ist eine Setzung von Glottolog.",
-    "verweis": "2.3: symbolisches System (Signal – Symbol); jede Sprache verweist auf den Eintrag glottolog/zeichensystem",
+    "sprache": "2.3: Gesprochene Sprache ist Teil und Grundlage des symbolischen Systems; Schrift als Norm (institutionalisierte Sprache) gehört nach 2.2 und ist nicht Teil dieses Adapters. Schon die Abgrenzung Sprache/Dialekt ist eine Setzung von Glottolog.",
+    "verweis": "2.3: symbolisches System (Signal – Symbol) als Ganzes; jede Sprache verweist auf den Eintrag glottolog/zeichensystem",
     "traeger": "1.3: Sprachgemeinschaft, Punkt als Näherung des Sprachgebiets",
-    "gesetzt": "Entscheidung Max, 2026-11-01"
+    "gesetzt": "Entscheidung Max, 2026-11-01; Sprache von 2.2 nach 2.3: Entscheidung Max, 2026-11-12"
   },
   "stapel": [
-    "2.2",
     "2.3",
     "1.3"
   ],

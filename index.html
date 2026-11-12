@@ -616,7 +616,10 @@
 
       <!-- Symbolisches System: symbolische Vermittlung -->
       <div class="sub-head" data-sub="riss"></div>
-      <div class="ob ov-side" id="tb-riss" onclick="ze.toggle('riss')"><div class="obd"></div>Religionen · Kulturkreise · Schriftsysteme <span class="hz" data-hz="riss"></span></div>
+      <!-- Sprache ist Teil und Grundlage des symbolischen Systems (Entscheidung Max, 2026-11-12) -->
+      <div class="ob ov-side" id="tb-sprachen" onclick="ze.toggle('sprachen')" title="Sprachen (2.3) am Träger Sprachgemeinschaft (1.3); Umrandung = Gefährdung der Überlieferung"><div class="obd"></div>Sprachen <span class="hz" data-hz="sprachen"></span></div>
+      <div class="ov-status" id="sprachen-status"></div>
+      <div class="ob ov-side" id="tb-riss" onclick="ze.toggle('riss')"><div class="obd"></div>Religionen · Kulturkreise <span class="hz" data-hz="riss"></span></div>
       <div class="ov-status" id="riss-status"></div>
 
       <!-- Institutionalisierter Überbau: Rechtsakte, Institutionen -->
@@ -625,8 +628,9 @@
       <div class="ov-status" id="ueberbau-status"></div>
       <div class="ob ov-side" id="tb-grenzen" onclick="ze.toggle('grenzen')"><div class="obd"></div>Staatsgrenzen <span class="hz" data-hz="grenzen"></span></div>
       <div class="ov-status" id="grenzen-status"></div>
-      <div class="ob ov-side" id="tb-sprachen" onclick="ze.toggle('sprachen')" title="Sprachen (2.2) am Träger Sprachgemeinschaft (1.3); Umrandung = Gefährdung der Überlieferung"><div class="obd"></div>Sprachen <span class="hz" data-hz="sprachen"></span></div>
-      <div class="ov-status" id="sprachen-status"></div>
+      <!-- Schrift ist institutionalisierte Sprache: Überbau (Entscheidung Max, 2026-11-12) -->
+      <div class="ob ov-side" id="tb-schrift" title="Schrift als Norm (Rechtschreibung, Kanon, Amtssprache), 2.2"><div class="obd"></div>Schriftsysteme <span class="hz" data-hz="schrift"></span></div>
+      <div class="ov-status" id="schrift-status"></div>
 
       <!-- Konstruierte Wirklichkeit: eingeschriebener und gebauter Raum -->
       <div class="sub-head" data-sub="konstruierte_wirklichkeit"></div>
@@ -634,6 +638,11 @@
       <div class="ov-status" id="kataster-status"></div>
       <div class="ob ov-side" id="tb-ware" onclick="ze.toggle('ware')"><div class="obd"></div>Wertformen (Ware · Kapital) <span class="hz" data-hz="ware"></span></div>
       <div class="ov-status" id="ware-status"></div>
+      <!-- Nachtlichter und Satelliten: gebauter, eingeschriebener Raum (Entscheidung Max, 2026-11-12) -->
+      <div class="ob ov-side" id="tb-nachtlicht" onclick="ze.toggleNachtlicht()"><div class="obd"></div>Nachtlichter <span class="hz" data-hz="nachtlicht"></span></div>
+      <div class="ov-status" id="nachtlicht-status"></div>
+      <div class="ob ov-side" id="tb-sats" onclick="ze.toggle('sats')"><div class="obd"></div>Satelliten <span class="hz" data-hz="sats"></span></div>
+      <div class="ov-status" id="sats-status"></div>
       </div>
     </div>
 
@@ -648,10 +657,6 @@
       <div class="ansicht-knopf" id="tb-fluss" onclick="ze.flussAnsicht.oeffne()" title="Öffnet die Flussansicht (Fach unter dem Globus); keine Ebene auf dem Globus">⇲ Stoffflüsse je Land <span class="hz" data-hz="fluss"></span><span class="ak-art">Ansicht</span></div>
       <div class="ob ov-side" id="tb-stroeme" onclick="ze.toggle('stroeme')"><div class="obd"></div>Netzströme (Waren · Kapital · Arbeit) <span class="hz" data-hz="stroeme"></span></div>
       <div class="ov-status" id="stroeme-status"></div>
-      <div class="ob ov-side" id="tb-nachtlicht" onclick="ze.toggleNachtlicht()"><div class="obd"></div>Nachtlichter <span class="hz" data-hz="nachtlicht"></span></div>
-      <div class="ov-status" id="nachtlicht-status"></div>
-      <div class="ob ov-side" id="tb-sats" onclick="ze.toggle('sats')"><div class="obd"></div>Satelliten <span class="hz" data-hz="sats"></span></div>
-      <div class="ov-status" id="sats-status"></div>
       <div class="ov-status" style="display:block">Straßen &amp; Bebauung (OSM): Regler „Ges. Stoffwechsel" im Linsen-Panel</div>
       </div>
     </div>
@@ -3768,7 +3773,7 @@ class SatLayer {
   }
 
   _status(html) {
-    const el = document.getElementById('sat-status');
+    const el = document.getElementById('sats-status');
     if (el) el.innerHTML = html;
   }
 
@@ -3899,7 +3904,7 @@ class OSMLayer {
    kern/adapter/glottolog/transform.mjs läuft hier im Browser, auf
    data/glottolog.json und seinem Manifest.
    Der Punkt ist der Träger, die Sprachgemeinschaft (1.3), als Näherung
-   des Sprachgebiets. Die Sprache (2.2) erscheint nur am Träger: als
+   des Sprachgebiets. Die Sprache (2.3) erscheint nur am Träger: als
    Umrandung in der Farbe ihrer Überlieferung (AES-Stufe). "Quelle
    fehlt" ist eine eigene Kategorie (grau), nicht eine Stufe; ohne
    Status (nicht erhoben) bleibt die Umrandung leer.
@@ -3932,7 +3937,7 @@ class SprachenLayer {
       this.ohneOrt = 0;
       this.punkte = [];
       for (const s of g.eintraege) {
-        if (s.stapel !== '2.2') continue;
+        if (s.stapel !== '2.3' || !Array.isArray(s.haengt_an)) continue;   // ohne glottolog/zeichensystem
         const traeger = E.get(s.haengt_an[0]);
         if (!traeger?.wo?.geometrie) { this.ohneOrt++; continue; }
         const r = rel.get(s.id);
@@ -4498,7 +4503,7 @@ class ZeroEarth {
       const sp = picked?.primitive?.zeSprache;
       if (sp) {
         const b = SprachenLayer.beschreibe(sp);
-        document.querySelector('#ip .il').textContent = 'Sprache (2.2) am Träger Sprachgemeinschaft (1.3)';
+        document.querySelector('#ip .il').textContent = 'Sprache (2.3) am Träger Sprachgemeinschaft (1.3)';
         document.getElementById('i-title').textContent = b.titel;
         document.getElementById('i-desc').textContent = b.text;
         document.getElementById('i-meta').textContent = b.meta;
@@ -7080,6 +7085,7 @@ const EBENEN_HERKUNFT = {
   gezeiten:    { arten: ['beobachtung'], datei: 'data/gezeiten.json', text: 'SWOT', fehlt_grund: 'Konverter gezeiten.py vorhanden, Datei nie erzeugt' },
   wind:        { arten: ['modell'], datei: 'data/manifest.json', text: 'GFS (Vorhersage, Modell)', fehlt_grund: 'Rasterdatensätze liegen nicht im Repo (data/manifest.json)' },
   sprachen:    { arten: ['kuratiert'], datei: 'data/glottolog.json', text: 'Glottolog' },
+  schrift:     { arten: ['kuratiert'], datei: 'data/schrift.json', fehlt_grund: 'Schrift als Norm (Rechtschreibung, Kanon, Amtssprache); vorgesehen ISO 15924, keine Quelle eingebunden' },
   sintflut:    { arten: ['rekonstruktion', 'berechnet'], datei: 'data/kuesten.json' },
   kueste:      { arten: ['rekonstruktion', 'berechnet'], datei: 'data/kuesten.json', text: 'PaleoMIST 1.0, Grenze Land/Meer entlang der Zellkanten' },
   klima:       { arten: ['modell'], datei: 'data/manifest.json', text: 'Köppen-Geiger', fehlt_grund: 'Rasterdatensätze liegen nicht im Repo (data/manifest.json)' },

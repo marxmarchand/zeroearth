@@ -262,15 +262,42 @@ Alle Entscheidungen von Max aus Teil A (1–12) sind in `index.html` umgesetzt; 
   - Der Kern (`SPHAEREN` in `kern/schema.mjs`, Test in `regeln.test.mjs`) folgt dem Strukturstand und kennt `biomasse` als Sphäre in 1.1.
   - Die Leiste weicht hier also von Strukturstand und Kern ab. Siehe Frage 5.
 
+## Stand (2026-11-12): Sprache, Schrift, Nachtlichter, Satelliten umgehängt
+
+Entscheidung Max (2026-11-12): „Nachtlichter und Satelliten gehören in konstruierte Wirklichkeit. Sprache ist Teil/Grundlage des symbolischen Systems, Schrift ist institutionalisierte Sprache“, und: „Schrift in Überbau“.
+
+- **Symbolisches System (2.3):**
+  - **Sprachen:** von 2.2 hierher verschoben.
+  - **`riss`:** heißt jetzt „Religionen · Kulturkreise“, ohne „Schriftsysteme“.
+- **Überbau (2.2):**
+  - **Neue Ebene „Schriftsysteme“** (`schrift`), gedacht für Schrift als Norm (Rechtschreibung, Kanon, Amtssprache).
+  - **Ohne Quelle:** Sie steht unter „fehlt“ mit dem Grund „vorgesehen ISO 15924, keine Quelle eingebunden“.
+  - **Kein Schalter:** Es gibt nichts zu zeichnen. `data/schrift.json` gibt es nicht.
+- **Konstruierte Wirklichkeit (2.1):** Nachtlichter und Satelliten sind aus dem gesellschaftlichen Stoffwechsel (materielle Produktionsmittel) hierher verschoben. Dort bleiben Bestände, Stoffflüsse und Netzströme.
+- **Kern:** Der Glottolog-Adapter führt Sprachen jetzt in 2.3.
+  - **Was gleich bleibt:**
+    - Sie verweisen weiter auf `glottolog/zeichensystem`, das symbolische System als Ganzes.
+    - Der Träger ist weiter die Sprachgemeinschaft (1.3).
+  - **Geändert:**
+    - Manifest: `stapel` [2.3, 1.3], Einordnung mit Datum.
+    - Test: Keine Sprache steht mehr in 2.2.
+    - Die Leiste filtert die Sprachen nach 2.3 und schließt den Eintrag `zeichensystem` aus.
+  - **Nicht berührt:** Nachtlichter und Satelliten haben keinen Kern-Adapter. Bei ihnen ändert sich nur die Leiste.
+- **Nebenbei behoben:** Die Satelliten-Ebene schrieb ihren Status in `sat-status`, die Leiste hat aber `sats-status`. Darum war die Statuszeile immer leer. Der Fehler bestand schon vorher. Jetzt erscheint der Status. Beim Test lieferte CelesTrak nach dem Neuladen HTTP 403, und die Zeile zeigte das richtig an.
+- **Geprüft im Browser bei 1280 × 900:**
+  - Reihenfolge der Ebenen in der Leiste wie oben.
+  - Sprachen: Die Zählung ist dieselbe wie vorher (7 992 Sprachen in 8 Kategorien).
+  - Nachtlichter und Satelliten lassen sich schalten.
+  - In der Konsole stehen nur 404-Fehler, und zwar von den Prüfanfragen nach Dateien, die fehlen. Das war schon vorher so.
+- **Strukturstand (nicht geändert, nur gemeldet):**
+  - Abschnitt „Sprache und Schrift“ stimmt mit der neuen Lage überein.
+  - Die Liste weiter unten sagt dagegen noch „Sprache braucht einen Überbau; konkrete Sprachen in 2.2“. Das widerspricht der neuen Lage.
+
 ## Offen, zur Entscheidung
 
 Die Fragen 1–13 vom 2026-11-10 sind entschieden (siehe „Stand“). Neu:
 
-1. **Sprache und Schrift** (Notiz von Max, nicht geändert):
-   - `sprachen` steht heute im Überbau (2.2) und `riss` mit „Schriftsysteme“ im symbolischen System (2.3).
-   - Nach Max' Linie gehört die Sprache ins symbolische System und die Schrift bzw. Schriftnorm in den Überbau.
-   - Umsetzen hieße: `sprachen` nach 2.3, „Schriftsysteme“ aus `riss` lösen und als eigene Ebene nach 2.2. Betroffen wären der Glottolog-Adapter (Stapel 2.2, Träger 1.3), seine Tests, `index.html` und der Matrix-Prüfer.
-   - Wann und ob?
+1. ~~Sprache und Schrift~~ **Erledigt (2026-11-12):** siehe „Stand (2026-11-12): Sprache, Schrift, Nachtlichter, Satelliten umgehängt“.
 2. **Kurzzeile bei „fehlt“-Ebenen:** Ist eine Ebene ohne Datei eingeschaltet (etwa Klimazonen), zählt sie als „an“ und steht in der Kurzzeile mit ■. So lassen oder solche Schalter sperren?
 3. **Kreislauf zugeklappt:** Die Bilanz steht in der Statuszeile im Ordner und ist bei zugeklapptem Ordner nicht zu sehen. Soll sie in die Legende oder in ein eigenes Fach wie die Flussansicht?
 4. **Schichten außerhalb von 1.1** (Basis, Biosphäre, Konstruierte Wirklichkeit) bestehen jetzt fast nur aus einer Zeile „fehlt“. Sollen ganz leere Schichten ebenfalls einen Kopf „leer“ bekommen wie der Ordner Biomasse?

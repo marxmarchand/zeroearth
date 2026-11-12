@@ -2,10 +2,12 @@
 /* ════════════════════════════════════════════════════════════════════
    Adapter Glottolog: data/glottolog.json → Graph nach kern/schema.mjs.
 
-   Einordnung (Entscheidung Max, 2026-11-01):
-   - Sprache = Eintrag der 2. Natur in 2.2 (Institutionalisierung von
-     Kommunikation; schon die Abgrenzung Sprache/Dialekt ist eine Setzung
-     von Glottolog). Verweist auf 2.3, das symbolische System.
+   Einordnung (Entscheidung Max, 2026-11-01; Stapel geändert 2026-11-12):
+   - Sprache = Eintrag der 2. Natur in 2.3: Teil und Grundlage des
+     symbolischen Systems (schon die Abgrenzung Sprache/Dialekt ist eine
+     Setzung von Glottolog). Verweist auf glottolog/zeichensystem, das
+     symbolische System als Ganzes. Schrift als Norm (institutionalisierte
+     Sprache) gehört nach 2.2 und ist nicht Teil dieses Adapters.
    - Träger: Sprachgemeinschaft in 1.3, Punkt als Näherung des Gebiets.
    - Gefährdung = Überlieferung von der Sprache in ihre Gemeinschaft, mit
      den sechs AES-Stufen als Modus. Status ohne Quellenangabe ist die
@@ -43,7 +45,7 @@ export function transform(roh, manifest) {
 
   const zeichensystem = {
     id: `${P}/zeichensystem`, stapel: '2.3', name: 'Sprache als symbolisches System (Signal – Symbol)',
-    haengt_an: fehlt('Ein symbolisches System hängt an keinem einzelnen Träger; die Sprachen (2.2) verweisen darauf'),
+    haengt_an: fehlt('Ein symbolisches System hängt an keinem einzelnen Träger; die Sprachen (2.3) verweisen darauf'),
     formation: fehlt('Gesellschaftsformation nicht bestimmt'),
     werte: {},
   };
@@ -62,7 +64,7 @@ export function transform(roh, manifest) {
       werte: {},
     };
     const sprache = {
-      id: `${P}/${s.g}`, stapel: '2.2', name: s.n,
+      id: `${P}/${s.g}`, stapel: '2.3', name: s.n,
       haengt_an: [gem.id],
       formation: fehlt('Glottolog nennt keine Gesellschaftsformation'),
       verweist_auf: [zeichensystem.id],
@@ -102,7 +104,7 @@ export function transform(roh, manifest) {
     formationen: [],
     subjektachse: { status: 'leer', grund: 'vorgesehen (strukturstand, Modi und Erwartung), vorerst leer' },
     auswahl: [
-      { id: `${P}/auswahl/einordnung`, was: 'Sprache als Eintrag in 2.2 mit Verweis auf 2.3; Träger Sprachgemeinschaft in 1.3',
+      { id: `${P}/auswahl/einordnung`, was: 'Sprache als Eintrag in 2.3 mit Verweis auf das symbolische System als Ganzes; Träger Sprachgemeinschaft in 1.3; Schrift als Norm in 2.2, nicht hier',
         gesetzt_in: manifest.einordnung.gesetzt, begruendung: manifest.einordnung.sprache },
       { id: `${P}/auswahl/level`, was: 'nur Languoide des Levels language; Sprache und Dialekt grenzt Glottolog ab',
         gesetzt_in: 'Glottolog (Level) und matrix-scharnier/adapter/glottolog.py',
@@ -128,7 +130,7 @@ export const kategorie = (/** @type {any} */ r) =>
 export function zusammenfassung(/** @type {any} */ graph) {
   const n = /** @type {Record<string, number>} */ ({});
   for (const r of graph.relationen) n[kategorie(r)] = (n[kategorie(r)] ?? 0) + 1;
-  n.nicht_erhoben = graph.eintraege.filter((/** @type {any} */ e) => e.stapel === '2.2' && e.werte.gefaehrdung).length;
+  n.nicht_erhoben = graph.eintraege.filter((/** @type {any} */ e) => e.stapel === '2.3' && e.werte.gefaehrdung).length;
   return n;
 }
 
