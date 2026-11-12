@@ -356,12 +356,36 @@ Wie bei den Flüssen drei Stufen nach Kamerahöhe:
   - **Größte Punktmenge:** Zentralasien (Region 13) mit 66 914. Als GeoJSON etwa 3 MB (**geschätzt, nicht gemessen**).
 - **Dateigrößen der Umrisse:** Sie bleiben ungemessen, bis die Umrisse da sind (CDS oder NSIDC, Konto von Max).
 
-### 9.6 Offen, zur Entscheidung
+### 9.6 Entscheidungen (Max, 2026-11-12)
 
-1. **Weg:** CDS (dasselbe Konto wie für ERA5, mit Raster 0,1°) oder NSIDC (Earthdata)? Beide Konten legt Max an; ich lege keines an.
+1. **Weg: CDS.** Max legt das Konto an und bestätigt die Lizenz; ich lege keines an. Stand der Vorbereitung:
+   - **Datensatz:** `insitu-glaciers-extent`, Lizenz laut Katalog CC-BY-4.0, zuletzt aktualisiert 2026-07-20. Seit dem 30.06.2026 gibt es das Raster auch in 0,1° und 0,5° (Ankündigung im ECMWF-Forum).
+   - **Abfragen** (öffentliche Prozessbeschreibung der CDS-API, ohne Konto gelesen):
+     - Umrisse: `variable=glacier_area`, `product_type=vector`, `version=rgi_7_0` (Shapefile).
+     - Raster für die Globusstufe: `product_type=gridded`, `resolution=0_1`, `version=rgi_7_0` (NetCDF-4).
+   - **Größe:** Sie ist nirgends angegeben. Die Kostenabfrage der API nennt nur Felder (je 1 von 10), keine Bytes. Die Größe zeigt sich erst, wenn der Auftrag auf dem Server fertig ist, aber noch vor dem Herunterladen. Dann nenne ich sie und warte auf die Freigabe.
+   - **Client:** `ecmwf-datastores-client` 0.5.1, installiert im Scratchpad, nicht im Repo.
+   - **Fehlt noch:** der Schlüssel in `~/.cdsapirc` (legt Max an) und die Zustimmung zur Lizenz auf der Datensatzseite.
 2. ~~Attributtabelle laden~~ **Erledigt (2026-11-12):** geladen und gemessen, stimmt mit der Quelle überein (9.5).
-3. **Zeitgrenze:** Inventar ab 1950 CE zeigen, davor `fehlt`? Oder enger, etwa 1990–heute? Laut Tabelle stammen 86 % der Umrisse aus 1998–2010, 2,9 % aus der Zeit vor 1990, die ältesten von 1943.
+3. **Zeitgrenze: 1990 CE bis heute.**
+   - **Hinweis in der Legende:** „Stand um 2000; seither viel Fläche verloren“.
+   - **Vor 1990:** `fehlt` mit Grund.
+   - **Setzung:** Die Grenze steht als Setzung in der Legende und im Manifest (`auswahl`).
+   - **Folge:** 2,9 % der Umrisse sind älter als 1990 (die ältesten von 1943). Sie bleiben im Inventar, weil RGI sie als Stand um 2000 führt. Das Aufnahmedatum steht im Tooltip.
 4. **Schwellen:**
-   - **Kontinentstufe: entschieden (Max, 2026-11-12): ab 10 km².** 6 824 Umrisse, 78 % der Fläche. Damit erscheinen auch in Alpen, Skandinavien, Kaukasus, Neuseeland und den Tropen die größeren Gletscher als Umriss, nicht nur im Raster. Die Tabelle in 9.3 ist angepasst.
-   - **Regionsstufe:** noch offen. Ab 1 km² als Umriss (44 905), kleinere als Punkt (229 626)?
-5. **Volumen:** fehlt mit Grund lassen, oder eine Dickenquelle (etwa Farinotti et al. 2019) prüfen?
+   - **Kontinentstufe: ab 10 km²** (Entscheidung vom 2026-11-12). 6 824 Umrisse, 78 % der Fläche.
+   - **Regionsstufe: Umrisse ab 1 km²** (44 905). Die kleineren (229 626) werden Punkte im Schwerpunkt, als `punkt` mit Näherung „vertritt fläche“. Geladen wird je RGI-Region, nach Sicht.
+5. **Volumen: fehlt mit Grund.** Keine Zuordnung zwischen RGI 6 und RGI 7. Geprüft habe ich nur, ob eine Eisdicken-Quelle direkt auf RGI 7.0 aufsetzt:
+   - **IceBoost v2.0** (Maffezzoli, Rignot, Barbante, Morlighem, Petersen, Vascon; Zenodo 10.5281/zenodo.17724512, Fassung `iceboost-v2.0`, **CC BY 4.0**, offen zugänglich):
+     - **Umfang:** rechnet für alle 274 531 Gletscher von RGI 7.0 (Kennung RGI70G), also genau für unser Inventar. Daneben gibt es eine Fassung für RGI 6.2.
+     - **Format:**
+       - Je Gletscher eine GeoTIFF mit 5 Ebenen: Dicke, Fehler der Dicke, Oberflächenhöhe (TanDEM-X), Geoid, Jensen-Lücke.
+       - Raster 100 m, bei kleinen Gletschern feiner. Projektion UTM, Grönland EPSG:3413, Antarktis südlich 60° S EPSG:3031.
+       - Die **Attribute** jeder Datei enthalten das Volumen (gesamt und unter Meeresniveau, km³, mit Fehler) und Messpunkte.
+     - **Größe:** 19 Regions-ZIPs für RGI 7.0, zusammen 3,69 GB. Region 13 (Zentralasien) allein 778,5 MB, Region 6 (Island) 23,8 MB.
+     - **Stand:** Fachbegutachtet veröffentlicht in Scientific Data (2026), Vorabfassung arXiv 2512.11685.
+     - **Ergebnis:** global (149 ± 38) × 10³ km³ und 323 ± 91 mm Meeresspiegeläquivalent. Das ist verträglich mit dem Ensemble nach Farinotti et al. (2019), (147 ± 28) × 10³ km³. Die Autoren nennen eine mögliche Unterschätzung über flachem, dickem Eis.
+     - **Lücke für uns:** Eine **Tabelle der Volumina je Gletscher fehlt**. Die Volumina stehen nur in den Attributen der Einzeldateien. Für eine Tabelle müssten alle Archive (3,69 GB) geladen und ausgelesen werden. Das habe ich nicht getan.
+   - **Farinotti et al. (2019) und Millan et al. (2022):** setzen auf RGI 6.0 auf. Ohne Zuordnung zwischen RGI 6 und RGI 7 nicht verwendbar.
+   - **OGGM:** stellt vorbereitete Verzeichnisse für RGI 7 bereit. Ein veröffentlichter Dicken- oder Volumendatensatz auf RGI 7.0 mit eigener Lizenz war nicht zu finden.
+   - **Vorschlag, nicht gebaut:** Wenn das Volumen später kommen soll, dann aus IceBoost v2.0 (RGI70G). Vorher müsste über den Download von 3,69 GB entschieden werden. Bis dahin steht das Volumen als `fehlt`, mit dem Grund „keine Tabelle je Gletscher auf RGI 7.0; IceBoost v2.0 nur als Einzel-GeoTIFFs (3,69 GB)“.
