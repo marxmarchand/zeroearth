@@ -1,5 +1,7 @@
 # Stand: Strukturstand gegen Code
 
+> **Überholt.** Momentaufnahme vom 1.10.2026 (Regeln 1–13, Schema 0.4.0), nur noch Vorgeschichte. Maßgeblich sind `docs/strukturstand.md` (Regeln 1–16) und die Berichte `kern/BERICHT-*.md`.
+
 Stand: 2026-10-01 · Branch `struktur` · Strukturstand in Commit `7ec7d38` (Regeln 1–13) · Schema 0.4.0
 
 Bestandsaufnahme, nichts gebaut. Verglichen wurden docs/strukturstand.md, kern/schema.mjs, kern/pruefe.mjs,

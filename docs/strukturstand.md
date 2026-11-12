@@ -1,6 +1,6 @@
 # zeroearth – Strukturstand
 
-Stand: 2026-09-29 · Max
+Stand: 2026-11-05 · Max
 
 ## Zweck
 
